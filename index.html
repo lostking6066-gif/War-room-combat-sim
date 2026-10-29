@@ -71,7 +71,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 <div class="panel"><h2>Combat Roster <span id="roster-count" style="font-size:.8rem;color:var(--dim)"></span></h2><div class="grid" id="fighter-pool"></div></div>
 <div class="panel"><h2>2 — Death Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. There is no AI team in v9: both fighters are chosen by you.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
 <label style="font-size:.85rem">Battlefield</label><select id="battlefield-select"></select><p class="note" id="battlefield-desc"></p>
-<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn yel" onclick="triggerOnlineResearch()" style="flex:1">Run Live Research</button><button class="btn" id="review-btn" disabled style="flex:1">Review Teams →</button></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn yel" onclick="triggerOnlineResearch()" style="flex:1">Retest live research (optional)</button><button class="btn" id="review-btn" disabled style="flex:1">Review Matchup →</button></div>
 <div id="research-intel" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Live research intel will appear here. Research is optional. Without internet it falls back to local data and gives no bonus.</div>
 <h3 style="color:var(--cyan);font-size:.95rem;margin-top:6px">YouTube Battle Research — no API key needed</h3>
 <p class="note">YouTube videos cannot be read automatically by a browser file without a YouTube Data API key, and scraping YouTube is blocked. So this version does the honest version that works on a phone: one-tap YouTube searches for each selected fighter, for powers, strength, speed and transformations, plus a channel library you can grow. Watching is research — it does not automatically add new powers to the combat engine.</p>
@@ -84,9 +84,9 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 <button class="btn small" onclick="saveYTNote()" style="margin-top:6px">Save research note for this battle</button>
 <div id="yt-note-display" class="note"></div>
 <h3 style="color:var(--cyan);font-size:.95rem;margin-top:6px">Canon Sources — Wikipedia + Fandom, automatically</h3>
-<p class="note">Fandom wikis are fan-run canon wikis for each franchise (Dragon Ball Wiki, Narutopedia, Wookieepedia, etc.). They are more canon-specific than Wikipedia, but they are still fan sources — the game shows which source succeeded and which failed, and never claims a failed fetch was verified. Canon extracts are context for the story; they do not automatically add new powers.</p>
-<button class="btn small" onclick="fetchCanonForSelected()">Fetch canon for selected team now</button>
-<div id="canon-results" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">Canon results will appear here. Review Teams also fetches canon automatically for both teams.</div>
+<p class="note">Fandom wikis are fan-run wikis for each franchise (Dragon Ball Wiki, Narutopedia, Wookieepedia, etc.). They are more canon-specific than Wikipedia, but they are still fan sources — the game shows which source succeeded and which failed, and never claims a failed fetch was verified. Canon extracts are context for the story; they do not automatically add new powers.</p>
+<button class="btn small" onclick="fetchCanonForSelected()">Retest canon for selected fighters (optional)</button>
+<div id="canon-results" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">Canon results appear here automatically when you pick a fighter. Review also refreshes canon for both fighters — no tap is required to proceed to battle.</div>
 <h3 style="color:var(--cyan);font-size:.95rem;margin-top:10px">Search canon for any character</h3>
 <input id="canon-search-input" placeholder="Search Wikipedia for a character, e.g. Vegeta, Thor, Pikachu">
 <button class="btn small" onclick="searchCanon()" style="margin-top:6px">Search canon</button>
@@ -114,12 +114,12 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 <b>3. Knowledge Brain + Analysis Brain:</b> identity, continuity, powers, feats, limits, weaknesses, transformations, relationships — plus Wikipedia + Fandom research, shown per source — and a head-to-head comparison of strength, speed, durability, abilities, experience, transformations, weaknesses and win conditions, with an explicit uncertainty note when a matchup is close.<br>
 <b>4. Narrator Brain:</b> turns the analysis and the recorded events into a 6-chapter episode (Contenders, Comparison, First Exchange, Turning Point, Final Clash, Verdict), using tactics and reasons, not just attack names.<br>
 <b>Continuity check (adapted to 1v1):</b> checks the battle before the episode is shown — a dead or incapacitated fighter must not act, powers must belong to that version, transformations must meet their trigger, and the winner must match the survivor / stalemate record.</p>
-<p class="note">Trade-off, stated plainly: this is a sophisticated rule system, not a language model. It can calculate, decide, and narrate from rules reliably, but it cannot write unlimited original prose like an LLM. That last step would need a local open model or a free/paid inference service, which v7 does not require.</p></div>
+<p class="note">Trade-off, stated plainly: this is a sophisticated rule system, not a language model. It can calculate, decide, and narrate from rules reliably, but it cannot write unlimited original prose like an LLM. That last step would need a local open model or a free/paid inference service, which v9 does not require.</p></div>
 <div class="panel"><h2>Internet Connection — Properly Connected</h2>
 <p class="note" id="file-warning"></p>
-<p class="note">This version connects, from the browser, to: Wikipedia, Fandom canon wikis, YouTube search, and — optionally — a free public AI text service (Pollinations, no key) or your own free Gemini key. No Muse server, no paid API, and no key is sent to Muse. Your Gemini key, if you enter one, is stored only in this device's localStorage and is sent only to Google when you tap Generate.</p>
-<button class="btn small" onclick="testConnections()">Test all connections now</button>
-<div id="connection-results" class="note" style="margin-top:8px">Not tested yet. Tap Test to see live ✅ / ❌ per source — the game does not fake a connection it did not test.</div>
+<p class="note">This version connects, from the browser, to: Wikipedia, fan-run Fandom wikis, YouTube search, and — optionally — a free public AI text service (Pollinations, no key) or your own free Gemini key. No Muse server, no paid API, and no key is sent to Muse. Your Gemini key, if you enter one, is stored only in this device's localStorage and is sent only to Google when you tap Generate.</p>
+<button class="btn small" onclick="testConnections()">Retest connections (optional)</button>
+<div id="connection-results" class="note" style="margin-top:8px">Testing connections automatically on load — just pick fighters and play. Retest is optional, never required to play.</div>
 <label style="font-size:.85rem;display:block;margin-top:10px">Optional: your own free Gemini API key (from Google AI Studio — free tier, no card for basic use in many regions)</label>
 <input id="gemini-key-input" type="password" placeholder="Paste your Gemini key here — saved on this device only">
 <button class="btn small" onclick="saveGeminiKey()" style="margin-top:6px">Save key on this device</button>
@@ -188,16 +188,31 @@ const BATTLEFIELDS=[
 {id:'desert',name:'Desert Basin',desc:'Open lines and harsh heat. All fighters gain +5 ATK but lose 5 DEF.',atk:5,def:-5},
 {id:'industrial',name:'Industrial Complex',desc:'Machinery and hazards can be weaponised. All fighters gain +8 ATK.',atk:8,def:0}
 ];
-const DIALOGUE={
-proud:['"I do not need backup. Watch what I can do alone."','"You picked the wrong side to stand against."'],
-strategist:['"Watch their patterns first. Every fighter has a tell."','"We win by position, not by shouting loudest."'],
-reckless:['"Enough talking — let us see who hits harder!"','"If I fall, I fall swinging."'],
-protective:['"Stay behind me. No one on my team falls today if I can help it."','"I will take the hit so they do not have to."'],
-ruthless:['"Weakness is an opening. I will find yours."','"Do not beg. It will not change the outcome."'],
-disciplined:['"Breathe. Form. Strike only when it counts."','"Honour is not weakness. It is control."'],
-compassionate:['"I do not want to hurt you. But I will stop you."','"There is always a way that does not end in ruin — I will look for it."'],
-humorous:['"Okay, this is either brilliant or very stupid. Let us find out."','"I have fought weirder Tuesdays than this."']
+/* Dialogue is ORIGINAL, in-character writing for this battle only — never quoted canon.
+   Lines are built from the fighter's own name, signature, variant and opponent, so two
+   fighters with the same personality do NOT say identical lines. No team language is used:
+   v9 is 1v1, so there is no team to protect or fall back on. */
+const DIALOGUE_TEMPLATES={
+proud:['"{name}, you picked the wrong opponent. Watch what {name} can do alone."','"{name} does not need backup — and {opp} is about to learn why."','"Pride is not a flaw when it is earned, {opp}. {sig} will prove it."'],
+strategist:['"Watch {opp} first, {name} tells themself — every fighter has a tell, and {sig} will find it."','"{name} wins by position, not noise. {opp}, your next move is already read."','"Patience, {opp}. {name} has studied you, and {sig} is coming at the right moment."'],
+reckless:['"Enough talking, {opp} — let us see who hits harder! {name} is not here to wait."','"If {name} falls, {name} falls swinging, {opp}. {sig} first."','"{variant} or not, {name} only knows one speed: forward, at {opp}."'],
+protective:['"{name} will not fall here, {opp} — not while {name} can still stand and use {sig}."','"I take the hit and I give it back, {opp}. That is how {name} fights."','"{name} protects what matters by ending this, {opp} — with {sig}, not with speeches."'],
+ruthless:['"Weakness is an opening, {opp}. {name} will find yours, then use {sig}."','"Do not beg, {opp}. It will not change what {name} does next."','"{name} does not fight for applause, {opp}. {name} fights to finish this."'],
+disciplined:['"Breathe. Form. Strike only when it counts, {opp}. {name} does not waste {sig}."','"Honour is not weakness, {opp}. It is control — and {name} has it."','"{name} has trained for this, {opp}. One clean {sig} is worth ten wild swings."'],
+compassionate:['"{name} does not want to hurt you, {opp}. But {name} will stop you — with {sig} if it comes to that."','"There is always a way that does not end in ruin, {opp}. {name} will look for it, even now."','"Mercy is not surrender, {opp}. {name} will hold back where possible, and not where it costs the fight."'],
+humorous:['"Okay, {opp}, this is either brilliant or very stupid. {name} is going with {sig} to find out."','"I have fought weirder days than this, {opp}. {name} is still standing, and {sig} is still ready."','"Note to self, {opp}: do not stand still while {name} is winding up {sig}."']
 };
+function dialogueFor(f, opp, round, kind){
+  const templates=DIALOGUE_TEMPLATES[f.pers]||DIALOGUE_TEMPLATES.disciplined;
+  const oppName=opp?opp.name:'opponent';
+  const sig=f.sig||'their signature';
+  const variant=f.variant||'Base';
+  const hash=(f.id||f.name).split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  const idx=(round+hash+(kind==='intro'?0:kind==='transform'?1:2))%templates.length;
+  return templates[idx].replaceAll('{name}',f.name).replaceAll('{opp}',oppName).replaceAll('{sig}',sig).replaceAll('{variant}',variant);
+}
+// Backwards-compatible name used by older code paths; now fighter-specific.
+const DIALOGUE={};
 let selected=[]; let selectedVariants={}; let researchIntel={}; let catFilter='All'; let searchTerm='';
 /* YouTube research: starter library only. No claim of 400 verified channels.
    The library is expandable — add channels in the game and they persist on this device.
@@ -251,17 +266,20 @@ function renderRoster(){
   }).join('') || '<p class="note">No fighters match that search.</p>';
   renderSlots();
 }
-function setVariant(id,v){selectedVariants[id]=v;renderRoster()}
+function setVariant(id,v){selectedVariants[id]=v;renderRoster(); if(selected.includes(id)) autoResearchFor(id);}
 function toggleFighter(id){
   const i=selected.indexOf(id);
   if(i>-1) selected.splice(i,1); else if(selected.length<2) selected.push(id); else {alert('Pick exactly 2 — Fighter A and Fighter B. Remove one first.');return}
   renderRoster();
+  if(selected.includes(id)) autoResearchFor(id);
 }
 function renderSlots(){
   const el=document.getElementById('alpha-squad-slots'); el.innerHTML='';
   const labels=['Fighter A','Fighter B'];
   for(let i=0;i<2;i++){const id=selected[i]; const f=id?byId(id):null; const v=f?variantOf(f):null;
-    el.innerHTML+=f?`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(v.label)})</small></span><span>ATK ${f.atk+v.atk} • HP ${f.hp+v.hp}</span></div>`:`<div class="slot"><span>${labels[i]} (Empty — pick a fighter)</span></div>`;}
+    if(f){const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0]; const inst=makeBattleInstance(f,bf); const c=canonResearch[id]||{}; const resStatus=c.time?`Research: Wikipedia ${c.wiki?'✅ found':'❌ no data'} • Fan-run Fandom wiki ${c.fandom?'✅ found':'❌ no data'}`:`Research: fetching automatically…`;
+    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(v.label)})</small></span><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}</span><small style="color:var(--dim)">${resStatus}</small></div>`;}
+    else el.innerHTML+=`<div class="slot"><span>${labels[i]} (Empty — pick a fighter)</span></div>`;}
   document.getElementById('roster-count').innerText=`${selected.length}/2 Selected`;
   document.getElementById('review-btn').disabled=selected.length!==2;
   renderBattlefields(); renderYT(); renderChannels();
@@ -288,10 +306,12 @@ function openInfo(id){
   <p><b>Notable feat (context, not a stat):</b> ${esc(f.feat)}</p>
   <p><b>Base stats:</b> HP ${f.hp} • ATK ${f.atk} • DEF ${f.def} • Speed ${f.sp}</p>
   <p class="note">Implemented vs canon: only the power set above, signature, transformation (if listed), and the engine traits for Infinity, prep-first-hit, and serious-punch scaling are implemented. Other canon powers for this character are not invented here. Research summaries, when fetched, are context — they do not automatically add new powers.</p>
-  <button class="btn small" onclick="fetchCanonForInfo('${f.id}')">Fetch canon sources (Wikipedia + Fandom)</button>
+  <button class="btn small" onclick="fetchCanonForInfo('${f.id}')">Retest canon sources (optional — canon auto-fetches on pick)</button>
   <div id="info-canon" class="note" style="margin-top:8px"></div>`;
   const portrait=document.getElementById('info-portrait'); if(portrait){portrait.style.display='none'; portrait.src='';}
   document.getElementById('info-modal').classList.add('open');
+  // Canon auto-fetches when a profile is opened — no tap required. Retest button remains optional.
+  try{ fetchCanonForInfo(id); }catch(e){}
   if(typeof loadPortrait==='function') loadPortrait(id);
 }
 function closeInfo(){document.getElementById('info-modal').classList.remove('open')}
@@ -306,7 +326,7 @@ async function triggerOnlineResearch(){
   }));
   let live=0; let html='';
   results.forEach(r=>{if(r.status==='fulfilled'){live++; researchIntel[r.value.f.id]=r.value.d; const s=r.value.d.extract.length>260?r.value.d.extract.slice(0,260)+'...':r.value.d.extract; html+=`<div style="margin-bottom:10px"><b style="color:var(--cyan)">${r.value.f.icon} ${esc(r.value.f.name)} — ${esc(r.value.d.title)}</b><br>${esc(s)}<br><span style="color:var(--green)">Battle intel bonus: +10 ATK, +60 HP</span></div>`;}});
-  if(live>0){badge.innerText='AI RESEARCH: ONLINE (VERIFIED)';badge.style.color='var(--green)';badge.style.borderColor='var(--green)';intel.innerHTML=html;}
+  if(live>0){badge.innerText='AI RESEARCH: ONLINE (Wikipedia found for '+live+' fighter(s))';badge.style.color='var(--green)';badge.style.borderColor='var(--green)';intel.innerHTML=html;}
   else{badge.innerText='AI RESEARCH: OFFLINE — LOCAL SIMULATION';badge.style.color='var(--yellow)';badge.style.borderColor='var(--yellow)';intel.innerText='No live source could be reached. The game falls back to local data and gives no intel bonus. It does not claim verification it did not get.';}
 }
 
@@ -314,13 +334,15 @@ async function triggerOnlineResearch(){
 document.getElementById('review-btn').onclick=async ()=>{
   if(selected.length!==2){alert('Pick exactly 2 fighters first — Fighter A and Fighter B.');return}
   const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
-  const teamHtml=(ids,title)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><span>${esc(f.fr)} • ATK ${f.atk+v.atk} • HP ${f.hp+v.hp}</span></div>`}).join('');
+  const teamHtml=(ids,title,inst)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); const finalInst=inst; return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><span>${esc(f.fr)} • Final battle stats: ATK ${finalInst.startAtk||finalInst.atk} • HP ${finalInst.startHp||finalInst.maxHp} • DEF ${finalInst.startDef||finalInst.def}${finalInst.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}</span></div>`}).join('');
   const aInst=makeBattleInstance(byId(selected[0]),bf); const bInst=makeBattleInstance(byId(selected[1]),bf);
   const analysis=generateAnalysis(aInst,bInst);
   document.getElementById('setup-review').style.display='block';
-  document.getElementById('setup-review').innerHTML=teamHtml([selected[0]],'Fighter A')+teamHtml([selected[1]],'Fighter B')+`<p class="note">Battlefield: ${bf.name}. ${bf.desc}</p><div class="panel" style="margin-top:8px"><h3 style="color:var(--cyan)">Analysis preview — Chapter II in brief</h3>${analysis.html}</div><p class="note" id="auto-research-note">Auto-researching both fighters from Wikipedia + Fandom…</p><button class="btn mag" style="width:100%" onclick="startBattle()">Start Death Battle on ${esc(bf.name)} →</button>`;
+  document.getElementById('setup-review').innerHTML=teamHtml([selected[0]],'Fighter A',aInst)+teamHtml([selected[1]],'Fighter B',bInst)+`<p class="note">Battlefield: ${bf.name}. ${bf.desc} Final battle stats above include the battlefield effect and, where shown, the research intel bonus. The same final stats appear in Chapter I and in the breakdown.</p><div class="panel" style="margin-top:8px"><h3 style="color:var(--cyan)">Analysis preview — Chapter II in brief</h3>${analysis.html}</div><p class="note">Analysis preview uses current stats; final battle stats are shown in Chapter I and the breakdown.</p><p class="note" id="auto-research-note">Auto-researching both fighters from Wikipedia + Fandom… Research runs automatically — the battle button below is already enabled and does not wait for research.</p><button class="btn mag" style="width:100%" onclick="startBattle()">Start Death Battle on ${esc(bf.name)} →</button>`;
   const live=await fetchResearchFor([...selected]);
-  const note=document.getElementById('auto-research-note'); if(note) note.innerText=live>0?`Auto-research complete: ${live} of 2 fighters found on Wikipedia/Fandom. Researched fighters get +10 ATK / +60 HP in battle (a research bonus, not a new power), and their summaries feed Chapter I.`:`Auto-research found no live Wikipedia/Fandom data (offline or blocked). The battle will use local profiles only, and the episode will say so — it will not invent researched feats.`;
+  const wikiCount=selected.filter(id=>{const c=canonResearch[id]||{}; return !!(c.wiki||researchIntel[id]);}).length; const fandomCount=selected.filter(id=>{const c=canonResearch[id]||{}; return !!c.fandom;}).length;
+  const note=document.getElementById('auto-research-note'); if(note) note.innerText=`Auto-research complete: Wikipedia: ${wikiCount}/2 found, Fan-run Fandom wiki: ${fandomCount}/2 found. The two sources are counted separately; a failed source is never counted as found. Researched fighters get +10 ATK / +60 HP in battle (a research bonus, not a new power), and their summaries feed Chapter I.`;
+  if(wikiCount===0&&fandomCount===0&&note) note.innerText=`Auto-research found no live Wikipedia or Fan-run Fandom data (offline or blocked). The battle will use local profiles only, and the episode will say so — it will not invent researched feats.`;
   renderCanonResults(selected);
 };
 function chooseTarget(actor, enemies){
@@ -336,6 +358,7 @@ function makeBattleInstance(f,bf){
   const inst=instanceOf(f); inst.atk+=bf.atk; inst.def+=bf.def;
   const canonOk=(typeof canonResearch!=='undefined'&&canonResearch[f.id]&&(canonResearch[f.id].wiki||canonResearch[f.id].fandom));
   if(researchIntel[f.id]||canonOk){inst.atk+=10; inst.maxHp+=60; inst.currentHp+=60; inst.researched=true;} else inst.researched=false;
+  inst.startAtk=inst.atk; inst.startDef=inst.def; inst.startHp=inst.maxHp;
   return inst;
 }
 function simulateBattle(){
@@ -459,6 +482,7 @@ document.getElementById('show-results-btn').onclick=showResults;
 
 /* ============ STORY ENGINE — built ONLY from recorded events ============ */
 function cond(hp,max){if(hp===0) return 'falls and does not rise'; if(hp/max<0.25) return 'is barely standing, breathing hard'; if(hp/max<0.5) return 'is badly hurt and slowing'; return 'staggers, but holds their ground';}
+function condState(hp,max){if(hp===0) return 'fallen and not rising'; if(hp/max<0.25) return 'barely standing, breathing hard'; if(hp/max<0.5) return 'badly hurt and slowing'; return 'staggering, but holding their ground';}
 function narrateAttack(e){
   if(e.blocked) return `${e.actor} drives forward, but ${e.target}'s defence turns the blow aside completely — the attack never lands.`;
   const hits=[`${e.actor} unleashes ${e.ability}, forcing ${e.target} back across the broken ground.`, `${e.actor} finds an opening and strikes with ${e.ability}, and ${e.target} ${cond(e.targetHp,e.targetMax)}.`, `${e.actor} presses the attack with ${e.ability}, testing ${e.target}'s guard until it begins to give.`];
@@ -475,7 +499,8 @@ function consistencyCheck(b){
 }
 function generateBreakdown(b){
   const totals={}; b.events.forEach(e=>{if(e.type==='attack'&&!e.blocked) totals[e.actor]=(totals[e.actor]||0)+e.damage;});
-  const summary=`<li><b>Winner:</b> ${b.winner} &nbsp; <b>Battlefield:</b> ${esc(b.battlefield.name)} &nbsp; <b>Rounds in record:</b> ${b.rounds} &nbsp; <b>Events:</b> ${b.events.length}</li>`+Object.entries(totals).map(([n,d])=>`<li><b>${esc(n)}</b> dealt ${d} damage in total.</li>`).join('')+(ytNote?`<li><b>Research note used as story context only (did not add powers):</b> ${esc(ytNote)}</li>`:`<li><b>Research sources:</b> Wikipedia summaries where fetched, plus YouTube battle-analysis searches linked from the draft screen. No YouTube video was automatically watched or transcribed by the game.</li>`);
+  const statLines=[...b.alpha,...b.beta].map(f=>`<li><b>${esc(f.name)} (${esc(f.variant)}) final battle stats (start of fight):</b> HP ${f.startHp||f.maxHp}, ATK ${f.startAtk||f.atk}, DEF ${f.startDef||f.def}, speed ${f.sp}, tier ${f.tier}${f.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}${f.transformed?` (later transformed to ${esc(f.trans)}: +${f.tAtk} ATK, +${f.tDef} DEF)`:''} — these are the same final stats shown in the selection panel and in Chapter I.</li>`).join('');
+  const summary=`<li><b>Winner:</b> ${b.winner} &nbsp; <b>Battlefield:</b> ${esc(b.battlefield.name)} &nbsp; <b>Rounds in record:</b> ${b.rounds} &nbsp; <b>Events:</b> ${b.events.length}</li>`+statLines+Object.entries(totals).map(([n,d])=>`<li><b>${esc(n)}</b> dealt ${d} damage in total.</li>`).join('')+(ytNote?`<li><b>Research note used as story context only (did not add powers):</b> ${esc(ytNote)}</li>`:`<li><b>Research sources:</b> Wikipedia summaries where fetched, plus YouTube battle-analysis searches linked from the draft screen. No YouTube video was automatically watched or transcribed by the game.</li>`);
   const list=b.events.map(e=>{
     if(e.type==='attack') return `<li>Round ${e.round}: ${esc(e.actor)} — ${esc(e.ability)} → ${esc(e.target)} — ${e.blocked?'BLOCKED, 0 damage':e.damage+' damage'+(e.crit?' (CRIT)':'')}, target left at ${e.targetHp}/${e.targetMax} HP.</li>`;
     if(e.type==='transform') return `<li>Round ${e.round}: ${esc(e.actor)} transforms into ${esc(e.detail)}.</li>`;
@@ -542,15 +567,23 @@ async function fetchResearchFor(ids){
 /* ============ V5: NOVEL STORY ENGINE ============ */
 /* Dialogue here is written in-character for this battle. It is NOT quoted canon dialogue. */
 function powerProse(e,idx){
-  if(e.blocked) return `${e.actor} commits to ${e.ability}, but ${e.target} reads it, turns it aside, and gives nothing away. The air where the blow should have landed is suddenly, pointedly empty.`;
-  const t=[
-    `${e.actor} moves the way only ${e.actor} moves — ${e.ability} cutting through the noise of ${e.target}'s defence, until ${e.target} ${cond(e.targetHp,e.targetMax)}.`,
-    `There is no wasted motion in ${e.ability}. ${e.actor} sets it up with a feint, a shift of weight, a change of angle, and ${e.target} pays for the half-second they were late.`,
-    `${e.ability} is not just an attack; it is a statement of how ${e.actor} fights. ${e.target} answers as best they can, but the exchange leaves them ${cond(e.targetHp,e.targetMax)}.`,
-    `The battlefield itself reacts to ${e.ability} — dust lifts, cover cracks, onlookers flinch — and ${e.target} is left ${cond(e.targetHp,e.targetMax)}.`,
-    `${e.actor} does not shout the name of the move and wait for applause. They use it, move again, and force ${e.target} to solve a new problem immediately.`
+  const targetF=[...currentBattle.alpha,...currentBattle.beta].find(x=>x.name===e.target);
+  const isInfinity = targetF && targetF.trait==='infinity_void';
+  if(e.blocked){
+    if(isInfinity) return `${e.actor} commits to ${e.ability}, but ${e.target}'s Infinity defence stops it outright — the attack never reaches ${e.target} at all.`;
+    if(e.reason && e.reason.includes('power gap')) return `${e.actor} commits to ${e.ability}, but the tier gap is real: the blow barely dents ${e.target}, who absorbs it and stays in control.`;
+    return `${e.actor} commits to ${e.ability}, but ${e.target} reads it, turns it aside, and gives nothing away.`;
+  }
+  const heavy = e.damage>=220 ? ' — a heavy blow that visibly shakes the fight' : (e.damage>=150 ? ' — a solid, telling hit' : '');
+  const why = e.reason && e.reason.includes('studied weakness') ? ` This one lands because ${e.actor} studied ${e.target} first and struck the weakness they found.` : (e.reason && e.reason.includes('holding back') ? ` ${e.actor} is still holding back, testing ${e.target} rather than committing fully.` : (e.reason && e.reason.includes('fatigued') ? ` ${e.actor} is fatigued now, and the blow carries less snap than it did earlier.` : (e.reason && e.reason.includes('power gap') ? ` Even with the tier gap, ${e.actor} keeps pressing — the damage is reduced, but the pressure is real.` : '')));
+  const templates=[
+    `${e.actor} moves the way only ${e.actor} moves — ${e.ability} cutting through the noise of ${e.target}'s defence, until ${e.target} ${cond(e.targetHp,e.targetMax)}.${heavy}`,
+    `There is no wasted motion in ${e.ability}. ${e.actor} sets it up with a feint, a shift of weight, a change of angle, and ${e.target} pays for the half-second they were late.${heavy}`,
+    `${e.ability} is not just an attack; it is a statement of how ${e.actor} fights. ${e.target} answers as best they can, but the exchange leaves them ${condState(e.targetHp,e.targetMax)}.${heavy}`,
+    `The battlefield itself reacts to ${e.ability} — dust lifts, cover cracks — and ${e.target} is left ${condState(e.targetHp,e.targetMax)}.${heavy}`,
+    `${e.actor} does not shout the name of the move and wait for applause. They use ${e.ability}, move again, and force ${e.target} to solve a new problem immediately.${heavy}`
   ];
-  let s=t[(idx+e.round)%t.length];
+  let s=templates[(idx+e.round)%templates.length]+why;
   if(e.crit) s+=' This one lands with a weight that changes the whole tempo of the fight.';
   return s;
 }
@@ -559,8 +592,11 @@ function sceneForRound(round,evs){
   evs.forEach((e,i)=>{
     if(e.type==='transform') parts.push(`Then the fight changes. ${e.actor} is pushed past what their current form can do, and becomes ${e.detail}. It is not a costume change — their power, reach and choices change, and everyone on the field recalculates in real time.`);
     else if(e.type==='knockout') parts.push(`${e.target} goes down. Not with a speech, not with a flourish — with the sudden, flat silence that follows a fighter who has nothing left to give.`);
-    else if(e.type==='heal') parts.push(`${e.actor} finds a breath, steadies, and recovers enough to keep fighting.`);
-    else {parts.push(powerProse(e,i)); if(i%3===0){const f=[...currentBattle.alpha,...currentBattle.beta].find(x=>x.name===e.actor); if(f&&DIALOGUE[f.pers]) parts.push(`<span class="dia">${e.actor}: "${DIALOGUE[f.pers][(e.round+i)%2]}"</span>`);}}
+    else if(e.type==='incapacitated') parts.push(`${e.target} cannot continue. Exhausted and barely standing, they have nothing left to give, and the fight is over for them.`);
+    else if(e.type==='heal') parts.push(`${e.actor} finds a breath, steadies, and recovers enough to keep fighting. Regeneration heals a living fighter only — it does not revive anyone.`);
+    else if(e.type==='study') parts.push(`${e.actor} does not attack yet. Instead they watch, measure range and timing, and look for the weakness every fighter hides. That choice will matter when they finally strike.`);
+    else if(e.type==='protect') parts.push(`${e.actor} braces to meet the next blow head-on, taking the risk themselves rather than giving ground.`);
+    else {parts.push(powerProse(e,i));}
   });
   return parts.join(' ');
 }
@@ -598,19 +634,33 @@ async function fetchCanonFor(id){
   return canonResearch[id];
 }
 async function fetchCanonForSelected(){
-  const el=document.getElementById('canon-results'); if(el) el.innerHTML='Fetching Wikipedia + Fandom for your team…';
+  const el=document.getElementById('canon-results'); if(el) el.innerHTML='Fetching Wikipedia + Fandom for selected fighters…';
   if(!selected.length){if(el) el.innerHTML='Pick fighters first.';return}
   await Promise.all(selected.map(id=>fetchCanonFor(id)));
   renderCanonResults(selected);
 }
+let researchFetchedKeys={}; let researchTimers={}; let researchInFlight={};
+function autoResearchFor(id){
+  const f=byId(id); if(!f) return;
+  const key=id+'|'+(selectedVariants[id]||'base');
+  if(researchFetchedKeys[key]||researchInFlight[id]) return;
+  if(researchTimers[id]) clearTimeout(researchTimers[id]);
+  researchTimers[id]=setTimeout(async()=>{
+    researchInFlight[id]=true;
+    try{ await fetchCanonFor(id); researchFetchedKeys[key]=true; }catch(e){}
+    delete researchInFlight[id];
+    try{ renderCanonResults(selected); renderSlots(); }catch(e){}
+  },200);
+}
+function autoResearchSelected(){ selected.forEach(id=>autoResearchFor(id)); }
 function renderCanonResults(ids){
   const el=document.getElementById('canon-results'); if(!el) return;
-  el.innerHTML=ids.map(id=>{const f=byId(id); const c=canonResearch[id]||{}; const w=c.wiki?`✅ Wikipedia: ${esc(c.wiki.extract.slice(0,200))}…`:`❌ Wikipedia: no data (offline / not found)`; const fa=c.fandom?`✅ Fandom (${esc(c.fandom.domain)}): ${esc(c.fandom.extract.slice(0,200))}… <a href="${c.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open canon page</a>`:`❌ Fandom: no data (offline / not found)`; return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)}</b><br>${w}<br>${fa}</div>`}).join('');
+  el.innerHTML=ids.map(id=>{const f=byId(id); const c=canonResearch[id]||{}; const w=c.wiki?`✅ Wikipedia: ${esc(c.wiki.extract.slice(0,200))}…`:`❌ Wikipedia: no data (offline / not found)`; const fa=c.fandom?`✅ Fan-run Fandom wiki (${esc(c.fandom.domain)}, not official canon): ${esc(c.fandom.extract.slice(0,200))}… <a href="${c.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open fan-run wiki page</a>`:`❌ Fan-run Fandom wiki: no data (offline / not found)`; return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)}</b><br>${w}<br>${fa}</div>`}).join('');
 }
 async function fetchCanonForInfo(id){
   const el=document.getElementById('info-canon'); if(el) el.innerHTML='Fetching canon sources…';
   const c=await fetchCanonFor(id);
-  if(el) el.innerHTML=`<p><b>Wikipedia:</b> ${c.wiki?esc(c.wiki.extract.slice(0,400))+'…':'No data.'}</p><p><b>Fandom:</b> ${c.fandom?esc(c.fandom.extract.slice(0,400))+'… <a href="'+c.fandom.url+'" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a>':'No data.'}</p><p class="note">These extracts are context. They do not automatically add new powers to the combat engine.</p>`;
+  if(el) el.innerHTML=`<p><b>Wikipedia:</b> ${c.wiki?esc(c.wiki.extract.slice(0,400))+'…':'No data.'}</p><p><b>Fan-run Fandom wiki (not official canon):</b> ${c.fandom?esc(c.fandom.extract.slice(0,400))+'… <a href="'+c.fandom.url+'" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a>':'No data.'}</p><p class="note">These extracts are context. They do not automatically add new powers to the combat engine.</p>`;
 }
 async function searchCanon(){
   const q=(document.getElementById('canon-search-input').value||'').trim(); const el=document.getElementById('canon-search-results'); if(!q){el.innerHTML='Type a character name first.';return}
@@ -679,12 +729,24 @@ function continuityReport(b){
 }
 /* Story Brain additions: scene handling for study/protect, and reason-aware prose. */
 const _origSceneForRound=sceneForRound;
+let sceneAttackCount=0;
 function sceneForRoundV7(round,evs){
   let parts=[];
   evs.forEach((e,i)=>{
     if(e.type==='study') parts.push(`${e.actor} does not attack yet. Instead they watch, measure range and timing, and look for the weakness every fighter hides. That choice will matter when they finally strike.`);
-    else if(e.type==='protect') parts.push(`${e.actor} steps in front of ${e.target}, taking the risk themselves so an injured ally can survive a little longer.`);
-    else parts.push(_origSceneForRound(round,[e]));
+    else if(e.type==='protect') parts.push(`${e.actor} braces to meet the next blow head-on, taking the risk themselves rather than giving ground.`);
+    else {
+      const scene=_origSceneForRound(round,[e]);
+      parts.push(scene);
+      if(e.type==='attack' && !e.blocked){
+        sceneAttackCount++;
+        if(sceneAttackCount%3===1){
+          const f=[...currentBattle.alpha,...currentBattle.beta].find(x=>x.name===e.actor);
+          const opp=[...currentBattle.alpha,...currentBattle.beta].find(x=>x.name===e.target);
+          if(f) parts.push(`<span class="dia">${e.actor}: "${dialogueFor(f,opp,round,'attack')}"</span>`);
+        }
+      }
+    }
   });
   return parts.join(' ');
 }
@@ -706,7 +768,7 @@ async function testConnections(){
   const fandom=await ping('https://dragonball.fandom.com/api.php?action=query&prop=info&titles=Goku&format=json&origin=*');
   const poll=await ping('https://text.pollinations.ai/Say%20OK');
   const gem=getGeminiKey()?'(saved, not tested here to avoid using quota)':' (not saved — optional)';
-  el.innerHTML=`${wiki?'✅':'❌'} Wikipedia &nbsp; ${fandom?'✅':'❌'} Fandom (Dragon Ball Wiki) &nbsp; ${poll?'✅':'❌'} Pollinations free AI &nbsp; Gemini key ${gem}<br><span style="font-size:.78rem">If a source shows ❌, it is offline, blocked, or rate-limited right now — the game will fall back to local play and will not pretend that source worked.</span>`;
+  el.innerHTML=`${wiki?'✅':'❌'} Wikipedia &nbsp; ${fandom?'✅':'❌'} Fandom (Dragon Ball Wiki sample only) &nbsp; ${poll?'✅':'❌'} Pollinations free AI &nbsp; Gemini key ${gem}<br><span style="font-size:.78rem">The Fandom check above only tests that one sample wiki responds. It does NOT guarantee a specific fighter's Fandom page exists — the per-fighter Canon Sources result for that fighter is authoritative. If a source shows ❌, it is offline, blocked, or rate-limited right now — the game will fall back to local play and will not pretend that source worked.</span>`;
 }
 function aiPromptForBattle(b){
   const kos=b.events.filter(e=>e.type==='knockout').map(e=>e.actor+' knocked out '+e.target).slice(0,10).join('; ');
@@ -755,7 +817,7 @@ function winConditionsFor(att,def){
   out.push(`Use ${att.sig} (signature) and the power set ${(POWERS[att.id]||[]).join(', ')||'listed in the profile'} to wear down ${def.name}.`);
   if(att.trans) out.push(`Trigger ${att.trans} at or below 45% HP for +${att.tAtk} ATK / +${att.tDef} DEF.`);
   if(att.pers==='strategist') out.push(`Study first, then strike the studied weakness for a boosted hit.`);
-  if(def.weak) out.push(`Exploit the known limitation: ${def.weak}.`);
+  if(def.weak) out.push(`Opponent's known limitation: ${def.weak} — this is a risk to watch, not a plan, unless ${att.name} actually has a power, item or counter that exploits it (for example, a prep fighter against a Kryptonite weakness).`);
   if(att.trait==='regen') out.push(`Outlast through regeneration — heal between exchanges, but remember regeneration does not revive after HP 0.`);
   return out;
 }
@@ -778,53 +840,93 @@ function generateAnalysis(a,b){
   return {html,score,uncertain,cats};
 }
 function generateEpisode(b){
-  currentBattle=b; // episode scenes read currentBattle; ensure it is set even if called standalone
+  currentBattle=b; sceneAttackCount=0;
   const a=b.alpha[0], f2=b.beta[0];
   const byRound={}; b.events.forEach(e=>{(byRound[e.round]=byRound[e.round]||[]).push(e)});
   const rounds=Object.keys(byRound).map(Number).sort((x,y)=>x-y);
-  const researchEntries=Object.entries(researchIntel).slice(0,4);
-  const fandomEntries=(typeof canonResearch!=='undefined'?Object.entries(canonResearch).filter(([id,c])=>c.fandom).slice(0,4):[]);
-  const researchPara=researchEntries.length||fandomEntries.length?`Live research, fetched automatically for both fighters before this battle, found this context: ${researchEntries.map(([id,d])=>{const f=byId(id); return `${f?f.name:id} (Wikipedia) — ${d.extract.slice(0,180)}…`}).join(' ')} ${fandomEntries.map(([id,c])=>{const f=byId(id); return `${f?f.name:id} (Fandom canon wiki) — ${c.fandom.extract.slice(0,180)}…`}).join(' ')} Research extracts are context for character, not new powers.`:`No live research could be fetched for this battle, so this episode uses only the in-game profiles. It does not invent researched feats it did not find.`;
-  const canonStatus=[selected[0],selected[1]].map(id=>{const f=byId(id); const c=canonResearch[id]||{}; return `${f.name}: Wikipedia ${c.wiki?'✅ found':'❌ no data'}; Fandom ${c.fandom?'✅ found':'❌ no data'}`}).join(' | ');
+  // Research paragraph: only claim what was actually found, per fighter, per source.
+  // Fandom is a fan-run wiki, never official canon, and a failed fetch is never "found".
+  const researchLines=[];
+  [a,f2].forEach(f=>{
+    const c=(typeof canonResearch!=='undefined'?canonResearch[f.id]:null)||{};
+    const w=researchIntel[f.id];
+    if(w) researchLines.push(`${f.name} (Wikipedia) — ${w.extract.slice(0,180)}…`);
+    else if(c.wiki) researchLines.push(`${f.name} (Wikipedia) — ${c.wiki.extract.slice(0,180)}…`);
+    if(c.fandom) researchLines.push(`${f.name} (fan-run Fandom wiki, not official canon) — ${c.fandom.extract.slice(0,180)}…`);
+  });
+  const researchPara=researchLines.length?`Live research, fetched automatically when each fighter was picked, found this context: ${researchLines.join(' ')} Research extracts are context for character, not new powers, and no extract adds a power to the combat engine.`:`No live research could be fetched for this battle, so this episode uses only the in-game profiles. It does not invent researched feats it did not find.`;
+  const canonStatus=[a,f2].map(f=>{const c=(typeof canonResearch!=='undefined'?canonResearch[f.id]:null)||{}; return `${f.name}: Wikipedia ${c.wiki?'✅ found':'❌ no data'}; Fan-run Fandom wiki ${c.fandom?'✅ found':'❌ no data'}`}).join(' | ');
+  const wikiCount=[a,f2].filter(f=>{const c=(typeof canonResearch!=='undefined'?canonResearch[f.id]:null)||{}; return !!c.wiki || !!researchIntel[f.id];}).length;
+  const fandomCount=[a,f2].filter(f=>{const c=(typeof canonResearch!=='undefined'?canonResearch[f.id]:null)||{}; return !!c.fandom;}).length;
+  const researchSummary=`Research for this battle — Wikipedia: ${wikiCount}/2 found, Fan-run Fandom wiki: ${fandomCount}/2 found. The two sources are counted separately; a failed source is never counted as found.`;
   const videoNotes=videoNotesText();
   const videoPara=videoNotes?`Video-inspired notes (user-pasted, context only — this text did not grant powers or change stats): ${videoNotes}`:'No video-inspired notes were pasted for this battle. This is an Original Death Battle (Mode A).';
-  const introF=f=>`${f.name} (${f.variant}, ${f.fr}, ${f.cat}) fights as ${f.style}. Personality: ${f.pers}. Signature: ${f.sig}. Powers: ${(POWERS[f.id]||[]).join(', ')||f.sig}. ${f.trans?`Transformation: ${f.trans}, triggering at or below 45% HP.`:`No transformation in this build.`} Weakness: ${f.weak}. Notable feat (context, not a stat): ${f.feat}. Battle stats for this version: HP ${f.maxHp}, ATK ${f.atk}, DEF ${f.def}, speed ${f.sp}, tier ${f.tier}. <span class="dia">${f.name}: "${(DIALOGUE[f.pers]||[''])[0]}"</span>`;
+  const actualPowers=f=>{let ps=(POWERS[f.id]||[]).slice(); if(f.variantId==='v2' && V2POWER[f.id]) ps=[V2POWER[f.id],...ps.slice(1)]; return ps;};
+  const introF=(f,opp)=>`${f.name} (${f.variant}, ${f.fr}, ${f.cat}) fights as ${f.style}. Personality: ${f.pers}. Signature: ${f.sig}. Powers actually used in this build for this version: ${actualPowers(f).join(', ')||f.sig}.${f.trans?` Transformation: ${f.trans}, triggering at or below 45% HP${TRANSSIG[f.id]?`, transformed signature: ${TRANSSIG[f.id]}`:''}.`:` No transformation in this build.`} Weakness: ${f.weak}. Notable feat (context, not a stat): ${f.feat}. Final battle stats for this version, at the start of the fight after battlefield and any research bonus (before any transformation bonus): HP ${f.startHp||f.maxHp}, ATK ${f.startAtk||f.atk}, DEF ${f.startDef||f.def}, speed ${f.sp}, tier ${f.tier}${f.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}. Battlefield effect included: ${b.battlefield.name} ATK ${b.battlefield.atk>=0?'+':''}${b.battlefield.atk}, DEF ${b.battlefield.def>=0?'+':''}${b.battlefield.def}. <span class="dia">${f.name}: "${dialogueFor(f,opp,0,'intro')}"</span>`;
   const relPara=(typeof relationshipPara==='function'?relationshipPara(b):'');
   const analysis=generateAnalysis(a,f2);
   const firstRounds=rounds.slice(0,2), lastRounds=rounds.slice(-2), midRounds=rounds.slice(2,-2);
-  // Turning point: first transformation, else first knockout/incapacitation, else biggest single-hit round.
-  let turningText='';
+  // Turning point: only claim what actually happened, with its real round/ability/HP.
   const firstTrans=b.events.find(e=>e.type==='transform');
-  const firstFinish=b.events.find(e=>e.type==='knockout'||e.type==='incapacitated');
-  if(firstTrans) turningText=`The turning point is real, not declared: in round ${firstTrans.round}, ${firstTrans.actor} is pushed to or below 45% HP and becomes ${firstTrans.detail}. Power, reach and choices change from that moment, and the opponent must adapt or lose the initiative.`;
-  else if(firstFinish) turningText=`The turning point is the finish itself: in round ${firstFinish.round}, ${firstFinish.actor} ends ${firstFinish.target}'s fight, and everything before it — injuries, stamina, failed defences — leads to that moment.`;
-  else turningText=`There is no single transformation or finish to point to. The turning point is cumulative: stamina drains, injuries accumulate, and the fighter who manages the later rounds better takes control.`;
+  const finalFinish=b.events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0];
+  const attacks=b.events.filter(e=>e.type==='attack'&&!e.blocked);
+  const biggestHit=attacks.slice().sort((x,y)=>y.damage-x.damage)[0];
+  let turningText='';
+  if(firstTrans && (!finalFinish || firstTrans.round < finalFinish.round)){
+    turningText=`The turning point is real, not declared: in round ${firstTrans.round}, ${firstTrans.actor} is at ${firstTrans.transformHp}/${firstTrans.transformMax} HP — at or below 45% — and becomes ${firstTrans.detail}. Power, reach and choices change from that moment, and the opponent must adapt or lose the initiative.`;
+  } else if(firstTrans && finalFinish && firstTrans.round===finalFinish.round){
+    turningText=`There is no separate turning point before the finish: ${firstTrans.actor} becomes ${firstTrans.detail} in round ${firstTrans.round}, the same round the fight ends, so the transformation came too late to reshape the fight on its own.`;
+  } else if(biggestHit && (!finalFinish || biggestHit.round < finalFinish.round)){
+    turningText=`No transformation reshaped this fight. The turning point is the heaviest clean blow before the finish: in round ${biggestHit.round}, ${biggestHit.actor} lands ${biggestHit.ability} on ${biggestHit.target} for ${biggestHit.damage} damage, leaving ${biggestHit.target} at ${biggestHit.targetHp}/${biggestHit.targetMax} HP. After that blow, the balance of the fight visibly shifts.`;
+  } else if(finalFinish){
+    turningText=`The turning point is cumulative, not a single declared moment: stamina drains, injuries accumulate, and the fighter who manages the later rounds better takes control, until the finish in round ${finalFinish.round}.`;
+  } else {
+    turningText=`There is no single transformation or finish to point to. The turning point is cumulative: stamina drains, injuries accumulate, and the fighter who manages the later rounds better takes control.`;
+  }
   const ch1=chapter('Chapter I — The Contenders',[
     `At ${b.battlefield.name}, two fighters stand alone. ${b.battlefield.desc} There is no team to hide behind and no ally to rescue anyone. This is a death battle: one fighter, one opponent, one verdict.`,
-    researchPara, `Canon source status for this battle: ${canonStatus}. A failed fetch is shown as no data, never as verified research.`, relPara, videoPara,
-    `Fighter A: ${introF(a)}`, `Fighter B: ${introF(f2)}`,
+    researchPara, researchSummary, `Canon source status for this battle: ${canonStatus}. A failed fetch is shown as no data, never as verified research. Fandom extracts are from fan-run wikis, not official canon.`, relPara, videoPara,
+    `Fighter A: ${introF(a,f2)}`, `Fighter B: ${introF(f2,a)}`,
     `Dialogue in this episode is written in-character for this battle. It is not quoted canon dialogue. What is canon here is the set of powers, forms, variants and weaknesses each fighter brings — and the result the simulation actually produces.`
   ].filter(Boolean));
   const ch2=chapter('Chapter II — The Comparison / Analysis',[analysis.html]);
   const ch3=chapter('Chapter III — The First Exchange', firstRounds.length?firstRounds.map(r=>sceneForRoundV7(r,byRound[r])):[`The opening exchanges are cautious, then suddenly not. Each fighter tests range, speed and nerve, and learns one true thing about an opponent that will matter later.`]);
-  const ch4=chapter('Chapter IV — The Turning Point',[turningText].concat(midRounds.length?midRounds.slice(0,4).map(r=>sceneForRoundV7(r,byRound[r])):[]));
-  const finalFinish=b.events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0];
+  // Mid rounds: show up to 4 scenes, then summarise any omitted rounds from real events (never invent).
+  let midParas=midRounds.slice(0,4).map(r=>sceneForRoundV7(r,byRound[r]));
+  if(midRounds.length>4){
+    const omitted=midRounds.slice(4);
+    const omitEvents=omitted.flatMap(r=>byRound[r]);
+    const omitDmg=omitEvents.filter(e=>e.type==='attack'&&!e.blocked).reduce((s,e)=>s+e.damage,0);
+    const omitTrans=omitEvents.filter(e=>e.type==='transform').map(e=>`${e.actor} became ${e.detail} in round ${e.round}`).join('; ');
+    midParas.push(`Rounds ${omitted[0]}–${omitted[omitted.length-1]} continue in the same pattern: ${omitDmg} total unblocked damage is recorded in the breakdown, and ${omitTrans||'no further transformations occur in those rounds'}. The scenes above and the final rounds below are the ones narrated in full; nothing in the omitted rounds is invented here.`);
+  }
+  const ch4=chapter('Chapter IV — The Turning Point',[turningText].concat(midParas));
   const ch5paras=lastRounds.map(r=>sceneForRoundV7(r,byRound[r]));
-  if(finalFinish) ch5paras.push(`The decisive moment is not a narrator declaring a winner. It is ${finalFinish.actor} landing the blow that ${finalFinish.target} cannot answer, after everything that came before — the injuries, the failed defences, the transformations, the choices.`);
+  if(finalFinish){
+    const killingAttack=[...b.events].reverse().find(e=>e.type==='attack'&&e.actor===finalFinish.actor&&e.target===finalFinish.target);
+    if(killingAttack) ch5paras.push(`The decisive moment is ${finalFinish.actor}'s ${killingAttack.ability} in round ${killingAttack.round}, dealing ${killingAttack.damage} damage and leaving ${finalFinish.target} at ${killingAttack.targetHp}/${killingAttack.targetMax} HP — the blow ${finalFinish.target} cannot answer.`);
+    else ch5paras.push(`The decisive moment is ${finalFinish.actor} finishing ${finalFinish.target} in round ${finalFinish.round}, after everything that came before — the injuries, the failed defences, the transformations, the choices.`);
+  } else {
+    ch5paras.push(`No final blow came in this fight: both fighters were still standing when the round cap was reached, so Chapter VI does not invent a finish.`);
+  }
   const ch5=chapter('Chapter V — The Final Clash',ch5paras.length?ch5paras:[`The final rounds are fought at the edge of endurance, with neither fighter willing to give the other a clean opening.`]);
   const topDamage={}; b.events.forEach(e=>{if(e.type==='attack'&&!e.blocked) topDamage[e.actor]=(topDamage[e.actor]||0)+e.damage;});
   const topList=Object.entries(topDamage).sort((x,y)=>y[1]-x[1]).map(([n,d])=>`${n} dealt ${d} damage`).join('; ')||'No unblocked damage was recorded.';
   const transList=b.events.filter(e=>e.type==='transform').map(e=>`${e.actor} became ${e.detail} in round ${e.round}`).join('; ')||'No transformations occurred.';
+  const blockedCount={}; b.events.forEach(e=>{if(e.type==='attack'&&e.blocked) blockedCount[e.target]=(blockedCount[e.target]||0)+1;});
+  const blockedNote=Object.entries(blockedCount).map(([n,c])=>`${n} blocked ${c} attack(s)`).join('; ');
+  const winnerBiggest=biggestHit && b.winner!=='Stalemate' && biggestHit.actor===b.winner ? ` The winner's heaviest clean blow was ${biggestHit.ability} in round ${biggestHit.round} for ${biggestHit.damage} damage.` : (biggestHit ? ` The heaviest clean blow in the fight was ${biggestHit.actor}'s ${biggestHit.ability} in round ${biggestHit.round} for ${biggestHit.damage} damage.` : '');
+  const studiedNote=b.events.some(e=>e.reason&&e.reason.includes('studied weakness')) ? ` A studied-weakness strike (a strategist studying first, then hitting the weakness they found) is recorded in the breakdown.` : '';
   const ch6=chapter('Chapter VI — The Verdict', b.stalemate?[
     `Verdict: Stalemate — no death. ${a.name} and ${f2.name} both survived to the round cap on ${b.battlefield.name}.`,
     `Victory condition: ${b.victoryCondition}. No killing blow is invented here, because the simulation did not produce one.`,
-    `Why no one won: ${topList}. Transformations: ${transList}. Battlefield destruction: ${b.destruction||0}%.`,
+    `Why no one won: ${topList}. Transformations: ${transList}. Battlefield destruction: ${b.destruction||0}%.${blockedNote?' Blocked attacks: '+blockedNote+'.':''}`,
     `This verdict follows the death rules exactly: a win requires death, incapacitation lasting the rest of the fight, or battlefield removal with no way back. None of those happened, so the honest verdict is that neither fighter proved they could finish the other in this fight.`
   ]:[
     `Verdict: ${b.winner} wins. ${b.loserFighter?b.loserFighter.name:''} is ${b.victoryCondition && b.victoryCondition.includes('Incapacitation')?'incapacitated and cannot continue':'dead (HP 0)'} on ${b.battlefield.name}.`,
     `Victory condition: ${b.victoryCondition}.`,
-    `Why ${b.winner} prevailed: ${topList}. Transformations: ${transList}. Battlefield destruction: ${b.destruction||0}%.`,
-    `The decisive factors were the abilities actually used, the transformations actually triggered, the weaknesses actually exploited, and the stamina and injuries actually recorded — not a power invented for the ending. ${b.winner}'s win conditions from Chapter II were tested in combat, and the recorded events show which ones held.`,
+    `Why ${b.winner} prevailed: ${topList}. Transformations: ${transList}. Battlefield destruction: ${b.destruction||0}%.${blockedNote?' Blocked attacks: '+blockedNote+'.':''}${winnerBiggest}${studiedNote}`,
+    `The decisive factors above are taken only from abilities actually used, transformations actually triggered, and damage actually recorded — not a power invented for the ending. ${b.winner}'s win conditions from Chapter II were tested in combat, and the recorded events show which ones held.`,
     analysis.uncertain?`The pre-battle analysis called this matchup genuinely close. That uncertainty is part of the verdict: the simulation, not the preview, decided it.`:`The pre-battle analysis gave one fighter a clearer edge, and the simulation confirmed it through the events above — but the verdict still rests on those events, not on the preview alone.`,
     ytNote?`Research note from this battle, kept as context only (did not add powers): ${ytNote}`:`No YouTube research note was saved for this battle.`
   ]);
@@ -837,6 +939,8 @@ document.getElementById('search-input').addEventListener('input',e=>{searchTerm=
 document.getElementById('battlefield-select').addEventListener('change',renderBattlefields);
 try{JSON.parse(localStorage.getItem('warroom_custom')||'[]').forEach(c=>{if(!ROSTER.find(x=>x.id===c.f.id)){ROSTER.push(c.f); if(c.powers) POWERS[c.f.id]=c.powers.slice(0,3);}})}catch(e){}
 renderChips(); renderRoster(); renderHistory(); renderChannels(); if(typeof updateOnlineStatus==='function'){updateOnlineStatus(); window.addEventListener('online',updateOnlineStatus); window.addEventListener('offline',updateOnlineStatus);} if(typeof updateFileWarning==='function') updateFileWarning(); if(typeof updateGeminiStatus==='function') updateGeminiStatus();
+// Fully automatic research: connection tests run on load, no tap required. Retest buttons remain optional.
+if(typeof testConnections==='function'){ try{ testConnections(); }catch(e){} }
 </script>
 </body>
 </html>
