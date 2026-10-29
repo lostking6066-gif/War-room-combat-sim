@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v3 — 5v5 Combat Sim, Story Engine &amp; History</title>
+<title>WAR-ROOM v9 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -59,17 +59,17 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v8</h1><span>5v5 COMBAT SIM • FIVE AI BRAINS • PROPERLY CONNECTED</span></div><div><span class="badge" id="online-status">● ONLINE</span> <span class="badge" id="ai-status">AI RESEARCH: STANDBY</span></div></header>
+<header><div><h1>WAR-ROOM v9</h1><span>1V1 DEATH BATTLES • FOUR AI BRAINS • PROPERLY CONNECTED</span></div><div><span class="badge" id="online-status">● ONLINE</span> <span class="badge" id="ai-status">AI RESEARCH: STANDBY</span></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
 <input id="search-input" placeholder="Search by name, franchise, or alias — try Goku, Batman, Link...">
 <div class="chips" id="cat-chips"></div>
-<p class="note">This build ships 24 playable fighters across 6 categories. The blueprint target is 100 per category long-term — that is a target, not a claim. Each card uses an emoji fallback portrait so no image ever breaks. Real artwork is not included.</p>
+<p class="note">This build ships 26 playable fighters across 6 categories. The blueprint target is 100 per category long-term — that is a target, not a claim. The roster is NOT 600 fighters; do not treat the target as implemented. Each card uses an emoji fallback portrait so no image ever breaks. Real artwork is not included.</p>
 </div>
 <div class="prep">
 <div class="panel"><h2>Combat Roster <span id="roster-count" style="font-size:.8rem;color:var(--dim)"></span></h2><div class="grid" id="fighter-pool"></div></div>
-<div class="panel"><h2>2 — Alpha Squad (pick 5)</h2><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
+<div class="panel"><h2>2 — Death Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. There is no AI team in v9: both fighters are chosen by you.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
 <label style="font-size:.85rem">Battlefield</label><select id="battlefield-select"></select><p class="note" id="battlefield-desc"></p>
 <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn yel" onclick="triggerOnlineResearch()" style="flex:1">Run Live Research</button><button class="btn" id="review-btn" disabled style="flex:1">Review Teams →</button></div>
 <div id="research-intel" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Live research intel will appear here. Research is optional. Without internet it falls back to local data and gives no bonus.</div>
@@ -94,13 +94,26 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 <div id="setup-review" style="display:none"></div>
 </div>
 </div>
+<div class="panel"><h2>Mode B — Video-Inspired Battle (optional, context only)</h2>
+<p class="note">Mode A (default) is an Original Death Battle, made from the game's own profiles and combat engine. Mode B is different: paste a transcript or notes from a video you watched below. That text is shown as "Video-inspired notes" in Chapters I–II only. It does NOT grant new powers, change stats, or replace the simulation. The narration in v9 is always original — it never copies another creator's script.</p>
+<p class="note"><b>Honest limit:</b> a YouTube link alone does not let this browser file read a video's audio or captions automatically. That would require a YouTube Data API key. Use whatever transcript or notes you can actually access and paste here.</p>
+<label style="font-size:.85rem">Paste transcript or notes (optional)</label>
+<textarea id="video-notes" placeholder="Paste transcript excerpts or notes here, e.g. which versions were discussed, feats mentioned, arguments made..." style="width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px;min-height:80px"></textarea>
+<p class="note">Video-inspired notes are context only. They do not add powers, forms, or stats.</p>
+</div>
+<div class="panel"><h2>Death Rules — what counts as a win</h2>
+<p class="note"><b>Victory is by death</b> (HP reaches 0), <b>or by incapacitation lasting the rest of the fight</b>, <b>or by battlefield removal with no way back</b>. The exact victory condition is stated in the results and in Chapter VI.</p>
+<p class="note"><b>Regeneration can heal, but it does NOT revive after HP 0.</b> A fighter who is knocked out stays knocked out — no dead fighter acts again, and regeneration only heals a fighter who is still alive.</p>
+<p class="note"><b>No invented killing blow:</b> if the battle hits its round cap with both fighters still alive and neither able to kill or incapacitate the other, the result is a <b>stalemate / no-death verdict</b>, explained in Chapter VI — not a fake finish.</p>
+<p class="note"><b>Battlefield removal:</b> removal alone does not count unless the opponent cannot return. No power in the current powersets permanently removes an opponent from the battlefield, so v9 will not claim a BFR victory it did not simulate.</p>
+</div>
 <div class="panel"><h2>Add a Custom Fighter (grows the roster without inventing canon)</h2><p class="note">Use this for original fighters, or for a version of a real character you have researched yourself. Custom fighters are saved on this device only.</p><input id="custom-name" placeholder="Name"><input id="custom-fr" placeholder="Franchise / universe" style="margin-top:6px"><select id="custom-cat" style="margin-top:6px"><option>Anime</option><option>Comics</option><option>Video Games</option><option>Movies &amp; TV</option><option>Animation</option><option>Fantasy &amp; Sci-Fi</option></select><input id="custom-style" placeholder="Fighting style" style="margin-top:6px"><input id="custom-powers" placeholder="Powers, comma-separated, e.g. Ki Blast, Dragon Fist" style="margin-top:6px"><button class="btn small" onclick="addCustomFighter()" style="margin-top:8px">Add custom fighter</button></div>
-<div class="panel"><h2>WAR-ROOM AI — Five Connected Brains (rule-based, no paid API)</h2>
-<p class="note"><b>1. Combat Brain:</b> tier scaling, counters, stamina, battlefield destruction — a street-level fighter cannot routinely hurt a cosmic foe by luck alone.<br>
-<b>2. Character Brain:</b> personality decisions — Batman studies first, Goku holds back to test a foe, Vegeta's pride seeks the strongest, protective fighters shield allies, humorous fighters are unpredictable.<br>
-<b>3. Knowledge Brain:</b> identity, continuity, powers, feats, limits, weaknesses, transformations, relationships — plus Wikipedia + Fandom research, shown per source.<br>
-<b>4. Story Brain:</b> turns recorded events into 5-chapter scenes, using tactics and reasons, not just attack names.<br>
-<b>5. Continuity Brain:</b> checks the battle before the story is shown — dead fighters must not act, powers must belong to that version, transformations must meet their trigger, winner must match the record.</p>
+<div class="panel"><h2>WAR-ROOM AI — Four Connected Brains for 1v1 (rule-based, no paid API)</h2>
+<p class="note"><b>1. Combat Brain:</b> tier scaling, counters, stamina, battlefield destruction, transformations at or below 45% HP — a street-level fighter cannot routinely hurt a cosmic foe by luck alone.<br>
+<b>2. Character Brain:</b> personality decisions — Batman studies first, Goku holds back to test a foe, Vegeta's pride seeks the strongest opponent, humorous fighters are unpredictable. In 1v1 there is no ally to protect, so protective shielding cannot trigger.<br>
+<b>3. Knowledge Brain + Analysis Brain:</b> identity, continuity, powers, feats, limits, weaknesses, transformations, relationships — plus Wikipedia + Fandom research, shown per source — and a head-to-head comparison of strength, speed, durability, abilities, experience, transformations, weaknesses and win conditions, with an explicit uncertainty note when a matchup is close.<br>
+<b>4. Narrator Brain:</b> turns the analysis and the recorded events into a 6-chapter episode (Contenders, Comparison, First Exchange, Turning Point, Final Clash, Verdict), using tactics and reasons, not just attack names.<br>
+<b>Continuity check (adapted to 1v1):</b> checks the battle before the episode is shown — a dead or incapacitated fighter must not act, powers must belong to that version, transformations must meet their trigger, and the winner must match the survivor / stalemate record.</p>
 <p class="note">Trade-off, stated plainly: this is a sophisticated rule system, not a language model. It can calculate, decide, and narrate from rules reliably, but it cannot write unlimited original prose like an LLM. That last step would need a local open model or a free/paid inference service, which v7 does not require.</p></div>
 <div class="panel"><h2>Internet Connection — Properly Connected</h2>
 <p class="note" id="file-warning"></p>
@@ -117,15 +130,15 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 </section>
 
 <section id="battle-screen" class="screen">
-<div class="arena"><div><div class="teams"><div class="col"><h3>Alpha Squad</h3><div id="alpha-combatants"></div></div><div class="col enemy"><h3>Adversaries</h3><div id="beta-combatants"></div></div></div></div>
+<div class="arena"><div><div class="teams"><div class="col"><h3>Fighter A</h3><div id="alpha-combatants"></div></div><div class="col enemy"><h3>Fighter B</h3><div id="beta-combatants"></div></div></div></div>
 <div class="panel" style="height:auto"><h2>Live Battle Feed</h2><div class="log" id="battle-log"></div><button class="btn" id="show-results-btn" style="display:none;margin-top:10px">Read the Story →</button></div></div>
 </section>
 
 <section id="results-screen" class="screen">
 <div class="panel"><h2 id="result-title">RESULT</h2><p id="result-desc" class="note" style="font-size:.9rem"></p><p id="consistency-note" class="note"></p></div>
-<div class="panel story"><h2>Cinematic Story — 5 Chapters</h2><div id="story-output"></div></div>
+<div class="panel story"><h2>Death Battle Episode — 6 Chapters (Narrator Style C)</h2><p class="note">Style C: analytical comparison first, then a cinematic battle story, then a verdict. The episode is built only from the recorded battle events and the pre-battle analysis. Dialogue is written in-character for this battle, not quoted canon.</p><div id="story-output"></div></div>
 <div class="panel story"><h2>AI Story — Optional, Online (draft, not the verified story)</h2>
-<p class="note">The 5-chapter story above is the verified one — it is built only from recorded events and checked by the Continuity Brain. This AI version is an extra draft. It may invent details, so always check it against the breakdown above. If the AI service is down or rate-limited, this panel will say so and the verified story still works.</p>
+<p class="note">The 6-chapter episode above is the verified one — it is built only from recorded events and checked by the Continuity Brain. This AI version is an extra draft. It may invent details, so always check it against the breakdown above. If the AI service is down or rate-limited, this panel will say so and the verified story still works.</p>
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" onclick="generateAIStory('pollinations')">Generate AI story — free public service, no key</button><button class="btn small" onclick="generateAIStory('gemini')">Generate AI story — with my saved Gemini key</button></div>
 <div id="ai-story-output" class="note" style="margin-top:10px;line-height:1.7">No AI story generated yet.</div></div>
 <div class="panel"><h2>Combat Breakdown (numbers live here, not in the story)</h2><ul class="break" id="breakdown-output"></ul></div>
@@ -241,15 +254,16 @@ function renderRoster(){
 function setVariant(id,v){selectedVariants[id]=v;renderRoster()}
 function toggleFighter(id){
   const i=selected.indexOf(id);
-  if(i>-1) selected.splice(i,1); else if(selected.length<5) selected.push(id); else {alert('Pick exactly 5. Remove one first.');return}
+  if(i>-1) selected.splice(i,1); else if(selected.length<2) selected.push(id); else {alert('Pick exactly 2 — Fighter A and Fighter B. Remove one first.');return}
   renderRoster();
 }
 function renderSlots(){
   const el=document.getElementById('alpha-squad-slots'); el.innerHTML='';
-  for(let i=0;i<5;i++){const id=selected[i]; const f=id?byId(id):null; const v=f?variantOf(f):null;
-    el.innerHTML+=f?`<div class="slot filled"><span>${f.icon} ${esc(f.name)} <small>(${esc(v.label)})</small></span><span>ATK ${f.atk+v.atk} • HP ${f.hp+v.hp}</span></div>`:`<div class="slot"><span>Slot ${i+1} (Empty)</span></div>`;}
-  document.getElementById('roster-count').innerText=`${selected.length}/5 Selected`;
-  document.getElementById('review-btn').disabled=selected.length!==5;
+  const labels=['Fighter A','Fighter B'];
+  for(let i=0;i<2;i++){const id=selected[i]; const f=id?byId(id):null; const v=f?variantOf(f):null;
+    el.innerHTML+=f?`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(v.label)})</small></span><span>ATK ${f.atk+v.atk} • HP ${f.hp+v.hp}</span></div>`:`<div class="slot"><span>${labels[i]} (Empty — pick a fighter)</span></div>`;}
+  document.getElementById('roster-count').innerText=`${selected.length}/2 Selected`;
+  document.getElementById('review-btn').disabled=selected.length!==2;
   renderBattlefields(); renderYT(); renderChannels();
 }
 function renderBattlefields(){
@@ -298,16 +312,16 @@ async function triggerOnlineResearch(){
 
 /* ============ TEAM REVIEW & COMBAT ENGINE ============ */
 document.getElementById('review-btn').onclick=async ()=>{
+  if(selected.length!==2){alert('Pick exactly 2 fighters first — Fighter A and Fighter B.');return}
   const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
-  const pool=ROSTER.filter(f=>!selected.includes(f.id));
-  aiTeam=[];
-  while(aiTeam.length<5 && pool.length){const i=Math.floor(Math.random()*pool.length); const f=pool.splice(i,1)[0]; selectedVariants[f.id]=selectedVariants[f.id]||(Math.random()<0.5?'base':'v2'); aiTeam.push(f.id);}
-  const teamHtml=(ids,title)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><span>${esc(f.fr)}</span></div>`}).join('');
+  const teamHtml=(ids,title)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><span>${esc(f.fr)} • ATK ${f.atk+v.atk} • HP ${f.hp+v.hp}</span></div>`}).join('');
+  const aInst=makeBattleInstance(byId(selected[0]),bf); const bInst=makeBattleInstance(byId(selected[1]),bf);
+  const analysis=generateAnalysis(aInst,bInst);
   document.getElementById('setup-review').style.display='block';
-  document.getElementById('setup-review').innerHTML=teamHtml(selected,'Your Alpha Squad')+teamHtml(aiTeam,'AI Adversaries — review before you start')+`<p class="note">Battlefield: ${bf.name}. ${bf.desc}</p><p class="note" id="auto-research-note">Auto-researching both teams from Wikipedia…</p><button class="btn mag" style="width:100%" onclick="startBattle()">Start Battle on ${esc(bf.name)} →</button>`;
-  // Automatic research: the game fetches Wikipedia itself for both teams, no manual button needed.
-  const live=await fetchResearchFor([...selected,...aiTeam]);
-  const note=document.getElementById('auto-research-note'); if(note) note.innerText=live>0?`Auto-research complete: ${live} fighters found on Wikipedia. Researched fighters get +10 ATK / +60 HP, and their summaries feed the story introduction.`:`Auto-research found no live Wikipedia data (offline or blocked). The battle will use local profiles only, and the story will say so — it will not invent researched feats.`;
+  document.getElementById('setup-review').innerHTML=teamHtml([selected[0]],'Fighter A')+teamHtml([selected[1]],'Fighter B')+`<p class="note">Battlefield: ${bf.name}. ${bf.desc}</p><div class="panel" style="margin-top:8px"><h3 style="color:var(--cyan)">Analysis preview — Chapter II in brief</h3>${analysis.html}</div><p class="note" id="auto-research-note">Auto-researching both fighters from Wikipedia + Fandom…</p><button class="btn mag" style="width:100%" onclick="startBattle()">Start Death Battle on ${esc(bf.name)} →</button>`;
+  const live=await fetchResearchFor([...selected]);
+  const note=document.getElementById('auto-research-note'); if(note) note.innerText=live>0?`Auto-research complete: ${live} of 2 fighters found on Wikipedia/Fandom. Researched fighters get +10 ATK / +60 HP in battle (a research bonus, not a new power), and their summaries feed Chapter I.`:`Auto-research found no live Wikipedia/Fandom data (offline or blocked). The battle will use local profiles only, and the episode will say so — it will not invent researched feats.`;
+  renderCanonResults(selected);
 };
 function chooseTarget(actor, enemies){
   const alive=enemies.filter(e=>e.alive);
@@ -318,17 +332,26 @@ function chooseTarget(actor, enemies){
   if(actor.pers==='protective'){const hurt=alive.sort((a,b)=>a.currentHp-b.currentHp)[0]; return hurt;}
   return alive[Math.floor(Math.random()*alive.length)];
 }
+function makeBattleInstance(f,bf){
+  const inst=instanceOf(f); inst.atk+=bf.atk; inst.def+=bf.def;
+  const canonOk=(typeof canonResearch!=='undefined'&&canonResearch[f.id]&&(canonResearch[f.id].wiki||canonResearch[f.id].fandom));
+  if(researchIntel[f.id]||canonOk){inst.atk+=10; inst.maxHp+=60; inst.currentHp+=60; inst.researched=true;} else inst.researched=false;
+  return inst;
+}
 function simulateBattle(){
   const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
-  let alpha=selected.map(id=>{const inst=instanceOf(byId(id)); inst.atk+=bf.atk; inst.def+=bf.def; const canonOk=(typeof canonResearch!=='undefined'&&canonResearch[id]&&(canonResearch[id].wiki||canonResearch[id].fandom)); if(researchIntel[id]||canonOk){inst.atk+=10; inst.maxHp+=60; inst.currentHp+=60;} return inst;});
-  let beta=aiTeam.map(id=>{const inst=instanceOf(byId(id)); inst.atk+=bf.atk; inst.def+=bf.def; inst.name='AI-'+inst.name; return inst;});
+  const a=makeBattleInstance(byId(selected[0]),bf);
+  const b=makeBattleInstance(byId(selected[1]),bf);
+  // 1v1: alpha=[Fighter A], beta=[Fighter B] are kept only so playback/render code still works.
+  let alpha=[a], beta=[b];
   [...alpha,...beta].forEach(f=>{f.stamina=100; f.shield=false; f.studied=false; f.nextBoost=1;});
-  const events=[]; let winner=null; let totalDamage=0;
+  const events=[]; let winner=null; let victoryCondition=null; let stalemate=false; let totalDamage=0;
   const alive=t=>t.filter(x=>x.alive);
-  for(let round=1; round<=80; round++){
-    // Regeneration is the only per-round heal implemented, and only for that trait.
+  const TIER_LEVEL={A:3,'A+':4,S:5,'S+':6,EX:7};
+  for(let round=1; round<=60; round++){
+    // Regeneration heals only a fighter who is still alive. It NEVER revives after HP 0.
     [...alpha,...beta].forEach(f=>{if(f.alive && f.trait==='regen' && f.currentHp<f.maxHp){const h=Math.min(40,f.maxHp-f.currentHp); f.currentHp+=h; events.push({round,type:'heal',actor:f.name,detail:'regenerates',heal:h});}});
-    const order=[...alive(alpha),...alive(beta)].sort((a,b)=>b.sp-a.sp);
+    const order=[...alive(alpha),...alive(beta)].sort((x,y)=>y.sp-x.sp);
     for(const actor of order){
       if(!actor.alive) continue;
       const foes=alpha.includes(actor)?beta:alpha;
@@ -337,16 +360,12 @@ function simulateBattle(){
         actor.transformed=true; actor.atk+=actor.tAtk; actor.def+=actor.tDef;
         events.push({round,type:'transform',actor:actor.name,detail:actor.trans,transformHp:actor.currentHp,transformMax:actor.maxHp});
       }
-      // Character Brain: personality decisions, recorded with a reason for the Story Brain.
       if(actor.pers==='strategist' && !actor.studied){
         actor.studied=true; actor.nextBoost=1.25; actor.actions++;
         events.push({round,type:'study',actor:actor.name,detail:'studies the enemy and finds a weakness',reason:'strategist studies first'});
         continue;
       }
-      if(actor.pers==='protective'){
-        const allies=alpha.includes(actor)?alpha:beta; const hurtAlly=allies.filter(a=>a.alive&&a!==actor&&a.currentHp<a.maxHp*0.3)[0];
-        if(hurtAlly && !hurtAlly.shield && Math.random()<0.4){hurtAlly.shield=true; actor.actions++; events.push({round,type:'protect',actor:actor.name,target:hurtAlly.name,detail:'steps in front of an injured ally',reason:'protective shields ally'}); continue;}
-      }
+      // In 1v1 there is no ally to protect, so the protective branch cannot trigger.
       const target=chooseTarget(actor,foes); if(!target) continue;
       actor.actions++;
       const useSig=actor.actions%4===0;
@@ -356,7 +375,6 @@ function simulateBattle(){
       if(useSig){ability=(actor.transformed&&TRANSSIG[actor.id])?TRANSSIG[actor.id]:actor.sig; mult=actor.sigMult;}
       else if(powers.length){ability=powers[(actor.actions-1)%powers.length]; mult=1.25;}
       else {ability=actor.sig; mult=1.2;}
-      // No 'Basic attack' in v5: every action uses a named power from the fighter's powerset.
       let blocked=false, crit=false;
       if(target.trait==='infinity_void' && actor.tier!=='EX' && Math.random()<0.65) blocked=true;
       if(actor.trait==='prep' && actor.actions===1) crit=true;
@@ -368,8 +386,7 @@ function simulateBattle(){
         let scale=1; if(actor.trait==='serious_punch') scale=1.35+(1-actor.currentHp/actor.maxHp)*0.5;
         if(actor.nextBoost && actor.nextBoost!==1){scale*=actor.nextBoost; actor.nextBoost=1; reason=(reason?reason+'; ':'')+'striking a studied weakness';}
         dmg=Math.max(20,Math.floor((actor.atk*mult*scale-target.def*0.28)*(crit?1.5:1)));
-        // Combat Brain tier scaling: a much weaker fighter cannot routinely hurt a cosmic foe.
-        const TIER_LEVEL={A:3,'A+':4,S:5,'S+':6,EX:7}; const tierDiff=(TIER_LEVEL[target.tier]||5)-(TIER_LEVEL[actor.tier]||5);
+        const tierDiff=(TIER_LEVEL[target.tier]||5)-(TIER_LEVEL[actor.tier]||5);
         const isCounter=(actor.trait==='prep' && target.weak && target.weak.includes('Kryptonite'));
         if(tierDiff>=2 && !isCounter){dmg=Math.floor(dmg*(useSig?0.5:0.25)); reason=(reason?reason+'; ':'')+'power gap: weaker tier barely dents a far stronger foe';}
         if(target.shield){dmg=Math.floor(dmg*0.5); target.shield=false; reason=(reason?reason+'; ':'')+'ally shield absorbs part of the blow';}
@@ -379,13 +396,27 @@ function simulateBattle(){
       }
       const ev={round,type:'attack',actor:actor.name,target:target.name,ability,damage:dmg,crit,blocked,targetHp:target.currentHp,targetMax:target.maxHp,actorPers:actor.pers,reason};
       events.push(ev);
-      if(target.currentHp===0 && target.alive){target.alive=false; events.push({round,type:'knockout',actor:actor.name,target:target.name});}
+      if(target.currentHp===0 && target.alive){
+        target.alive=false; target.deathRound=round;
+        events.push({round,type:'knockout',actor:actor.name,target:target.name});
+        winner=actor.name; victoryCondition='Death (HP 0)';
+      } else if(target.currentHp>0 && target.currentHp<=target.maxHp*0.10 && target.stamina===0 && target.alive){
+        // Incapacitation: exhausted and barely standing, cannot continue the fight.
+        target.alive=false; target.incapacitated=true;
+        events.push({round,type:'incapacitated',actor:actor.name,target:target.name,detail:'incapacitated — exhausted and unable to continue'});
+        winner=actor.name; victoryCondition='Incapacitation (unable to continue)';
+      }
       if(!alive(alpha).length||!alive(beta).length) break;
     }
     if(!alive(alpha).length||!alive(beta).length) break;
   }
-  winner=alive(alpha).length?'Alpha Squad':'Adversaries';
-  return {alpha,beta,events,winner,rounds:events.length?events[events.length-1].round:0,battlefield:bf,totalDamage,destruction:Math.min(100,Math.floor(totalDamage/200))};
+  if(!winner){
+    // Round cap reached, both still alive, no death and no incapacitation: do NOT invent a killing blow.
+    stalemate=true; winner='Stalemate'; victoryCondition='Stalemate — no death (round cap reached, neither fighter could kill or incapacitate the other)';
+  }
+  const winnerFighter=stalemate?null:(alpha[0].alive?alpha[0]:beta[0]);
+  const loserFighter=stalemate?null:(alpha[0].alive?beta[0]:alpha[0]);
+  return {alpha,beta,events,winner,winnerFighter,loserFighter,victoryCondition,stalemate,rounds:events.length?events[events.length-1].round:0,battlefield:bf,totalDamage,destruction:Math.min(100,Math.floor(totalDamage/200))};
 }
 function startBattle(){
   currentBattle=simulateBattle();
@@ -419,6 +450,7 @@ function playBack(){
     else if(e.type==='study'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> studies the enemy instead of attacking — ${esc(e.detail)}.</div>`;}
     else if(e.type==='protect'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> protects ${esc(e.target)}.</div>`;}
     else if(e.type==='knockout'){log.innerHTML+=`<div><b>${esc(e.target)}</b> is knocked out.</div>`;}
+    else if(e.type==='incapacitated'){const t=all.find(x=>x.name===e.target); if(t) t.alive=false; log.innerHTML+=`<div><b>${esc(e.target)}</b> is incapacitated and cannot continue.</div>`;}
     else if(e.type==='heal'){const a=all.find(x=>x.name===e.actor); if(a) a.currentHp=Math.min(a.maxHp,a.currentHp+e.heal); log.innerHTML+=`<div>${esc(e.actor)} recovers some strength.</div>`;}
     renderCombatants(alpha,beta); log.scrollTop=log.scrollHeight;
   },550);
@@ -434,29 +466,11 @@ function narrateAttack(e){
   return e.crit?base+' The impact is far heavier than expected, and the whole battlefield seems to shudder.':base;
 }
 function chapter(title,paras){return `<h3>${title}</h3>`+paras.map(p=>`<p>${p}</p>`).join('')}
-function generateStory(b){
-  const evs=b.events; const first=evs.filter(e=>e.round<=2); const last=evs.slice(-6);
-  const middle=evs.filter(e=>e.round>2 && !last.includes(e));
-  const introTeam=(team,label)=>team.map((f,i)=>{const d=DIALOGUE[f.pers]?DIALOGUE[f.pers][i%2]:''; return `${f.name}, ${f.style}, steps forward. <span class="dia">${d}</span>`}).join(' ');
-  const survivors=t=>t.filter(f=>f.alive); const fallen=t=>t.filter(f=>!f.alive);
-  const ch1=chapter('Chapter I — The Arrival',[`The confrontation takes place at ${b.battlefield.name}. ${b.battlefield.desc} Dust, light and the weight of ten very different histories fill the air before anyone moves.`,`For Alpha Squad: ${introTeam(b.alpha,'Alpha')}`,`Against them stand the Adversaries: ${introTeam(b.beta,'Adversaries')}`,`No one here fights for the same reason. That is why the first moments matter more than the first blows.`]);
-  const ch2=chapter('Chapter II — First Contact', first.length?first.map(e=>e.type==='transform'?`${e.actor} changes form, becoming ${e.detail}, and the opposing team immediately rethinks its plan.`:e.type==='knockout'?`${e.target} is already down — an early warning that this fight will not be gentle.`:narrateAttack(e)):[`The two teams circle, test range, and exchange careful opening blows. Each fighter learns something in those first seconds that will matter later.`]);
-  const ch3paras=middle.length?middle.map(e=>e.type==='transform'?`${e.actor} is pushed to a limit and transforms into ${e.detail}. The change is not cosmetic: their speed, power and options shift, and opponents who were winning must now adapt.`:e.type==='knockout'?`${e.target} falls. The loss changes the shape of the fight, leaving teammates exposed and forcing a new plan.`:e.type==='heal'?`${e.actor} steadies and recovers, buying a moment to breathe.`:narrateAttack(e)):[`The battle grinds on, with neither side able to finish the other cleanly.`];
-  const ch3=chapter('Chapter III — Escalation and Reversals',ch3paras.slice(0,18));
-  const ch4=chapter('Chapter IV — The Decisive Clash', last.map(e=>e.type==='transform'?`${e.actor} makes a final transformation, gambling everything on a new form.`:e.type==='knockout'?`${e.target} falls, and with that fall the balance of the battle tips for good.`:e.type==='attack'?narrateAttack(e):`${e.actor} recovers, but it is too late to change the direction of the fight.`));
-  const winTeam=b.winner==='Alpha Squad'?b.alpha:b.beta; const loseTeam=b.winner==='Alpha Squad'?b.beta:b.alpha;
-  const ch5=chapter('Chapter V — The Aftermath',[
-    `${b.winner} stand victorious. ${survivors(winTeam).map(f=>f.name).join(', ')||'No one'} remain standing, while ${fallen(winTeam).map(f=>f.name).join(', ')||'none of their own'} have fallen. On the other side, ${fallen(loseTeam).map(f=>f.name).join(', ')} are down, and ${survivors(loseTeam).map(f=>f.name).join(', ')||'no one'} remain.`,
-    `The battlefield bears the marks of the fight — shattered cover, scorched ground, and the silence that follows a contest that was decided by tactics and endurance, not by a single declared blow.`,
-    `The survivors do not celebrate in the same way. A proud fighter looks for the next challenge. A disciplined fighter acknowledges a worthy opponent. A compassionate fighter checks on the fallen first. That difference is the point: the ending follows the people who fought, and the result the simulation actually produced.`
-  ]);
-  return ch1+ch2+ch3+ch4+ch5;
-}
 function consistencyCheck(b){
   const dead=new Set(); let ok=true;
   for(const e of b.events){if(e.type==='attack'||e.type==='transform'){if(dead.has(e.actor)) ok=false;} if(e.type==='knockout') dead.add(e.target);}
   const aliveAlpha=b.alpha.filter(f=>f.alive).length, aliveBeta=b.beta.filter(f=>f.alive).length;
-  if(b.winner==='Alpha Squad' && aliveAlpha===0) ok=false; if(b.winner==='Adversaries' && aliveBeta===0) ok=false;
+  if(!b.stalemate){const winAlive=b.alpha.filter(f=>f.alive).length+b.beta.filter(f=>f.alive).length; if(winAlive!==1) ok=false;}
   return ok;
 }
 function generateBreakdown(b){
@@ -468,6 +482,7 @@ function generateBreakdown(b){
     if(e.type==='study') return `<li>Round ${e.round}: ${esc(e.actor)} studies instead of attacking — ${esc(e.detail)}.</li>`;
     if(e.type==='protect') return `<li>Round ${e.round}: ${esc(e.actor)} protects ${esc(e.target)}.</li>`;
     if(e.type==='knockout') return `<li>Round ${e.round}: ${esc(e.target)} is knocked out by ${esc(e.actor)}.</li>`;
+    if(e.type==='incapacitated') return `<li>Round ${e.round}: ${esc(e.target)} is incapacitated by ${esc(e.actor)} and cannot continue.</li>`;
     return `<li>Round ${e.round}: ${esc(e.actor)} recovers ${e.heal} HP.</li>`;
   }).join('');
   return summary+list;
@@ -477,11 +492,11 @@ function showResults(){
   const b=currentBattle; if(!b) return;
   document.getElementById('battle-screen').classList.remove('active');
   document.getElementById('results-screen').classList.add('active');
-  const winTeam=b.winner==='Alpha Squad'?b.alpha:b.beta;
-  document.getElementById('result-title').innerText=b.winner==='Alpha Squad'?'MULTIVERSE SUPREMACY — Alpha Squad Wins':'SIMULATION COLLAPSE — Adversaries Win';
-  document.getElementById('result-desc').innerText=`Survivors: ${winTeam.filter(f=>f.alive).map(f=>f.name).join(', ')||'None'}. Battlefield: ${b.battlefield.name}. The story below was generated only from the recorded battle events.`;
+  const a=b.alpha[0], f2=b.beta[0];
+  document.getElementById('result-title').innerText=b.stalemate?'STALEMATE — NO DEATH':('DEATH BATTLE VERDICT — '+b.winner+' Wins');
+  document.getElementById('result-desc').innerText=b.stalemate?`${a.name} vs ${f2.name} on ${b.battlefield.name}: no death. Victory condition: ${b.victoryCondition}.`:`Winner: ${b.winner}. Loser: ${b.stalemate?'—':(b.loserFighter?b.loserFighter.name:'')}. Victory condition: ${b.victoryCondition}. Battlefield: ${b.battlefield.name}. The episode below was generated only from the recorded battle events and the pre-battle analysis.`;
   document.getElementById('consistency-note').innerText=(typeof continuityReport==='function'?continuityReport(b):'Story consistency check: '+(consistencyCheck(b)?'PASSED.':'FAILED — do not trust this story; check the breakdown.'));
-  const story=generateStoryV2(b), breakdown=generateBreakdown(b);
+  const story=generateEpisode(b), breakdown=generateBreakdown(b);
   document.getElementById('story-output').innerHTML=story;
   document.getElementById('breakdown-output').innerHTML=breakdown;
   saveBattle(b,story,breakdown);
@@ -548,32 +563,6 @@ function sceneForRound(round,evs){
     else {parts.push(powerProse(e,i)); if(i%3===0){const f=[...currentBattle.alpha,...currentBattle.beta].find(x=>x.name===e.actor); if(f&&DIALOGUE[f.pers]) parts.push(`<span class="dia">${e.actor}: "${DIALOGUE[f.pers][(e.round+i)%2]}"</span>`);}}
   });
   return parts.join(' ');
-}
-function generateStoryV2(b){
-  const byRound={}; b.events.forEach(e=>{(byRound[e.round]=byRound[e.round]||[]).push(e)});
-  const rounds=Object.keys(byRound).map(Number).sort((a,c)=>a-c);
-  const researchEntries=Object.entries(researchIntel).slice(0,3);
-  const fandomEntries=(typeof canonResearch!=='undefined'?Object.entries(canonResearch).filter(([id,c])=>c.fandom).slice(0,3):[]);
-  const researchPara=researchEntries.length||fandomEntries.length?`Live research, fetched automatically for both teams before this battle, found this context: ${researchEntries.map(([id,d])=>{const f=byId(id); return `${f?f.name:id} (Wikipedia) — ${d.extract.slice(0,180)}…`}).join(' ')} ${fandomEntries.map(([id,c])=>{const f=byId(id); return `${f?f.name:id} (Fandom canon wiki) — ${c.fandom.extract.slice(0,180)}…`}).join(' ')} The story uses that context for character, not as a licence to invent new powers.`:`No live research could be fetched for this battle, so this story uses only the in-game profiles. It does not invent researched feats it did not find.`;
-  const introTeam=team=>team.map((f,i)=>`${f.name} (${f.variant}, ${f.fr}) fights as ${f.style}. Their named powers include ${(POWERS[f.id]||[]).join(', ')||f.sig}, with ${f.sig} as their signature, ${f.trans?`and ${f.trans} as a transformation that only triggers under pressure`:`and no transformation in this build`}. <span class="dia">${f.name}: "${(DIALOGUE[f.pers]||[''])[i%2]}"</span>`).join(' ');
-  const firstRounds=rounds.slice(0,2), lastRounds=rounds.slice(-2), midRounds=rounds.slice(2,-2);
-  const relPara=(typeof relationshipPara==='function'?relationshipPara(b):'');
-  const ch1=chapter('Chapter I — The Arrival',[`At ${b.battlefield.name}, the ground itself sets the terms. ${b.battlefield.desc} This is not an arena built for fairness; it is a place that rewards the fighter who reads it fastest.`,researchPara,relPara,`Alpha Squad arrive first in spirit, if not in step: ${introTeam(b.alpha)}`,`The Adversaries answer in kind: ${introTeam(b.beta)}`,`Dialogue in this story is written in-character for this battle. It is not quoted canon dialogue. What is canon here is the set of powers, forms, variants and weaknesses each fighter brings — and the result the simulation actually produces.`].filter(Boolean));
-  const ch2=chapter('Chapter II — First Contact', firstRounds.length?firstRounds.map(r=>sceneForRoundV7(r,byRound[r])):[`The opening exchanges are cautious, then suddenly not. Each fighter tests range, speed and nerve, and learns one true thing about an opponent that will matter later.`]);
-  const ch3=chapter('Chapter III — Escalation and Reversals', midRounds.length?midRounds.slice(0,6).map(r=>sceneForRoundV7(r,byRound[r])):[`The middle of the fight is where plans break. A strategy that worked in the first minute stops working, a fighter who was winning is forced to defend, and a transformation or a desperate power changes who is in control.`]);
-  const ch4paras=lastRounds.map(r=>sceneForRoundV7(r,byRound[r]));
-  const finalKO=b.events.filter(e=>e.type==='knockout').slice(-1)[0];
-  if(finalKO) ch4paras.push(`The decisive moment is not a narrator declaring a winner. It is ${finalKO.actor} landing the blow that ${finalKO.target} cannot answer, after everything that came before — the injuries, the failed defences, the transformations, the choices. ${b.winner} earn the result because the record, round by round, leads here.`);
-  const ch4=chapter('Chapter IV — The Decisive Clash',ch4paras);
-  const winTeam=b.winner==='Alpha Squad'?b.alpha:b.beta, loseTeam=b.winner==='Alpha Squad'?b.beta:b.alpha;
-  const ch5=chapter('Chapter V — The Aftermath',[
-    `${b.winner} remain. ${winTeam.filter(f=>f.alive).map(f=>f.name).join(', ')||'No one'} are still standing; ${winTeam.filter(f=>!f.alive).map(f=>f.name).join(', ')||'none of their own'} have fallen. For the losing side, ${loseTeam.filter(f=>!f.alive).map(f=>f.name).join(', ')} are down, and ${loseTeam.filter(f=>f.alive).map(f=>f.name).join(', ')||'no one'} remain.`,
-    ytNote?`Research note from this battle, kept as context: ${ytNote}`:`No YouTube research note was saved for this battle.`,
-    `Battlefield destruction from the Combat Brain: ${b.destruction||0}% of the arena's cover and structures were damaged in the recorded fight, from the total force exchanged. That damage is why later exchanges had less cover and fewer safe places to stand.`,
-    `The aftermath is not the same for everyone. A proud fighter looks for the next challenge. A disciplined fighter bows to a worthy opponent. A compassionate fighter goes first to the fallen, not to the applause. A ruthless fighter would already be planning the next advantage. Those reactions follow the personalities established at the start — they do not rewrite the winner, the fallen, or the powers that were actually used.`,
-    `That is the story of this battle: not a list of attacks, but a chain of choices, powers, forms and injuries that could only end this way once it had unfolded this way.`
-  ]);
-  return ch1+ch2+ch3+ch4+ch5;
 }
 /* ============ V5: PORTRAITS & CUSTOM FIGHTERS ============ */
 /* Portraits: Wikipedia thumbnails where available, emoji fallback otherwise.
@@ -672,16 +661,21 @@ function validateBattle(b){
       const f=fighterByName(e.actor); if(f){const allowed=[...(POWERS[f.id]||[]),f.sig,TRANSSIG[f.id],V2POWER[f.id]].filter(Boolean); if(!allowed.includes(e.ability)) issues.push(`Unknown ability: ${e.actor} used ${e.ability}, which is not in that version's powerset.`);}
     }
     if(e.type==='transform' && e.transformHp!==undefined && e.transformMax && e.transformHp>e.transformMax*0.45) issues.push(`Transformation without trigger: ${e.actor} transformed above 45% HP.`);
-    if(e.type==='knockout') dead.add(e.target);
+    if(e.type==='knockout'||e.type==='incapacitated') dead.add(e.target);
   }
-  const aliveA=b.alpha.filter(f=>f.alive).length, aliveB=b.beta.filter(f=>f.alive).length;
-  if(b.winner==='Alpha Squad'&&aliveA===0) issues.push('Winner mismatch: Alpha Squad declared winner with no survivors.');
-  if(b.winner==='Adversaries'&&aliveB===0) issues.push('Winner mismatch: Adversaries declared winner with no survivors.');
+  if(b.stalemate){
+    if(!b.alpha[0].alive || !b.beta[0].alive) issues.push('Stalemate declared, but a fighter is not alive.');
+  } else {
+    const winF=b.alpha[0].alive?b.alpha[0]:b.beta[0];
+    if(!winF || winF.name!==b.winner) issues.push('Winner mismatch: declared winner is not the surviving fighter.');
+    const loseF=b.alpha[0].alive?b.beta[0]:b.alpha[0];
+    if(loseF && loseF.alive) issues.push('Winner mismatch: losing fighter is still alive.');
+  }
   return {passed:issues.length===0,issues};
 }
 function continuityReport(b){
   const v=validateBattle(b);
-  return v.passed?'Continuity Brain: PASSED — '+['No dead fighter acted after knockout.','All abilities belong to the fighter version used.','Transformations met their trigger.','Winner matches the surviving team.'].join(' '):'Continuity Brain: WARNINGS — '+v.issues.join(' ');
+  return v.passed?'Continuity Brain: PASSED — '+['No dead or incapacitated fighter acted after being finished.','All abilities belong to the fighter version used.','Transformations met their trigger.','Winner (or stalemate) matches the surviving fighters.'].join(' '):'Continuity Brain: WARNINGS — '+v.issues.join(' ');
 }
 /* Story Brain additions: scene handling for study/protect, and reason-aware prose. */
 const _origSceneForRound=sceneForRound;
@@ -716,9 +710,10 @@ async function testConnections(){
 }
 function aiPromptForBattle(b){
   const kos=b.events.filter(e=>e.type==='knockout').map(e=>e.actor+' knocked out '+e.target).slice(0,10).join('; ');
+  const inc=b.events.filter(e=>e.type==='incapacitated').map(e=>e.actor+' incapacitated '+e.target).join('; ');
   const trans=b.events.filter(e=>e.type==='transform').map(e=>e.actor+' transformed into '+e.detail).join('; ');
   const atks=b.events.filter(e=>e.type==='attack').slice(0,20).map(e=>e.actor+' used '+e.ability+' on '+e.target+(e.blocked?' (blocked)':'')).join('; ');
-  return `Write a short cinematic battle story in 5 short chapters: Arrival, First Contact, Escalation, Decisive Clash, Aftermath. Teams: Alpha ${b.alpha.map(f=>f.name).join(', ')} vs Adversaries ${b.beta.map(f=>f.name).join(', ')} at ${b.battlefield.name}. Winner must be ${b.winner}. Survivors: ${b.alpha.concat(b.beta).filter(f=>f.alive).map(f=>f.name).join(', ')}. Do NOT change the winner, do NOT revive knocked-out fighters, do NOT give a fighter a power they did not use here. Key events: ${atks}. Knockouts: ${kos||'none listed'}. Transformations: ${trans||'none'}. Keep dialogue in-character, not quoted canon. No damage numbers.`;
+  return `Write a short cinematic 1v1 death-battle episode in 6 short chapters: Contenders, Comparison, First Exchange, Turning Point, Final Clash, Verdict. Fighters: ${b.alpha[0].name} vs ${b.beta[0].name} at ${b.battlefield.name}. Winner must be ${b.winner}. Victory condition: ${b.victoryCondition||'unknown'}. Survivors: ${b.alpha.concat(b.beta).filter(f=>f.alive).map(f=>f.name).join(', ')||'none (stalemate)'}. Do NOT change the winner, do NOT revive knocked-out or incapacitated fighters, do NOT give a fighter a power they did not use here. Key events: ${atks}. Knockouts: ${kos||'none listed'}. Incapacitations: ${inc||'none'}. Transformations: ${trans||'none'}. Keep dialogue in-character, not quoted canon. No damage numbers.`;
 }
 async function generateAIStory(mode){
   const out=document.getElementById('ai-story-output'); if(!out) return; if(!currentBattle){out.innerText='Battle a fight first, then generate an AI story.';return}
@@ -743,6 +738,100 @@ function updateFileWarning(){
   if(location.protocol==='file:') el.innerText='⚠️ You opened this as a local file (file://). Some Android browsers block internet fetches from file://, which is why research can look broken even with internet on. Open the hosted https link for a proper connection — fetches to Wikipedia/Fandom/AI work far more reliably from https.';
   else el.innerText='✅ Opened over '+location.protocol+' — this is the proper way to run the connected version. Internet fetches should work if you are online.';
 }
+
+/* ============ V9: ANALYSIS BRAIN + 6-CHAPTER EPISODE ============ */
+function videoNotesText(){const el=document.getElementById('video-notes'); return el?(el.value||'').trim():''}
+function tierScore(t){return {A:3,'A+':4,S:5,'S+':6,EX:7}[t]||5}
+function canHarmNote(att,def){
+  const diff=tierScore(def.tier)-tierScore(att.tier);
+  const counter=(att.trait==='prep' && def.weak && def.weak.includes('Kryptonite'));
+  if(diff>=2 && !counter) return `${att.name} cannot win by ordinary attacks alone against ${def.name}: the tier gap means most blows are reduced to a fraction of their power. A credible path needs a signature, a studied weakness, a transformation, or a weakness exploit.`;
+  if(counter) return `${att.name} has a specific counter here: preparation against a Kryptonite weakness bypasses the usual tier gap against ${def.name}.`;
+  if(def.trait==='infinity_void' && att.tier!=='EX') return `${def.name}'s Infinity defence blocks many non-EX attacks outright, so ${att.name} must find a way around it rather than trading blows head-on.`;
+  return `${att.name} can harm ${def.name} with ordinary powers, though durability and defence still decide how much each hit matters.`;
+}
+function winConditionsFor(att,def){
+  const out=[];
+  out.push(`Use ${att.sig} (signature) and the power set ${(POWERS[att.id]||[]).join(', ')||'listed in the profile'} to wear down ${def.name}.`);
+  if(att.trans) out.push(`Trigger ${att.trans} at or below 45% HP for +${att.tAtk} ATK / +${att.tDef} DEF.`);
+  if(att.pers==='strategist') out.push(`Study first, then strike the studied weakness for a boosted hit.`);
+  if(def.weak) out.push(`Exploit the known limitation: ${def.weak}.`);
+  if(att.trait==='regen') out.push(`Outlast through regeneration — heal between exchanges, but remember regeneration does not revive after HP 0.`);
+  return out;
+}
+function generateAnalysis(a,b){
+  const cats=[];
+  const pick=(label,av,bv,ev)=>{const w=av===bv?'Tie':(av>bv?a.name:b.name); cats.push({label,w,ev}); return w===a.name?1:(w===b.name?-1:0)};
+  let score=0;
+  score+=pick('Strength (ATK)',a.atk,b.atk,`${a.name} ATK ${a.atk} vs ${b.name} ATK ${b.atk}.`);
+  score+=pick('Speed',a.sp,b.sp,`${a.name} speed ${a.sp} vs ${b.name} speed ${b.sp} — higher speed acts first in the engine order.`);
+  score+=pick('Durability',a.def+a.maxHp/20,b.def+b.maxHp/20,`${a.name} DEF ${a.def} / HP ${a.maxHp} vs ${b.name} DEF ${b.def} / HP ${b.maxHp}.`);
+  score+=pick('Special abilities', (POWERS[a.id]||[]).length + a.sigMult, (POWERS[b.id]||[]).length + b.sigMult, `${a.name} signature ${a.sig} (x${a.sigMult}) vs ${b.name} signature ${b.sig} (x${b.sigMult}).`);
+  score+=pick('Tier',tierScore(a.tier),tierScore(b.tier),`${a.name} tier ${a.tier} vs ${b.name} tier ${b.tier}.`);
+  score+=pick('Transformation power',a.trans?a.tAtk+a.tDef:0,b.trans?b.tAtk+b.tDef:0,`${a.name} transformation: ${a.trans||'none'} vs ${b.name} transformation: ${b.trans||'none'}.`);
+  const uncertain=Math.abs(score)<=1;
+  const html=cats.map(c=>`<p><b>${c.label}:</b> ${c.w} — ${c.ev}</p>`).join('')+
+    `<p><b>Can each fighter harm the other?</b> ${canHarmNote(a,b)} ${canHarmNote(b,a)}</p>`+
+    `<p><b>${a.name} win conditions:</b> ${winConditionsFor(a,b).join(' ')}</p>`+
+    `<p><b>${b.name} win conditions:</b> ${winConditionsFor(b,a).join(' ')}</p>`+
+    `<p><b>Uncertainty:</b> ${uncertain?'This matchup is genuinely close on the numbers above. The analysis does not manufacture false precision — the battle itself, including transformations, counters and stamina, will decide it.':'On the numbers above, one fighter has a clearer edge, but transformations, counters, stamina and a single studied or critical hit can still swing a 1v1. The verdict must follow the simulation, not this preview.'}</p>`;
+  return {html,score,uncertain,cats};
+}
+function generateEpisode(b){
+  currentBattle=b; // episode scenes read currentBattle; ensure it is set even if called standalone
+  const a=b.alpha[0], f2=b.beta[0];
+  const byRound={}; b.events.forEach(e=>{(byRound[e.round]=byRound[e.round]||[]).push(e)});
+  const rounds=Object.keys(byRound).map(Number).sort((x,y)=>x-y);
+  const researchEntries=Object.entries(researchIntel).slice(0,4);
+  const fandomEntries=(typeof canonResearch!=='undefined'?Object.entries(canonResearch).filter(([id,c])=>c.fandom).slice(0,4):[]);
+  const researchPara=researchEntries.length||fandomEntries.length?`Live research, fetched automatically for both fighters before this battle, found this context: ${researchEntries.map(([id,d])=>{const f=byId(id); return `${f?f.name:id} (Wikipedia) — ${d.extract.slice(0,180)}…`}).join(' ')} ${fandomEntries.map(([id,c])=>{const f=byId(id); return `${f?f.name:id} (Fandom canon wiki) — ${c.fandom.extract.slice(0,180)}…`}).join(' ')} Research extracts are context for character, not new powers.`:`No live research could be fetched for this battle, so this episode uses only the in-game profiles. It does not invent researched feats it did not find.`;
+  const canonStatus=[selected[0],selected[1]].map(id=>{const f=byId(id); const c=canonResearch[id]||{}; return `${f.name}: Wikipedia ${c.wiki?'✅ found':'❌ no data'}; Fandom ${c.fandom?'✅ found':'❌ no data'}`}).join(' | ');
+  const videoNotes=videoNotesText();
+  const videoPara=videoNotes?`Video-inspired notes (user-pasted, context only — this text did not grant powers or change stats): ${videoNotes}`:'No video-inspired notes were pasted for this battle. This is an Original Death Battle (Mode A).';
+  const introF=f=>`${f.name} (${f.variant}, ${f.fr}, ${f.cat}) fights as ${f.style}. Personality: ${f.pers}. Signature: ${f.sig}. Powers: ${(POWERS[f.id]||[]).join(', ')||f.sig}. ${f.trans?`Transformation: ${f.trans}, triggering at or below 45% HP.`:`No transformation in this build.`} Weakness: ${f.weak}. Notable feat (context, not a stat): ${f.feat}. Battle stats for this version: HP ${f.maxHp}, ATK ${f.atk}, DEF ${f.def}, speed ${f.sp}, tier ${f.tier}. <span class="dia">${f.name}: "${(DIALOGUE[f.pers]||[''])[0]}"</span>`;
+  const relPara=(typeof relationshipPara==='function'?relationshipPara(b):'');
+  const analysis=generateAnalysis(a,f2);
+  const firstRounds=rounds.slice(0,2), lastRounds=rounds.slice(-2), midRounds=rounds.slice(2,-2);
+  // Turning point: first transformation, else first knockout/incapacitation, else biggest single-hit round.
+  let turningText='';
+  const firstTrans=b.events.find(e=>e.type==='transform');
+  const firstFinish=b.events.find(e=>e.type==='knockout'||e.type==='incapacitated');
+  if(firstTrans) turningText=`The turning point is real, not declared: in round ${firstTrans.round}, ${firstTrans.actor} is pushed to or below 45% HP and becomes ${firstTrans.detail}. Power, reach and choices change from that moment, and the opponent must adapt or lose the initiative.`;
+  else if(firstFinish) turningText=`The turning point is the finish itself: in round ${firstFinish.round}, ${firstFinish.actor} ends ${firstFinish.target}'s fight, and everything before it — injuries, stamina, failed defences — leads to that moment.`;
+  else turningText=`There is no single transformation or finish to point to. The turning point is cumulative: stamina drains, injuries accumulate, and the fighter who manages the later rounds better takes control.`;
+  const ch1=chapter('Chapter I — The Contenders',[
+    `At ${b.battlefield.name}, two fighters stand alone. ${b.battlefield.desc} There is no team to hide behind and no ally to rescue anyone. This is a death battle: one fighter, one opponent, one verdict.`,
+    researchPara, `Canon source status for this battle: ${canonStatus}. A failed fetch is shown as no data, never as verified research.`, relPara, videoPara,
+    `Fighter A: ${introF(a)}`, `Fighter B: ${introF(f2)}`,
+    `Dialogue in this episode is written in-character for this battle. It is not quoted canon dialogue. What is canon here is the set of powers, forms, variants and weaknesses each fighter brings — and the result the simulation actually produces.`
+  ].filter(Boolean));
+  const ch2=chapter('Chapter II — The Comparison / Analysis',[analysis.html]);
+  const ch3=chapter('Chapter III — The First Exchange', firstRounds.length?firstRounds.map(r=>sceneForRoundV7(r,byRound[r])):[`The opening exchanges are cautious, then suddenly not. Each fighter tests range, speed and nerve, and learns one true thing about an opponent that will matter later.`]);
+  const ch4=chapter('Chapter IV — The Turning Point',[turningText].concat(midRounds.length?midRounds.slice(0,4).map(r=>sceneForRoundV7(r,byRound[r])):[]));
+  const finalFinish=b.events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0];
+  const ch5paras=lastRounds.map(r=>sceneForRoundV7(r,byRound[r]));
+  if(finalFinish) ch5paras.push(`The decisive moment is not a narrator declaring a winner. It is ${finalFinish.actor} landing the blow that ${finalFinish.target} cannot answer, after everything that came before — the injuries, the failed defences, the transformations, the choices.`);
+  const ch5=chapter('Chapter V — The Final Clash',ch5paras.length?ch5paras:[`The final rounds are fought at the edge of endurance, with neither fighter willing to give the other a clean opening.`]);
+  const topDamage={}; b.events.forEach(e=>{if(e.type==='attack'&&!e.blocked) topDamage[e.actor]=(topDamage[e.actor]||0)+e.damage;});
+  const topList=Object.entries(topDamage).sort((x,y)=>y[1]-x[1]).map(([n,d])=>`${n} dealt ${d} damage`).join('; ')||'No unblocked damage was recorded.';
+  const transList=b.events.filter(e=>e.type==='transform').map(e=>`${e.actor} became ${e.detail} in round ${e.round}`).join('; ')||'No transformations occurred.';
+  const ch6=chapter('Chapter VI — The Verdict', b.stalemate?[
+    `Verdict: Stalemate — no death. ${a.name} and ${f2.name} both survived to the round cap on ${b.battlefield.name}.`,
+    `Victory condition: ${b.victoryCondition}. No killing blow is invented here, because the simulation did not produce one.`,
+    `Why no one won: ${topList}. Transformations: ${transList}. Battlefield destruction: ${b.destruction||0}%.`,
+    `This verdict follows the death rules exactly: a win requires death, incapacitation lasting the rest of the fight, or battlefield removal with no way back. None of those happened, so the honest verdict is that neither fighter proved they could finish the other in this fight.`
+  ]:[
+    `Verdict: ${b.winner} wins. ${b.loserFighter?b.loserFighter.name:''} is ${b.victoryCondition && b.victoryCondition.includes('Incapacitation')?'incapacitated and cannot continue':'dead (HP 0)'} on ${b.battlefield.name}.`,
+    `Victory condition: ${b.victoryCondition}.`,
+    `Why ${b.winner} prevailed: ${topList}. Transformations: ${transList}. Battlefield destruction: ${b.destruction||0}%.`,
+    `The decisive factors were the abilities actually used, the transformations actually triggered, the weaknesses actually exploited, and the stamina and injuries actually recorded — not a power invented for the ending. ${b.winner}'s win conditions from Chapter II were tested in combat, and the recorded events show which ones held.`,
+    analysis.uncertain?`The pre-battle analysis called this matchup genuinely close. That uncertainty is part of the verdict: the simulation, not the preview, decided it.`:`The pre-battle analysis gave one fighter a clearer edge, and the simulation confirmed it through the events above — but the verdict still rests on those events, not on the preview alone.`,
+    ytNote?`Research note from this battle, kept as context only (did not add powers): ${ytNote}`:`No YouTube research note was saved for this battle.`
+  ]);
+  return ch1+ch2+ch3+ch4+ch5+ch6;
+}
+function generateStoryV2(b){return generateEpisode(b);}
+
 /* ============ INIT ============ */
 document.getElementById('search-input').addEventListener('input',e=>{searchTerm=e.target.value.toLowerCase();renderRoster()});
 document.getElementById('battlefield-select').addEventListener('change',renderBattlefields);
