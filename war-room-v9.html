@@ -193,22 +193,29 @@ const BATTLEFIELDS=[
    fighters with the same personality do NOT say identical lines. No team language is used:
    v9 is 1v1, so there is no team to protect or fall back on. */
 const DIALOGUE_TEMPLATES={
-proud:['"{name}, you picked the wrong opponent. Watch what {name} can do alone."','"{name} does not need backup — and {opp} is about to learn why."','"Pride is not a flaw when it is earned, {opp}. {sig} will prove it."'],
-strategist:['"Watch {opp} first, {name} tells themself — every fighter has a tell, and {sig} will find it."','"{name} wins by position, not noise. {opp}, your next move is already read."','"Patience, {opp}. {name} has studied you, and {sig} is coming at the right moment."'],
-reckless:['"Enough talking, {opp} — let us see who hits harder! {name} is not here to wait."','"If {name} falls, {name} falls swinging, {opp}. {sig} first."','"{variant} or not, {name} only knows one speed: forward, at {opp}."'],
-protective:['"{name} will not fall here, {opp} — not while {name} can still stand and use {sig}."','"I take the hit and I give it back, {opp}. That is how {name} fights."','"{name} protects what matters by ending this, {opp} — with {sig}, not with speeches."'],
-ruthless:['"Weakness is an opening, {opp}. {name} will find yours, then use {sig}."','"Do not beg, {opp}. It will not change what {name} does next."','"{name} does not fight for applause, {opp}. {name} fights to finish this."'],
-disciplined:['"Breathe. Form. Strike only when it counts, {opp}. {name} does not waste {sig}."','"Honour is not weakness, {opp}. It is control — and {name} has it."','"{name} has trained for this, {opp}. One clean {sig} is worth ten wild swings."'],
-compassionate:['"{name} does not want to hurt you, {opp}. But {name} will stop you — with {sig} if it comes to that."','"There is always a way that does not end in ruin, {opp}. {name} will look for it, even now."','"Mercy is not surrender, {opp}. {name} will hold back where possible, and not where it costs the fight."'],
-humorous:['"Okay, {opp}, this is either brilliant or very stupid. {name} is going with {sig} to find out."','"I have fought weirder days than this, {opp}. {name} is still standing, and {sig} is still ready."','"Note to self, {opp}: do not stand still while {name} is winding up {sig}."']
+proud:['"{name}, you picked the wrong opponent. Watch what {name} can do alone."','"{name} does not need backup — and {opp} is about to learn why."','"Pride is not a flaw when it is earned, {opp}. {sig} will prove it."','"{name} has already decided how this ends, {opp}. {sig} is not a threat — it is a conclusion."','"Watch closely, {opp}. {name} in {variant} form does not repeat mistakes — and {sig} does not miss twice."','"You have {name} attention now, {opp}. That is rarer — and more dangerous — than you think."'],
+strategist:['"Watch {opp} first, {name} tells themself — every fighter has a tell, and {sig} will find it."','"{name} wins by position, not noise. {opp}, your next move is already read."','"Patience, {opp}. {name} has studied you, and {sig} is coming at the right moment."','"{name} has counted your habits, {opp}. The next {sig} will land where you were going, not where you are."','"Every exchange teaches {name} something, {opp}. By the end, there will be nothing left to learn — only {sig}."','"Do not mistake stillness for hesitation, {opp}. {name} is choosing the moment, not avoiding it."'],
+reckless:['"Enough talking, {opp} — let us see who hits harder! {name} is not here to wait."','"If {name} falls, {name} falls swinging, {opp}. {sig} first."','"{variant} or not, {name} only knows one speed: forward, at {opp}."','"{name} does not plan the ending, {opp}. {name} just keeps throwing {sig} until the ending arrives."','"Hit me back if you can, {opp} — {name} would rather trade blows than trade words."','"{variant} changes the power, {opp}, not the plan: forward, fast, and straight through {sig}."'],
+protective:['"{name} will not fall here, {opp} — not while {name} can still stand and use {sig}."','"I take the hit and I give it back, {opp}. That is how {name} fights."','"{name} protects what matters by ending this, {opp} — with {sig}, not with speeches."','"{name} stands here so nothing else has to fall, {opp}. {sig} is the line."','"You will have to go through {name}, {opp} — and {name} is not moving."','"{name} does not need to win beautifully, {opp}. {name} needs to still be standing when {sig} lands."'],
+ruthless:['"Weakness is an opening, {opp}. {name} will find yours, then use {sig}."','"Do not beg, {opp}. It will not change what {name} does next."','"{name} does not fight for applause, {opp}. {name} fights to finish this."','"{name} saw the opening the moment you made it, {opp}. {sig} is already on its way."','"No speeches, {opp}. {name} finishes fights, and {sig} finishes them."','"{name} does not hate you, {opp}. {name} simply does not let an opening close unused."'],
+disciplined:['"Breathe. Form. Strike only when it counts, {opp}. {name} does not waste {sig}."','"Honour is not weakness, {opp}. It is control — and {name} has it."','"{name} has trained for this, {opp}. One clean {sig} is worth ten wild swings."','"Form first, {opp}. {name} will not chase a wild swing when one clean {sig} will do."','"{name} has already fought this fight in their head, {opp}. Now {sig} does the rest."','"Control is a weapon, {opp}. {name} uses it, then uses {sig}."'],
+compassionate:['"{name} does not want to hurt you, {opp}. But {name} will stop you — with {sig} if it comes to that."','"There is always a way that does not end in ruin, {opp}. {name} will look for it, even now."','"Mercy is not surrender, {opp}. {name} will hold back where possible, and not where it costs the fight."','"{name} will give you a way out, {opp}, right up until {sig} is the only way left."','"This does not have to be cruelty, {opp}. {name} can end it cleanly with {sig}."','"{name} fights because someone must stop this, {opp} — not because {name} enjoys {sig}."'],
+humorous:['"Okay, {opp}, this is either brilliant or very stupid. {name} is going with {sig} to find out."','"I have fought weirder days than this, {opp}. {name} is still standing, and {sig} is still ready."','"Note to self, {opp}: do not stand still while {name} is winding up {sig}."','"Great, {opp}, another dramatic showdown. {name} brought {sig} and questionable life choices."','"{name} would make a joke here, {opp}, but {sig} is funnier when it lands."','"If this goes badly, {opp}, {name} is blaming {variant} form and {sig} in that order."']
 };
+let episodeDialogueUsed={};
 function dialogueFor(f, opp, round, kind){
   const templates=DIALOGUE_TEMPLATES[f.pers]||DIALOGUE_TEMPLATES.disciplined;
   const oppName=opp?opp.name:'opponent';
   const sig=f.sig||'their signature';
   const variant=f.variant||'Base';
+  const key=f.id||f.name;
+  if(!episodeDialogueUsed[key]) episodeDialogueUsed[key]=[];
+  let used=episodeDialogueUsed[key];
+  let candidates=templates.map((_,i)=>i).filter(i=>!used.includes(i));
+  if(!candidates.length){ episodeDialogueUsed[key]=[]; used=[]; candidates=templates.map((_,i)=>i); }
   const hash=(f.id||f.name).split('').reduce((a,c)=>a+c.charCodeAt(0),0);
-  const idx=(round+hash+(kind==='intro'?0:kind==='transform'?1:2))%templates.length;
+  const idx=candidates[(round+hash+(kind==='intro'?0:kind==='transform'?1:2))%candidates.length];
+  episodeDialogueUsed[key]=[...used, idx];
   return templates[idx].replaceAll('{name}',f.name).replaceAll('{opp}',oppName).replaceAll('{sig}',sig).replaceAll('{variant}',variant);
 }
 // Backwards-compatible name used by older code paths; now fighter-specific.
@@ -278,7 +285,7 @@ function renderSlots(){
   const labels=['Fighter A','Fighter B'];
   for(let i=0;i<2;i++){const id=selected[i]; const f=id?byId(id):null; const v=f?variantOf(f):null;
     if(f){const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0]; const inst=makeBattleInstance(f,bf); const c=canonResearch[id]||{}; const resStatus=c.time?`Research: Wikipedia ${c.wiki?'✅ found':'❌ no data'} • Fan-run Fandom wiki ${c.fandom?'✅ found':'❌ no data'}`:`Research: fetching automatically…`;
-    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(v.label)})</small></span><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}</span><small style="color:var(--dim)">${resStatus}</small></div>`;}
+    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(v.label)})</small></span><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(inst, bf)}</small><small style="color:var(--dim)">${resStatus}</small></div>`;}
     else el.innerHTML+=`<div class="slot"><span>${labels[i]} (Empty — pick a fighter)</span></div>`;}
   document.getElementById('roster-count').innerText=`${selected.length}/2 Selected`;
   document.getElementById('review-btn').disabled=selected.length!==2;
@@ -334,7 +341,7 @@ async function triggerOnlineResearch(){
 document.getElementById('review-btn').onclick=async ()=>{
   if(selected.length!==2){alert('Pick exactly 2 fighters first — Fighter A and Fighter B.');return}
   const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
-  const teamHtml=(ids,title,inst)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); const finalInst=inst; return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><span>${esc(f.fr)} • Final battle stats: ATK ${finalInst.startAtk||finalInst.atk} • HP ${finalInst.startHp||finalInst.maxHp} • DEF ${finalInst.startDef||finalInst.def}${finalInst.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}</span></div>`}).join('');
+  const teamHtml=(ids,title,inst)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); const finalInst=inst; return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><span>${esc(f.fr)} • Final battle stats: ATK ${finalInst.startAtk||finalInst.atk} • HP ${finalInst.startHp||finalInst.maxHp} • DEF ${finalInst.startDef||finalInst.def}${finalInst.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(finalInst, bf)}</small></div>`}).join('');
   const aInst=makeBattleInstance(byId(selected[0]),bf); const bInst=makeBattleInstance(byId(selected[1]),bf);
   const analysis=generateAnalysis(aInst,bInst);
   document.getElementById('setup-review').style.display='block';
@@ -499,8 +506,8 @@ function consistencyCheck(b){
 }
 function generateBreakdown(b){
   const totals={}; b.events.forEach(e=>{if(e.type==='attack'&&!e.blocked) totals[e.actor]=(totals[e.actor]||0)+e.damage;});
-  const statLines=[...b.alpha,...b.beta].map(f=>`<li><b>${esc(f.name)} (${esc(f.variant)}) final battle stats (start of fight):</b> HP ${f.startHp||f.maxHp}, ATK ${f.startAtk||f.atk}, DEF ${f.startDef||f.def}, speed ${f.sp}, tier ${f.tier}${f.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}${f.transformed?` (later transformed to ${esc(f.trans)}: +${f.tAtk} ATK, +${f.tDef} DEF)`:''} — these are the same final stats shown in the selection panel and in Chapter I.</li>`).join('');
-  const summary=`<li><b>Winner:</b> ${b.winner} &nbsp; <b>Battlefield:</b> ${esc(b.battlefield.name)} &nbsp; <b>Rounds in record:</b> ${b.rounds} &nbsp; <b>Events:</b> ${b.events.length}</li>`+statLines+Object.entries(totals).map(([n,d])=>`<li><b>${esc(n)}</b> dealt ${d} damage in total.</li>`).join('')+(ytNote?`<li><b>Research note used as story context only (did not add powers):</b> ${esc(ytNote)}</li>`:`<li><b>Research sources:</b> Wikipedia summaries where fetched, plus YouTube battle-analysis searches linked from the draft screen. No YouTube video was automatically watched or transcribed by the game.</li>`);
+  const statLines=[...b.alpha,...b.beta].map(f=>`<li><b>${esc(f.name)} (${esc(f.variant)}) final battle stats (start of fight):</b> HP ${f.startHp||f.maxHp}, ATK ${f.startAtk||f.atk}, DEF ${f.startDef||f.def}, speed ${f.sp}, tier ${f.tier} — Stat build: ${statBuildString(f, b.battlefield)}${f.transformed?` (later transformed to ${esc(f.trans)}: +${f.tAtk} ATK, +${f.tDef} DEF, applied only on transformation)`:''} — these are the same final stats shown in the selection panel and in Chapter I.</li>`).join('');
+  const summary=`<li><b>Winner:</b> ${b.winner} &nbsp; <b>Battlefield:</b> ${esc(b.battlefield.name)} &nbsp; <b>Rounds in record:</b> ${b.rounds} &nbsp; <b>Events:</b> ${b.events.length} &nbsp; <b>Battlefield destruction:</b> ${b.destruction||0}% (calculated from total damage ${b.totalDamage} — 200 damage per 1%, capped at 100%; this is the same figure used in Chapter VI)</li>`+statLines+Object.entries(totals).map(([n,d])=>`<li><b>${esc(n)}</b> dealt ${d} damage in total.</li>`).join('')+(ytNote?`<li><b>Research note used as story context only (did not add powers):</b> ${esc(ytNote)}</li>`:`<li><b>Research sources:</b> Wikipedia summaries where fetched, plus YouTube battle-analysis searches linked from the draft screen. No YouTube video was automatically watched or transcribed by the game.</li>`);
   const list=b.events.map(e=>{
     if(e.type==='attack') return `<li>Round ${e.round}: ${esc(e.actor)} — ${esc(e.ability)} → ${esc(e.target)} — ${e.blocked?'BLOCKED, 0 damage':e.damage+' damage'+(e.crit?' (CRIT)':'')}, target left at ${e.targetHp}/${e.targetMax} HP.</li>`;
     if(e.type==='transform') return `<li>Round ${e.round}: ${esc(e.actor)} transforms into ${esc(e.detail)}.</li>`;
@@ -545,7 +552,7 @@ function viewHistory(id){
 }
 function resetSimulator(){
   if(playbackTimer) clearInterval(playbackTimer);
-  selected=[]; aiTeam=[]; researchIntel={}; currentBattle=null; ytNote=''; if(typeof canonResearch!=='undefined') canonResearch={};
+  selected=[]; aiTeam=[]; researchIntel={}; currentBattle=null; ytNote=''; if(typeof canonResearch!=='undefined') canonResearch={}; researchFetchedKeys={}; researchTimers={}; researchInFlight={}; episodeDialogueUsed={};
   const tn=document.getElementById('yt-note'); if(tn) tn.value=''; const nd=document.getElementById('yt-note-display'); if(nd) nd.innerHTML='';
   document.getElementById('setup-review').style.display='none';
   document.getElementById('ai-status').innerText='AI RESEARCH: STANDBY';
@@ -643,7 +650,9 @@ let researchFetchedKeys={}; let researchTimers={}; let researchInFlight={};
 function autoResearchFor(id){
   const f=byId(id); if(!f) return;
   const key=id+'|'+(selectedVariants[id]||'base');
-  if(researchFetchedKeys[key]||researchInFlight[id]) return;
+  if(researchFetchedKeys[key] && canonResearch[id] && canonResearch[id].time){ try{renderSlots();}catch(e){} return; }
+  if(researchFetchedKeys[key] && !(canonResearch[id]&&canonResearch[id].time)){ delete researchFetchedKeys[key]; }
+  if(researchInFlight[id]) return;
   if(researchTimers[id]) clearTimeout(researchTimers[id]);
   researchTimers[id]=setTimeout(async()=>{
     researchInFlight[id]=true;
@@ -769,6 +778,12 @@ async function testConnections(){
   const poll=await ping('https://text.pollinations.ai/Say%20OK');
   const gem=getGeminiKey()?'(saved, not tested here to avoid using quota)':' (not saved — optional)';
   el.innerHTML=`${wiki?'✅':'❌'} Wikipedia &nbsp; ${fandom?'✅':'❌'} Fandom (Dragon Ball Wiki sample only) &nbsp; ${poll?'✅':'❌'} Pollinations free AI &nbsp; Gemini key ${gem}<br><span style="font-size:.78rem">The Fandom check above only tests that one sample wiki responds. It does NOT guarantee a specific fighter's Fandom page exists — the per-fighter Canon Sources result for that fighter is authoritative. If a source shows ❌, it is offline, blocked, or rate-limited right now — the game will fall back to local play and will not pretend that source worked.</span>`;
+  const aiBadge=document.getElementById('ai-status');
+  if(aiBadge){
+    if(wiki&&fandom&&poll){aiBadge.innerText='AI RESEARCH: ONLINE — AUTO-TESTED'; aiBadge.style.color='var(--green)'; aiBadge.style.borderColor='var(--green)';}
+    else if(wiki||fandom||poll){aiBadge.innerText='AI RESEARCH: PARTIAL — SOME SOURCES FAILED'; aiBadge.style.color='var(--yellow)'; aiBadge.style.borderColor='var(--yellow)';}
+    else {aiBadge.innerText='AI RESEARCH: OFFLINE — LOCAL SIMULATION'; aiBadge.style.color='var(--yellow)'; aiBadge.style.borderColor='var(--yellow)';}
+  }
 }
 function aiPromptForBattle(b){
   const kos=b.events.filter(e=>e.type==='knockout').map(e=>e.actor+' knocked out '+e.target).slice(0,10).join('; ');
@@ -812,9 +827,20 @@ function canHarmNote(att,def){
   if(def.trait==='infinity_void' && att.tier!=='EX') return `${def.name}'s Infinity defence blocks many non-EX attacks outright, so ${att.name} must find a way around it rather than trading blows head-on.`;
   return `${att.name} can harm ${def.name} with ordinary powers, though durability and defence still decide how much each hit matters.`;
 }
+function actualPowersFor(f){let ps=(POWERS[f.id]||[]).slice(); const vid=f.variantId||selectedVariants[f.id]||'base'; if(vid==='v2' && V2POWER[f.id]) ps=[V2POWER[f.id],...ps.slice(1)]; return ps;}
+function statBuildString(f, bf){
+  const base=byId(f.id)||f;
+  const isV2=(f.variantId||selectedVariants[f.id]||'base')==='v2';
+  const vb=isV2?{hp:base.v2hp||0,atk:base.v2atk||0,def:base.v2def||0}:{hp:0,atk:0,def:0};
+  const rb=f.researched?{hp:60,atk:10,def:0}:{hp:0,atk:0,def:0};
+  const sa=f.startAtk||f.atk, sd=f.startDef||f.def, sh=f.startHp||f.maxHp;
+  const bb=bf?{atk:bf.atk||0,def:bf.def||0}:{atk:sa-base.atk-vb.atk-rb.atk, def:sd-base.def-vb.def-rb.def};
+  const fmt=n=>(n>=0?'+':'')+n;
+  return `${f.name} (${f.variant||'Base'}): base HP ${base.hp} / ATK ${base.atk} / DEF ${base.def} → variant bonus ${fmt(vb.hp)} HP, ${fmt(vb.atk)} ATK, ${fmt(vb.def)} DEF → battlefield bonus ${fmt(bb.atk)} ATK, ${fmt(bb.def)} DEF → research bonus ${f.researched?'+60 HP, +10 ATK':'none'} = start HP ${sh} / ATK ${sa} / DEF ${sd}`;
+}
 function winConditionsFor(att,def){
   const out=[];
-  out.push(`Use ${att.sig} (signature) and the power set ${(POWERS[att.id]||[]).join(', ')||'listed in the profile'} to wear down ${def.name}.`);
+  out.push(`Use ${att.sig} (signature) and the actual power set for this version, ${actualPowersFor(att).join(', ')||'listed in the profile'}, to wear down ${def.name}.`);
   if(att.trans) out.push(`Trigger ${att.trans} at or below 45% HP for +${att.tAtk} ATK / +${att.tDef} DEF.`);
   if(att.pers==='strategist') out.push(`Study first, then strike the studied weakness for a boosted hit.`);
   if(def.weak) out.push(`Opponent's known limitation: ${def.weak} — this is a risk to watch, not a plan, unless ${att.name} actually has a power, item or counter that exploits it (for example, a prep fighter against a Kryptonite weakness).`);
@@ -825,14 +851,14 @@ function generateAnalysis(a,b){
   const cats=[];
   const pick=(label,av,bv,ev)=>{const w=av===bv?'Tie':(av>bv?a.name:b.name); cats.push({label,w,ev}); return w===a.name?1:(w===b.name?-1:0)};
   let score=0;
-  score+=pick('Strength (ATK)',a.atk,b.atk,`${a.name} ATK ${a.atk} vs ${b.name} ATK ${b.atk}.`);
+  score+=pick('Strength (ATK)',a.startAtk||a.atk,b.startAtk||b.atk,`${a.name} ATK ${a.startAtk||a.atk} vs ${b.name} ATK ${b.startAtk||b.atk} (start-of-fight stats, before transformation bonuses).`);
   score+=pick('Speed',a.sp,b.sp,`${a.name} speed ${a.sp} vs ${b.name} speed ${b.sp} — higher speed acts first in the engine order.`);
-  score+=pick('Durability',a.def+a.maxHp/20,b.def+b.maxHp/20,`${a.name} DEF ${a.def} / HP ${a.maxHp} vs ${b.name} DEF ${b.def} / HP ${b.maxHp}.`);
-  score+=pick('Special abilities', (POWERS[a.id]||[]).length + a.sigMult, (POWERS[b.id]||[]).length + b.sigMult, `${a.name} signature ${a.sig} (x${a.sigMult}) vs ${b.name} signature ${b.sig} (x${b.sigMult}).`);
+  score+=pick('Durability',(a.startDef||a.def)+(a.startHp||a.maxHp)/20,(b.startDef||b.def)+(b.startHp||b.maxHp)/20,`${a.name} DEF ${a.startDef||a.def} / HP ${a.startHp||a.maxHp} vs ${b.name} DEF ${b.startDef||b.def} / HP ${b.startHp||b.maxHp} (start-of-fight stats, before transformation bonuses).`);
+  score+=pick('Special abilities', (POWERS[a.id]||[]).length + a.sigMult, (POWERS[b.id]||[]).length + b.sigMult, `${a.name} signature ${a.sig} (x${a.sigMult}), actual powers for this version: ${actualPowersFor(a).join(', ')} vs ${b.name} signature ${b.sig} (x${b.sigMult}), actual powers for this version: ${actualPowersFor(b).join(', ')}.`);
   score+=pick('Tier',tierScore(a.tier),tierScore(b.tier),`${a.name} tier ${a.tier} vs ${b.name} tier ${b.tier}.`);
   score+=pick('Transformation power',a.trans?a.tAtk+a.tDef:0,b.trans?b.tAtk+b.tDef:0,`${a.name} transformation: ${a.trans||'none'} vs ${b.name} transformation: ${b.trans||'none'}.`);
   const uncertain=Math.abs(score)<=1;
-  const html=cats.map(c=>`<p><b>${c.label}:</b> ${c.w} — ${c.ev}</p>`).join('')+
+  const html=`<p><b>Start-of-fight stats (before transformation bonuses):</b> ${a.name} HP ${a.startHp||a.maxHp} / ATK ${a.startAtk||a.atk} / DEF ${a.startDef||a.def}; ${b.name} HP ${b.startHp||b.maxHp} / ATK ${b.startAtk||b.atk} / DEF ${b.startDef||b.def}. Transformation bonuses are listed separately below and apply only if that fighter transforms: ${a.name} +${a.tAtk||0} ATK / +${a.tDef||0} DEF for ${a.trans||'no transformation'}; ${b.name} +${b.tAtk||0} ATK / +${b.tDef||0} DEF for ${b.trans||'no transformation'}. These start stats are the same numbers shown in Chapter I and in the breakdown.</p><p><b>Stat builds:</b> ${statBuildString(a)}; ${statBuildString(b)}.</p>`+cats.map(c=>`<p><b>${c.label}:</b> ${c.w} — ${c.ev}</p>`).join('')+
     `<p><b>Can each fighter harm the other?</b> ${canHarmNote(a,b)} ${canHarmNote(b,a)}</p>`+
     `<p><b>${a.name} win conditions:</b> ${winConditionsFor(a,b).join(' ')}</p>`+
     `<p><b>${b.name} win conditions:</b> ${winConditionsFor(b,a).join(' ')}</p>`+
@@ -840,7 +866,7 @@ function generateAnalysis(a,b){
   return {html,score,uncertain,cats};
 }
 function generateEpisode(b){
-  currentBattle=b; sceneAttackCount=0;
+  currentBattle=b; sceneAttackCount=0; episodeDialogueUsed={};
   const a=b.alpha[0], f2=b.beta[0];
   const byRound={}; b.events.forEach(e=>{(byRound[e.round]=byRound[e.round]||[]).push(e)});
   const rounds=Object.keys(byRound).map(Number).sort((x,y)=>x-y);
@@ -862,7 +888,7 @@ function generateEpisode(b){
   const videoNotes=videoNotesText();
   const videoPara=videoNotes?`Video-inspired notes (user-pasted, context only — this text did not grant powers or change stats): ${videoNotes}`:'No video-inspired notes were pasted for this battle. This is an Original Death Battle (Mode A).';
   const actualPowers=f=>{let ps=(POWERS[f.id]||[]).slice(); if(f.variantId==='v2' && V2POWER[f.id]) ps=[V2POWER[f.id],...ps.slice(1)]; return ps;};
-  const introF=(f,opp)=>`${f.name} (${f.variant}, ${f.fr}, ${f.cat}) fights as ${f.style}. Personality: ${f.pers}. Signature: ${f.sig}. Powers actually used in this build for this version: ${actualPowers(f).join(', ')||f.sig}.${f.trans?` Transformation: ${f.trans}, triggering at or below 45% HP${TRANSSIG[f.id]?`, transformed signature: ${TRANSSIG[f.id]}`:''}.`:` No transformation in this build.`} Weakness: ${f.weak}. Notable feat (context, not a stat): ${f.feat}. Final battle stats for this version, at the start of the fight after battlefield and any research bonus (before any transformation bonus): HP ${f.startHp||f.maxHp}, ATK ${f.startAtk||f.atk}, DEF ${f.startDef||f.def}, speed ${f.sp}, tier ${f.tier}${f.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}. Battlefield effect included: ${b.battlefield.name} ATK ${b.battlefield.atk>=0?'+':''}${b.battlefield.atk}, DEF ${b.battlefield.def>=0?'+':''}${b.battlefield.def}. <span class="dia">${f.name}: "${dialogueFor(f,opp,0,'intro')}"</span>`;
+  const introF=(f,opp)=>`${f.name} (${f.variant}, ${f.fr}, ${f.cat}) fights as ${f.style}. Personality: ${f.pers}. Signature: ${f.sig}. Powers actually used in this build for this version: ${actualPowers(f).join(', ')||f.sig}.${f.trans?` Transformation: ${f.trans}, triggering at or below 45% HP${TRANSSIG[f.id]?`, transformed signature: ${TRANSSIG[f.id]}`:''}.`:` No transformation in this build.`} Weakness: ${f.weak}. Notable feat (context, not a stat): ${f.feat}. Final battle stats for this version, at the start of the fight (before any transformation bonus): HP ${f.startHp||f.maxHp}, ATK ${f.startAtk||f.atk}, DEF ${f.startDef||f.def}, speed ${f.sp}, tier ${f.tier}. Stat build: ${statBuildString(f, b.battlefield)}. Transformation bonuses, if triggered, are +${f.tAtk||0} ATK / +${f.tDef||0} DEF and are NOT included in the start stats above. <span class="dia">${f.name}: "${dialogueFor(f,opp,0,'intro')}"</span>`;
   const relPara=(typeof relationshipPara==='function'?relationshipPara(b):'');
   const analysis=generateAnalysis(a,f2);
   const firstRounds=rounds.slice(0,2), lastRounds=rounds.slice(-2), midRounds=rounds.slice(2,-2);
@@ -889,7 +915,7 @@ function generateEpisode(b){
     `Fighter A: ${introF(a,f2)}`, `Fighter B: ${introF(f2,a)}`,
     `Dialogue in this episode is written in-character for this battle. It is not quoted canon dialogue. What is canon here is the set of powers, forms, variants and weaknesses each fighter brings — and the result the simulation actually produces.`
   ].filter(Boolean));
-  const ch2=chapter('Chapter II — The Comparison / Analysis',[analysis.html]);
+  const ch2=chapter('Chapter II — The Comparison / Analysis',[analysis.html, videoNotes?`Video-inspired notes (user-pasted, context only — this text did not grant powers or change stats): ${esc(videoNotes)}`:''].filter(Boolean));
   const ch3=chapter('Chapter III — The First Exchange', firstRounds.length?firstRounds.map(r=>sceneForRoundV7(r,byRound[r])):[`The opening exchanges are cautious, then suddenly not. Each fighter tests range, speed and nerve, and learns one true thing about an opponent that will matter later.`]);
   // Mid rounds: show up to 4 scenes, then summarise any omitted rounds from real events (never invent).
   let midParas=midRounds.slice(0,4).map(r=>sceneForRoundV7(r,byRound[r]));
