@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAR-ROOM v3 — 5v5 Combat Sim, Story Engine &amp; History</title>
+<style>
+:root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+body{background:var(--bg);color:var(--main);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+header{background:linear-gradient(180deg,#121826,#07090f);border-bottom:2px solid var(--border);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+header h1{font-size:1.25rem;letter-spacing:2px;color:var(--cyan)}
+header span{font-size:.72rem;color:var(--dim);letter-spacing:1px;display:block}
+.badge{background:rgba(0,240,255,.1);border:1px solid var(--cyan);color:var(--cyan);padding:5px 10px;border-radius:4px;font-weight:700;font-size:.8rem}
+main{flex:1;max-width:1450px;width:100%;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:16px}
+.screen{display:none;flex-direction:column;gap:16px}.screen.active{display:flex}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.panel h2{font-size:1.05rem;color:var(--cyan);border-bottom:1px solid var(--border);padding-bottom:8px}
+.prep{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:950px){.prep{grid-template-columns:1fr}}
+input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px;font-size:.9rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:20px;padding:6px 12px;cursor:pointer;font-size:.8rem}
+.chip.on{border-color:var(--cyan);color:var(--cyan)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;max-height:520px;overflow-y:auto;padding-right:4px}
+.card{background:#141b2c;border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;cursor:pointer}
+.card.sel{border-color:var(--mag);background:rgba(255,0,127,.12)}
+.card .ic{font-size:2rem}.card b{display:block;font-size:.88rem;margin:4px 0 2px}.card small{color:var(--dim);font-size:.72rem;display:block}
+.card select{margin-top:8px;padding:6px;font-size:.8rem}
+.mini{margin-top:8px;display:flex;gap:6px}.mini button{flex:1}
+.btn{background:linear-gradient(135deg,var(--cyan),#0070ff);color:#000;font-weight:700;border:none;padding:12px 16px;border-radius:6px;cursor:pointer;text-transform:uppercase;letter-spacing:1px;font-size:.85rem}
+.btn:disabled{background:#222a3d;color:#55627a;cursor:not-allowed}
+.btn.mag{background:linear-gradient(135deg,var(--mag),#99004d);color:#fff}
+.btn.yel{background:linear-gradient(135deg,var(--yellow),#cc9900);color:#000}
+.btn.small{padding:7px 10px;font-size:.75rem;text-transform:none;letter-spacing:0}
+.slot{background:#131929;border:1px dashed var(--border);border-radius:6px;padding:10px;display:flex;justify-content:space-between;font-size:.85rem}
+.slot.filled{border-style:solid;border-color:var(--cyan)}
+.arena{display:grid;grid-template-columns:1fr 380px;gap:16px}
+@media(max-width:1050px){.arena{grid-template-columns:1fr}}
+.teams{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:650px){.teams{grid-template-columns:1fr}}
+.col{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px}
+.col h3{color:var(--cyan);font-size:.9rem;text-transform:uppercase;margin-bottom:8px}.col.enemy h3{color:var(--mag)}
+.fighter{background:#141b2c;border:1px solid var(--border);border-radius:6px;padding:9px;margin-bottom:8px}
+.fighter.dead{opacity:.35;filter:grayscale(1)}
+.fighter .row{display:flex;justify-content:space-between;font-size:.85rem;font-weight:600}
+.bar{background:#07090f;height:7px;border-radius:3px;overflow:hidden;margin-top:5px}.fill{height:100%;background:var(--green)}
+.log{background:#05070c;border:1px solid var(--border);border-radius:6px;padding:10px;height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;font-size:.85rem;line-height:1.5}
+.log div{border-left:3px solid var(--border);padding-left:8px}
+.story{line-height:1.75;font-size:.97rem}
+.story h3{color:var(--cyan);margin:18px 0 6px}.story p{margin-bottom:10px;color:#dbe4f0}
+.story .dia{color:#ff99cc;font-style:italic}
+.break{font-size:.85rem;line-height:1.6}.break li{margin-bottom:6px;list-style:none;border-left:3px solid var(--border);padding-left:8px}
+.modal{position:fixed;inset:0;background:rgba(5,7,12,.88);display:none;justify-content:center;align-items:center;z-index:1000;padding:16px}
+.modal.open{display:flex}
+.modal-box{background:var(--panel);border:1px solid var(--cyan);border-radius:10px;padding:20px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.modal-box h3{color:var(--cyan)}.modal-box p,.modal-box li{font-size:.88rem;line-height:1.6;color:#dbe4f0}
+.note{font-size:.78rem;color:var(--dim);line-height:1.5}
+</style>
+</head>
+<body>
+<header><div><h1>WAR-ROOM v6</h1><span>5v5 COMBAT SIM • CINEMATIC STORY • BREAKDOWN • HISTORY • CONNECTED CANON</span></div><div><span class="badge" id="online-status">● ONLINE</span> <span class="badge" id="ai-status">AI RESEARCH: STANDBY</span></div></header>
+<main>
+<section id="draft-screen" class="screen active">
+<div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
+<input id="search-input" placeholder="Search by name, franchise, or alias — try Goku, Batman, Link...">
+<div class="chips" id="cat-chips"></div>
+<p class="note">This build ships 24 playable fighters across 6 categories. The blueprint target is 100 per category long-term — that is a target, not a claim. Each card uses an emoji fallback portrait so no image ever breaks. Real artwork is not included.</p>
+</div>
+<div class="prep">
+<div class="panel"><h2>Combat Roster <span id="roster-count" style="font-size:.8rem;color:var(--dim)"></span></h2><div class="grid" id="fighter-pool"></div></div>
+<div class="panel"><h2>2 — Alpha Squad (pick 5)</h2><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
+<label style="font-size:.85rem">Battlefield</label><select id="battlefield-select"></select><p class="note" id="battlefield-desc"></p>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn yel" onclick="triggerOnlineResearch()" style="flex:1">Run Live Research</button><button class="btn" id="review-btn" disabled style="flex:1">Review Teams →</button></div>
+<div id="research-intel" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Live research intel will appear here. Research is optional. Without internet it falls back to local data and gives no bonus.</div>
+<h3 style="color:var(--cyan);font-size:.95rem;margin-top:6px">YouTube Battle Research — no API key needed</h3>
+<p class="note">YouTube videos cannot be read automatically by a browser file without a YouTube Data API key, and scraping YouTube is blocked. So this version does the honest version that works on a phone: one-tap YouTube searches for each selected fighter, for powers, strength, speed and transformations, plus a channel library you can grow. Watching is research — it does not automatically add new powers to the combat engine.</p>
+<div id="yt-links" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Pick fighters to see their YouTube research searches.</div>
+<div id="yt-channels" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px"></div>
+<input id="new-channel-name" placeholder="Add a battle channel, e.g. Death Battle">
+<button class="btn small" onclick="addChannel()" style="margin-top:6px">Add channel to library</button>
+<label style="font-size:.85rem;display:block;margin-top:10px">Your research note — powers, speed, transformation (context only, does not grant new powers)</label>
+<textarea id="yt-note" placeholder="Example: Watched a breakdown saying X is faster in this form, but weaker against Y..." style="width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px;min-height:70px"></textarea>
+<button class="btn small" onclick="saveYTNote()" style="margin-top:6px">Save research note for this battle</button>
+<div id="yt-note-display" class="note"></div>
+<h3 style="color:var(--cyan);font-size:.95rem;margin-top:6px">Canon Sources — Wikipedia + Fandom, automatically</h3>
+<p class="note">Fandom wikis are fan-run canon wikis for each franchise (Dragon Ball Wiki, Narutopedia, Wookieepedia, etc.). They are more canon-specific than Wikipedia, but they are still fan sources — the game shows which source succeeded and which failed, and never claims a failed fetch was verified. Canon extracts are context for the story; they do not automatically add new powers.</p>
+<button class="btn small" onclick="fetchCanonForSelected()">Fetch canon for selected team now</button>
+<div id="canon-results" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">Canon results will appear here. Review Teams also fetches canon automatically for both teams.</div>
+<h3 style="color:var(--cyan);font-size:.95rem;margin-top:10px">Search canon for any character</h3>
+<input id="canon-search-input" placeholder="Search Wikipedia for a character, e.g. Vegeta, Thor, Pikachu">
+<button class="btn small" onclick="searchCanon()" style="margin-top:6px">Search canon</button>
+<div id="canon-search-results" class="note" style="margin-top:8px"></div>
+<div id="setup-review" style="display:none"></div>
+</div>
+</div>
+<div class="panel"><h2>Add a Custom Fighter (grows the roster without inventing canon)</h2><p class="note">Use this for original fighters, or for a version of a real character you have researched yourself. Custom fighters are saved on this device only.</p><input id="custom-name" placeholder="Name"><input id="custom-fr" placeholder="Franchise / universe" style="margin-top:6px"><select id="custom-cat" style="margin-top:6px"><option>Anime</option><option>Comics</option><option>Video Games</option><option>Movies &amp; TV</option><option>Animation</option><option>Fantasy &amp; Sci-Fi</option></select><input id="custom-style" placeholder="Fighting style" style="margin-top:6px"><input id="custom-powers" placeholder="Powers, comma-separated, e.g. Ki Blast, Dragon Fist" style="margin-top:6px"><button class="btn small" onclick="addCustomFighter()" style="margin-top:8px">Add custom fighter</button></div>
+<div class="panel"><h2>Battle History (saved on this device only)</h2><div id="history-list" class="note">No saved battles yet.</div></div>
+</section>
+
+<section id="battle-screen" class="screen">
+<div class="arena"><div><div class="teams"><div class="col"><h3>Alpha Squad</h3><div id="alpha-combatants"></div></div><div class="col enemy"><h3>Adversaries</h3><div id="beta-combatants"></div></div></div></div>
+<div class="panel" style="height:auto"><h2>Live Battle Feed</h2><div class="log" id="battle-log"></div><button class="btn" id="show-results-btn" style="display:none;margin-top:10px">Read the Story →</button></div></div>
+</section>
+
+<section id="results-screen" class="screen">
+<div class="panel"><h2 id="result-title">RESULT</h2><p id="result-desc" class="note" style="font-size:.9rem"></p><p id="consistency-note" class="note"></p></div>
+<div class="panel story"><h2>Cinematic Story — 5 Chapters</h2><div id="story-output"></div></div>
+<div class="panel"><h2>Combat Breakdown (numbers live here, not in the story)</h2><ul class="break" id="breakdown-output"></ul></div>
+<button class="btn" onclick="downloadStory()">Download story as HTML</button>
+<button class="btn" onclick="resetSimulator()">New Battle</button>
+</section>
+</main>
+
+<div class="modal" id="info-modal"><div class="modal-box"><h3 id="info-title"></h3><img id="info-portrait" style="display:none;max-width:220px;border-radius:8px" alt="Character portrait from Wikipedia, if available"><div id="info-content"></div><button class="btn" onclick="closeInfo()">Close</button></div></div>
+<script>
+/* ============ ROSTER: compact, honest, expandable ============ */
+/* Fields: v2 = second variant label + its stat mods. trans = transformation, or '' if none. */
+/* Only abilities listed here are implemented. Canon powers not listed are NOT invented. */
+const ROSTER=[
+{id:'goku',name:'Goku',fr:'Dragon Ball',cat:'Anime',icon:'💥',hp:1300,atk:125,def:80,sp:1.2,tier:'S+',trait:'ki_burst',pers:'reckless',style:'Saiyan brawler who closes distance fast',sig:'Kamehameha',sigMult:1.7,trans:'Super Saiyan Blue',tAtk:35,tDef:10,weak:'Overconfidence; stamina drains in very long fights',feat:'Survived planet-shaking clashes',wiki:'Goku',alias:'Kakarot',v2:'Super Saiyan God',v2hp:200,v2atk:25,v2def:5},
+{id:'naruto',name:'Naruto',fr:'Naruto',cat:'Anime',icon:'🌀',hp:1200,atk:115,def:85,sp:1.3,tier:'S',trait:'shadow_clones',pers:'protective',style:'Unpredictable ninja who overwhelms with clones',sig:'Rasengan',sigMult:1.6,trans:'Kurama Mode',tAtk:30,tDef:10,weak:'Chakra limits; emotions can cloud judgement',feat:'Faced village-destroying foes',wiki:'Naruto_Uzumaki',alias:'Naruto Uzumaki',v2:'Sage Mode',v2hp:150,v2atk:20,v2def:10},
+{id:'tanjiro',name:'Tanjiro',fr:'Demon Slayer',cat:'Anime',icon:'⚔️',hp:1100,atk:135,def:70,sp:1.4,tier:'A+',trait:'total_concentration',pers:'compassionate',style:'Precise swordsman who reads breathing and movement',sig:'Hinokami Kagura',sigMult:1.7,trans:'Hinokami Awakening',tAtk:30,tDef:5,weak:'Human durability; no regeneration',feat:'Cut through demon defences others could not',wiki:'Tanjiro_Kamado',alias:'Tanjiro Kamado',v2:'Sun Breathing',v2hp:100,v2atk:25,v2def:0},
+{id:'gojo',name:'Gojo',fr:'Jujutsu Kaisen',cat:'Anime',icon:'♾️',hp:1500,atk:155,def:120,sp:1.2,tier:'EX',trait:'infinity_void',pers:'proud',style:'Untouchable sorcerer who controls space',sig:'Hollow Purple',sigMult:1.8,trans:'Unlimited Void',tAtk:25,tDef:15,weak:'Six Eyes strain; can be sealed by special means',feat:'Attacks stop before reaching him',wiki:'Satoru_Gojo',alias:'Satoru Gojo',v2:'Shibuya Arc',v2hp:200,v2atk:15,v2def:10},
+{id:'superman',name:'Superman',fr:'DC Comics',cat:'Comics',icon:'🦸',hp:1800,atk:160,def:115,sp:1.1,tier:'EX',trait:'invulnerable',pers:'compassionate',style:'Flying powerhouse who protects first',sig:'Heat Vision',sigMult:1.6,trans:'Sun-Charged',tAtk:30,tDef:15,weak:'Kryptonite; magic bypasses much of his durability',feat:'Held back collapsing structures',wiki:'Superman',alias:'Clark Kent, Kal-El',v2:'Kingdom Come',v2hp:200,v2atk:20,v2def:10},
+{id:'batman',name:'Batman',fr:'DC Comics',cat:'Comics',icon:'🦇',hp:1000,atk:110,def:85,sp:1.3,tier:'S',trait:'prep',pers:'strategist',style:'Tactical fighter who studies foes before striking',sig:'Gadget Barrage',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human; no innate powers',feat:'Outplanned far stronger foes',wiki:'Batman',alias:'Bruce Wayne',v2:'Armored Batsuit',v2hp:200,v2atk:10,v2def:25},
+{id:'spiderman',name:'Spider-Man',fr:'Marvel',cat:'Comics',icon:'🕷️',hp:1200,atk:125,def:80,sp:1.45,tier:'S',trait:'agile',pers:'humorous',style:'Fast, quipping fighter who uses webs and momentum',sig:'Web + Impact Combo',sigMult:1.6,trans:'Symbiote Surge',tAtk:30,tDef:5,weak:'Web-fluid limits; responsibility slows him',feat:'Held a collapsing building; dodged bullets',wiki:'Spider-Man',alias:'Peter Parker',v2:'Symbiote Suit',v2hp:150,v2atk:20,v2def:5},
+{id:'wonderwoman',name:'Wonder Woman',fr:'DC Comics',cat:'Comics',icon:'🛡️',hp:1500,atk:145,def:105,sp:1.25,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Warrior with shield, sword and lasso',sig:'Lasso Strike',sigMult:1.6,trans:'Divine Power',tAtk:30,tDef:10,weak:'Bindings and bracelets can limit her',feat:'Traded blows with gods and titans',wiki:'Wonder_Woman',alias:'Diana Prince',v2:'New 52',v2hp:150,v2atk:15,v2def:10},
+{id:'mario',name:'Mario',fr:'Super Mario',cat:'Video Games',icon:'🍄',hp:1100,atk:110,def:90,sp:1.1,tier:'A',trait:'power_up',pers:'humorous',style:'Jumping brawler who uses power-ups',sig:'Fireball Barrage',sigMult:1.5,trans:'Super Star',tAtk:35,tDef:5,weak:'No long-range power without items',feat:'Survived falls and lava-world hazards',wiki:'Mario',alias:'Super Mario',v2:'Fire Mario',v2hp:100,v2atk:20,v2def:5},
+{id:'link',name:'Link',fr:'The Legend of Zelda',cat:'Video Games',icon:'🗡️',hp:1250,atk:135,def:90,sp:1.25,tier:'S',trait:'disciplined',pers:'disciplined',style:'Sword, shield and tool-using hero',sig:'Master Sword Spin',sigMult:1.7,trans:'Fierce Deity',tAtk:35,tDef:10,weak:'Stamina and item dependence',feat:'Defeated world-ending evils',wiki:'Link_(The_Legend_of_Zelda)',alias:'Hero of Time',v2:"Champion's Tunic",v2hp:150,v2atk:15,v2def:10},
+{id:'chief',name:'Master Chief',fr:'Halo',cat:'Video Games',icon:'🪖',hp:1400,atk:130,def:110,sp:1.0,tier:'S',trait:'disciplined',pers:'disciplined',style:'Armoured soldier with precise fire',sig:'Spartan Laser',sigMult:1.7,trans:'Overshield',tAtk:20,tDef:25,weak:'No superpowers; ammunition is finite',feat:'Survived orbital drops and alien armies',wiki:'Master_Chief_(Halo)',alias:'John-117',v2:'MJOLNIR Gen3',v2hp:200,v2atk:10,v2def:20},
+{id:'kratos',name:'Kratos',fr:'God of War',cat:'Video Games',icon:'🪓',hp:1700,atk:155,def:100,sp:1.05,tier:'EX',trait:'ruthless',pers:'ruthless',style:'Brutal close fighter with axe and blades',sig:'Leviathan Axe Throw',sigMult:1.7,trans:'Spartan Rage',tAtk:40,tDef:5,weak:'Rage can cloud judgement',feat:'Killed gods and titans',wiki:'Kratos_(God_of_War)',alias:'Ghost of Sparta',v2:'Valhalla',v2hp:200,v2atk:20,v2def:5},
+{id:'vader',name:'Darth Vader',fr:'Star Wars',cat:'Movies & TV',icon:'🌑',hp:1500,atk:145,def:105,sp:1.1,tier:'S+',trait:'ruthless',pers:'ruthless',style:'Force and lightsaber duellist',sig:'Force Choke + Saber',sigMult:1.7,trans:'Dark Side Surge',tAtk:30,tDef:10,weak:'Suit vulnerabilities; emotional ties',feat:'Defeated Jedi Masters',wiki:'Darth_Vader',alias:'Anakin Skywalker',v2:'Revenge of the Sith',v2hp:100,v2atk:20,v2def:10},
+{id:'luke',name:'Luke Skywalker',fr:'Star Wars',cat:'Movies & TV',icon:'✨',hp:1200,atk:130,def:80,sp:1.3,tier:'S',trait:'compassionate',pers:'compassionate',style:'Jedi who seeks a non-lethal opening first',sig:'Lightsaber Form V',sigMult:1.6,trans:'Jedi Master Focus',tAtk:25,tDef:10,weak:'Mercy; self-doubt',feat:'Redeemed Vader; faced the Emperor',wiki:'Luke_Skywalker',alias:'Luke',v2:'Return of the Jedi',v2hp:150,v2atk:15,v2def:5},
+{id:'neo',name:'Neo',fr:'The Matrix',cat:'Movies & TV',icon:'🕶️',hp:1300,atk:140,def:85,sp:1.5,tier:'S+',trait:'agile',pers:'strategist',style:'Reality-bending martial artist',sig:'Bullet-Time Assault',sigMult:1.6,trans:'The One Awakening',tAtk:35,tDef:5,weak:'Matrix dependence; human body outside it',feat:'Stopped bullets; flew and reshaped the Matrix',wiki:'Neo_(The_Matrix)',alias:'Thomas Anderson',v2:'Reloaded',v2hp:100,v2atk:20,v2def:5},
+{id:'wick',name:'John Wick',fr:'John Wick',cat:'Movies & TV',icon:'🔫',hp:950,atk:135,def:65,sp:1.4,tier:'A+',trait:'disciplined',pers:'disciplined',style:'Gun-fu specialist, precise and relentless',sig:'Gun-Fu Combination',sigMult:1.6,trans:'Baba Yaga Mode',tAtk:25,tDef:0,weak:'Human; injuries accumulate',feat:'Survived assassin armies',wiki:'John_Wick_(character)',alias:'Baba Yaga',v2:'Chapter 4',v2hp:100,v2atk:15,v2def:5},
+{id:'aang',name:'Aang',fr:'Avatar',cat:'Animation',icon:'🌪️',hp:1150,atk:125,def:80,sp:1.35,tier:'S',trait:'compassionate',pers:'compassionate',style:'Airbender who controls all four elements',sig:'Four-Element Combo',sigMult:1.7,trans:'Avatar State',tAtk:40,tDef:10,weak:'Pacifism; Avatar State risk',feat:'Ended a hundred-year war',wiki:'Aang',alias:'Avatar Aang',v2:'Adult Aang',v2hp:150,v2atk:15,v2def:10},
+{id:'ben',name:'Ben Tennyson',fr:'Ben 10',cat:'Animation',icon:'⌚',hp:1100,atk:130,def:75,sp:1.2,tier:'S',trait:'reckless',pers:'reckless',style:'Teen hero who swaps alien forms mid-fight',sig:'Alien Transformation Strike',sigMult:1.7,trans:'Way Big Form',tAtk:35,tDef:10,weak:'Omnitrix timeout',feat:'Saved Earth and the galaxy repeatedly',wiki:'Ben_Tennyson',alias:'Ben 10',v2:'Alien Force',v2hp:150,v2atk:20,v2def:5},
+{id:'danny',name:'Danny Phantom',fr:'Danny Phantom',cat:'Animation',icon:'👻',hp:1150,atk:125,def:85,sp:1.3,tier:'S',trait:'protective',pers:'protective',style:'Half-ghost who phases, flies and blasts',sig:'Ghostly Wail',sigMult:1.6,trans:'Phantom Rage',tAtk:25,tDef:10,weak:'Ghost-energy drain',feat:'Defeated ghost kings',wiki:'Danny_Phantom',alias:'Danny Fenton',v2:'Ultimate Enemy',v2hp:100,v2atk:20,v2def:10},
+{id:'jack',name:'Samurai Jack',fr:'Samurai Jack',cat:'Animation',icon:'🥋',hp:1250,atk:140,def:85,sp:1.35,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Master swordsman, patient and honourable',sig:'Katana Master Combo',sigMult:1.6,trans:"Warrior's Resolve",tAtk:25,tDef:10,weak:'Human; displaced in time',feat:'Defeated armies and demons',wiki:'Samurai_Jack_(character)',alias:'Jack',v2:'Season 5',v2hp:150,v2atk:20,v2def:5},
+{id:'gandalf',name:'Gandalf',fr:'Lord of the Rings',cat:'Fantasy & Sci-Fi',icon:'🧙',hp:1300,atk:135,def:90,sp:1.0,tier:'S',trait:'strategist',pers:'strategist',style:'Wizard who guides, shields and strikes with light',sig:'Staff Blast',sigMult:1.6,trans:'Wrath of the Istari',tAtk:35,tDef:15,weak:'Limited direct power in mortal form',feat:'Faced a Balrog; rallied kingdoms',wiki:'Gandalf',alias:'Mithrandir',v2:'Gandalf the White',v2hp:200,v2atk:20,v2def:15},
+{id:'geralt',name:'Geralt',fr:'The Witcher',cat:'Fantasy & Sci-Fi',icon:'🐺',hp:1200,atk:135,def:85,sp:1.3,tier:'S',trait:'disciplined',pers:'disciplined',style:'Monster hunter with sword, signs and potions',sig:'Silver Sword + Signs',sigMult:1.6,trans:'Toxicity Surge',tAtk:25,tDef:5,weak:'Human; potion toxicity',feat:'Killed monsters armies feared',wiki:'Geralt_of_Rivia',alias:'White Wolf',v2:'Grandmaster Armor',v2hp:150,v2atk:10,v2def:20},
+{id:'spock',name:'Spock',fr:'Star Trek',cat:'Fantasy & Sci-Fi',icon:'🖖',hp:1050,atk:115,def:90,sp:1.15,tier:'A',trait:'strategist',pers:'strategist',style:'Logical Vulcan, precise nerve strikes',sig:'Vulcan Nerve Pinch',sigMult:1.5,trans:'Vulcan Fury',tAtk:20,tDef:10,weak:'Emotional control; human fragility',feat:'Out-thought superior foes',wiki:'Spock',alias:'Mr. Spock',v2:'Captain Spock',v2hp:100,v2atk:15,v2def:10},
+{id:'doctor',name:'The Doctor',fr:'Doctor Who',cat:'Fantasy & Sci-Fi',icon:'🔷',hp:1000,atk:110,def:80,sp:1.2,tier:'S',trait:'strategist',pers:'strategist',style:'Pacifist genius who turns the environment against foes',sig:'Sonic Screwdriver Trap',sigMult:1.4,trans:'Regeneration Surge',tAtk:30,tDef:10,weak:'No direct super-strength; refuses to kill',feat:'Saved planets with wit, not force',wiki:'The_Doctor_(Doctor_Who)',alias:'Doctor Who',v2:'Tenth Doctor',v2hp:100,v2atk:15,v2def:5}
+];
+const CATS=['All','Anime','Comics','Video Games','Movies & TV','Animation','Fantasy & Sci-Fi'];
+const BATTLEFIELDS=[
+{id:'arena',name:'Open Arena',desc:'Flat, open ground. No cover, no hazards. Pure speed and power decide exchanges.',atk:0,def:0},
+{id:'ruined',name:'Ruined City',desc:'Broken buildings give cover. All fighters gain +12 DEF, but movement is tighter.',atk:0,def:12},
+{id:'forest',name:'Forest Clearing',desc:'Trees and mist hide movement. All fighters gain +8 DEF; agile fighters use cover best.',atk:0,def:8},
+{id:'desert',name:'Desert Basin',desc:'Open lines and harsh heat. All fighters gain +5 ATK but lose 5 DEF.',atk:5,def:-5},
+{id:'industrial',name:'Industrial Complex',desc:'Machinery and hazards can be weaponised. All fighters gain +8 ATK.',atk:8,def:0}
+];
+const DIALOGUE={
+proud:['"I do not need backup. Watch what I can do alone."','"You picked the wrong side to stand against."'],
+strategist:['"Watch their patterns first. Every fighter has a tell."','"We win by position, not by shouting loudest."'],
+reckless:['"Enough talking — let us see who hits harder!"','"If I fall, I fall swinging."'],
+protective:['"Stay behind me. No one on my team falls today if I can help it."','"I will take the hit so they do not have to."'],
+ruthless:['"Weakness is an opening. I will find yours."','"Do not beg. It will not change the outcome."'],
+disciplined:['"Breathe. Form. Strike only when it counts."','"Honour is not weakness. It is control."'],
+compassionate:['"I do not want to hurt you. But I will stop you."','"There is always a way that does not end in ruin — I will look for it."'],
+humorous:['"Okay, this is either brilliant or very stupid. Let us find out."','"I have fought weirder Tuesdays than this."']
+};
+let selected=[]; let selectedVariants={}; let researchIntel={}; let catFilter='All'; let searchTerm='';
+/* YouTube research: starter library only. No claim of 400 verified channels.
+   The library is expandable — add channels in the game and they persist on this device.
+   Links are YouTube searches, not direct video claims, so they do not break if a handle changes. */
+const YT_STARTER_CHANNELS=['Death Battle','SethTheProgrammer','Swagkage','Comic Drake','AnimeUproar','Clyde','VSBW','Power Scaling Hub','DBZimran','ScrewAttack'];
+let ytCustomChannels=[]; try{ytCustomChannels=JSON.parse(localStorage.getItem('warroom_yt_channels')||'[]')}catch(e){ytCustomChannels=[]}
+let ytNote='';
+function ytUrl(q){return 'https://www.youtube.com/results?search_query='+encodeURIComponent(q)}
+function renderYT(){
+  const el=document.getElementById('yt-links'); if(!el) return;
+  if(!selected.length){el.innerHTML='Pick fighters to see their YouTube research searches.';return}
+  el.innerHTML=selected.map(id=>{const f=byId(id); return `<div style="margin-bottom:10px"><b style="color:var(--cyan)">${f.icon} ${esc(f.name)}</b><br>
+  <a href="${ytUrl(f.name+' vs battle analysis')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ ${esc(f.name)} vs battle analysis</a> •
+  <a href="${ytUrl(f.name+' powers strength speed explained')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ Powers, strength &amp; speed</a> •
+  <a href="${ytUrl(f.name+' transformations explained')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ Transformations</a> •
+  <a href="${ytUrl(f.name+' Death Battle')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ Death Battle search</a></div>`}).join('');
+}
+function renderChannels(){
+  const el=document.getElementById('yt-channels'); if(!el) return;
+  const all=[...YT_STARTER_CHANNELS,...ytCustomChannels];
+  el.innerHTML=`<b style="color:var(--cyan)">Battle-channel library: ${all.length} channels saved on this device</b><br><span style="font-size:.78rem;color:var(--dim)">Starter list + your additions. Add more any time — the system has no hard limit, so you can build toward 400 over time instead of pretending 400 were verified at once.</span><br>`+all.map(c=>`<a href="${ytUrl(c+' character battles powerscaling')}" target="_blank" rel="noopener" style="color:var(--main);display:inline-block;margin:4px 8px 0 0">▶ ${esc(c)}</a>`).join('');
+}
+function addChannel(){
+  const inp=document.getElementById('new-channel-name'); const name=(inp.value||'').trim(); if(!name) return;
+  if(!ytCustomChannels.includes(name)) ytCustomChannels.push(name);
+  try{localStorage.setItem('warroom_yt_channels',JSON.stringify(ytCustomChannels))}catch(e){}
+  inp.value=''; renderChannels();
+}
+function saveYTNote(){
+  ytNote=(document.getElementById('yt-note').value||'').trim();
+  document.getElementById('yt-note-display').innerHTML=ytNote?`<b style="color:var(--cyan)">Saved research note (context only):</b><br>${esc(ytNote)}`:'';
+}
+let aiTeam=[]; let currentBattle=null; let playbackTimer=null;
+function byId(id){return ROSTER.find(f=>f.id===id)}
+function variantOf(f){const v=selectedVariants[f.id]||'base'; if(v==='v2') return {label:f.v2,hp:f.v2hp,atk:f.v2atk,def:f.v2def}; return {label:'Base',hp:0,atk:0,def:0}}
+function instanceOf(f){const v=variantOf(f); return {...f,variant:v.label,variantId:selectedVariants[f.id]||'base',hp:f.hp+v.hp,atk:f.atk+v.atk,def:f.def+v.def,currentHp:f.hp+v.hp,maxHp:f.hp+v.hp,cooldown:0,actions:0,transformed:false,alive:true}}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+
+/* ============ ROSTER UI, INFO, VARIANTS ============ */
+function renderChips(){document.getElementById('cat-chips').innerHTML=CATS.map(c=>`<button class="chip ${c===catFilter?'on':''}" onclick="setCat('${c}')">${c}</button>`).join('')}
+function setCat(c){catFilter=c;renderChips();renderRoster()}
+function renderRoster(){
+  const pool=document.getElementById('fighter-pool');
+  const list=ROSTER.filter(f=>(catFilter==='All'||f.cat===catFilter)&&((f.name+' '+f.fr+' '+f.alias).toLowerCase().includes(searchTerm)));
+  document.getElementById('roster-note').innerText=`Showing ${list.length} of ${ROSTER.length} in this build.`;
+  pool.innerHTML=list.map(f=>{
+    const sel=selected.includes(f.id); const v=selectedVariants[f.id]||'base';
+    return `<div class="card ${sel?'sel':''}"><div class="ic">${f.icon}</div><b>${esc(f.name)}</b><small>${esc(f.fr)} • ${esc(f.cat)} • ${f.tier}</small><small>${esc(f.style)}</small>
+    <select onclick="event.stopPropagation()" onchange="setVariant('${f.id}',this.value)"><option value="base" ${v==='base'?'selected':''}>Base</option><option value="v2" ${v==='v2'?'selected':''}>${esc(f.v2)}</option></select>
+    <div class="mini"><button class="btn small" onclick="event.stopPropagation();openInfo('${f.id}')">Info</button><button class="btn small ${sel?'mag':''}" onclick="event.stopPropagation();toggleFighter('${f.id}')">${sel?'Remove':'Select'}</button></div></div>`;
+  }).join('') || '<p class="note">No fighters match that search.</p>';
+  renderSlots();
+}
+function setVariant(id,v){selectedVariants[id]=v;renderRoster()}
+function toggleFighter(id){
+  const i=selected.indexOf(id);
+  if(i>-1) selected.splice(i,1); else if(selected.length<5) selected.push(id); else {alert('Pick exactly 5. Remove one first.');return}
+  renderRoster();
+}
+function renderSlots(){
+  const el=document.getElementById('alpha-squad-slots'); el.innerHTML='';
+  for(let i=0;i<5;i++){const id=selected[i]; const f=id?byId(id):null; const v=f?variantOf(f):null;
+    el.innerHTML+=f?`<div class="slot filled"><span>${f.icon} ${esc(f.name)} <small>(${esc(v.label)})</small></span><span>ATK ${f.atk+v.atk} • HP ${f.hp+v.hp}</span></div>`:`<div class="slot"><span>Slot ${i+1} (Empty)</span></div>`;}
+  document.getElementById('roster-count').innerText=`${selected.length}/5 Selected`;
+  document.getElementById('review-btn').disabled=selected.length!==5;
+  renderBattlefields(); renderYT(); renderChannels();
+}
+function renderBattlefields(){
+  const sel=document.getElementById('battlefield-select'); const cur=sel.value||'arena';
+  sel.innerHTML=BATTLEFIELDS.map(b=>`<option value="${b.id}" ${b.id===cur?'selected':''}>${b.name}</option>`).join('');
+  const b=BATTLEFIELDS.find(x=>x.id===sel.value)||BATTLEFIELDS[0];
+  document.getElementById('battlefield-desc').innerText=b.desc+` Combat effect: ATK ${b.atk>=0?'+':''}${b.atk}, DEF ${b.def>=0?'+':''}${b.def} for all fighters.`;
+}
+function openInfo(id){
+  const f=byId(id); const v=variantOf(f);
+  document.getElementById('info-title').innerText=`${f.icon} ${f.name} — ${f.fr}`;
+  document.getElementById('info-content').innerHTML=`
+  <p><b>Category:</b> ${esc(f.cat)} &nbsp; <b>Tier:</b> ${f.tier} &nbsp; <b>Selected variant:</b> ${esc(v.label)}</p>
+  <p><b>Aliases:</b> ${esc(f.alias)}</p>
+  <p><b>Fighting style:</b> ${esc(f.style)}</p>
+  <p><b>Personality:</b> ${esc(f.pers)}</p>
+  <p><b>Signature (implemented):</b> ${esc(f.sig)} — used every 4th action, ×${f.sigMult}</p>
+  <p><b>Power set (implemented, cycled in battle):</b> ${esc((typeof POWERS!=='undefined'&&POWERS[f.id]?POWERS[f.id]:[]).join(', ')||'—')}</p>
+  <p><b>Variant power:</b> ${esc((typeof V2POWER!=='undefined'&&V2POWER[f.id])||'—')} (replaces first power when the second variant is selected)</p>
+  <p><b>Transformation (implemented, if listed):</b> ${f.trans?esc(f.trans)+' — triggers below 45% HP, +'+f.tAtk+' ATK, +'+f.tDef+' DEF':'None in this build'}</p>
+  <p><b>Weakness:</b> ${esc(f.weak)}</p>
+  <p><b>Notable feat (context, not a stat):</b> ${esc(f.feat)}</p>
+  <p><b>Base stats:</b> HP ${f.hp} • ATK ${f.atk} • DEF ${f.def} • Speed ${f.sp}</p>
+  <p class="note">Implemented vs canon: only the power set above, signature, transformation (if listed), and the engine traits for Infinity, prep-first-hit, and serious-punch scaling are implemented. Other canon powers for this character are not invented here. Research summaries, when fetched, are context — they do not automatically add new powers.</p>
+  <button class="btn small" onclick="fetchCanonForInfo('${f.id}')">Fetch canon sources (Wikipedia + Fandom)</button>
+  <div id="info-canon" class="note" style="margin-top:8px"></div>`;
+  const portrait=document.getElementById('info-portrait'); if(portrait){portrait.style.display='none'; portrait.src='';}
+  document.getElementById('info-modal').classList.add('open');
+  if(typeof loadPortrait==='function') loadPortrait(id);
+}
+function closeInfo(){document.getElementById('info-modal').classList.remove('open')}
+/* ============ LIVE RESEARCH (Wikipedia, free, no key) ============ */
+async function triggerOnlineResearch(){
+  const badge=document.getElementById('ai-status'); const intel=document.getElementById('research-intel');
+  if(selected.length===0){badge.innerText='AI RESEARCH: PICK FIGHTERS FIRST';intel.innerText='Pick at least 1 fighter first.';return}
+  badge.innerText='AI RESEARCH: FETCHING LIVE DATA...'; intel.innerText='Fetching live Wikipedia summaries...';
+  const results=await Promise.allSettled(selected.map(async id=>{
+    const f=byId(id); const res=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(f.wiki)}`,{headers:{Accept:'application/json'}});
+    if(!res.ok) throw new Error('HTTP '+res.status); const d=await res.json(); if(!d.extract) throw new Error('No summary'); return {f,d};
+  }));
+  let live=0; let html='';
+  results.forEach(r=>{if(r.status==='fulfilled'){live++; researchIntel[r.value.f.id]=r.value.d; const s=r.value.d.extract.length>260?r.value.d.extract.slice(0,260)+'...':r.value.d.extract; html+=`<div style="margin-bottom:10px"><b style="color:var(--cyan)">${r.value.f.icon} ${esc(r.value.f.name)} — ${esc(r.value.d.title)}</b><br>${esc(s)}<br><span style="color:var(--green)">Battle intel bonus: +10 ATK, +60 HP</span></div>`;}});
+  if(live>0){badge.innerText='AI RESEARCH: ONLINE (VERIFIED)';badge.style.color='var(--green)';badge.style.borderColor='var(--green)';intel.innerHTML=html;}
+  else{badge.innerText='AI RESEARCH: OFFLINE — LOCAL SIMULATION';badge.style.color='var(--yellow)';badge.style.borderColor='var(--yellow)';intel.innerText='No live source could be reached. The game falls back to local data and gives no intel bonus. It does not claim verification it did not get.';}
+}
+
+/* ============ TEAM REVIEW & COMBAT ENGINE ============ */
+document.getElementById('review-btn').onclick=async ()=>{
+  const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
+  const pool=ROSTER.filter(f=>!selected.includes(f.id));
+  aiTeam=[];
+  while(aiTeam.length<5 && pool.length){const i=Math.floor(Math.random()*pool.length); const f=pool.splice(i,1)[0]; selectedVariants[f.id]=selectedVariants[f.id]||(Math.random()<0.5?'base':'v2'); aiTeam.push(f.id);}
+  const teamHtml=(ids,title)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><span>${esc(f.fr)}</span></div>`}).join('');
+  document.getElementById('setup-review').style.display='block';
+  document.getElementById('setup-review').innerHTML=teamHtml(selected,'Your Alpha Squad')+teamHtml(aiTeam,'AI Adversaries — review before you start')+`<p class="note">Battlefield: ${bf.name}. ${bf.desc}</p><p class="note" id="auto-research-note">Auto-researching both teams from Wikipedia…</p><button class="btn mag" style="width:100%" onclick="startBattle()">Start Battle on ${esc(bf.name)} →</button>`;
+  // Automatic research: the game fetches Wikipedia itself for both teams, no manual button needed.
+  const live=await fetchResearchFor([...selected,...aiTeam]);
+  const note=document.getElementById('auto-research-note'); if(note) note.innerText=live>0?`Auto-research complete: ${live} fighters found on Wikipedia. Researched fighters get +10 ATK / +60 HP, and their summaries feed the story introduction.`:`Auto-research found no live Wikipedia data (offline or blocked). The battle will use local profiles only, and the story will say so — it will not invent researched feats.`;
+};
+function chooseTarget(actor, enemies){
+  const alive=enemies.filter(e=>e.alive);
+  if(!alive.length) return null;
+  if(actor.pers==='ruthless') return alive.sort((a,b)=>a.currentHp-b.currentHp)[0];
+  if(actor.pers==='strategist') return alive.sort((a,b)=>b.atk-a.atk)[0];
+  if(actor.pers==='protective'){const hurt=alive.sort((a,b)=>a.currentHp-b.currentHp)[0]; return hurt;}
+  return alive[Math.floor(Math.random()*alive.length)];
+}
+function simulateBattle(){
+  const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
+  let alpha=selected.map(id=>{const inst=instanceOf(byId(id)); inst.atk+=bf.atk; inst.def+=bf.def; const canonOk=(typeof canonResearch!=='undefined'&&canonResearch[id]&&(canonResearch[id].wiki||canonResearch[id].fandom)); if(researchIntel[id]||canonOk){inst.atk+=10; inst.maxHp+=60; inst.currentHp+=60;} return inst;});
+  let beta=aiTeam.map(id=>{const inst=instanceOf(byId(id)); inst.atk+=bf.atk; inst.def+=bf.def; inst.name='AI-'+inst.name; return inst;});
+  const events=[]; let winner=null;
+  const alive=t=>t.filter(x=>x.alive);
+  for(let round=1; round<=80; round++){
+    // Regeneration is the only per-round heal implemented, and only for that trait.
+    [...alpha,...beta].forEach(f=>{if(f.alive && f.trait==='regen' && f.currentHp<f.maxHp){const h=Math.min(40,f.maxHp-f.currentHp); f.currentHp+=h; events.push({round,type:'heal',actor:f.name,detail:'regenerates',heal:h});}});
+    const order=[...alive(alpha),...alive(beta)].sort((a,b)=>b.sp-a.sp);
+    for(const actor of order){
+      if(!actor.alive) continue;
+      const foes=alpha.includes(actor)?beta:alpha;
+      if(!alive(foes).length) break;
+      if(actor.trans && !actor.transformed && actor.currentHp<=actor.maxHp*0.45){
+        actor.transformed=true; actor.atk+=actor.tAtk; actor.def+=actor.tDef;
+        events.push({round,type:'transform',actor:actor.name,detail:actor.trans});
+      }
+      const target=chooseTarget(actor,foes); if(!target) continue;
+      actor.actions++;
+      const useSig=actor.actions%4===0;
+      let powers=(POWERS[actor.id]||[]).slice();
+      if(actor.variantId==='v2' && V2POWER[actor.id]) powers=[V2POWER[actor.id],...powers.slice(1)];
+      let ability, mult;
+      if(useSig){ability=(actor.transformed&&TRANSSIG[actor.id])?TRANSSIG[actor.id]:actor.sig; mult=actor.sigMult;}
+      else if(powers.length){ability=powers[(actor.actions-1)%powers.length]; mult=1.25;}
+      else {ability=actor.sig; mult=1.2;}
+      // No 'Basic attack' in v5: every action uses a named power from the fighter's powerset.
+      let blocked=false, crit=false;
+      if(target.trait==='infinity_void' && actor.tier!=='EX' && Math.random()<0.65) blocked=true;
+      if(actor.trait==='prep' && actor.actions===1) crit=true;
+      else if(Math.random()<0.20) crit=true;
+      let dmg=0;
+      if(!blocked){
+        let scale=1; if(actor.trait==='serious_punch') scale=1.35+(1-actor.currentHp/actor.maxHp)*0.5;
+        dmg=Math.max(20,Math.floor((actor.atk*mult*scale-target.def*0.28)*(crit?1.5:1)));
+        target.currentHp=Math.max(0,target.currentHp-dmg);
+      }
+      const ev={round,type:'attack',actor:actor.name,target:target.name,ability,damage:dmg,crit,blocked,targetHp:target.currentHp,targetMax:target.maxHp,actorPers:actor.pers};
+      events.push(ev);
+      if(target.currentHp===0 && target.alive){target.alive=false; events.push({round,type:'knockout',actor:actor.name,target:target.name});}
+      if(!alive(alpha).length||!alive(beta).length) break;
+    }
+    if(!alive(alpha).length||!alive(beta).length) break;
+  }
+  winner=alive(alpha).length?'Alpha Squad':'Adversaries';
+  return {alpha,beta,events,winner,rounds:events.length?events[events.length-1].round:0,battlefield:bf};
+}
+function startBattle(){
+  currentBattle=simulateBattle();
+  document.getElementById('draft-screen').classList.remove('active');
+  document.getElementById('battle-screen').classList.add('active');
+  document.getElementById('results-screen').classList.remove('active');
+  document.getElementById('battle-log').innerHTML='<div>Battle simulation complete in the engine. Playing back the recorded events — the story will be built only from these events.</div>';
+  document.getElementById('show-results-btn').style.display='none';
+  playBack();
+}
+function renderCombatants(alpha,beta){
+  const mk=(t)=>t.map(f=>`<div class="fighter ${f.alive?'':'dead'}"><div class="row"><span>${f.icon} ${esc(f.name)}</span><span>${Math.max(0,f.currentHp)}/${f.maxHp} HP</span></div><div class="bar"><div class="fill" style="width:${Math.max(0,f.currentHp/f.maxHp*100)}%"></div></div><small style="color:var(--dim)">${esc(f.variant)}${f.transformed?' • '+esc(f.trans):''}</small></div>`).join('');
+  document.getElementById('alpha-combatants').innerHTML=mk(alpha);
+  document.getElementById('beta-combatants').innerHTML=mk(beta);
+}
+function playBack(){
+  if(playbackTimer) clearInterval(playbackTimer);
+  // Playback copies start at full HP and apply events in order, so HP never contradicts the log.
+  const alpha=currentBattle.alpha.map(f=>({...f,currentHp:f.maxHp,alive:true,transformed:false}));
+  const beta=currentBattle.beta.map(f=>({...f,currentHp:f.maxHp,alive:true,transformed:false}));
+  // Note: transformed flag in playback is visual only; final state is in currentBattle.
+  renderCombatants(alpha,beta);
+  const evs=currentBattle.events; let i=0; const log=document.getElementById('battle-log');
+  playbackTimer=setInterval(()=>{
+    if(i>=evs.length){clearInterval(playbackTimer); document.getElementById('show-results-btn').style.display='block'; return;}
+    const e=evs[i++]; const all=[...alpha,...beta];
+    if(e.type==='attack'){
+      const t=all.find(x=>x.name===e.target); if(t){t.currentHp=e.targetHp; if(e.targetHp===0) t.alive=false;}
+      log.innerHTML+=`<div><b>${esc(e.actor)}</b> ${e.blocked?'is stopped cold by '+esc(e.target)+"'s defence.":'uses '+esc(e.ability)+' on '+esc(e.target)+(e.crit?' — a critical hit!':'')+'.'}</div>`;
+    } else if(e.type==='transform'){const a=all.find(x=>x.name===e.actor); if(a) a.transformed=true; log.innerHTML+=`<div><b>${esc(e.actor)}</b> transforms: ${esc(e.detail)}!</div>`;}
+    else if(e.type==='knockout'){log.innerHTML+=`<div><b>${esc(e.target)}</b> is knocked out.</div>`;}
+    else if(e.type==='heal'){const a=all.find(x=>x.name===e.actor); if(a) a.currentHp=Math.min(a.maxHp,a.currentHp+e.heal); log.innerHTML+=`<div>${esc(e.actor)} recovers some strength.</div>`;}
+    renderCombatants(alpha,beta); log.scrollTop=log.scrollHeight;
+  },550);
+}
+document.getElementById('show-results-btn').onclick=showResults;
+
+/* ============ STORY ENGINE — built ONLY from recorded events ============ */
+function cond(hp,max){if(hp===0) return 'falls and does not rise'; if(hp/max<0.25) return 'is barely standing, breathing hard'; if(hp/max<0.5) return 'is badly hurt and slowing'; return 'staggers, but holds their ground';}
+function narrateAttack(e){
+  if(e.blocked) return `${e.actor} drives forward, but ${e.target}'s defence turns the blow aside completely — the attack never lands.`;
+  const hits=[`${e.actor} unleashes ${e.ability}, forcing ${e.target} back across the broken ground.`, `${e.actor} finds an opening and strikes with ${e.ability}, and ${e.target} ${cond(e.targetHp,e.targetMax)}.`, `${e.actor} presses the attack with ${e.ability}, testing ${e.target}'s guard until it begins to give.`];
+  const base=hits[Math.abs(e.actor.length+e.target.length+e.round)%hits.length];
+  return e.crit?base+' The impact is far heavier than expected, and the whole battlefield seems to shudder.':base;
+}
+function chapter(title,paras){return `<h3>${title}</h3>`+paras.map(p=>`<p>${p}</p>`).join('')}
+function generateStory(b){
+  const evs=b.events; const first=evs.filter(e=>e.round<=2); const last=evs.slice(-6);
+  const middle=evs.filter(e=>e.round>2 && !last.includes(e));
+  const introTeam=(team,label)=>team.map((f,i)=>{const d=DIALOGUE[f.pers]?DIALOGUE[f.pers][i%2]:''; return `${f.name}, ${f.style}, steps forward. <span class="dia">${d}</span>`}).join(' ');
+  const survivors=t=>t.filter(f=>f.alive); const fallen=t=>t.filter(f=>!f.alive);
+  const ch1=chapter('Chapter I — The Arrival',[`The confrontation takes place at ${b.battlefield.name}. ${b.battlefield.desc} Dust, light and the weight of ten very different histories fill the air before anyone moves.`,`For Alpha Squad: ${introTeam(b.alpha,'Alpha')}`,`Against them stand the Adversaries: ${introTeam(b.beta,'Adversaries')}`,`No one here fights for the same reason. That is why the first moments matter more than the first blows.`]);
+  const ch2=chapter('Chapter II — First Contact', first.length?first.map(e=>e.type==='transform'?`${e.actor} changes form, becoming ${e.detail}, and the opposing team immediately rethinks its plan.`:e.type==='knockout'?`${e.target} is already down — an early warning that this fight will not be gentle.`:narrateAttack(e)):[`The two teams circle, test range, and exchange careful opening blows. Each fighter learns something in those first seconds that will matter later.`]);
+  const ch3paras=middle.length?middle.map(e=>e.type==='transform'?`${e.actor} is pushed to a limit and transforms into ${e.detail}. The change is not cosmetic: their speed, power and options shift, and opponents who were winning must now adapt.`:e.type==='knockout'?`${e.target} falls. The loss changes the shape of the fight, leaving teammates exposed and forcing a new plan.`:e.type==='heal'?`${e.actor} steadies and recovers, buying a moment to breathe.`:narrateAttack(e)):[`The battle grinds on, with neither side able to finish the other cleanly.`];
+  const ch3=chapter('Chapter III — Escalation and Reversals',ch3paras.slice(0,18));
+  const ch4=chapter('Chapter IV — The Decisive Clash', last.map(e=>e.type==='transform'?`${e.actor} makes a final transformation, gambling everything on a new form.`:e.type==='knockout'?`${e.target} falls, and with that fall the balance of the battle tips for good.`:e.type==='attack'?narrateAttack(e):`${e.actor} recovers, but it is too late to change the direction of the fight.`));
+  const winTeam=b.winner==='Alpha Squad'?b.alpha:b.beta; const loseTeam=b.winner==='Alpha Squad'?b.beta:b.alpha;
+  const ch5=chapter('Chapter V — The Aftermath',[
+    `${b.winner} stand victorious. ${survivors(winTeam).map(f=>f.name).join(', ')||'No one'} remain standing, while ${fallen(winTeam).map(f=>f.name).join(', ')||'none of their own'} have fallen. On the other side, ${fallen(loseTeam).map(f=>f.name).join(', ')} are down, and ${survivors(loseTeam).map(f=>f.name).join(', ')||'no one'} remain.`,
+    `The battlefield bears the marks of the fight — shattered cover, scorched ground, and the silence that follows a contest that was decided by tactics and endurance, not by a single declared blow.`,
+    `The survivors do not celebrate in the same way. A proud fighter looks for the next challenge. A disciplined fighter acknowledges a worthy opponent. A compassionate fighter checks on the fallen first. That difference is the point: the ending follows the people who fought, and the result the simulation actually produced.`
+  ]);
+  return ch1+ch2+ch3+ch4+ch5;
+}
+function consistencyCheck(b){
+  const dead=new Set(); let ok=true;
+  for(const e of b.events){if(e.type==='attack'||e.type==='transform'){if(dead.has(e.actor)) ok=false;} if(e.type==='knockout') dead.add(e.target);}
+  const aliveAlpha=b.alpha.filter(f=>f.alive).length, aliveBeta=b.beta.filter(f=>f.alive).length;
+  if(b.winner==='Alpha Squad' && aliveAlpha===0) ok=false; if(b.winner==='Adversaries' && aliveBeta===0) ok=false;
+  return ok;
+}
+function generateBreakdown(b){
+  const totals={}; b.events.forEach(e=>{if(e.type==='attack'&&!e.blocked) totals[e.actor]=(totals[e.actor]||0)+e.damage;});
+  const summary=`<li><b>Winner:</b> ${b.winner} &nbsp; <b>Battlefield:</b> ${esc(b.battlefield.name)} &nbsp; <b>Rounds in record:</b> ${b.rounds} &nbsp; <b>Events:</b> ${b.events.length}</li>`+Object.entries(totals).map(([n,d])=>`<li><b>${esc(n)}</b> dealt ${d} damage in total.</li>`).join('')+(ytNote?`<li><b>Research note used as story context only (did not add powers):</b> ${esc(ytNote)}</li>`:`<li><b>Research sources:</b> Wikipedia summaries where fetched, plus YouTube battle-analysis searches linked from the draft screen. No YouTube video was automatically watched or transcribed by the game.</li>`);
+  const list=b.events.map(e=>{
+    if(e.type==='attack') return `<li>Round ${e.round}: ${esc(e.actor)} — ${esc(e.ability)} → ${esc(e.target)} — ${e.blocked?'BLOCKED, 0 damage':e.damage+' damage'+(e.crit?' (CRIT)':'')}, target left at ${e.targetHp}/${e.targetMax} HP.</li>`;
+    if(e.type==='transform') return `<li>Round ${e.round}: ${esc(e.actor)} transforms into ${esc(e.detail)}.</li>`;
+    if(e.type==='knockout') return `<li>Round ${e.round}: ${esc(e.target)} is knocked out by ${esc(e.actor)}.</li>`;
+    return `<li>Round ${e.round}: ${esc(e.actor)} recovers ${e.heal} HP.</li>`;
+  }).join('');
+  return summary+list;
+}
+/* ============ RESULTS & HISTORY (localStorage only) ============ */
+function showResults(){
+  const b=currentBattle; if(!b) return;
+  document.getElementById('battle-screen').classList.remove('active');
+  document.getElementById('results-screen').classList.add('active');
+  const winTeam=b.winner==='Alpha Squad'?b.alpha:b.beta;
+  document.getElementById('result-title').innerText=b.winner==='Alpha Squad'?'MULTIVERSE SUPREMACY — Alpha Squad Wins':'SIMULATION COLLAPSE — Adversaries Win';
+  document.getElementById('result-desc').innerText=`Survivors: ${winTeam.filter(f=>f.alive).map(f=>f.name).join(', ')||'None'}. Battlefield: ${b.battlefield.name}. The story below was generated only from the recorded battle events.`;
+  document.getElementById('consistency-note').innerText='Story consistency check: '+(consistencyCheck(b)?'PASSED — winner, knockouts and transformations in the story match the simulation record.':'FAILED — do not trust this story; check the breakdown.');
+  const story=generateStoryV2(b), breakdown=generateBreakdown(b);
+  document.getElementById('story-output').innerHTML=story;
+  document.getElementById('breakdown-output').innerHTML=breakdown;
+  saveBattle(b,story,breakdown);
+}
+function loadHistory(){try{return JSON.parse(localStorage.getItem('warroom_battles_v3')||'[]')}catch(e){return []}}
+function saveBattle(b,story,breakdown){
+  try{const h=loadHistory(); h.unshift({id:Date.now(),date:new Date().toLocaleString(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),battlefield:b.battlefield.name,winner:b.winner,story,breakdown}); localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));}catch(e){}
+  renderHistory();
+}
+function renderHistory(){
+  const h=loadHistory(); const el=document.getElementById('history-list');
+  if(!h.length){el.innerText='No saved battles yet.';return}
+  el.innerHTML=h.map(x=>`<div style="margin-bottom:10px"><b>${esc(x.date)} — ${esc(x.winner)}</b> on ${esc(x.battlefield)}<br><small>${esc(x.alpha.join(', '))} vs ${esc(x.beta.join(', '))}</small><br><button class="btn small" onclick="viewHistory(${x.id})">View story</button></div>`).join('');
+}
+function viewHistory(id){
+  const x=loadHistory().find(h=>h.id===id); if(!x) return;
+  document.getElementById('draft-screen').classList.remove('active'); document.getElementById('battle-screen').classList.remove('active'); document.getElementById('results-screen').classList.add('active');
+  document.getElementById('result-title').innerText='Saved Battle — '+x.winner; document.getElementById('result-desc').innerText=x.date+' • '+x.battlefield;
+  document.getElementById('consistency-note').innerText='Loaded from history saved on this device only. It is not synced to other devices.';
+  document.getElementById('story-output').innerHTML=x.story; document.getElementById('breakdown-output').innerHTML=x.breakdown;
+}
+function resetSimulator(){
+  if(playbackTimer) clearInterval(playbackTimer);
+  selected=[]; aiTeam=[]; researchIntel={}; currentBattle=null; ytNote=''; if(typeof canonResearch!=='undefined') canonResearch={};
+  const tn=document.getElementById('yt-note'); if(tn) tn.value=''; const nd=document.getElementById('yt-note-display'); if(nd) nd.innerHTML='';
+  document.getElementById('setup-review').style.display='none';
+  document.getElementById('ai-status').innerText='AI RESEARCH: STANDBY';
+  document.getElementById('results-screen').classList.remove('active'); document.getElementById('battle-screen').classList.remove('active'); document.getElementById('draft-screen').classList.add('active');
+  renderRoster(); renderHistory();
+}
+/* ============ V5: CANON POWERSETS ============ */
+const POWERS={
+goku:['Ki Blast','Instant Transmission Strike','Dragon Fist'],naruto:['Shadow Clone Barrage','Wind Style Strike','Sage Art Strike'],tanjiro:['Water Breathing Slash','Thunder Breathing Dash','Dance of the Fire God'],gojo:['Cursed Energy Punch','Blue: Attraction','Red: Repulsion'],superman:['Super Punch','Freeze Breath','Tornado Spin'],batman:['Batarang Throw','Smoke Pellet Ambush','Grapple Kick'],spiderman:['Web Shot','Wall-Crawl Kick','Spider-Sense Counter'],wonderwoman:['Shield Bash','Sword of Athena','Bracelet Shockwave'],mario:['Jump Stomp','Fireball','Hammer Swing'],link:['Sword Slash','Bomb Throw','Bow Shot'],chief:['Assault Rifle Burst','Melee Strike','Grenade Toss'],kratos:['Axe Swing','Blades of Chaos Whip','Shield Slam'],vader:['Force Push','Lightsaber Slash','Force Grip'],luke:['Lightsaber Slash','Force Push','Mind Trick Feint'],neo:['Kung Fu Combo','Bullet Dodge Strike','Telekinesis Push'],wick:['Pistol Shot','Knife Strike','Judo Throw'],aang:['Air Blast','Water Whip','Earth Pillar'],ben:['Heatblast Flame','Four Arms Punch','XLR8 Speed Strike'],danny:['Ecto Blast','Intangibility Strike','Overshadow Feint'],jack:['Katana Slash','Jumping Strike','Bow Shot'],gandalf:['Staff Strike','Light Burst','Word of Power'],geralt:['Steel Sword Slash','Igni Sign','Aard Sign'],spock:['Nerve Pinch Attempt','Phaser Strike','Logic Counter'],doctor:['Sonic Distraction','TARDIS Feint','Psychic Paper Trick']};
+const V2POWER={goku:'God Ki Blast',naruto:'Sage Rasengan',tanjiro:'Sun Halo Slash',gojo:'Domain Expansion Strike',superman:'Solar Flare Punch',batman:'Powered Gauntlet Punch',spiderman:'Symbiote Tendril Strike',wonderwoman:'Godkiller Sword Slash',mario:'Fire Flower Blast',link:'Champion Sword Beam',chief:'Railgun Shot',kratos:'Valhalla Axe Throw',vader:'Sith Lightning',luke:'Jedi Master Saber Throw',neo:'One Code Burst',wick:'Dual Pistol Barrage',aang:'Avatar Elemental Surge',ben:'Ultimate Humungousaur Slam',danny:'Phantom Energy Beam',jack:'Season 5 Katana Fury',gandalf:'White Light Beam',geralt:'Grandmaster Crossbow Shot',spock:'Captain Command Strike',doctor:'Regeneration Energy Burst'};
+const TRANSSIG={goku:'God Kamehameha',naruto:'Tailed Beast Bomb',tanjiro:'Sun Breathing Final Form',gojo:'Unlimited Void Crush',superman:'Sun-Charged Heat Vision',spiderman:'Symbiote Rage',wonderwoman:'Divine Lasso Crush',mario:'Star Power Slam',link:'Fierce Deity Sword Beam',chief:'Overshield Charge',kratos:'Spartan Rage Slam',vader:'Dark Side Fury',luke:'Master Force Wave',neo:'The One Blast',wick:'Baba Yaga Final Shot',aang:'Avatar State Blast',ben:'Way Big Slam',danny:'Phantom Rage Wail',jack:'Resolve Katana Finale',gandalf:'Istari Wrath Beam',geralt:'Toxicity Berserk Slash',spock:'Vulcan Fury Strike',doctor:'Regeneration Surge Blast'};
+/* ============ V5: AUTOMATIC RESEARCH FOR BOTH TEAMS ============ */
+async function fetchResearchFor(ids){
+  let live=0;
+  const results=await Promise.allSettled(ids.map(async id=>{const c=await fetchCanonFor(id); return {id,c};}));
+  results.forEach(r=>{if(r.status==='fulfilled'&&r.value&&r.value.c&&(r.value.c.wiki||r.value.c.fandom)){live++;}});
+  return live;
+}
+/* ============ V5: NOVEL STORY ENGINE ============ */
+/* Dialogue here is written in-character for this battle. It is NOT quoted canon dialogue. */
+function powerProse(e,idx){
+  if(e.blocked) return `${e.actor} commits to ${e.ability}, but ${e.target} reads it, turns it aside, and gives nothing away. The air where the blow should have landed is suddenly, pointedly empty.`;
+  const t=[
+    `${e.actor} moves the way only ${e.actor} moves — ${e.ability} cutting through the noise of ${e.target}'s defence, until ${e.target} ${cond(e.targetHp,e.targetMax)}.`,
+    `There is no wasted motion in ${e.ability}. ${e.actor} sets it up with a feint, a shift of weight, a change of angle, and ${e.target} pays for the half-second they were late.`,
+    `${e.ability} is not just an attack; it is a statement of how ${e.actor} fights. ${e.target} answers as best they can, but the exchange leaves them ${cond(e.targetHp,e.targetMax)}.`,
+    `The battlefield itself reacts to ${e.ability} — dust lifts, cover cracks, onlookers flinch — and ${e.target} is left ${cond(e.targetHp,e.targetMax)}.`,
+    `${e.actor} does not shout the name of the move and wait for applause. They use it, move again, and force ${e.target} to solve a new problem immediately.`
+  ];
+  let s=t[(idx+e.round)%t.length];
+  if(e.crit) s+=' This one lands with a weight that changes the whole tempo of the fight.';
+  return s;
+}
+function sceneForRound(round,evs){
+  let parts=[];
+  evs.forEach((e,i)=>{
+    if(e.type==='transform') parts.push(`Then the fight changes. ${e.actor} is pushed past what their current form can do, and becomes ${e.detail}. It is not a costume change — their power, reach and choices change, and everyone on the field recalculates in real time.`);
+    else if(e.type==='knockout') parts.push(`${e.target} goes down. Not with a speech, not with a flourish — with the sudden, flat silence that follows a fighter who has nothing left to give.`);
+    else if(e.type==='heal') parts.push(`${e.actor} finds a breath, steadies, and recovers enough to keep fighting.`);
+    else {parts.push(powerProse(e,i)); if(i%3===0){const f=[...currentBattle.alpha,...currentBattle.beta].find(x=>x.name===e.actor); if(f&&DIALOGUE[f.pers]) parts.push(`<span class="dia">${e.actor}: "${DIALOGUE[f.pers][(e.round+i)%2]}"</span>`);}}
+  });
+  return parts.join(' ');
+}
+function generateStoryV2(b){
+  const byRound={}; b.events.forEach(e=>{(byRound[e.round]=byRound[e.round]||[]).push(e)});
+  const rounds=Object.keys(byRound).map(Number).sort((a,c)=>a-c);
+  const researchEntries=Object.entries(researchIntel).slice(0,3);
+  const fandomEntries=(typeof canonResearch!=='undefined'?Object.entries(canonResearch).filter(([id,c])=>c.fandom).slice(0,3):[]);
+  const researchPara=researchEntries.length||fandomEntries.length?`Live research, fetched automatically for both teams before this battle, found this context: ${researchEntries.map(([id,d])=>{const f=byId(id); return `${f?f.name:id} (Wikipedia) — ${d.extract.slice(0,180)}…`}).join(' ')} ${fandomEntries.map(([id,c])=>{const f=byId(id); return `${f?f.name:id} (Fandom canon wiki) — ${c.fandom.extract.slice(0,180)}…`}).join(' ')} The story uses that context for character, not as a licence to invent new powers.`:`No live research could be fetched for this battle, so this story uses only the in-game profiles. It does not invent researched feats it did not find.`;
+  const introTeam=team=>team.map((f,i)=>`${f.name} (${f.variant}, ${f.fr}) fights as ${f.style}. Their named powers include ${(POWERS[f.id]||[]).join(', ')||f.sig}, with ${f.sig} as their signature, ${f.trans?`and ${f.trans} as a transformation that only triggers under pressure`:`and no transformation in this build`}. <span class="dia">${f.name}: "${(DIALOGUE[f.pers]||[''])[i%2]}"</span>`).join(' ');
+  const firstRounds=rounds.slice(0,2), lastRounds=rounds.slice(-2), midRounds=rounds.slice(2,-2);
+  const ch1=chapter('Chapter I — The Arrival',[`At ${b.battlefield.name}, the ground itself sets the terms. ${b.battlefield.desc} This is not an arena built for fairness; it is a place that rewards the fighter who reads it fastest.`,researchPara,`Alpha Squad arrive first in spirit, if not in step: ${introTeam(b.alpha)}`,`The Adversaries answer in kind: ${introTeam(b.beta)}`,`Dialogue in this story is written in-character for this battle. It is not quoted canon dialogue. What is canon here is the set of powers, forms, variants and weaknesses each fighter brings — and the result the simulation actually produces.`]);
+  const ch2=chapter('Chapter II — First Contact', firstRounds.length?firstRounds.map(r=>sceneForRound(r,byRound[r])):[`The opening exchanges are cautious, then suddenly not. Each fighter tests range, speed and nerve, and learns one true thing about an opponent that will matter later.`]);
+  const ch3=chapter('Chapter III — Escalation and Reversals', midRounds.length?midRounds.slice(0,6).map(r=>sceneForRound(r,byRound[r])):[`The middle of the fight is where plans break. A strategy that worked in the first minute stops working, a fighter who was winning is forced to defend, and a transformation or a desperate power changes who is in control.`]);
+  const ch4paras=lastRounds.map(r=>sceneForRound(r,byRound[r]));
+  const finalKO=b.events.filter(e=>e.type==='knockout').slice(-1)[0];
+  if(finalKO) ch4paras.push(`The decisive moment is not a narrator declaring a winner. It is ${finalKO.actor} landing the blow that ${finalKO.target} cannot answer, after everything that came before — the injuries, the failed defences, the transformations, the choices. ${b.winner} earn the result because the record, round by round, leads here.`);
+  const ch4=chapter('Chapter IV — The Decisive Clash',ch4paras);
+  const winTeam=b.winner==='Alpha Squad'?b.alpha:b.beta, loseTeam=b.winner==='Alpha Squad'?b.beta:b.alpha;
+  const ch5=chapter('Chapter V — The Aftermath',[
+    `${b.winner} remain. ${winTeam.filter(f=>f.alive).map(f=>f.name).join(', ')||'No one'} are still standing; ${winTeam.filter(f=>!f.alive).map(f=>f.name).join(', ')||'none of their own'} have fallen. For the losing side, ${loseTeam.filter(f=>!f.alive).map(f=>f.name).join(', ')} are down, and ${loseTeam.filter(f=>f.alive).map(f=>f.name).join(', ')||'no one'} remain.`,
+    ytNote?`Research note from this battle, kept as context: ${ytNote}`:`No YouTube research note was saved for this battle.`,
+    `The aftermath is not the same for everyone. A proud fighter looks for the next challenge. A disciplined fighter bows to a worthy opponent. A compassionate fighter goes first to the fallen, not to the applause. A ruthless fighter would already be planning the next advantage. Those reactions follow the personalities established at the start — they do not rewrite the winner, the fallen, or the powers that were actually used.`,
+    `That is the story of this battle: not a list of attacks, but a chain of choices, powers, forms and injuries that could only end this way once it had unfolded this way.`
+  ]);
+  return ch1+ch2+ch3+ch4+ch5;
+}
+/* ============ V5: PORTRAITS & CUSTOM FIGHTERS ============ */
+/* Portraits: Wikipedia thumbnails where available, emoji fallback otherwise.
+   Form-specific licensed artwork is not reliably available free, so v5 does not claim it. */
+async function loadPortrait(id){
+  const f=byId(id); if(!f) return;
+  try{const res=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(f.wiki)}`); const d=await res.json(); const img=document.getElementById('info-portrait'); if(img&&d.thumbnail) {img.src=d.thumbnail.source; img.style.display='block';} }catch(e){}
+}
+function addCustomFighter(){
+  const name=(document.getElementById('custom-name').value||'').trim(); if(!name) {alert('Give the fighter a name first.');return}
+  const powers=(document.getElementById('custom-powers').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const f={id:'custom_'+Date.now(),name,fr:document.getElementById('custom-fr').value||'Custom',cat:document.getElementById('custom-cat').value||'Anime',icon:'⭐',hp:1200,atk:125,def:85,sp:1.2,tier:'A',trait:'',pers:'disciplined',style:document.getElementById('custom-style').value||'Custom fighter',sig:powers[0]||'Custom Power',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Custom — set by creator',feat:'Custom — set by creator',wiki:name.replace(/\s+/g,'_'),alias:name,v2:'Custom Variant',v2hp:100,v2atk:15,v2def:5};
+  ROSTER.push(f); if(powers.length) POWERS[f.id]=powers.slice(0,3);
+  try{const cur=JSON.parse(localStorage.getItem('warroom_custom')||'[]'); cur.push({f,powers}); localStorage.setItem('warroom_custom',JSON.stringify(cur));}catch(e){}
+  renderRoster(); alert(name+' added. Custom fighters help grow the roster toward 100 per category without inventing canon profiles for real characters.');
+}
+/* ============ V6: CONNECTED CANON — WIKIPEDIA + FANDOM ============ */
+const FANDOM={
+goku:{d:'dragonball.fandom.com',t:'Goku'},naruto:{d:'naruto.fandom.com',t:'Naruto Uzumaki'},tanjiro:{d:'kimetsu-no-yaiba.fandom.com',t:'Tanjiro Kamado'},gojo:{d:'jujutsu-kaisen.fandom.com',t:'Satoru Gojo'},superman:{d:'dc.fandom.com',t:'Superman'},batman:{d:'dc.fandom.com',t:'Batman'},spiderman:{d:'marvel.fandom.com',t:'Spider-Man'},wonderwoman:{d:'dc.fandom.com',t:'Wonder Woman'},mario:{d:'mario.fandom.com',t:'Mario'},link:{d:'zelda.fandom.com',t:'Link'},chief:{d:'halo.fandom.com',t:'Master Chief'},kratos:{d:'godofwar.fandom.com',t:'Kratos'},vader:{d:'starwars.fandom.com',t:'Darth Vader'},luke:{d:'starwars.fandom.com',t:'Luke Skywalker'},neo:{d:'matrix.fandom.com',t:'Neo'},wick:{d:'johnwick.fandom.com',t:'John Wick'},aang:{d:'avatar.fandom.com',t:'Aang'},ben:{d:'ben10.fandom.com',t:'Ben Tennyson'},danny:{d:'dannyphantom.fandom.com',t:'Danny Phantom'},jack:{d:'samuraijack.fandom.com',t:'Samurai Jack'},gandalf:{d:'lotr.fandom.com',t:'Gandalf'},geralt:{d:'witcher.fandom.com',t:'Geralt of Rivia'},spock:{d:'memory-alpha.fandom.com',t:'Spock'},doctor:{d:'tardis.fandom.com',t:'The Doctor'}};
+let canonResearch={};
+async function fetchWiki(id){
+  const f=byId(id); if(!f) return null;
+  try{const res=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(f.wiki)}`,{headers:{Accept:'application/json'}}); if(!res.ok) return null; const d=await res.json(); if(d.extract) {researchIntel[id]=d; return d;} }catch(e){} return null;
+}
+async function fetchFandom(id){
+  const fm=FANDOM[id]; if(!fm) return null;
+  try{const url=`https://${fm.d}/api.php?action=query&prop=extracts|info&explaintext&exintro&inprop=url&titles=${encodeURIComponent(fm.t)}&format=json&origin=*`;
+  const res=await fetch(url); if(!res.ok) return null; const j=await res.json(); const pages=j.query&&j.query.pages?Object.values(j.query.pages):[]; const p=pages[0]; if(p&&p.extract) return {title:p.title,extract:p.extract,url:p.canonicalurl||`https://${fm.d}/wiki/${encodeURIComponent(fm.t)}`,domain:fm.d}; }catch(e){} return null;
+}
+async function fetchCanonFor(id){
+  const [wiki,fandom]=await Promise.all([fetchWiki(id),fetchFandom(id)]);
+  canonResearch[id]={wiki,fandom,time:new Date().toISOString()};
+  return canonResearch[id];
+}
+async function fetchCanonForSelected(){
+  const el=document.getElementById('canon-results'); if(el) el.innerHTML='Fetching Wikipedia + Fandom for your team…';
+  if(!selected.length){if(el) el.innerHTML='Pick fighters first.';return}
+  await Promise.all(selected.map(id=>fetchCanonFor(id)));
+  renderCanonResults(selected);
+}
+function renderCanonResults(ids){
+  const el=document.getElementById('canon-results'); if(!el) return;
+  el.innerHTML=ids.map(id=>{const f=byId(id); const c=canonResearch[id]||{}; const w=c.wiki?`✅ Wikipedia: ${esc(c.wiki.extract.slice(0,200))}…`:`❌ Wikipedia: no data (offline / not found)`; const fa=c.fandom?`✅ Fandom (${esc(c.fandom.domain)}): ${esc(c.fandom.extract.slice(0,200))}… <a href="${c.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open canon page</a>`:`❌ Fandom: no data (offline / not found)`; return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)}</b><br>${w}<br>${fa}</div>`}).join('');
+}
+async function fetchCanonForInfo(id){
+  const el=document.getElementById('info-canon'); if(el) el.innerHTML='Fetching canon sources…';
+  const c=await fetchCanonFor(id);
+  if(el) el.innerHTML=`<p><b>Wikipedia:</b> ${c.wiki?esc(c.wiki.extract.slice(0,400))+'…':'No data.'}</p><p><b>Fandom:</b> ${c.fandom?esc(c.fandom.extract.slice(0,400))+'… <a href="'+c.fandom.url+'" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a>':'No data.'}</p><p class="note">These extracts are context. They do not automatically add new powers to the combat engine.</p>`;
+}
+async function searchCanon(){
+  const q=(document.getElementById('canon-search-input').value||'').trim(); const el=document.getElementById('canon-search-results'); if(!q){el.innerHTML='Type a character name first.';return}
+  el.innerHTML='Searching Wikipedia…';
+  try{const res=await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&srlimit=8&format=json&origin=*`); const j=await res.json(); const list=(j.query&&j.query.search)||[];
+  el.innerHTML=list.length?list.map(r=>`<div style="margin-bottom:8px"><b>${esc(r.title)}</b> — ${esc((r.snippet||'').replace(/<[^>]+>/g,''))} <button class="btn small" onclick="addSearchAsCustom('${esc(r.title).replace(/'/g,"")}')">Add as custom fighter</button></div>`).join(''):'No Wikipedia results found. Try another spelling.';}catch(e){el.innerHTML='Search failed — you may be offline. Try again when connected.';}
+}
+function addSearchAsCustom(title){
+  const f={id:'custom_'+Date.now(),name:title,fr:'From Wikipedia search',cat:'Anime',icon:'⭐',hp:1200,atk:125,def:85,sp:1.2,tier:'A',trait:'',pers:'disciplined',style:'Added from canon search — edit powers in your own research notes',sig:'Custom Power',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Not yet researched in-game',feat:'From Wikipedia search result',wiki:title.replace(/\s+/g,'_'),alias:title,v2:'Custom Variant',v2hp:100,v2atk:15,v2def:5};
+  ROSTER.push(f); renderRoster(); alert(title+' added as a custom fighter. Add its real powers via your research notes — the search result alone does not create a canon profile.');
+}
+function downloadStory(){
+  if(!currentBattle) return;
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>WAR-ROOM Battle Story</title></head><body style="font-family:sans-serif;line-height:1.7;max-width:800px;margin:20px auto;padding:0 16px">${document.getElementById('story-output').innerHTML}<hr>${document.getElementById('breakdown-output').innerHTML}</body></html>`;
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([html],{type:'text/html'})); a.download='war-room-story.html'; a.click();
+}
+function updateOnlineStatus(){
+  const el=document.getElementById('online-status'); if(!el) return;
+  el.innerText=navigator.onLine?'● ONLINE':'○ OFFLINE — local play only';
+  el.style.color=navigator.onLine?'var(--green)':'var(--yellow)';
+}
+/* ============ INIT ============ */
+document.getElementById('search-input').addEventListener('input',e=>{searchTerm=e.target.value.toLowerCase();renderRoster()});
+document.getElementById('battlefield-select').addEventListener('change',renderBattlefields);
+try{JSON.parse(localStorage.getItem('warroom_custom')||'[]').forEach(c=>{if(!ROSTER.find(x=>x.id===c.f.id)){ROSTER.push(c.f); if(c.powers) POWERS[c.f.id]=c.powers.slice(0,3);}})}catch(e){}
+renderChips(); renderRoster(); renderHistory(); renderChannels(); if(typeof updateOnlineStatus==='function'){updateOnlineStatus(); window.addEventListener('online',updateOnlineStatus); window.addEventListener('offline',updateOnlineStatus);}
+</script>
+</body>
+</html>

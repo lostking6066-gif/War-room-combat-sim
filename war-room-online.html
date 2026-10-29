@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAR-ROOM: Canon-Aware Multiverse Combat & Story Engine</title>
+    <style>
+        :root {
+            --bg-dark: #07090f;
+            --panel-bg: #0f131f;
+            --border-color: #1a2236;
+            --accent-cyan: #00f0ff;
+            --accent-magenta: #ff007f;
+            --accent-green: #00ff66;
+            --accent-yellow: #ffcc00;
+            --text-main: #e2e8f0;
+            --text-dim: #8fa3bf;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        header {
+            background: linear-gradient(180deg, #121826 0%, #07090f 100%);
+            border-bottom: 2px solid var(--border-color);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-area h1 {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+        }
+        .logo-area span {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 1.5px;
+        }
+        .system-status {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+        }
+        .status-badge {
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        main {
+            flex: 1;
+            max-width: 1450px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .screen {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .screen.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .prep-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media(max-width: 950px) {
+            .prep-container { grid-template-columns: 1fr; }
+        }
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.6);
+        }
+        .panel h2 {
+            font-size: 1.1rem;
+            color: var(--accent-cyan);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .fighter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            gap: 12px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .fighter-card {
+            background: #141b2c;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            position: relative;
+        }
+        .fighter-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+        .fighter-card.selected {
+            border-color: var(--accent-magenta);
+            background: rgba(255, 0, 127, 0.12);
+        }
+        .avatar-placeholder {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #1c253d;
+            margin: 0 auto 8px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            border: 1px solid var(--border-color);
+        }
+        .fighter-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .fighter-class {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+        .tier-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            font-size: 0.6rem;
+            background: rgba(0, 240, 255, 0.2);
+            color: var(--accent-cyan);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .squad-roster {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 240px;
+        }
+        .roster-slot {
+            background: #131929;
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+        .roster-slot.filled {
+            border-style: solid;
+            border-color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.06);
+        }
+        .btn {
+            background: linear-gradient(135deg, var(--accent-cyan), #0070ff);
+            color: #000;
+            font-weight: 700;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { background: #222a3d; color: #55627a; cursor: not-allowed; }
+        .btn-magenta {
+            background: linear-gradient(135deg, var(--accent-magenta), #99004d);
+            color: #fff;
+        }
+        .btn-research {
+            background: linear-gradient(135deg, var(--accent-yellow), #cc9900);
+            color: #000;
+        }
+        .arena-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+        }
+        @media(max-width: 1050px) {
+            .arena-layout { grid-template-columns: 1fr; }
+        }
+        .battlefield {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .teams-combat-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .team-combat-col {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .team-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        .team-combat-col.enemy .team-title {
+            color: var(--accent-magenta);
+        }
+        .combatant-card {
+            background: #141b2c;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .combatant-card.attacking {
+            border-color: var(--accent-yellow);
+            box-shadow: 0 0 12px rgba(255, 204, 0, 0.4);
+        }
+        .combatant-card.defeated {
+            opacity: 0.35;
+            filter: grayscale(100%);
+        }
+        .combatant-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .bars-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .bar-wrapper {
+            background: #07090f;
+            border-radius: 3px;
+            height: 7px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        .bar-fill {
+            height: 100%;
+            width: 100%;
+            transition: width 0.1s linear;
+        }
+        .hp-fill { background: var(--accent-green); }
+        .cd-fill { background: var(--accent-cyan); }
+        .console-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 520px;
+        }
+        .console-logs {
+            flex: 1;
+            background: #05070c;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .log-entry {
+            line-height: 1.5;
+            border-left: 3px solid var(--border-color);
+            padding-left: 8px;
+        }
+        .log-entry.info { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .log-entry.research { border-color: var(--accent-yellow); color: var(--accent-yellow); font-family: 'Courier New', monospace; font-size: 0.8rem; }
+        .log-entry.story { border-color: var(--accent-magenta); color: #ff99cc; font-style: italic; }
+        .log-entry.crit { border-color: var(--accent-yellow); color: var(--accent-yellow); font-weight: bold; }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 7, 12, 0.85);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--panel-bg);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+        }
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-area">
+            <h1>WAR-ROOM</h1>
+            <span>CANON-AWARE MULTIVERSE COMBAT &amp; CINEMATIC ENGINE</span>
+        </div>
+        <div class="system-status">
+            <span class="status-badge" id="ai-status">AI RESEARCH: STANDBY</span>
+        </div>
+    </header>
+
+    <main>
+        <section id="prep-screen" class="screen active">
+            <div class="prep-container">
+                <div class="panel">
+                    <h2>
+                        Combat Roster
+                        <span id="roster-count" style="font-size:0.8rem; color:var(--text-dim);">0/5 Selected</span>
+                    </h2>
+                    <div class="fighter-grid" id="fighter-pool"></div>
+                </div>
+
+                <div class="panel">
+                    <h2>Alpha Squad Deployment</h2>
+                    <div class="squad-roster" id="alpha-squad-slots"></div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-research" onclick="triggerOnlineResearch()" style="flex: 1;">Run AI Research Cycle</button>
+                        <button class="btn" id="start-battle-btn" disabled style="flex: 1;">Start Combat Simulation</button>
+                    </div>
+                    <p style="font-size:0.75rem; color:var(--text-dim);">Internet mode: uses free Wikipedia summaries, no API key. Needs internet. If you are offline, it falls back to local simulation.</p>
+                    <div id="research-intel" style="background:#131929; border:1px solid var(--border-color); border-radius:6px; padding:12px; font-size:0.85rem; color:var(--text-dim); line-height:1.5;">Live research intel will appear here after you run a research cycle.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="battle-screen" class="screen">
+            <div class="arena-layout">
+                <div class="battlefield">
+                    <div class="teams-combat-view">
+                        <div class="team-combat-col">
+                            <div class="team-title">Alpha Squad</div>
+                            <div id="alpha-combatants" style="display:flex; flex-direction:column; gap:8px;"></div>
+                        </div>
+                        <div class="team-combat-col enemy">
+                            <div class="team-title">Adversaries</div>
+                            <div id="beta-combatants" style="display:flex; flex-direction:column; gap:8px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="console-panel">
+                    <h2>Live Cinematic Storytelling Feed</h2>
+                    <div class="console-logs" id="console-logs">
+                        <div class="log-entry info">[SYSTEM] Combat and cinematic storytelling engines initialized. Awaiting deployment.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal-overlay" id="result-modal">
+        <div class="modal-content">
+            <div class="modal-title" id="modal-title">SIMULATION COMPLETE</div>
+            <p id="modal-desc" style="color:var(--text-dim); font-size:0.95rem;"></p>
+            <button class="btn" onclick="resetSimulator()">New Simulation</button>
+        </div>
+    </div>
+
+    <script>
+        const MASTER_ROSTER = [
+            { id: 'f1', name: 'Goku-X', class: 'Saiyan Brawler', hp: 1300, atk: 125, def: 80, speed: 1.2, tier: 'S+', icon: '💥', trait: 'ki_burst' },
+            { id: 'f2', name: 'Naruto-S', class: 'Ninja Prodigy', hp: 1200, atk: 115, def: 85, speed: 1.3, tier: 'S', icon: '🌀', trait: 'shadow_clones' },
+            { id: 'f3', name: 'Tanji-K', class: 'Blade Swordsman', hp: 1100, atk: 135, def: 70, speed: 1.4, tier: 'A+', icon: '⚔️', trait: 'total_concentration' },
+            { id: 'f4', name: 'Luffy-D', class: 'Rubber Captain', hp: 1400, atk: 120, def: 95, speed: 1.1, tier: 'S', icon: '⚓', trait: 'gear_elasticity' },
+            { id: 'f5', name: 'Ichigo-K', class: 'Soul Reaper', hp: 1250, atk: 130, def: 75, speed: 1.25, tier: 'S+', icon: '🗡️', trait: 'bankai_release' },
+            { id: 'f6', name: 'Saitama-O', class: 'One-Punch Hero', hp: 1900, atk: 170, def: 110, speed: 1.0, tier: 'EX', icon: '🥊', trait: 'serious_punch' },
+            { id: 'f7', name: 'Sasuke-U', class: 'Shadow Shinobi', hp: 1150, atk: 140, def: 70, speed: 1.35, tier: 'S', icon: '👁️', trait: 'sharingan_genjutsu' },
+            { id: 'f8', name: 'Zoro-R', class: 'Three-Sword Master', hp: 1350, atk: 145, def: 85, speed: 1.15, tier: 'S+', icon: '🗡️', trait: 'ashura_nine_swords' },
+            { id: 'f9', name: 'Bakugo-K', class: 'Explosive Striker', hp: 1050, atk: 150, def: 60, speed: 1.45, tier: 'A+', icon: '💣', trait: 'howitzer_impact' },
+            { id: 'f10', name: 'Gojo-S', class: 'Infinite Sorcerer', hp: 1500, atk: 155, def: 120, speed: 1.2, tier: 'EX', icon: '♾️', trait: 'infinity_void' }
+        ];
+
+        // Free, no-key internet source: Wikipedia REST API page summaries.
+        // Maps each game fighter to its real Wikipedia article title.
+        const WIKI_TITLES = {
+            f1: 'Goku', f2: 'Naruto_Uzumaki', f3: 'Tanjiro_Kamado',
+            f4: 'Monkey_D._Luffy', f5: 'Ichigo_Kurosaki',
+            f6: 'Saitama_(One-Punch_Man)', f7: 'Sasuke_Uchiha',
+            f8: 'Roronoa_Zoro', f9: 'Katsuki_Bakugo', f10: 'Satoru_Gojo'
+        };
+        // Successful live research, keyed by fighter id. Used for the intel bonus.
+        let researchIntel = {};
+
+        let selectedFighters = [];
+        let simulationInterval = null;
+        let isBattleRunning = false;
+
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            return audioCtx;
+        }
+        function playSound(type) {
+            try {
+                const ctx = getAudioCtx();
+                if (ctx.state === 'suspended') ctx.resume();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                let now = ctx.currentTime;
+                if (type === 'hit') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(140, now);
+                    osc.frequency.exponentialRampToValueAtTime(40, now + 0.12);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+                    osc.start(now);
+                    osc.stop(now + 0.12);
+                } else if (type === 'research') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.2);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'win') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.15);
+                    osc.frequency.setValueAtTime(783.99, now + 0.3);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                }
+            } catch (e) {}
+        }
+
+        function initPrepScreen() {
+            const poolEl = document.getElementById('fighter-pool');
+            poolEl.innerHTML = '';
+            MASTER_ROSTER.forEach(f => {
+                const card = document.createElement('div');
+                card.className = `fighter-card ${selectedFighters.some(s => s.id === f.id) ? 'selected' : ''}`;
+                card.innerHTML = `
+                    <span class="tier-badge">${f.tier}</span>
+                    <div class="avatar-placeholder">${f.icon}</div>
+                    <div class="fighter-name">${f.name}</div>
+                    <div class="fighter-class">${f.class}</div>
+                `;
+                card.onclick = () => toggleFighterSelection(f);
+                poolEl.appendChild(card);
+            });
+            updateRosterSlots();
+        }
+
+        function toggleFighterSelection(fighter) {
+            const idx = selectedFighters.findIndex(s => s.id === fighter.id);
+            if (idx > -1) {
+                selectedFighters.splice(idx, 1);
+            } else if (selectedFighters.length < 5) {
+                selectedFighters.push({ ...fighter });
+            }
+            initPrepScreen();
+        }
+
+        function updateRosterSlots() {
+            const slotsEl = document.getElementById('alpha-squad-slots');
+            slotsEl.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const f = selectedFighters[i];
+                const slot = document.createElement('div');
+                slot.className = `roster-slot ${f ? 'filled' : ''}`;
+                slot.innerHTML = f ? `<span>${f.icon} ${f.name}</span><span style="color:var(--accent-cyan)">ATK: ${f.atk}</span>` : `<span>Slot ${i+1} (Empty)</span>`;
+                slotsEl.appendChild(slot);
+            }
+            const startBtn = document.getElementById('start-battle-btn');
+            startBtn.disabled = selectedFighters.length !== 5;
+            document.getElementById('roster-count').innerText = `${selectedFighters.length}/5 Selected`;
+        }
+
+        async function triggerOnlineResearch() {
+            playSound('research');
+            const statusBadge = document.getElementById('ai-status');
+            const intelEl = document.getElementById('research-intel');
+            const logsEl = document.getElementById('console-logs');
+            // The battle-screen log is hidden on the prep screen, so also show
+            // results in the visible intel panel. Both use the same data.
+            const logEntry = (text, type = 'research') => {
+                if (!logsEl) return;
+                const entry = document.createElement('div');
+                entry.className = `log-entry ${type}`;
+                entry.innerText = text;
+                logsEl.appendChild(entry);
+                logsEl.scrollTop = logsEl.scrollHeight;
+            };
+            if (selectedFighters.length === 0) {
+                statusBadge.innerText = "AI RESEARCH: PICK FIGHTERS FIRST";
+                statusBadge.style.borderColor = "var(--accent-yellow)";
+                statusBadge.style.color = "var(--accent-yellow)";
+                if (intelEl) intelEl.innerText = "Pick at least 1 fighter first, then run a research cycle.";
+                return;
+            }
+            statusBadge.innerText = "AI RESEARCH: FETCHING LIVE DATA...";
+            statusBadge.style.borderColor = "var(--accent-yellow)";
+            statusBadge.style.color = "var(--accent-yellow)";
+            if (logsEl) logsEl.innerHTML = '';
+            if (intelEl) intelEl.innerText = "Fetching live Wikipedia summaries for your squad...";
+            logEntry("[NET] Fetching live canon summaries from Wikipedia (free, no API key)...");
+
+            const results = await Promise.allSettled(selectedFighters.map(async (f) => {
+                const title = WIKI_TITLES[f.id] || f.name;
+                const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+                const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                if (!data.extract) throw new Error('No summary returned');
+                return { fighter: f, data };
+            }));
+
+            let liveCount = 0;
+            const intelHtml = [];
+            results.forEach((r) => {
+                if (r.status === 'fulfilled') {
+                    liveCount++;
+                    const { fighter, data } = r.value;
+                    researchIntel[fighter.id] = data;
+                    const short = data.extract.length > 280 ? data.extract.slice(0, 280) + '...' : data.extract;
+                    logEntry(`[LIVE] ${data.title}: ${short}`);
+                    intelHtml.push(`<div style="margin-bottom:10px;"><strong style="color:var(--accent-cyan);">${fighter.icon} ${fighter.name} — ${data.title}</strong><br>${short}<br><span style="color:var(--accent-green);">Intel bonus in battle: +10 ATK, +60 HP</span></div>`);
+                } else {
+                    logEntry(`[OFFLINE] Could not fetch live data for that fighter, using local trait index instead.`, 'info');
+                }
+            });
+
+            if (liveCount > 0) {
+                statusBadge.innerText = "AI RESEARCH: ONLINE (VERIFIED)";
+                statusBadge.style.borderColor = "var(--accent-green)";
+                statusBadge.style.color = "var(--accent-green)";
+                logEntry(`[SUCCESS] Live research complete: ${liveCount}/${selectedFighters.length} fighters verified online. Researched fighters enter battle with +10 ATK and +60 HP.`);
+                if (intelEl) intelEl.innerHTML = intelHtml.join('') || 'Live research returned no summaries.';
+            } else {
+                // Honest fallback: no internet, no fake "verified" badge.
+                statusBadge.innerText = "AI RESEARCH: OFFLINE - LOCAL SIMULATION";
+                statusBadge.style.borderColor = "var(--accent-yellow)";
+                statusBadge.style.color = "var(--accent-yellow)";
+                logEntry("[FALLBACK] No live data reached. Using local trait data so the game still works offline.");
+                selectedFighters.forEach(f => {
+                    logEntry(`[DATA] Local index for '${f.name}': Trait '${f.trait}' indexed.`);
+                });
+                if (intelEl) intelEl.innerText = "No internet / Wikipedia could not be reached. The game fell back to local simulation, so you can still battle — just without the live intel bonus.";
+            }
+        }
+
+        document.getElementById('start-battle-btn').onclick = () => {
+            document.getElementById('prep-screen').classList.remove('active');
+            document.getElementById('battle-screen').classList.add('active');
+            const statusBadge = document.getElementById('ai-status');
+            statusBadge.innerText = "AI RESEARCH: COMBAT ACTIVE";
+            statusBadge.style.borderColor = "var(--accent-magenta)";
+            statusBadge.style.color = "var(--accent-magenta)";
+            setupRealTimeBattle();
+        };
+
+        let alphaTeam = [];
+        let betaTeam = [];
+
+        function setupRealTimeBattle() {
+            alphaTeam = selectedFighters.map((f, idx) => {
+                const researched = Boolean(researchIntel[f.id]);
+                const bonusHp = researched ? 60 : 0;
+                const bonusAtk = researched ? 10 : 0;
+                const hp = f.hp + bonusHp;
+                return {
+                    ...f,
+                    atk: f.atk + bonusAtk,
+                    uid: 'a_' + idx,
+                    currentHp: hp,
+                    maxHp: hp,
+                    cooldown: 0,
+                    maxCooldown: Math.max(45, 105 - Math.floor(f.speed * 20)),
+                    isAlive: true,
+                    isAttacking: false,
+                    researched
+                };
+            });
+            const availablePool = MASTER_ROSTER.filter(f => !selectedFighters.some(s => s.id === f.id));
+            betaTeam = [];
+            for (let i = 0; i < 5; i++) {
+                const rand = Math.floor(Math.random() * availablePool.length);
+                const enemy = availablePool.splice(rand, 1)[0];
+                betaTeam.push({
+                    ...enemy,
+                    uid: 'b_' + i,
+                    name: `AI-${enemy.name}`,
+                    currentHp: enemy.hp,
+                    maxHp: enemy.hp,
+                    cooldown: 0,
+                    maxCooldown: Math.max(45, 105 - Math.floor(enemy.speed * 20)),
+                    isAlive: true,
+                    isAttacking: false
+                });
+            }
+            renderBattlefield();
+            logMessage("story", "[STORY] The dimensional barrier fractures! Alpha Squad takes their stance as five unique multiverse adversaries materialize across the void...");
+            if (simulationInterval) clearInterval(simulationInterval);
+            isBattleRunning = true;
+            simulationInterval = setInterval(realTimeTick, 100);
+        }
+
+        function realTimeTick() {
+            if (!isBattleRunning) return;
+            alphaTeam.forEach(fighter => {
+                if (!fighter.isAlive) return;
+                fighter.cooldown += 5;
+                if (fighter.cooldown >= fighter.maxCooldown) {
+                    fighter.cooldown = 0;
+                    performCanonCombat(fighter, betaTeam);
+                }
+            });
+            betaTeam.forEach(fighter => {
+                if (!fighter.isAlive) return;
+                fighter.cooldown += 5;
+                if (fighter.cooldown >= fighter.maxCooldown) {
+                    fighter.cooldown = 0;
+                    performCanonCombat(fighter, alphaTeam);
+                }
+            });
+            renderBattlefield();
+            checkWinCondition();
+        }
+
+        function performCanonCombat(attacker, targetTeam) {
+            const target = getRandomAliveTarget(targetTeam);
+            if (!target) return;
+            let isNullified = false;
+            let bypassText = "";
+            if (target.trait === 'infinity_void' && Math.random() < 0.65 && attacker.tier !== 'EX') {
+                isNullified = true;
+                bypassText = ` However, absolute spatial curvature halts the assault inches away—${target.name}'s Infinity completely nullifies the impact!`;
+            }
+            attacker.isAttacking = true;
+            setTimeout(() => { attacker.isAttacking = false; }, 200);
+            playSound('hit');
+            if (isNullified) {
+                logMessage("story", `[STORY] ${attacker.name} launches a high-velocity strike toward ${target.name}.${bypassText}`);
+                return;
+            }
+            const isCrit = Math.random() < 0.22;
+            let scalingFactor = 1.0;
+            if (attacker.trait === 'serious_punch') {
+                scalingFactor = 1.35 + (1 - (attacker.currentHp / attacker.maxHp)) * 0.5;
+            }
+            let damage = Math.floor((attacker.atk * scalingFactor - target.def * 0.28) * (isCrit ? 1.6 : 1.0));
+            damage = Math.max(22, damage);
+            target.currentHp = Math.max(0, target.currentHp - damage);
+            const combatNarratives = [
+                `unleashes a devastating kinetic shockwave, forcing ${target.name} back against the dimensional boundary.`,
+                `channels raw multiverse energy, striking with precision to overwhelm ${target.name}'s guard.`,
+                `trades blows in a brilliant flash of light, testing the absolute durability of ${target.name}.`,
+                `executes a flawless technique, shattering the air pressure around ${target.name} with crushing force.`
+            ];
+            const chosenNarrative = combatNarratives[Math.floor(Math.random() * combatNarratives.length)];
+            const critNarrative = isCrit ? " The sheer magnitude of the impact creates a temporal shockwave across the arena!" : "";
+            logMessage(isCrit ? "crit" : "story", `[STORY] ${attacker.name} ${chosenNarrative}${critNarrative}`);
+            if (target.currentHp === 0 && target.isAlive) {
+                target.isAlive = false;
+                logMessage("info", `[ELIMINATION] ${target.name} has been eradicated from the simulation grid!`);
+            }
+        }
+
+        function getRandomAliveTarget(team) {
+            const alive = team.filter(m => m.isAlive);
+            if (alive.length === 0) return null;
+            return alive[Math.floor(Math.random() * alive.length)];
+        }
+
+        function renderBattlefield() {
+            const alphaEl = document.getElementById('alpha-combatants');
+            const betaEl = document.getElementById('beta-combatants');
+            alphaEl.innerHTML = alphaTeam.map(f => `
+                <div class="combatant-card ${f.isAlive ? '' : 'defeated'} ${f.isAttacking ? 'attacking' : ''}">
+                    <div class="combatant-info">
+                        <span>${f.icon} ${f.name}</span>
+                        <span>${Math.max(0, f.currentHp)}/${f.maxHp} HP</span>
+                    </div>
+                    <div class="bars-container">
+                        <div class="bar-wrapper"><div class="bar-fill hp-fill" style="width: ${Math.max(0, (f.currentHp / f.maxHp) * 100)}%"></div></div>
+                        <div class="bar-wrapper"><div class="bar-fill cd-fill" style="width: ${Math.min(100, (f.cooldown / f.maxCooldown) * 100)}%"></div></div>
+                    </div>
+                </div>
+            `).join('');
+            betaEl.innerHTML = betaTeam.map(f => `
+                <div class="combatant-card ${f.isAlive ? '' : 'defeated'} ${f.isAttacking ? 'attacking' : ''}">
+                    <div class="combatant-info">
+                        <span>${f.icon} ${f.name}</span>
+                        <span>${Math.max(0, f.currentHp)}/${f.maxHp} HP</span>
+                    </div>
+                    <div class="bars-container">
+                        <div class="bar-wrapper"><div class="bar-fill hp-fill" style="width: ${Math.max(0, (f.currentHp / f.maxHp) * 100)}%"></div></div>
+                        <div class="bar-wrapper"><div class="bar-fill cd-fill" style="width: ${Math.min(100, (f.cooldown / f.maxCooldown) * 100)}%"></div></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function logMessage(type, text) {
+            const logsEl = document.getElementById('console-logs');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerText = text;
+            logsEl.appendChild(entry);
+            logsEl.scrollTop = logsEl.scrollHeight;
+        }
+
+        function checkWinCondition() {
+            const alphaAlive = alphaTeam.some(m => m.isAlive);
+            const betaAlive = betaTeam.some(m => m.isAlive);
+            if (!alphaAlive || !betaAlive) {
+                isBattleRunning = false;
+                clearInterval(simulationInterval);
+                setTimeout(endBattle, 400);
+            }
+        }
+
+        function endBattle() {
+            playSound('win');
+            const alphaAlive = alphaTeam.some(m => m.isAlive);
+            const modal = document.getElementById('result-modal');
+            const title = document.getElementById('modal-title');
+            const desc = document.getElementById('modal-desc');
+            if (alphaAlive) {
+                title.innerText = "MULTIVERSE SUPREMACY";
+                desc.innerText = "Alpha Squad successfully outmaneuvered and defeated all canon adversaries.";
+            } else {
+                title.innerText = "SIMULATION COLLAPSE";
+                desc.innerText = "Alpha Squad was overwhelmed by opponent canon abilities. Re-run your AI research cycle and adjust squad synergy.";
+            }
+            modal.style.display = 'flex';
+        }
+
+        function resetSimulator() {
+            if (simulationInterval) clearInterval(simulationInterval);
+            isBattleRunning = false;
+            document.getElementById('result-modal').style.display = 'none';
+            document.getElementById('battle-screen').classList.remove('active');
+            document.getElementById('prep-screen').classList.add('active');
+            const statusBadge = document.getElementById('ai-status');
+            statusBadge.innerText = "AI RESEARCH: STANDBY";
+            statusBadge.style.borderColor = "var(--accent-cyan)";
+            statusBadge.style.color = "var(--accent-cyan)";
+            selectedFighters = [];
+            researchIntel = {};
+            initPrepScreen();
+        }
+
+        window.onload = initPrepScreen;
+    </script>
+</body>
+</html>
