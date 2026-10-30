@@ -8,13 +8,13 @@ breakdown.
 ## Play it
 
 Open `index.html` in a browser — no install, no build step. This is now
-WAR-ROOM v9, the 1v1 Death Battle game, and the main game on GitHub Pages.
+WAR-ROOM v10, the 1v1 Death Battle game, and the main game on GitHub Pages.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
 reliably.
 
-## The episode (narrator style C)
+## The episode
 
 1. Chapter I — The Contenders
 2. Chapter II — The Comparison / Analysis
@@ -23,8 +23,16 @@ reliably.
 5. Chapter V — The Final Clash
 6. Chapter VI — The Verdict
 
-First the analytical breakdown, then the cinematic battle story built only
-from the recorded simulation, then a verdict explaining who won and why.
+The episode is narrative fiction based on the canon winner: a start,
+middle, climax, and end, written as scenes — not a battle-event log and
+not Wikipedia descriptions. Wikipedia/Fandom research runs automatically
+in a separate Research panel outside the episode. Numbers live in the
+separate Combat Breakdown.
+
+Winners are picked from power scaling: power, speed, dexterity, durability,
+stamina, and tactics, plus counters, transformations, and weaknesses.
+Every fighter profile now shows personality, fighting style, power usage,
+scaling numbers, and a key weakness.
 
 ## Death rules
 
@@ -39,24 +47,26 @@ killing blow.
 
 - **Original Death Battle (default):** pick two fighters and play.
 - **Video-Inspired Battle:** paste a transcript or notes. That text is
-  context only, shown as video-inspired notes, and does not grant powers.
+  context only, shown in Chapters I and II, and does not grant powers.
   Narration is always original — never a copy of another creator's script.
   A YouTube link alone does not guarantee transcript access without a
-  YouTube Data API key.
+  YouTube Data API key. Per-fighter and matchup-specific YouTube search
+  links are included.
+
+## Roster
+
+v10 ships 98 playable fighters: Anime 17, Comics 17, Video Games 16,
+Movies & TV 16, Animation 16, Fantasy & Sci-Fi 16. The long-term target
+is 100 per category; that target is NOT a claim that 600 are implemented.
+New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v9 (1v1 Death Battles)
-- `war-room-v9.html` — same as `index.html`
-- `war-room-v8.html` — previous 5v5 version, kept as an archive (not the
-  main game anymore)
-- `war-room-v7.html` — five-brain 5v5 architecture
-- `war-room-v6.html` — Wikipedia + Fandom canon research (5v5)
-- `war-room-v5.html` — canonical powersets, novel story engine (5v5)
-- `war-room-v4.html` — YouTube battle research (5v5)
-- `war-room-v3.html` — 24 fighters, variants, 5-chapter story, history (5v5)
-- `war-room-online.html` — first internet version (Wikipedia research)
-- `war-room.html` — original offline version
+- `index.html` — latest, WAR-ROOM v10 (1v1 Death Battles, narrative story)
+- `war-room-v10.html` — same as `index.html`
+- `war-room-v9.html` — previous 1v1 version, kept as an archive
+- `war-room-v8.html` — previous 5v5 version, kept as an archive
+- Earlier 5v5 versions: `war-room-v7.html` down to `war-room.html`
 
 ## Honest limits
 
@@ -68,8 +78,6 @@ killing blow.
   draft when a free service or your own key is available.
 - Battle history is saved on the player's device only (localStorage), not
   synced across devices.
-- Roster target is 100 fighters per category long-term. This build ships
-  26 playable fighters; the target is not a claim that 600 are implemented.
 
 ## GitHub Pages
 

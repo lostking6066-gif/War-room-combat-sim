@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAR-ROOM v10 — 1v1 Death Battles</title>
+<style>
+:root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+body{background:var(--bg);color:var(--main);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+header{background:linear-gradient(180deg,#121826,#07090f);border-bottom:2px solid var(--border);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+header h1{font-size:1.25rem;letter-spacing:2px;color:var(--cyan)}
+header span{font-size:.72rem;color:var(--dim);letter-spacing:1px;display:block}
+.badge{background:rgba(0,240,255,.1);border:1px solid var(--cyan);color:var(--cyan);padding:5px 10px;border-radius:4px;font-weight:700;font-size:.8rem}
+main{flex:1;max-width:1450px;width:100%;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:16px}
+.screen{display:none;flex-direction:column;gap:16px}.screen.active{display:flex}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.panel h2{font-size:1.05rem;color:var(--cyan);border-bottom:1px solid var(--border);padding-bottom:8px}
+.prep{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:950px){.prep{grid-template-columns:1fr}}
+input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px;font-size:.9rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:20px;padding:6px 12px;cursor:pointer;font-size:.8rem}
+.chip.on{border-color:var(--cyan);color:var(--cyan)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;max-height:520px;overflow-y:auto;padding-right:4px}
+.card{background:#141b2c;border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;cursor:pointer}
+.card.sel{border-color:var(--mag);background:rgba(255,0,127,.12)}
+.card .ic{font-size:2rem}.card b{display:block;font-size:.88rem;margin:4px 0 2px}.card small{color:var(--dim);font-size:.72rem;display:block}
+.card select{margin-top:8px;padding:6px;font-size:.8rem}
+.mini{margin-top:8px;display:flex;gap:6px}.mini button{flex:1}
+.btn{background:linear-gradient(135deg,var(--cyan),#0070ff);color:#000;font-weight:700;border:none;padding:12px 16px;border-radius:6px;cursor:pointer;text-transform:uppercase;letter-spacing:1px;font-size:.85rem}
+.btn:disabled{background:#222a3d;color:#55627a;cursor:not-allowed}
+.btn.mag{background:linear-gradient(135deg,var(--mag),#99004d);color:#fff}
+.btn.yel{background:linear-gradient(135deg,var(--yellow),#cc9900);color:#000}
+.btn.small{padding:7px 10px;font-size:.75rem;text-transform:none;letter-spacing:0}
+.slot{background:#131929;border:1px dashed var(--border);border-radius:6px;padding:10px;display:flex;justify-content:space-between;font-size:.85rem}
+.slot.filled{border-style:solid;border-color:var(--cyan)}
+.arena{display:grid;grid-template-columns:1fr 380px;gap:16px}
+@media(max-width:1050px){.arena{grid-template-columns:1fr}}
+.teams{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:650px){.teams{grid-template-columns:1fr}}
+.col{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px}
+.col h3{color:var(--cyan);font-size:.9rem;text-transform:uppercase;margin-bottom:8px}.col.enemy h3{color:var(--mag)}
+.fighter{background:#141b2c;border:1px solid var(--border);border-radius:6px;padding:9px;margin-bottom:8px}
+.fighter.dead{opacity:.35;filter:grayscale(1)}
+.fighter .row{display:flex;justify-content:space-between;font-size:.85rem;font-weight:600}
+.bar{background:#07090f;height:7px;border-radius:3px;overflow:hidden;margin-top:5px}.fill{height:100%;background:var(--green)}
+.log{background:#05070c;border:1px solid var(--border);border-radius:6px;padding:10px;height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;font-size:.85rem;line-height:1.5}
+.log div{border-left:3px solid var(--border);padding-left:8px}
+.story{line-height:1.75;font-size:.97rem}
+.story h3{color:var(--cyan);margin:18px 0 6px}.story p{margin-bottom:10px;color:#dbe4f0}
+.story .dia{color:#ff99cc;font-style:italic}
+.break{font-size:.85rem;line-height:1.6}.break li{margin-bottom:6px;list-style:none;border-left:3px solid var(--border);padding-left:8px}
+.modal{position:fixed;inset:0;background:rgba(5,7,12,.88);display:none;justify-content:center;align-items:center;z-index:1000;padding:16px}
+.modal.open{display:flex}
+.modal-box{background:var(--panel);border:1px solid var(--cyan);border-radius:10px;padding:20px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.modal-box h3{color:var(--cyan)}.modal-box p,.modal-box li{font-size:.88rem;line-height:1.6;color:#dbe4f0}
+.note{font-size:.78rem;color:var(--dim);line-height:1.5}
+</style>
+</head>
+<body>
+<header><div><h1>WAR-ROOM v10</h1><span>1V1 DEATH BATTLES • STORY • SCALING • PROPERLY CONNECTED</span></div><div><span class="badge" id="online-status">● ONLINE</span> <span class="badge" id="ai-status">AI RESEARCH: STANDBY</span></div></header>
+<main>
+<section id="draft-screen" class="screen active">
+<div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
+<input id="search-input" placeholder="Search by name, franchise, or alias — try Goku, Batman, Link...">
+<div class="chips" id="cat-chips"></div>
+<p class="note">This build ships 98 playable fighters across 6 categories (Anime 17, Comics 17, Video Games 16, Movies & TV 16, Animation 16, Fantasy & Sci-Fi 16). The next-batch target is 100 per category — that is a target, not a claim. The roster is NOT 600 fighters; do not treat the target as implemented. Each card uses an emoji fallback portrait so no image ever breaks. Real artwork is not included.</p>
+</div>
+<div class="prep">
+<div class="panel"><h2>Combat Roster <span id="roster-count" style="font-size:.8rem;color:var(--dim)"></span></h2><div class="grid" id="fighter-pool"></div></div>
+<div class="panel"><h2>2 — Death Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. There is no AI team in v9: both fighters are chosen by you.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
+<label style="font-size:.85rem">Battlefield</label><select id="battlefield-select"></select><p class="note" id="battlefield-desc"></p>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn yel" onclick="triggerOnlineResearch()" style="flex:1">Retest live research (optional)</button><button class="btn" id="review-btn" disabled style="flex:1">Review Matchup →</button></div>
+<div id="research-intel" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Live research intel will appear here. Research is optional. Without internet it falls back to local data and gives no bonus.</div>
+<h3 style="color:var(--cyan);font-size:.95rem;margin-top:6px">YouTube Battle Research — no API key needed</h3>
+<p class="note">YouTube videos cannot be read automatically by a browser file without a YouTube Data API key, and scraping YouTube is blocked. So this version does the honest version that works on a phone: one-tap YouTube searches for each selected fighter, for powers, strength, speed and transformations, plus a channel library you can grow. Watching is research — it does not automatically add new powers to the combat engine.</p>
+<div id="yt-links" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Pick fighters to see their YouTube research searches.</div>
+<div id="yt-channels" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px"></div>
+<input id="new-channel-name" placeholder="Add a battle channel, e.g. Death Battle">
+<button class="btn small" onclick="addChannel()" style="margin-top:6px">Add channel to library</button>
+<label style="font-size:.85rem;display:block;margin-top:10px">Your research note — powers, speed, transformation (context only, does not grant new powers)</label>
+<textarea id="yt-note" placeholder="Example: Watched a breakdown saying X is faster in this form, but weaker against Y..." style="width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px;min-height:70px"></textarea>
+<button class="btn small" onclick="saveYTNote()" style="margin-top:6px">Save research note for this battle</button>
+<div id="yt-note-display" class="note"></div>
+<h3 style="color:var(--cyan);font-size:.95rem;margin-top:6px">Canon Sources — Wikipedia + Fandom, automatically</h3>
+<p class="note">Research panel — outside the episode: Fandom wikis are fan-run wikis for each franchise (Dragon Ball Wiki, Narutopedia, Wookieepedia, etc.). They are more canon-specific than Wikipedia, but they are still fan sources — the game shows which source succeeded and which failed, and never claims a failed fetch was verified. Canon extracts are context for the story; they do not automatically add new powers.</p>
+<button class="btn small" onclick="fetchCanonForSelected()">Retest canon for selected fighters (optional)</button>
+<div id="canon-results" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">Canon results appear here automatically when you pick a fighter. Review also refreshes canon for both fighters — no tap is required to proceed to battle.</div>
+<h3 style="color:var(--cyan);font-size:.95rem;margin-top:10px">Search canon for any character</h3>
+<input id="canon-search-input" placeholder="Search Wikipedia for a character, e.g. Vegeta, Thor, Pikachu">
+<button class="btn small" onclick="searchCanon()" style="margin-top:6px">Search canon</button>
+<div id="canon-search-results" class="note" style="margin-top:8px"></div>
+<div id="setup-review" style="display:none"></div>
+</div>
+</div>
+<div class="panel"><h2>Mode B — Video-Inspired Battle (optional, context only)</h2>
+<p class="note">Mode A (default) is an Original Death Battle, made from the game's own profiles and combat engine. Mode B is different: paste a transcript or notes from a video you watched below. That text is shown as "Video-inspired notes" in Chapters I–II only. It does NOT grant new powers, change stats, or replace the simulation. The narration in v9 is always original — it never copies another creator's script.</p>
+<p class="note"><b>Honest limit:</b> a YouTube link alone does not let this browser file read a video's audio or captions automatically. That would require a YouTube Data API key. Use whatever transcript or notes you can actually access and paste here.</p>
+<label style="font-size:.85rem">Paste transcript or notes (optional)</label>
+<textarea id="video-notes" placeholder="Paste transcript excerpts or notes here, e.g. which versions were discussed, feats mentioned, arguments made..." style="width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px;min-height:80px"></textarea>
+<p class="note">Video-inspired notes are context only. They do not add powers, forms, or stats.</p>
+</div>
+<div class="panel"><h2>Death Rules — what counts as a win</h2>
+<p class="note"><b>Victory is by death</b> (HP reaches 0), <b>or by incapacitation lasting the rest of the fight</b>, <b>or by battlefield removal with no way back</b>. The exact victory condition is stated in the results and in Chapter VI.</p>
+<p class="note"><b>Regeneration can heal, but it does NOT revive after HP 0.</b> A fighter who is knocked out stays knocked out — no dead fighter acts again, and regeneration only heals a fighter who is still alive.</p>
+<p class="note"><b>No invented killing blow:</b> if the battle hits its round cap with both fighters still alive and neither able to kill or incapacitate the other, the result is a <b>stalemate / no-death verdict</b>, explained in Chapter VI — not a fake finish.</p>
+<p class="note"><b>Battlefield removal:</b> removal alone does not count unless the opponent cannot return. No power in the current powersets permanently removes an opponent from the battlefield, so v9 will not claim a BFR victory it did not simulate.</p>
+</div>
+<div class="panel"><h2>Add a Custom Fighter (grows the roster without inventing canon)</h2><p class="note">Use this for original fighters, or for a version of a real character you have researched yourself. Custom fighters are saved on this device only.</p><input id="custom-name" placeholder="Name"><input id="custom-fr" placeholder="Franchise / universe" style="margin-top:6px"><select id="custom-cat" style="margin-top:6px"><option>Anime</option><option>Comics</option><option>Video Games</option><option>Movies &amp; TV</option><option>Animation</option><option>Fantasy &amp; Sci-Fi</option></select><input id="custom-style" placeholder="Fighting style" style="margin-top:6px"><input id="custom-powers" placeholder="Powers, comma-separated, e.g. Ki Blast, Dragon Fist" style="margin-top:6px"><button class="btn small" onclick="addCustomFighter()" style="margin-top:8px">Add custom fighter</button></div>
+<div class="panel"><h2>WAR-ROOM AI — Four Connected Brains for 1v1 (rule-based, no paid API)</h2>
+<p class="note"><b>1. Combat Brain:</b> tier scaling, counters, stamina, battlefield destruction, transformations at or below 45% HP — a street-level fighter cannot routinely hurt a cosmic foe by luck alone.<br>
+<b>2. Character Brain:</b> personality decisions — Batman studies first, Goku holds back to test a foe, Vegeta's pride seeks the strongest opponent, humorous fighters are unpredictable. In 1v1 there is no ally to protect, so protective shielding cannot trigger.<br>
+<b>3. Knowledge Brain + Analysis Brain:</b> identity, continuity, powers, feats, limits, weaknesses, transformations, relationships — plus Wikipedia + Fandom research, shown per source — and a head-to-head comparison of strength, speed, durability, abilities, experience, transformations, weaknesses and win conditions, with an explicit uncertainty note when a matchup is close.<br>
+<b>4. Narrator Brain:</b> turns the analysis and the recorded events into a 6-chapter episode (Contenders, Comparison, First Exchange, Turning Point, Final Clash, Verdict), using tactics and reasons, not just attack names.<br>
+<b>Continuity check (adapted to 1v1):</b> checks the battle before the episode is shown — a dead or incapacitated fighter must not act, powers must belong to that version, transformations must meet their trigger, and the winner must match the survivor / stalemate record.</p>
+<p class="note">Trade-off, stated plainly: this is a sophisticated rule system, not a language model. It can calculate, decide, and narrate from rules reliably, but it cannot write unlimited original prose like an LLM. That last step would need a local open model or a free/paid inference service, which v9 does not require.</p></div>
+<div class="panel"><h2>Internet Connection — Properly Connected</h2>
+<p class="note" id="file-warning"></p>
+<p class="note">This version connects, from the browser, to: Wikipedia, fan-run Fandom wikis, YouTube search, and — optionally — a free public AI text service (Pollinations, no key) or your own free Gemini key. No Muse server, no paid API, and no key is sent to Muse. Your Gemini key, if you enter one, is stored only in this device's localStorage and is sent only to Google when you tap Generate.</p>
+<button class="btn small" onclick="testConnections()">Retest connections (optional)</button>
+<div id="connection-results" class="note" style="margin-top:8px">Testing connections automatically on load — just pick fighters and play. Retest is optional, never required to play.</div>
+<label style="font-size:.85rem;display:block;margin-top:10px">Optional: your own free Gemini API key (from Google AI Studio — free tier, no card for basic use in many regions)</label>
+<input id="gemini-key-input" type="password" placeholder="Paste your Gemini key here — saved on this device only">
+<button class="btn small" onclick="saveGeminiKey()" style="margin-top:6px">Save key on this device</button>
+<button class="btn small" onclick="clearGeminiKey()" style="margin-top:6px">Remove key</button>
+<div id="gemini-key-status" class="note"></div>
+<p class="note">Security note: a key in a browser game can be seen in network traffic on that device. Use a free key, never a paid/production key, and rotate it if you share the device.</p></div>
+<div class="panel"><h2>Battle History (saved on this device only)</h2><div id="history-list" class="note">No saved battles yet.</div></div>
+</section>
+
+<section id="battle-screen" class="screen">
+<div class="arena"><div><div class="teams"><div class="col"><h3>Fighter A</h3><div id="alpha-combatants"></div></div><div class="col enemy"><h3>Fighter B</h3><div id="beta-combatants"></div></div></div></div>
+<div class="panel" style="height:auto"><h2>Live Battle Feed</h2><div class="log" id="battle-log"></div><button class="btn" id="show-results-btn" style="display:none;margin-top:10px">Read the Story →</button></div></div>
+</section>
+
+<section id="results-screen" class="screen">
+<div class="panel"><h2 id="result-title">RESULT</h2><p id="result-desc" class="note" style="font-size:.9rem"></p><p id="consistency-note" class="note"></p></div>
+<div class="panel story"><h2>Death Battle Episode — 6 Chapters (Narrator Style C)</h2><p class="note">Style C: analytical comparison first, then a cinematic battle story, then a verdict. The episode is built only from the recorded battle events and the pre-battle analysis. Dialogue is written in-character for this battle, not quoted canon.</p><div id="story-output"></div></div>
+<div class="panel story"><h2>AI Story — Optional, Online (draft, not the verified story)</h2>
+<p class="note">The 6-chapter episode above is the verified one — it is built only from recorded events and checked by the Continuity Brain. This AI version is an extra draft. It may invent details, so always check it against the breakdown above. If the AI service is down or rate-limited, this panel will say so and the verified story still works.</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" onclick="generateAIStory('pollinations')">Generate AI story — free public service, no key</button><button class="btn small" onclick="generateAIStory('gemini')">Generate AI story — with my saved Gemini key</button></div>
+<div id="ai-story-output" class="note" style="margin-top:10px;line-height:1.7">No AI story generated yet.</div></div>
+<div class="panel"><h2>Combat Breakdown (numbers live here, not in the story)</h2><ul class="break" id="breakdown-output"></ul></div>
+<button class="btn" onclick="downloadStory()">Download story as HTML</button>
+<button class="btn" onclick="resetSimulator()">New Battle</button>
+</section>
+</main>
+
+<div class="modal" id="info-modal"><div class="modal-box"><h3 id="info-title"></h3><img id="info-portrait" style="display:none;max-width:220px;border-radius:8px" alt="Character portrait from Wikipedia, if available"><div id="info-content"></div><button class="btn" onclick="closeInfo()">Close</button></div></div>
+<script>
+/* ============ ROSTER: compact, honest, expandable ============ */
+/* Fields: v2 = second variant label + its stat mods. trans = transformation, or '' if none. */
+/* Only abilities listed here are implemented. Canon powers not listed are NOT invented. */
+const ROSTER=[
+{id:'goku',name:'Goku',fr:'Dragon Ball',cat:'Anime',icon:'💥',hp:1300,atk:125,def:80,sp:1.2,tier:'S+',trait:'ki_burst',pers:'reckless',style:'Saiyan brawler who closes distance fast',sig:'Kamehameha',sigMult:1.7,trans:'Super Saiyan Blue',tAtk:35,tDef:10,weak:'Overconfidence; stamina drains in very long fights',feat:'Survived planet-shaking clashes',wiki:'Goku',alias:'Kakarot',v2:'Super Saiyan God',v2hp:200,v2atk:25,v2def:5,pw:9,dex:8,dur:8,sta:8,tac:7,usage:'Closes distance fast, tests the opponent with probing blows, then escalates to energy blasts and Kamehameha; transforms only when pushed.',persNote:'Reckless, joyful, and honourable — fights to test limits, holds back at first, then goes all out.'},
+{id:'naruto',name:'Naruto',fr:'Naruto',cat:'Anime',icon:'🌀',hp:1200,atk:115,def:85,sp:1.3,tier:'S',trait:'shadow_clones',pers:'protective',style:'Unpredictable ninja who overwhelms with clones',sig:'Rasengan',sigMult:1.6,trans:'Kurama Mode',tAtk:30,tDef:10,weak:'Chakra limits; emotions can cloud judgement',feat:'Faced village-destroying foes',wiki:'Naruto_Uzumaki',alias:'Naruto Uzumaki',v2:'Sage Mode',v2hp:150,v2atk:20,v2def:10,pw:7,dex:8,dur:7,sta:9,tac:7,usage:'Overwhelms with shadow clones, then finds an opening for Rasengan; Sage and Kurama forms raise power, not precision.',persNote:'Protective and stubborn — refuses to abandon a fight or a friend, even when outmatched.'},
+{id:'tanjiro',name:'Tanjiro',fr:'Demon Slayer',cat:'Anime',icon:'⚔️',hp:1100,atk:135,def:70,sp:1.4,tier:'A+',trait:'total_concentration',pers:'compassionate',style:'Precise swordsman who reads breathing and movement',sig:'Hinokami Kagura',sigMult:1.7,trans:'Hinokami Awakening',tAtk:30,tDef:5,weak:'Human durability; no regeneration',feat:'Cut through demon defences others could not',wiki:'Tanjiro_Kamado',alias:'Tanjiro Kamado',v2:'Sun Breathing',v2hp:100,v2atk:25,v2def:0,pw:7,dex:9,dur:6,sta:8,tac:8,usage:'Reads breathing and movement, stays precise, chains Water and Thunder forms into Hinokami when an opening appears.',persNote:'Compassionate and disciplined — fights to protect, reads the opponent before committing.'},
+{id:'gojo',name:'Gojo',fr:'Jujutsu Kaisen',cat:'Anime',icon:'♾️',hp:1500,atk:155,def:120,sp:1.2,tier:'EX',trait:'infinity_void',pers:'proud',style:'Untouchable sorcerer who controls space',sig:'Hollow Purple',sigMult:1.8,trans:'Unlimited Void',tAtk:25,tDef:15,weak:'Six Eyes strain; can be sealed by special means',feat:'Attacks stop before reaching him',wiki:'Satoru_Gojo',alias:'Satoru Gojo',v2:'Shibuya Arc',v2hp:200,v2atk:15,v2def:10,pw:10,dex:8,dur:9,sta:7,tac:9,usage:'Keeps distance behind Infinity, controls space with Blue and Red, and only unleashes Hollow Purple when the read is clean.',persNote:'Proud and playful — supremely confident, controls the fight\'s tempo and rarely rushes.'},
+{id:'superman',name:'Superman',fr:'DC Comics',cat:'Comics',icon:'🦸',hp:1800,atk:160,def:115,sp:1.1,tier:'EX',trait:'invulnerable',pers:'compassionate',style:'Flying powerhouse who protects first',sig:'Heat Vision',sigMult:1.6,trans:'Sun-Charged',tAtk:30,tDef:15,weak:'Kryptonite; magic bypasses much of his durability',feat:'Held back collapsing structures',wiki:'Superman',alias:'Clark Kent, Kal-El',v2:'Kingdom Come',v2hp:200,v2atk:20,v2def:10,pw:10,dex:7,dur:10,sta:9,tac:8,usage:'Flies in, controls range with heat vision and freeze breath, protects first, and escalates to Sun-Charged when outmatched.',persNote:'Compassionate and restrained — holds back to avoid harm, then commits fully when others are at risk.'},
+{id:'batman',name:'Batman',fr:'DC Comics',cat:'Comics',icon:'🦇',hp:1000,atk:110,def:85,sp:1.3,tier:'S',trait:'prep',pers:'strategist',style:'Tactical fighter who studies foes before striking',sig:'Gadget Barrage',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human; no innate powers',feat:'Outplanned far stronger foes',wiki:'Batman',alias:'Bruce Wayne',v2:'Armored Batsuit',v2hp:200,v2atk:10,v2def:25,pw:6,dex:8,dur:6,sta:7,tac:10,usage:'Studies first, then strikes the weakness with gadgets and preparation; wins by planning, not by matching raw power.',persNote:'Strategist and obsessive planner — watches, measures, and hits where it hurts most.'},
+{id:'spiderman',name:'Spider-Man',fr:'Marvel',cat:'Comics',icon:'🕷️',hp:1200,atk:125,def:80,sp:1.45,tier:'S',trait:'agile',pers:'humorous',style:'Fast, quipping fighter who uses webs and momentum',sig:'Web + Impact Combo',sigMult:1.6,trans:'Symbiote Surge',tAtk:30,tDef:5,weak:'Web-fluid limits; responsibility slows him',feat:'Held a collapsing building; dodged bullets',wiki:'Spider-Man',alias:'Peter Parker',v2:'Symbiote Suit',v2hp:150,v2atk:20,v2def:5,pw:7,dex:10,dur:7,sta:8,tac:8,usage:'Uses spider-sense and webs to stay untouchable, builds momentum, then lands a web-assisted impact combo.',persNote:'Humorous and responsible — jokes to stay loose, but never stops moving or thinking.'},
+{id:'wonderwoman',name:'Wonder Woman',fr:'DC Comics',cat:'Comics',icon:'🛡️',hp:1500,atk:145,def:105,sp:1.25,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Warrior with shield, sword and lasso',sig:'Lasso Strike',sigMult:1.6,trans:'Divine Power',tAtk:30,tDef:10,weak:'Bindings and bracelets can limit her',feat:'Traded blows with gods and titans',wiki:'Wonder_Woman',alias:'Diana Prince',v2:'New 52',v2hp:150,v2atk:15,v2def:10,pw:9,dex:8,dur:9,sta:8,tac:8,usage:'Fights head-on with shield and sword, uses the lasso to control an opponent, and escalates to divine power.',persNote:'Disciplined warrior — honourable, direct, and unshaken by a stronger-looking foe.'},
+{id:'mario',name:'Mario',fr:'Super Mario',cat:'Video Games',icon:'🍄',hp:1100,atk:110,def:90,sp:1.1,tier:'A',trait:'power_up',pers:'humorous',style:'Jumping brawler who uses power-ups',sig:'Fireball Barrage',sigMult:1.5,trans:'Super Star',tAtk:35,tDef:5,weak:'No long-range power without items',feat:'Survived falls and lava-world hazards',wiki:'Mario',alias:'Super Mario',v2:'Fire Mario',v2hp:100,v2atk:20,v2def:5,pw:6,dex:7,dur:7,sta:8,tac:6,usage:'Bounces, jumps and uses power-ups, chaining fireballs and hammer swings at close range.',persNote:'Cheerful and persistent — keeps coming back, no matter how many times he is knocked down.'},
+{id:'link',name:'Link',fr:'The Legend of Zelda',cat:'Video Games',icon:'🗡️',hp:1250,atk:135,def:90,sp:1.25,tier:'S',trait:'disciplined',pers:'disciplined',style:'Sword, shield and tool-using hero',sig:'Master Sword Spin',sigMult:1.7,trans:'Fierce Deity',tAtk:35,tDef:10,weak:'Stamina and item dependence',feat:'Defeated world-ending evils',wiki:'Link_(The_Legend_of_Zelda)',alias:'Hero of Time',v2:"Champion's Tunic",v2hp:150,v2atk:15,v2def:10,pw:7,dex:8,dur:8,sta:8,tac:8,usage:'Uses sword, shield and tools in rotation, reads the opponent, and unleashes Fierce Deity only when pressed.',persNote:'Disciplined and quiet — patient, tool-smart, and brave under pressure.'},
+{id:'chief',name:'Master Chief',fr:'Halo',cat:'Video Games',icon:'🪖',hp:1400,atk:130,def:110,sp:1.0,tier:'S',trait:'disciplined',pers:'disciplined',style:'Armoured soldier with precise fire',sig:'Spartan Laser',sigMult:1.7,trans:'Overshield',tAtk:20,tDef:25,weak:'No superpowers; ammunition is finite',feat:'Survived orbital drops and alien armies',wiki:'Master_Chief_(Halo)',alias:'John-117',v2:'MJOLNIR Gen3',v2hp:200,v2atk:10,v2def:20,pw:7,dex:6,dur:9,sta:9,tac:9,usage:'Fights disciplined and precise, uses cover and firepower, and uses Overshield to absorb a decisive exchange.',persNote:'Disciplined soldier — calm, precise, and relentless under fire.'},
+{id:'kratos',name:'Kratos',fr:'God of War',cat:'Video Games',icon:'🪓',hp:1700,atk:155,def:100,sp:1.05,tier:'EX',trait:'ruthless',pers:'ruthless',style:'Brutal close fighter with axe and blades',sig:'Leviathan Axe Throw',sigMult:1.7,trans:'Spartan Rage',tAtk:40,tDef:5,weak:'Rage can cloud judgement',feat:'Killed gods and titans',wiki:'Kratos_(God_of_War)',alias:'Ghost of Sparta',v2:'Valhalla',v2hp:200,v2atk:20,v2def:5,pw:10,dex:6,dur:9,sta:8,tac:6,usage:'Brutal close combat with axe and blades, absorbs punishment, and unleashes Spartan Rage to finish.',persNote:'Ruthless and driven — anger is a weapon, but it can cloud judgement.'},
+{id:'vader',name:'Darth Vader',fr:'Star Wars',cat:'Movies & TV',icon:'🌑',hp:1500,atk:145,def:105,sp:1.1,tier:'S+',trait:'ruthless',pers:'ruthless',style:'Force and lightsaber duellist',sig:'Force Choke + Saber',sigMult:1.7,trans:'Dark Side Surge',tAtk:30,tDef:10,weak:'Suit vulnerabilities; emotional ties',feat:'Defeated Jedi Masters',wiki:'Darth_Vader',alias:'Anakin Skywalker',v2:'Revenge of the Sith',v2hp:100,v2atk:20,v2def:10,pw:9,dex:7,dur:9,sta:7,tac:8,usage:'Uses the Force to control distance, then closes with lightsaber duels and choke pressure.',persNote:'Ruthless and commanding — dominates through fear, power, and control of the field.'},
+{id:'luke',name:'Luke Skywalker',fr:'Star Wars',cat:'Movies & TV',icon:'✨',hp:1200,atk:130,def:80,sp:1.3,tier:'S',trait:'compassionate',pers:'compassionate',style:'Jedi who seeks a non-lethal opening first',sig:'Lightsaber Form V',sigMult:1.6,trans:'Jedi Master Focus',tAtk:25,tDef:10,weak:'Mercy; self-doubt',feat:'Redeemed Vader; faced the Emperor',wiki:'Luke_Skywalker',alias:'Luke',v2:'Return of the Jedi',v2hp:150,v2atk:15,v2def:5,pw:8,dex:8,dur:7,sta:8,tac:8,usage:'Seeks a non-lethal opening first, uses Force awareness to anticipate, then commits with lightsaber Form V.',persNote:'Compassionate and hopeful — tries to redeem before destroying.'},
+{id:'neo',name:'Neo',fr:'The Matrix',cat:'Movies & TV',icon:'🕶️',hp:1300,atk:140,def:85,sp:1.5,tier:'S+',trait:'agile',pers:'strategist',style:'Reality-bending martial artist',sig:'Bullet-Time Assault',sigMult:1.6,trans:'The One Awakening',tAtk:35,tDef:5,weak:'Matrix dependence; human body outside it',feat:'Stopped bullets; flew and reshaped the Matrix',wiki:'Neo_(The_Matrix)',alias:'Thomas Anderson',v2:'Reloaded',v2hp:100,v2atk:20,v2def:5,pw:8,dex:10,dur:7,sta:8,tac:8,usage:'Bends the fight with bullet-time movement, then lands reality-bending martial-arts strikes.',persNote:'Strategist and awakened — calm under fire, reads the system around him.'},
+{id:'wick',name:'John Wick',fr:'John Wick',cat:'Movies & TV',icon:'🔫',hp:950,atk:135,def:65,sp:1.4,tier:'A+',trait:'disciplined',pers:'disciplined',style:'Gun-fu specialist, precise and relentless',sig:'Gun-Fu Combination',sigMult:1.6,trans:'Baba Yaga Mode',tAtk:25,tDef:0,weak:'Human; injuries accumulate',feat:'Survived assassin armies',wiki:'John_Wick_(character)',alias:'Baba Yaga',v2:'Chapter 4',v2hp:100,v2atk:15,v2def:5,pw:7,dex:9,dur:6,sta:8,tac:9,usage:'Gun-fu: precise, relentless, closes distance and chains pistol, knife and throws without wasted motion.',persNote:'Disciplined and relentless — no wasted words, no wasted movement.'},
+{id:'aang',name:'Aang',fr:'Avatar',cat:'Animation',icon:'🌪️',hp:1150,atk:125,def:80,sp:1.35,tier:'S',trait:'compassionate',pers:'compassionate',style:'Airbender who controls all four elements',sig:'Four-Element Combo',sigMult:1.7,trans:'Avatar State',tAtk:40,tDef:10,weak:'Pacifism; Avatar State risk',feat:'Ended a hundred-year war',wiki:'Aang',alias:'Avatar Aang',v2:'Adult Aang',v2hp:150,v2atk:15,v2def:10,pw:8,dex:9,dur:7,sta:8,tac:8,usage:'Evades first, uses air, water and earth in sequence, and enters Avatar State only when the fight demands it.',persNote:'Compassionate and playful — avoids killing, wins by movement and control.'},
+{id:'ben',name:'Ben Tennyson',fr:'Ben 10',cat:'Animation',icon:'⌚',hp:1100,atk:130,def:75,sp:1.2,tier:'S',trait:'reckless',pers:'reckless',style:'Teen hero who swaps alien forms mid-fight',sig:'Alien Transformation Strike',sigMult:1.7,trans:'Way Big Form',tAtk:35,tDef:10,weak:'Omnitrix timeout',feat:'Saved Earth and the galaxy repeatedly',wiki:'Ben_Tennyson',alias:'Ben 10',v2:'Alien Force',v2hp:150,v2atk:20,v2def:5,pw:8,dex:7,dur:7,sta:7,tac:6,usage:'Swaps alien forms mid-fight to match the problem, then commits with the chosen alien\'s signature strike.',persNote:'Reckless teenager — confident, improvisational, and always switching tactics.'},
+{id:'danny',name:'Danny Phantom',fr:'Danny Phantom',cat:'Animation',icon:'👻',hp:1150,atk:125,def:85,sp:1.3,tier:'S',trait:'protective',pers:'protective',style:'Half-ghost who phases, flies and blasts',sig:'Ghostly Wail',sigMult:1.6,trans:'Phantom Rage',tAtk:25,tDef:10,weak:'Ghost-energy drain',feat:'Defeated ghost kings',wiki:'Danny_Phantom',alias:'Danny Fenton',v2:'Ultimate Enemy',v2hp:100,v2atk:20,v2def:10,pw:7,dex:9,dur:7,sta:7,tac:7,usage:'Phases and flies to stay untouchable, then lands ecto blasts and Ghostly Wail when the opening appears.',persNote:'Protective teenager — jokes to hide fear, but stands his ground.'},
+{id:'jack',name:'Samurai Jack',fr:'Samurai Jack',cat:'Animation',icon:'🥋',hp:1250,atk:140,def:85,sp:1.35,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Master swordsman, patient and honourable',sig:'Katana Master Combo',sigMult:1.6,trans:"Warrior's Resolve",tAtk:25,tDef:10,weak:'Human; displaced in time',feat:'Defeated armies and demons',wiki:'Samurai_Jack_(character)',alias:'Jack',v2:'Season 5',v2hp:150,v2atk:20,v2def:5,pw:8,dex:9,dur:8,sta:9,tac:9,usage:'Patient, honourable swordsmanship: waits, reads, then lands a single decisive katana combination.',persNote:'Disciplined samurai — patient, honourable, and unshaken.'},
+{id:'gandalf',name:'Gandalf',fr:'Lord of the Rings',cat:'Fantasy & Sci-Fi',icon:'🧙',hp:1300,atk:135,def:90,sp:1.0,tier:'S',trait:'strategist',pers:'strategist',style:'Wizard who guides, shields and strikes with light',sig:'Staff Blast',sigMult:1.6,trans:'Wrath of the Istari',tAtk:35,tDef:15,weak:'Limited direct power in mortal form',feat:'Faced a Balrog; rallied kingdoms',wiki:'Gandalf',alias:'Mithrandir',v2:'Gandalf the White',v2hp:200,v2atk:20,v2def:15,pw:8,dex:6,dur:8,sta:7,tac:9,usage:'Guides the fight with light and words, shields, then strikes with staff and Word of Power.',persNote:'Strategist and mentor — speaks first, strikes when the moment is right.'},
+{id:'geralt',name:'Geralt',fr:'The Witcher',cat:'Fantasy & Sci-Fi',icon:'🐺',hp:1200,atk:135,def:85,sp:1.3,tier:'S',trait:'disciplined',pers:'disciplined',style:'Monster hunter with sword, signs and potions',sig:'Silver Sword + Signs',sigMult:1.6,trans:'Toxicity Surge',tAtk:25,tDef:5,weak:'Human; potion toxicity',feat:'Killed monsters armies feared',wiki:'Geralt_of_Rivia',alias:'White Wolf',v2:'Grandmaster Armor',v2hp:150,v2atk:10,v2def:20,pw:7,dex:8,dur:7,sta:8,tac:9,usage:'Prepares with signs and potions, reads foe movement, then chains steel sword and Igni/Aard.',persNote:'Disciplined monster hunter — dry, practical, and precise.'},
+{id:'spock',name:'Spock',fr:'Star Trek',cat:'Fantasy & Sci-Fi',icon:'🖖',hp:1050,atk:115,def:90,sp:1.15,tier:'A',trait:'strategist',pers:'strategist',style:'Logical Vulcan, precise nerve strikes',sig:'Vulcan Nerve Pinch',sigMult:1.5,trans:'Vulcan Fury',tAtk:20,tDef:10,weak:'Emotional control; human fragility',feat:'Out-thought superior foes',wiki:'Spock',alias:'Mr. Spock',v2:'Captain Spock',v2hp:100,v2atk:15,v2def:10,pw:6,dex:7,dur:7,sta:7,tac:10,usage:'Logical, precise nerve strikes and phaser work; wins by reading the opponent, not by brute force.',persNote:'Strategist and logical — calm, precise, and almost impossible to rattle.'},
+{id:'doctor',name:'The Doctor',fr:'Doctor Who',cat:'Fantasy & Sci-Fi',icon:'🔷',hp:1000,atk:110,def:80,sp:1.2,tier:'S',trait:'strategist',pers:'strategist',style:'Pacifist genius who turns the environment against foes',sig:'Sonic Screwdriver Trap',sigMult:1.4,trans:'Regeneration Surge',tAtk:30,tDef:10,weak:'No direct super-strength; refuses to kill',feat:'Saved planets with wit, not force',wiki:'The_Doctor_(Doctor_Who)',alias:'Doctor Who',v2:'Tenth Doctor',v2hp:100,v2atk:15,v2def:5,pw:5,dex:7,dur:6,sta:7,tac:10,usage:'Turns the environment against the foe with the sonic screwdriver and feints; avoids direct strength contests.',persNote:'Strategist and pacifist genius — talks, tricks, and out-thinks instead of overpowering.'},
+{id:'vegeta',name:'Vegeta',fr:'Dragon Ball',cat:'Anime',icon:'👑',hp:1350,atk:140,def:85,sp:1.25,tier:'S+',trait:'proud',pers:'proud',style:'Proud Saiyan prince who seeks a direct contest with the strongest foe',sig:'Galick Gun',sigMult:1.7,trans:'Super Saiyan Blue Evolution',tAtk:35,tDef:10,weak:'Pride; will refuse help and chase a direct duel',feat:'Fought gods and top-tier warriors',wiki:'Vegeta',alias:'Prince Vegeta',v2:'Majin Vegeta',v2hp:150,v2atk:25,v2def:5,pw:9,dex:8,dur:8,sta:8,tac:7,usage:'Seeks a direct contest with the strongest foe, escalates with Galick Gun, and transforms when pride demands it.',persNote:'Proud prince — refuses help, chases a direct duel, and grows through rivalry.'},
+{id:'deadpool',name:'Deadpool',fr:'Marvel',cat:'Comics',icon:'🎭',hp:1300,atk:130,def:85,sp:1.35,tier:'S',trait:'regen',pers:'humorous',style:'Unpredictable mercenary with katanas, guns and rapid regeneration',sig:'Katana + Gun Combo',sigMult:1.6,trans:'Maximum Effort',tAtk:30,tDef:5,weak:'Recklessness; humour distracts him',feat:'Survived injuries that would kill most fighters',wiki:'Deadpool',alias:'Wade Wilson',v2:'X-Force',v2hp:150,v2atk:20,v2def:10,pw:7,dex:9,dur:8,sta:9,tac:6,usage:'Unpredictable katana and gun combinations, uses regeneration to absorb punishment and keep pressing.',persNote:'Humorous and chaotic — jokes mid-fight, breaks rhythm, and never stays down for long.'},
+{id:'luffy',name:'Monkey D. Luffy',fr:'One Piece',cat:'Anime',icon:'🏴',hp:1500,atk:140,def:90,sp:1.35,tier:'S+',trait:'ki_burst',pers:'reckless',style:'Rubber brawler who stretches, bounces and escalates to Gear forms',sig:'Gum-Gum Pistol',sigMult:1.7,trans:'Gear 5',tAtk:40,tDef:10,weak:'Water and cutting attacks; recklessness',feat:'Beat world-class pirates and warlords',wiki:'Monkey_D._Luffy',alias:'Straw Hat Luffy',v2:'Gear 4',v2hp:150,v2atk:25,v2def:5,pw:8,dex:9,dur:8,sta:9,tac:7,usage:'Stretches to close distance, bounces off blows, and escalates to Gear 5 only when the fight demands it.',persNote:'Reckless and joyful — laughs, tests limits, and never gives up.'},
+{id:'ichigo',name:'Ichigo Kurosaki',fr:'Bleach',cat:'Anime',icon:'⚔️',hp:1400,atk:145,def:85,sp:1.4,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Substitute Soul Reaper with massive spiritual pressure and sword speed',sig:'Getsuga Tensho',sigMult:1.7,trans:'Bankai: Tensa Zangetsu',tAtk:35,tDef:10,weak:'Spiritual pressure drain; overexertion',feat:'Cut through captain-level foes',wiki:'Ichigo_Kurosaki',alias:'Ichigo',v2:'Hollow Mask',v2hp:150,v2atk:25,v2def:5,pw:9,dex:9,dur:7,sta:8,tac:8,usage:'Closes with sword speed, builds spiritual pressure, then unleashes Getsuga Tensho at full power.',persNote:'Disciplined protector — blunt, brave, and willing to pay any price to protect others.'},
+{id:'saitama',name:'Saitama',fr:'One Punch Man',cat:'Anime',icon:'👊',hp:2000,atk:180,def:110,sp:1.2,tier:'EX',trait:'serious_punch',pers:'disciplined',style:'Unassuming hero whose ordinary punches carry impossible power',sig:'Serious Punch',sigMult:1.8,trans:'Serious Series',tAtk:30,tDef:10,weak:'Boredom; rarely takes a fight seriously at first',feat:'Defeated foes no one else could touch',wiki:'Saitama_(One-Punch_Man)',alias:'Caped Baldy',v2:'Serious Saitama',v2hp:200,v2atk:20,v2def:10,pw:10,dex:7,dur:10,sta:9,tac:7,usage:'Fights casually at first, shrugs off blows, then lands a serious punch when the fight finally matters.',persNote:'Calm and bored — underestimates opponents because almost nothing challenges him.'},
+{id:'deku',name:'Izuku Midoriya',fr:'My Hero Academia',cat:'Anime',icon:'💚',hp:1200,atk:135,def:80,sp:1.35,tier:'S',trait:'protective',pers:'protective',style:'Analytical hero who uses One For All in controlled bursts',sig:'Delaware Smash',sigMult:1.6,trans:'Full Cowling 100%',tAtk:35,tDef:5,weak:'Body breaks under full power; self-sacrifice',feat:'Analysed and outfought stronger villains',wiki:'Izuku_Midoriya',alias:'Deku',v2:'Full Cowling',v2hp:150,v2atk:20,v2def:10,pw:8,dex:9,dur:7,sta:8,tac:9,usage:'Analyses the opponent, uses speed and air pressure, then commits to a full-power smash.',persNote:'Protective and analytical — studies every fight, even while taking hits.'},
+{id:'sasuke',name:'Sasuke Uchiha',fr:'Naruto',cat:'Anime',icon:'👁️',hp:1300,atk:140,def:85,sp:1.4,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Sharingan user who reads movement and strikes with lightning',sig:'Chidori',sigMult:1.7,trans:'Susanoo',tAtk:35,tDef:15,weak:'Chakra drain; revenge-driven focus',feat:'Matched the strongest shinobi of his era',wiki:'Sasuke_Uchiha',alias:'Sasuke',v2:'Mangekyo',v2hp:150,v2atk:25,v2def:10,pw:8,dex:9,dur:7,sta:8,tac:9,usage:'Reads movement with Sharingan, controls with fire and lightning, then unleashes Susanoo.',persNote:'Disciplined and driven — cold, precise, and fuelled by a personal mission.'},
+{id:'levi',name:'Levi Ackerman',fr:'Attack on Titan',cat:'Anime',icon:'🗡️',hp:1000,atk:135,def:70,sp:1.5,tier:'A+',trait:'disciplined',pers:'disciplined',style:'Humanity\'s strongest soldier, ODM blades at blinding speed',sig:'ODM Blade Barrage',sigMult:1.6,trans:'Ackerman Awakening',tAtk:25,tDef:5,weak:'Human durability; no regeneration',feat:'Cut down Titans and elite soldiers alike',wiki:'Levi_Ackerman',alias:'Captain Levi',v2:'Survey Corps Captain',v2hp:100,v2atk:20,v2def:5,pw:7,dex:10,dur:6,sta:9,tac:10,usage:'Uses ODM mobility to stay untouchable, then lands precise blade strikes at speed.',persNote:'Disciplined and blunt — cold, fast, and brutally efficient.'},
+{id:'eren',name:'Eren Yeager',fr:'Attack on Titan',cat:'Anime',icon:'� Titan',hp:1450,atk:140,def:95,sp:1.1,tier:'S',trait:'reckless',pers:'reckless',style:'Titan shifter who fights with raw strength and regeneration',sig:'Titan Punch',sigMult:1.7,trans:'Founding Titan Form',tAtk:40,tDef:15,weak:'Human body when outside Titan form; rage',feat:'Transformed the course of wars',wiki:'Eren_Yeager',alias:'Eren',v2:'Attack Titan',v2hp:200,v2atk:20,v2def:10,pw:9,dex:6,dur:9,sta:7,tac:6,usage:'Transforms to Titan form to overwhelm with size and regeneration, then brawls head-on.',persNote:'Reckless and driven — rage and freedom drive every fight.'},
+{id:'madara',name:'Madara Uchiha',fr:'Naruto',cat:'Anime',icon:'🌀',hp:1600,atk:155,def:100,sp:1.25,tier:'EX',trait:'disciplined',pers:'disciplined',style:'Legendary Uchiha who controls Susanoo and wood release',sig:'Susanoo Slash',sigMult:1.8,trans:'Six Paths Form',tAtk:35,tDef:15,weak:'Overconfidence; long plans',feat:'Fought the entire shinobi alliance',wiki:'Madara_Uchiha',alias:'Madara',v2:'Rinnegan',v2hp:200,v2atk:20,v2def:10,pw:10,dex:8,dur:9,sta:8,tac:9,usage:'Controls the field with Susanoo and wood release, then escalates to Six Paths power.',persNote:'Disciplined strategist — calm, arrogant, and almost impossible to surprise.'},
+{id:'allmight',name:'All Might',fr:'My Hero Academia',cat:'Anime',icon:'💪',hp:1500,atk:150,def:95,sp:1.25,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Symbol of Peace who ends fights with overwhelming punches',sig:'Detroit Smash',sigMult:1.7,trans:'One For All Full Power',tAtk:35,tDef:10,weak:'Time limit in weakened form; injuries',feat:'Held back villains and disasters for decades',wiki:'All_Might',alias:'Toshinori Yagi',v2:'Prime All Might',v2hp:200,v2atk:25,v2def:5,pw:9,dex:7,dur:9,sta:8,tac:8,usage:'Overwhelms with speed and punching power, then finishes with a named smash.',persNote:'Disciplined hero — inspiring, direct, and willing to break himself to win.'},
+{id:'yuji',name:'Yuji Itadori',fr:'Jujutsu Kaisen',cat:'Anime',icon:'👊',hp:1250,atk:135,def:85,sp:1.4,tier:'S',trait:'protective',pers:'protective',style:'Superhuman sorcerer with Divergent Fist and Black Flash',sig:'Divergent Fist',sigMult:1.6,trans:'Black Flash Surge',tAtk:30,tDef:10,weak:'Cursed energy limits; Sukuna risk',feat:'Matched special-grade curses',wiki:'Yuji_Itadori',alias:'Yuji',v2:'Shibuya',v2hp:150,v2atk:20,v2def:5,pw:8,dex:9,dur:7,sta:9,tac:7,usage:'Fights with superhuman speed and strength, chains Divergent Fist into Black Flash.',persNote:'Protective and kind — refuses to let others die, even at personal cost.'},
+{id:'kaneki',name:'Ken Kaneki',fr:'Tokyo Ghoul',cat:'Anime',icon:'👁️',hp:1300,atk:140,def:85,sp:1.35,tier:'S',trait:'disciplined',pers:'disciplined',style:'Half-ghoul who fights with kagune tendrils and regeneration',sig:'Kagune Strike',sigMult:1.7,trans:'Kakuja Form',tAtk:35,tDef:10,weak:'Kagune drain; mental strain',feat:'Defeated elite ghoul investigators',wiki:'Ken_Kaneki',alias:'Kaneki',v2:'One-Eyed King',v2hp:150,v2atk:25,v2def:5,pw:8,dex:9,dur:8,sta:8,tac:8,usage:'Uses kagune tendrils to control range, regenerates, then escalates to Kakuja.',persNote:'Disciplined and haunted — fights to protect, even when it costs him.'},
+{id:'zoro',name:'Roronoa Zoro',fr:'One Piece',cat:'Anime',icon:'⚔️',hp:1350,atk:145,def:85,sp:1.35,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Three-sword master with overwhelming cutting power',sig:'Three Sword Style: Oni Giri',sigMult:1.7,trans:'Asura Form',tAtk:35,tDef:10,weak:'Direction; overexertion',feat:'Cut steel and top-tier swordsmen',wiki:'Roronoa_Zoro',alias:'Zoro',v2:'Wano',v2hp:150,v2atk:25,v2def:5,pw:9,dex:9,dur:8,sta:9,tac:8,usage:'Fights with three swords at once, builds cutting pressure, then unleashes Asura.',persNote:'Disciplined swordsman — loyal, stubborn, and unbreakable in a duel.'},
+{id:'thor',name:'Thor',fr:'Marvel',cat:'Comics',icon:'⚡',hp:1700,atk:155,def:110,sp:1.2,tier:'EX',trait:'disciplined',pers:'disciplined',style:'God of Thunder with Mjolnir, lightning and flight',sig:'Mjolnir Strike',sigMult:1.7,trans:'Warrior\'s Madness',tAtk:35,tDef:15,weak:'Magic and god-tier foes; overconfidence',feat:'Held back armies and gods',wiki:'Thor_(Marvel_Comics)',alias:'Thor Odinson',v2:'King Thor',v2hp:200,v2atk:20,v2def:10,pw:10,dex:7,dur:10,sta:8,tac:8,usage:'Calls lightning, throws Mjolnir, then closes for god-tier melee.',persNote:'Disciplined god-warrior — honourable, direct, and relentless.'},
+{id:'hulk',name:'Hulk',fr:'Marvel',cat:'Comics',icon:'🟢',hp:1900,atk:165,def:105,sp:1.05,tier:'EX',trait:'ruthless',pers:'ruthless',style:'Gamma powerhouse who grows stronger as he gets angrier',sig:'Thunderclap',sigMult:1.8,trans:'Worldbreaker',tAtk:40,tDef:10,weak:'Calm and control; gamma drain',feat:'Smashed armies and gods',wiki:'Hulk',alias:'Bruce Banner',v2:'Worldbreaker Hulk',v2hp:200,v2atk:25,v2def:5,pw:10,dex:5,dur:10,sta:7,tac:5,usage:'Absorbs punishment, grows angrier, then smashes with overwhelming force.',persNote:'Ruthless and furious — anger is the strategy.'},
+{id:'ironman',name:'Iron Man',fr:'Marvel',cat:'Comics',icon:'🤖',hp:1400,atk:145,def:100,sp:1.3,tier:'S+',trait:'strategist',pers:'strategist',style:'Genius in powered armour with repulsors, missiles and flight',sig:'Repulsor Blast',sigMult:1.6,trans:'Hulkbuster Armour',tAtk:30,tDef:20,weak:'Armour power and damage; human inside',feat:'Outfought gods and armies with technology',wiki:'Iron_Man',alias:'Tony Stark',v2:'Hulkbuster',v2hp:200,v2atk:15,v2def:15,pw:8,dex:8,dur:9,sta:8,tac:10,usage:'Uses flight and repulsors to control range, then escalates armour for a decisive exchange.',persNote:'Strategist genius — plans, adapts, and builds a counter mid-fight.'},
+{id:'captainamerica',name:'Captain America',fr:'Marvel',cat:'Comics',icon:'🛡️',hp:1300,atk:135,def:95,sp:1.35,tier:'S',trait:'disciplined',pers:'disciplined',style:'Super-soldier with shield mastery and tactics',sig:'Shield Throw',sigMult:1.6,trans:'Super-Soldier Surge',tAtk:25,tDef:10,weak:'Human limits against gods',feat:'Led heroes against armies and tyrants',wiki:'Captain_America',alias:'Steve Rogers',v2:'Endgame',v2hp:150,v2atk:20,v2def:10,pw:8,dex:9,dur:8,sta:9,tac:10,usage:'Uses shield for offence and defence, leads the fight, and out-tactics stronger foes.',persNote:'Disciplined leader — honourable, tactical, and unbreakable.'},
+{id:'flash',name:'The Flash',fr:'DC Comics',cat:'Comics',icon:'⚡',hp:1300,atk:140,def:75,sp:1.6,tier:'S+',trait:'humorous',pers:'humorous',style:'Fastest man alive, Speed Force strikes and phasing',sig:'Speed Force Punch',sigMult:1.7,trans:'Speed Force Surge',tAtk:30,tDef:5,weak:'Speed Force drain; overconfidence',feat:'Outran light and time itself',wiki:'Flash_(Barry_Allen)',alias:'Barry Allen',v2:'Justice League',v2hp:150,v2atk:25,v2def:5,pw:8,dex:10,dur:7,sta:9,tac:8,usage:'Uses impossible speed to strike from every angle, then phases through defences.',persNote:'Humorous hero — fast, funny, and always moving.'},
+{id:'blackpanther',name:'Black Panther',fr:'Marvel',cat:'Comics',icon:'🐆',hp:1300,atk:135,def:95,sp:1.4,tier:'S',trait:'disciplined',pers:'disciplined',style:'King of Wakanda in vibranium armour, claws and tactics',sig:'Vibranium Claw Strike',sigMult:1.6,trans:'King of the Dead Surge',tAtk:25,tDef:15,weak:'Armour limits; human',feat:'Defended Wakanda against armies',wiki:'Black_Panther_(character)',alias:'T\'Challa',v2:'Wakanda King',v2hp:150,v2atk:20,v2def:10,pw:8,dex:9,dur:8,sta:9,tac:10,usage:'Uses vibranium armour to absorb blows, then strikes with claws and tactics.',persNote:'Disciplined king — tactical, honourable, and precise.'},
+{id:'drstrange',name:'Doctor Strange',fr:'Marvel',cat:'Comics',icon:'🔮',hp:1400,atk:150,def:85,sp:1.2,tier:'S+',trait:'strategist',pers:'strategist',style:'Sorcerer Supreme with portals, shields and mystic arts',sig:'Mystic Bolt',sigMult:1.7,trans:'Astral Surge',tAtk:30,tDef:10,weak:'Mystic drain; human body',feat:'Outwitted gods and dimensions',wiki:'Doctor_Strange',alias:'Stephen Strange',v2:'Sorcerer Supreme',v2hp:150,v2atk:25,v2def:10,pw:9,dex:8,dur:8,sta:7,tac:10,usage:'Controls the field with portals and shields, then lands mystic bolts.',persNote:'Strategist sorcerer — calm, arrogant, and brilliant under pressure.'},
+{id:'thanos',name:'Thanos',fr:'Marvel',cat:'Comics',icon:'🟣',hp:1800,atk:160,def:110,sp:1.1,tier:'EX',trait:'ruthless',pers:'ruthless',style:'Mad Titan with overwhelming strength and tactics',sig:'Titan Punch',sigMult:1.8,trans:'Infinity Gauntlet Surge',tAtk:35,tDef:15,weak:'Overconfidence; gauntlet dependence',feat:'Defeated heroes and armies across the universe',wiki:'Thanos',alias:'Mad Titan',v2:'Infinity War',v2hp:200,v2atk:25,v2def:10,pw:10,dex:6,dur:10,sta:8,tac:9,usage:'Overwhelms with strength and tactics, then escalates to gauntlet power.',persNote:'Ruthless strategist — patient, certain, and terrifyingly calm.'},
+{id:'wolverine',name:'Wolverine',fr:'Marvel',cat:'Comics',icon:'🐺',hp:1400,atk:140,def:95,sp:1.35,tier:'S+',trait:'ruthless',pers:'ruthless',style:'Mutant with adamantium claws and healing factor',sig:'Adamantium Claw Slash',sigMult:1.7,trans:'Berserker Rage',tAtk:30,tDef:5,weak:'Adamantium weight; rage',feat:'Survived wars and superhuman foes',wiki:'Wolverine_(character)',alias:'Logan',v2:'Old Man Logan',v2hp:150,v2atk:25,v2def:5,pw:8,dex:9,dur:9,sta:9,tac:7,usage:'Heals through punishment, closes with claws, then unleashes berserker rage.',persNote:'Ruthless loner — stubborn, feral, and impossible to keep down.'},
+{id:'greenlantern',name:'Green Lantern',fr:'DC Comics',cat:'Comics',icon:'💚',hp:1450,atk:145,def:90,sp:1.3,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Ring bearer who creates constructs from willpower',sig:'Energy Construct Strike',sigMult:1.7,trans:'Willpower Surge',tAtk:30,tDef:10,weak:'Willpower and fear; ring charge',feat:'Held back cosmic threats',wiki:'Green_Lantern',alias:'Hal Jordan',v2:'Parallax',v2hp:150,v2atk:25,v2def:10,pw:9,dex:8,dur:9,sta:8,tac:9,usage:'Creates constructs to control the field, then lands willpower strikes.',persNote:'Disciplined hero — brave, wilful, and creative under fire.'},
+{id:'aquaman',name:'Aquaman',fr:'DC Comics',cat:'Comics',icon:'🔱',hp:1500,atk:145,def:100,sp:1.25,tier:'S+',trait:'disciplined',pers:'disciplined',style:'King of Atlantis with trident, strength and sea power',sig:'Trident Strike',sigMult:1.7,trans:'King of Atlantis Surge',tAtk:30,tDef:10,weak:'Dehydration on land; pride',feat:'Defended Atlantis and the surface',wiki:'Aquaman',alias:'Arthur Curry',v2:'King Aquaman',v2hp:150,v2atk:20,v2def:10,pw:9,dex:8,dur:9,sta:8,tac:8,usage:'Fights with trident and superhuman strength, controls water when available.',persNote:'Disciplined king — proud, strong, and loyal to two worlds.'},
+{id:'daredevil',name:'Daredevil',fr:'Marvel',cat:'Comics',icon:'😈',hp:1150,atk:130,def:80,sp:1.45,tier:'S',trait:'disciplined',pers:'disciplined',style:'Blind lawyer with radar sense and acrobatic combat',sig:'Radar Sense Strike',sigMult:1.6,trans:'Devil\'s Resolve',tAtk:25,tDef:5,weak:'Human; sensory overload',feat:'Defeated gangs and superhuman foes',wiki:'Daredevil_(Marvel_Comics)',alias:'Matt Murdock',v2:'Shadowland',v2hp:100,v2atk:20,v2def:5,pw:7,dex:10,dur:7,sta:9,tac:9,usage:'Uses radar sense to dodge and strike, stays acrobatic, and out-reads opponents.',persNote:'Disciplined hero — precise, moral, and relentless in the dark.'},
+{id:'sonic',name:'Sonic',fr:'Sonic the Hedgehog',cat:'Video Games',icon:'💙',hp:1300,atk:140,def:75,sp:1.6,tier:'S+',trait:'humorous',pers:'humorous',style:'Fastest hedgehog alive, spin dashes and homing attacks',sig:'Spin Dash',sigMult:1.7,trans:'Super Sonic',tAtk:35,tDef:5,weak:'Overconfidence; speed control',feat:'Outran robots and gods',wiki:'Sonic_the_Hedgehog',alias:'Sonic',v2:'Super Sonic',v2hp:150,v2atk:25,v2def:5,pw:8,dex:10,dur:7,sta:9,tac:7,usage:'Uses impossible speed to spin-dash and home in, then escalates to Super Sonic.',persNote:'Humorous hero — cocky, fast, and always moving.'},
+{id:'pikachu',name:'Pikachu',fr:'Pokémon',cat:'Video Games',icon:'⚡',hp:1100,atk:135,def:75,sp:1.45,tier:'S',trait:'humorous',pers:'humorous',style:'Electric mouse with speed, agility and thunder attacks',sig:'Thunderbolt',sigMult:1.6,trans:'Gigantamax Surge',tAtk:30,tDef:5,weak:'Size and stamina; type weakness',feat:'Beat legendaries with Ash',wiki:'Pikachu',alias:'Pikachu',v2:'Ash\'s Pikachu',v2hp:100,v2atk:20,v2def:5,pw:8,dex:10,dur:7,sta:9,tac:7,usage:'Uses speed and agility to dodge, then lands thunder attacks.',persNote:'Humorous partner — loyal, quick, and surprisingly fierce.'},
+{id:'samus',name:'Samus Aran',fr:'Metroid',cat:'Video Games',icon:'🔫',hp:1400,atk:140,def:100,sp:1.3,tier:'S',trait:'disciplined',pers:'disciplined',style:'Bounty hunter in power suit with beam, missiles and morph ball',sig:'Power Beam',sigMult:1.6,trans:'Phazon Surge',tAtk:30,tDef:15,weak:'Suit energy; human inside',feat:'Defeated Space Pirates and Metroids',wiki:'Samus_Aran',alias:'Samus',v2:'Zero Suit',v2hp:150,v2atk:20,v2def:10,pw:8,dex:8,dur:9,sta:9,tac:9,usage:'Uses power suit beams and missiles at range, then closes with morph ball tactics.',persNote:'Disciplined hunter — calm, precise, and relentless.'},
+{id:'doomslayer',name:'Doom Slayer',fr:'Doom',cat:'Video Games',icon:'💀',hp:1600,atk:150,def:105,sp:1.2,tier:'S+',trait:'ruthless',pers:'ruthless',style:'Demon slayer with guns, chainsaw and unbreakable will',sig:'Super Shotgun Blast',sigMult:1.7,trans:'Berserk Mode',tAtk:35,tDef:10,weak:'Rage; no ranged magic',feat:'Tore through Hell itself',wiki:'Doomguy',alias:'Doom Slayer',v2:'Eternal',v2hp:150,v2atk:25,v2def:10,pw:9,dex:7,dur:10,sta:9,tac:6,usage:'Charges head-on with shotgun and chainsaw, absorbs punishment, and escalates to berserk.',persNote:'Ruthless slayer — silent, furious, and unstoppable.'},
+{id:'snake',name:'Solid Snake',fr:'Metal Gear',cat:'Video Games',icon:'🐍',hp:1200,atk:135,def:85,sp:1.35,tier:'S',trait:'disciplined',pers:'disciplined',style:'Legendary soldier with stealth, CQC and tactics',sig:'CQC Strike',sigMult:1.6,trans:'Stealth Camo Surge',tAtk:25,tDef:10,weak:'Human; ageing',feat:'Infiltrated armies and stopped weapons',wiki:'Solid_Snake',alias:'Snake',v2:'Old Snake',v2hp:100,v2atk:20,v2def:10,pw:7,dex:9,dur:7,sta:9,tac:10,usage:'Uses stealth and CQC to control the fight, then lands precise strikes.',persNote:'Disciplined soldier — calm, tactical, and pragmatic.'},
+{id:'cloud',name:'Cloud Strife',fr:'Final Fantasy',cat:'Video Games',icon:'☁️',hp:1400,atk:145,def:90,sp:1.3,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Ex-SOLDIER with Buster Sword and Limit Breaks',sig:'Braver',sigMult:1.7,trans:'Omnislash',tAtk:40,tDef:10,weak:'Mako drain; self-doubt',feat:'Defeated Sephiroth and world threats',wiki:'Cloud_Strife',alias:'Cloud',v2:'Advent Children',v2hp:150,v2atk:25,v2def:10,pw:9,dex:8,dur:8,sta:8,tac:8,usage:'Uses Buster Sword combos and materia, then unleashes Limit Breaks.',persNote:'Disciplined mercenary — quiet, skilled, and driven.'},
+{id:'sephiroth',name:'Sephiroth',fr:'Final Fantasy',cat:'Video Games',icon:'🪽',hp:1550,atk:150,def:90,sp:1.35,tier:'S+',trait:'ruthless',pers:'ruthless',style:'One-Winged Angel with Masamune and magic',sig:'Masamune Slash',sigMult:1.7,trans:'One-Winged Angel Form',tAtk:35,tDef:10,weak:'Overconfidence; madness',feat:'Nearly destroyed the planet',wiki:'Sephiroth_(Final_Fantasy)',alias:'Sephiroth',v2:'Safer Sephiroth',v2hp:150,v2atk:25,v2def:10,pw:9,dex:9,dur:8,sta:8,tac:8,usage:'Uses Masamune reach and magic to control distance, then escalates to One-Winged Angel.',persNote:'Ruthless villain — calm, terrifying, and precise.'},
+{id:'ryu',name:'Ryu',fr:'Street Fighter',cat:'Video Games',icon:'🥋',hp:1250,atk:135,def:85,sp:1.35,tier:'S',trait:'disciplined',pers:'disciplined',style:'Wandering martial artist with Hadoken and Shoryuken',sig:'Hadoken',sigMult:1.6,trans:'Evil Ryu Surge',tAtk:30,tDef:5,weak:'Satsui no Hado risk',feat:'Won world tournaments',wiki:'Ryu_(Street_Fighter)',alias:'Ryu',v2:'Evil Ryu',v2hp:100,v2atk:20,v2def:5,pw:8,dex:9,dur:8,sta:9,tac:9,usage:'Uses Hadoken to control range, then lands Shoryuken on openings.',persNote:'Disciplined fighter — humble, focused, and always seeking a stronger foe.'},
+{id:'megaman',name:'Mega Man',fr:'Mega Man',cat:'Video Games',icon:'🤖',hp:1250,atk:135,def:90,sp:1.3,tier:'S',trait:'disciplined',pers:'disciplined',style:'Robot hero with Mega Buster and copied weapons',sig:'Mega Buster Shot',sigMult:1.6,trans:'Super Adaptor',tAtk:25,tDef:10,weak:'Weapon energy; human-like limits',feat:'Defeated Robot Masters repeatedly',wiki:'Mega_Man',alias:'Mega Man',v2:'X',v2hp:100,v2atk:20,v2def:10,pw:8,dex:8,dur:8,sta:9,tac:9,usage:'Uses Mega Buster at range, adapts weapons, then escalates to Super Adaptor.',persNote:'Disciplined hero — brave, adaptable, and precise.'},
+{id:'kirby',name:'Kirby',fr:'Kirby',cat:'Video Games',icon:'🌸',hp:1300,atk:140,def:85,sp:1.4,tier:'S+',trait:'humorous',pers:'humorous',style:'Pink puffball who copies powers and inhales foes',sig:'Inhale Strike',sigMult:1.7,trans:'Hypernova',tAtk:35,tDef:5,weak:'Size; overconfidence',feat:'Defeated cosmic horrors',wiki:'Kirby_(character)',alias:'Kirby',v2:'Hypernova Kirby',v2hp:150,v2atk:25,v2def:5,pw:8,dex:10,dur:8,sta:9,tac:7,usage:'Inhales and copies powers, uses agility, then escalates to Hypernova.',persNote:'Humorous hero — cute, fearless, and surprisingly dangerous.'},
+{id:'dante',name:'Dante',fr:'Devil May Cry',cat:'Video Games',icon:'😈',hp:1500,atk:150,def:90,sp:1.4,tier:'S+',trait:'humorous',pers:'humorous',style:'Demon hunter with Rebellion, guns and devil trigger',sig:'Rebellion Slash',sigMult:1.7,trans:'Devil Trigger',tAtk:35,tDef:10,weak:'Overconfidence; devil power drain',feat:'Defeated demons and demon kings',wiki:'Dante_(Devil_May_Cry)',alias:'Dante',v2:'Devil May Cry 5',v2hp:150,v2atk:25,v2def:10,pw:9,dex:9,dur:8,sta:9,tac:8,usage:'Uses sword and guns in stylish combos, then unleashes Devil Trigger.',persNote:'Humorous hunter — cocky, stylish, and lethal.'},
+{id:'lara',name:'Lara Croft',fr:'Tomb Raider',cat:'Video Games',icon:'🏹',hp:1150,atk:130,def:80,sp:1.4,tier:'S',trait:'disciplined',pers:'disciplined',style:'Archaeologist adventurer with dual pistols and agility',sig:'Dual Pistol Shot',sigMult:1.6,trans:'Survivor Surge',tAtk:25,tDef:5,weak:'Human; injuries',feat:'Survived tombs and armies',wiki:'Lara_Croft',alias:'Lara',v2:'Rise of the Tomb Raider',v2hp:100,v2atk:20,v2def:5,pw:7,dex:9,dur:7,sta:9,tac:9,usage:'Uses dual pistols and agility to control range, then closes with bow and axe.',persNote:'Disciplined adventurer — brave, smart, and relentless.'},
+{id:'harry',name:'Harry Potter',fr:'Harry Potter',cat:'Movies & TV',icon:'⚡',hp:1200,atk:135,def:80,sp:1.25,tier:'S',trait:'protective',pers:'protective',style:'Wizard with wand, spells and quick thinking',sig:'Expelliarmus',sigMult:1.6,trans:'Patronus Surge',tAtk:25,tDef:10,weak:'Wand dependence; human',feat:'Defeated Voldemort',wiki:'Harry_Potter',alias:'Harry',v2:'Deathly Hallows',v2hp:100,v2atk:20,v2def:10,pw:8,dex:8,dur:7,sta:8,tac:8,usage:'Uses wand spells to disarm and defend, then lands Patronus and Stupefy.',persNote:'Protective wizard — brave, loyal, and quick under fire.'},
+{id:'terminator',name:'T-800',fr:'Terminator',cat:'Movies & TV',icon:'🤖',hp:1500,atk:140,def:110,sp:1.0,tier:'S',trait:'disciplined',pers:'disciplined',style:'Cybernetic assassin with strength and endurance',sig:'Hydraulic Punch',sigMult:1.7,trans:'Endoskeleton Surge',tAtk:25,tDef:15,weak:'CPU damage; human-like limits',feat:'Hunted and survived armies',wiki:'T-800',alias:'Terminator',v2:'T-850',v2hp:150,v2atk:20,v2def:10,pw:8,dex:5,dur:10,sta:8,tac:8,usage:'Walks through punishment, uses strength and weapons, then escalates to endoskeleton power.',persNote:'Disciplined machine — relentless, precise, and unfeeling.'},
+{id:'robocop',name:'RoboCop',fr:'RoboCop',cat:'Movies & TV',icon:'🤖',hp:1450,atk:140,def:110,sp:1.05,tier:'S',trait:'disciplined',pers:'disciplined',style:'Cyborg officer with armour, Auto-9 and tactics',sig:'Auto-9 Shot',sigMult:1.6,trans:'Prime Directive Surge',tAtk:25,tDef:15,weak:'Human brain; directives',feat:'Cleaned up Detroit gangs',wiki:'RoboCop',alias:'Alex Murphy',v2:'Prime Directives',v2hp:150,v2atk:20,v2def:10,pw:8,dex:6,dur:10,sta:8,tac:9,usage:'Uses armour to absorb blows, then lands precise Auto-9 fire.',persNote:'Disciplined officer — lawful, precise, and unyielding.'},
+{id:'rambo',name:'John Rambo',fr:'Rambo',cat:'Movies & TV',icon:'🔪',hp:1150,atk:135,def:80,sp:1.3,tier:'A+',trait:'disciplined',pers:'disciplined',style:'Special forces veteran with survival and guerrilla tactics',sig:'Knife Strike',sigMult:1.6,trans:'First Blood Surge',tAtk:25,tDef:5,weak:'Human; trauma',feat:'Survived wars and armies',wiki:'John_Rambo',alias:'Rambo',v2:'First Blood',v2hp:100,v2atk:20,v2def:5,pw:7,dex:8,dur:7,sta:9,tac:9,usage:'Uses guerrilla tactics, traps and knife work, then escalates to full assault.',persNote:'Disciplined veteran — silent, survivalist, and lethal.'},
+{id:'buffy',name:'Buffy Summers',fr:'Buffy the Vampire Slayer',cat:'Movies & TV',icon:'🧛',hp:1250,atk:135,def:85,sp:1.4,tier:'S',trait:'protective',pers:'protective',style:'Slayer with superhuman strength, agility and stakes',sig:'Stake Strike',sigMult:1.6,trans:'Slayer Surge',tAtk:25,tDef:10,weak:'Human; responsibility',feat:'Defeated vampires and apocalypses',wiki:'Buffy_Summers',alias:'Buffy',v2:'Season 7',v2hp:100,v2atk:20,v2def:10,pw:8,dex:9,dur:7,sta:9,tac:8,usage:'Uses agility and stakes to outmanoeuvre, then lands Slayer strikes.',persNote:'Protective hero — brave, funny, and relentless.'},
+{id:'bond',name:'James Bond',fr:'James Bond',cat:'Movies & TV',icon:'🍸',hp:1150,atk:130,def:80,sp:1.35,tier:'S',trait:'disciplined',pers:'disciplined',style:'Secret agent with gadgets, guns and hand-to-hand skill',sig:'Walther Shot',sigMult:1.6,trans:'00 Agent Surge',tAtk:25,tDef:5,weak:'Human; overconfidence',feat:'Defeated villains and armies',wiki:'James_Bond',alias:'Bond',v2:'Skyfall',v2hp:100,v2atk:20,v2def:5,pw:7,dex:9,dur:7,sta:9,tac:10,usage:'Uses gadgets and guns to control the fight, then closes with hand-to-hand.',persNote:'Disciplined agent — calm, clever, and precise under fire.'},
+{id:'ethan',name:'Ethan Hunt',fr:'Mission: Impossible',cat:'Movies & TV',icon:'🕶️',hp:1200,atk:135,def:85,sp:1.4,tier:'S',trait:'disciplined',pers:'disciplined',style:'IMF agent with disguises, gadgets and stunts',sig:'Gadget Strike',sigMult:1.6,trans:'Impossible Surge',tAtk:25,tDef:10,weak:'Human; team dependence',feat:'Completed impossible missions',wiki:'Ethan_Hunt',alias:'Ethan',v2:'Fallout',v2hp:100,v2atk:20,v2def:10,pw:7,dex:9,dur:7,sta:9,tac:10,usage:'Uses gadgets and stunts to outmanoeuvre, then lands precise strikes.',persNote:'Disciplined agent — brave, inventive, and relentless.'},
+{id:'bourne',name:'Jason Bourne',fr:'Bourne',cat:'Movies & TV',icon:'🔫',hp:1200,atk:135,def:85,sp:1.4,tier:'S',trait:'disciplined',pers:'disciplined',style:'Amnesiac assassin with hand-to-hand and tactics',sig:'Hand-to-Hand Combo',sigMult:1.6,trans:'Treadstone Surge',tAtk:25,tDef:5,weak:'Human; memory',feat:'Defeated assassins and agencies',wiki:'Jason_Bourne',alias:'Bourne',v2:'Ultimatum',v2hp:100,v2atk:20,v2def:5,pw:7,dex:9,dur:7,sta:9,tac:10,usage:'Uses hand-to-hand and environment to outfight, then escalates to full assault.',persNote:'Disciplined assassin — precise, paranoid, and lethal.'},
+{id:'godzilla',name:'Godzilla',fr:'Godzilla',cat:'Movies & TV',icon:'🦖',hp:2000,atk:165,def:115,sp:1.0,tier:'EX',trait:'ruthless',pers:'ruthless',style:'King of Monsters with atomic breath and size',sig:'Atomic Breath',sigMult:1.8,trans:'Burning Godzilla',tAtk:40,tDef:15,weak:'Radiation drain; size',feat:'Defeated kaiju and armies',wiki:'Godzilla',alias:'Gojira',v2:'Burning Godzilla',v2hp:200,v2atk:25,v2def:10,pw:10,dex:5,dur:10,sta:7,tac:6,usage:'Uses size and atomic breath to overwhelm, then escalates to Burning form.',persNote:'Ruthless king — territorial, unstoppable, and ancient.'},
+{id:'predator',name:'Predator',fr:'Predator',cat:'Movies & TV',icon:'👽',hp:1500,atk:145,def:100,sp:1.3,tier:'S+',trait:'ruthless',pers:'ruthless',style:'Alien hunter with cloaking, plasma and blades',sig:'Plasma Caster Shot',sigMult:1.7,trans:'Hunter\'s Wrath',tAtk:30,tDef:10,weak:'Honour code; heat vision',feat:'Hunted elite soldiers and aliens',wiki:'Predator_(fictional_species)',alias:'Yautja',v2:'City Hunter',v2hp:150,v2atk:25,v2def:10,pw:9,dex:8,dur:9,sta:8,tac:8,usage:'Uses cloaking and plasma to hunt, then closes with wrist blades.',persNote:'Ruthless hunter — patient, honourable, and lethal.'},
+{id:'optimus',name:'Optimus Prime',fr:'Transformers',cat:'Movies & TV',icon:'🤖',hp:1700,atk:150,def:110,sp:1.15,tier:'EX',trait:'disciplined',pers:'disciplined',style:'Autobot leader with strength, sword and blasters',sig:'Energon Sword Slash',sigMult:1.7,trans:'Matrix Surge',tAtk:30,tDef:15,weak:'Size; leadership burden',feat:'Led Autobots against Decepticons',wiki:'Optimus_Prime',alias:'Optimus',v2:'Age of Extinction',v2hp:150,v2atk:20,v2def:10,pw:9,dex:7,dur:10,sta:8,tac:9,usage:'Uses size and sword to dominate, then escalates with Matrix power.',persNote:'Disciplined leader — honourable, strong, and inspiring.'},
+{id:'irongiant',name:'Iron Giant',fr:'The Iron Giant',cat:'Movies & TV',icon:'🤖',hp:1700,atk:145,def:115,sp:1.05,tier:'S+',trait:'protective',pers:'protective',style:'Giant robot with strength, flight and weapons',sig:'Robot Punch',sigMult:1.7,trans:'Weapon Mode',tAtk:30,tDef:15,weak:'Programming; size',feat:'Defended a town from armies',wiki:'Iron_Giant',alias:'Giant',v2:'Weapon Mode',v2hp:150,v2atk:20,v2def:10,pw:9,dex:6,dur:10,sta:8,tac:8,usage:'Uses size and strength to protect, then escalates to weapon mode.',persNote:'Protective giant — gentle, loyal, and terrifying when threatened.'},
+{id:'korra',name:'Korra',fr:'Avatar: Legend of Korra',cat:'Animation',icon:'🌊',hp:1350,atk:140,def:85,sp:1.35,tier:'S+',trait:'protective',pers:'protective',style:'Avatar who bends all four elements with aggressive style',sig:'Water Whip Strike',sigMult:1.7,trans:'Avatar State',tAtk:40,tDef:10,weak:'Hot temper; Avatar State risk',feat:'Ended wars and spirits',wiki:'Korra',alias:'Avatar Korra',v2:'Book 4',v2hp:150,v2atk:25,v2def:10,pw:8,dex:9,dur:7,sta:8,tac:8,usage:'Bends all four elements aggressively, then enters Avatar State.',persNote:'Protective Avatar — fierce, direct, and headstrong.'},
+{id:'steven',name:'Steven Universe',fr:'Steven Universe',cat:'Animation',icon:'💎',hp:1300,atk:130,def:100,sp:1.25,tier:'S',trait:'protective',pers:'protective',style:'Half-Gem hero with shield, healing and empathy',sig:'Shield Throw',sigMult:1.6,trans:'Diamond Surge',tAtk:25,tDef:15,weak:'Pacifism; gem limits',feat:'Defended Earth and gems',wiki:'Steven_Universe',alias:'Steven',v2:'Future',v2hp:100,v2atk:20,v2def:10,pw:7,dex:8,dur:9,sta:8,tac:9,usage:'Uses shield to defend, heals, then lands gem-powered strikes.',persNote:'Protective hero — kind, brave, and empathetic.'},
+{id:'finn',name:'Finn',fr:'Adventure Time',cat:'Animation',icon:'🗡️',hp:1200,atk:135,def:80,sp:1.4,tier:'S',trait:'protective',pers:'protective',style:'Human hero with sword, grass arm and bravery',sig:'Sword Slash',sigMult:1.6,trans:'Grass Arm Surge',tAtk:25,tDef:10,weak:'Human; recklessness',feat:'Defeated demons and liches',wiki:'Finn_the_Human',alias:'Finn',v2:'Adult Finn',v2hp:100,v2atk:20,v2def:10,pw:8,dex:9,dur:7,sta:9,tac:7,usage:'Uses sword and grass arm to fight, stays brave and direct.',persNote:'Protective hero — brave, loyal, and adventurous.'},
+{id:'jake',name:'Jake',fr:'Adventure Time',cat:'Animation',icon:'🐶',hp:1250,atk:135,def:85,sp:1.35,tier:'S',trait:'humorous',pers:'humorous',style:'Magic dog who stretches and shapeshifts',sig:'Stretch Punch',sigMult:1.6,trans:'Stretch Surge',tAtk:25,tDef:10,weak:'Stretch limits; laziness',feat:'Defeated demons with Finn',wiki:'Jake_the_Dog',alias:'Jake',v2:'Adult Jake',v2hp:100,v2atk:20,v2def:10,pw:8,dex:9,dur:8,sta:8,tac:7,usage:'Stretches and shapeshifts to control range, then lands stretch punches.',persNote:'Humorous hero — lazy, funny, and loyal.'},
+{id:'invincible',name:'Invincible',fr:'Invincible',cat:'Animation',icon:'🦸',hp:1600,atk:150,def:95,sp:1.35,tier:'S+',trait:'protective',pers:'protective',style:'Viltrumite hero with flight, strength and speed',sig:'Viltrumite Punch',sigMult:1.7,trans:'Viltrumite Surge',tAtk:30,tDef:10,weak:'Viltrumite weaknesses; youth',feat:'Fought Viltrumites and aliens',wiki:'Invincible_(character)',alias:'Mark Grayson',v2:'Season 2',v2hp:150,v2atk:25,v2def:10,pw:9,dex:8,dur:9,sta:8,tac:8,usage:'Flies in with Viltrumite strength, then escalates to full power.',persNote:'Protective hero — earnest, brave, and learning fast.'},
+{id:'omniman',name:'Omni-Man',fr:'Invincible',cat:'Animation',icon:'👨',hp:1750,atk:160,def:100,sp:1.3,tier:'EX',trait:'ruthless',pers:'ruthless',style:'Viltrumite warrior with overwhelming strength',sig:'Viltrumite Punch',sigMult:1.8,trans:'Viltrumite Wrath',tAtk:35,tDef:10,weak:'Viltrumite weaknesses; pride',feat:'Conquered planets',wiki:'Omni-Man',alias:'Nolan Grayson',v2:'Season 2',v2hp:150,v2atk:25,v2def:10,pw:10,dex:7,dur:10,sta:8,tac:7,usage:'Overwhelms with Viltrumite strength and flight, then escalates to wrath.',persNote:'Ruthless warrior — cold, powerful, and terrifying.'},
+{id:'atomeve',name:'Atom Eve',fr:'Invincible',cat:'Animation',icon:'✨',hp:1400,atk:145,def:85,sp:1.3,tier:'S+',trait:'protective',pers:'protective',style:'Hero who manipulates matter and energy',sig:'Matter Construct Strike',sigMult:1.7,trans:'Matter Surge',tAtk:30,tDef:10,weak:'Matter limits; pacifism',feat:'Rebuilt matter and fought Viltrumites',wiki:'Atom_Eve',alias:'Samantha Eve Wilkins',v2:'Season 2',v2hp:100,v2atk:25,v2def:10,pw:9,dex:8,dur:8,sta:8,tac:9,usage:'Manipulates matter to create constructs, then lands energy strikes.',persNote:'Protective hero — smart, kind, and powerful.'},
+{id:'rick',name:'Rick Sanchez',fr:'Rick and Morty',cat:'Animation',icon:'🔬',hp:1250,atk:140,def:80,sp:1.25,tier:'S',trait:'strategist',pers:'strategist',style:'Genius scientist with portal gun and gadgets',sig:'Portal Gun Blast',sigMult:1.6,trans:'Genius Surge',tAtk:25,tDef:10,weak:'Alcohol; recklessness',feat:'Outsmarted universes',wiki:'Rick_Sanchez',alias:'Rick',v2:'C-137',v2hp:100,v2atk:25,v2def:5,pw:8,dex:8,dur:7,sta:7,tac:10,usage:'Uses portal gun and gadgets to outmanoeuvre, then lands tech strikes.',persNote:'Strategist genius — cynical, brilliant, and unpredictable.'},
+{id:'robin',name:'Robin',fr:'Teen Titans',cat:'Animation',icon:'🦸',hp:1150,atk:130,def:80,sp:1.4,tier:'S',trait:'disciplined',pers:'disciplined',style:'Leader with staff, gadgets and acrobatics',sig:'Staff Strike',sigMult:1.6,trans:'Leader Surge',tAtk:25,tDef:5,weak:'Human; obsession',feat:'Led Titans against villains',wiki:'Robin_(Teen_Titans)',alias:'Dick Grayson',v2:'Teen Titans Go',v2hp:100,v2atk:20,v2def:5,pw:7,dex:9,dur:7,sta:9,tac:10,usage:'Uses staff and acrobatics to outfight, then lands leader strikes.',persNote:'Disciplined leader — tactical, driven, and precise.'},
+{id:'raven',name:'Raven',fr:'Teen Titans',cat:'Animation',icon:'🌑',hp:1450,atk:150,def:85,sp:1.25,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Half-demon with dark magic, portals and telekinesis',sig:'Dark Magic Blast',sigMult:1.7,trans:'Demon Surge',tAtk:35,tDef:10,weak:'Emotion control; demon father',feat:'Defeated demons and Trigon',wiki:'Raven_(Teen_Titans)',alias:'Raven',v2:'Season 4',v2hp:150,v2atk:25,v2def:10,pw:9,dex:8,dur:8,sta:7,tac:9,usage:'Uses dark magic and telekinesis to control, then escalates to demon power.',persNote:'Disciplined sorceress — calm, dark, and powerful.'},
+{id:'beastboy',name:'Beast Boy',fr:'Teen Titans',cat:'Animation',icon:'🦁',hp:1250,atk:135,def:85,sp:1.4,tier:'S',trait:'humorous',pers:'humorous',style:'Shapeshifter who becomes any animal',sig:'Animal Form Strike',sigMult:1.6,trans:'Beast Surge',tAtk:25,tDef:10,weak:'Form limits; humour',feat:'Fought villains as animals',wiki:'Beast_Boy',alias:'Garfield Logan',v2:'Teen Titans Go',v2hp:100,v2atk:20,v2def:10,pw:8,dex:10,dur:8,sta:8,tac:7,usage:'Shapeshifts to match the fight, then lands animal strikes.',persNote:'Humorous hero — funny, loyal, and adaptable.'},
+{id:'shera',name:'She-Ra',fr:'She-Ra',cat:'Animation',icon:'🗡️',hp:1450,atk:145,def:90,sp:1.35,tier:'S+',trait:'protective',pers:'protective',style:'Princess of Power with sword and healing',sig:'Sword of Protection Strike',sigMult:1.7,trans:'She-Ra Surge',tAtk:30,tDef:10,weak:'Sword dependence; responsibility',feat:'Defeated the Horde',wiki:'She-Ra',alias:'Adora',v2:'Season 5',v2hp:150,v2atk:25,v2def:10,pw:9,dex:8,dur:9,sta:8,tac:8,usage:'Uses Sword of Protection to fight and heal, then escalates to She-Ra power.',persNote:'Protective hero — brave, kind, and powerful.'},
+{id:'aragorn',name:'Aragorn',fr:'Lord of the Rings',cat:'Fantasy & Sci-Fi',icon:'👑',hp:1250,atk:135,def:85,sp:1.3,tier:'S',trait:'disciplined',pers:'disciplined',style:'Ranger king with sword, bow and leadership',sig:'Anduril Slash',sigMult:1.6,trans:'King\'s Resolve',tAtk:25,tDef:10,weak:'Human; leadership burden',feat:'Defeated orcs and Sauron\'s armies',wiki:'Aragorn',alias:'Strider',v2:'Return of the King',v2hp:100,v2atk:20,v2def:10,pw:8,dex:8,dur:8,sta:9,tac:10,usage:'Uses sword and bow with ranger tactics, then leads with king\'s resolve.',persNote:'Disciplined king — honourable, tactical, and brave.'},
+{id:'legolas',name:'Legolas',fr:'Lord of the Rings',cat:'Fantasy & Sci-Fi',icon:'🏹',hp:1250,atk:140,def:80,sp:1.45,tier:'S',trait:'disciplined',pers:'disciplined',style:'Elven archer with impossible speed and accuracy',sig:'Elven Bow Shot',sigMult:1.6,trans:'Elven Fury',tAtk:25,tDef:5,weak:'Elf limits; pride',feat:'Shot down armies and Oliphaunts',wiki:'Legolas',alias:'Legolas Greenleaf',v2:'Return of the King',v2hp:100,v2atk:25,v2def:5,pw:8,dex:10,dur:7,sta:9,tac:9,usage:'Uses bow speed and agility to stay untouchable, then lands elf strikes.',persNote:'Disciplined elf — precise, graceful, and deadly.'},
+{id:'sauron',name:'Sauron',fr:'Lord of the Rings',cat:'Fantasy & Sci-Fi',icon:'👁️',hp:1750,atk:155,def:105,sp:1.15,tier:'EX',trait:'ruthless',pers:'ruthless',style:'Dark Lord with mace, magic and domination',sig:'Mace of Doom',sigMult:1.8,trans:'Dark Lord Surge',tAtk:35,tDef:15,weak:'Ring dependence; pride',feat:'Nearly conquered Middle-earth',wiki:'Sauron',alias:'Dark Lord',v2:'Second Age',v2hp:200,v2atk:25,v2def:10,pw:10,dex:7,dur:10,sta:8,tac:9,usage:'Uses mace and dark magic to dominate, then escalates to Dark Lord power.',persNote:'Ruthless dark lord — patient, terrifying, and absolute.'},
+{id:'saruman',name:'Saruman',fr:'Lord of the Rings',cat:'Fantasy & Sci-Fi',icon:'🧙',hp:1500,atk:145,def:90,sp:1.2,tier:'S+',trait:'strategist',pers:'strategist',style:'Wizard with staff, voice and armies',sig:'Staff Blast',sigMult:1.7,trans:'White Wizard Surge',tAtk:30,tDef:10,weak:'Pride; staff dependence',feat:'Commanded armies and magic',wiki:'Saruman',alias:'Saruman the White',v2:'Two Towers',v2hp:150,v2atk:25,v2def:10,pw:9,dex:7,dur:9,sta:8,tac:10,usage:'Uses staff magic and voice to control, then escalates to white wizard power.',persNote:'Strategist wizard — proud, brilliant, and corrupt.'},
+{id:'yoda',name:'Yoda',fr:'Star Wars',cat:'Fantasy & Sci-Fi',icon:'🟢',hp:1400,atk:145,def:85,sp:1.45,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Jedi Master with lightsaber and Force mastery',sig:'Lightsaber Slash',sigMult:1.7,trans:'Force Mastery Surge',tAtk:30,tDef:10,weak:'Size; age',feat:'Trained Jedi for centuries',wiki:'Yoda',alias:'Yoda',v2:'Empire Strikes Back',v2hp:100,v2atk:25,v2def:10,pw:9,dex:10,dur:8,sta:9,tac:10,usage:'Uses Force and lightsaber speed to outmanoeuvre, then escalates to mastery.',persNote:'Disciplined master — wise, patient, and deceptively fast.'},
+{id:'obiwan',name:'Obi-Wan Kenobi',fr:'Star Wars',cat:'Fantasy & Sci-Fi',icon:'✨',hp:1400,atk:140,def:90,sp:1.35,tier:'S+',trait:'disciplined',pers:'disciplined',style:'Jedi Master with Soresu defence and tactics',sig:'Lightsaber Slash',sigMult:1.6,trans:'Jedi Master Surge',tAtk:25,tDef:10,weak:'Mercy; self-sacrifice',feat:'Defeated Sith and armies',wiki:'Obi-Wan_Kenobi',alias:'Obi-Wan',v2:'Revenge of the Sith',v2hp:150,v2atk:20,v2def:10,pw:8,dex:9,dur:8,sta:9,tac:10,usage:'Uses Soresu defence to outlast, then lands precise lightsaber strikes.',persNote:'Disciplined Jedi — honourable, tactical, and calm.'},
+{id:'kirk',name:'James T. Kirk',fr:'Star Trek',cat:'Fantasy & Sci-Fi',icon:'🖖',hp:1150,atk:130,def:85,sp:1.3,tier:'S',trait:'disciplined',pers:'disciplined',style:'Starship captain with phaser, tactics and fists',sig:'Phaser Shot',sigMult:1.6,trans:'Captain\'s Resolve',tAtk:25,tDef:5,weak:'Human; recklessness',feat:'Defeated Klingons and gods',wiki:'James_T._Kirk',alias:'Kirk',v2:'Original Series',v2hp:100,v2atk:20,v2def:5,pw:7,dex:8,dur:7,sta:9,tac:10,usage:'Uses phaser and tactics to outfight, then lands captain strikes.',persNote:'Disciplined captain — bold, tactical, and charismatic.'},
+{id:'paul',name:'Paul Atreides',fr:'Dune',cat:'Fantasy & Sci-Fi',icon:'🏜️',hp:1250,atk:135,def:85,sp:1.35,tier:'S',trait:'strategist',pers:'strategist',style:'Duke with prescience, crysknife and desert tactics',sig:'Crysknife Strike',sigMult:1.6,trans:'Kwisatz Haderach Surge',tAtk:25,tDef:10,weak:'Prescience burden; human',feat:'Led Fremen and changed Arrakis',wiki:'Paul_Atreides',alias:'Paul',v2:'Dune Part Two',v2hp:100,v2atk:20,v2def:10,pw:8,dex:9,dur:7,sta:8,tac:10,usage:'Uses prescience to anticipate, then lands crysknife strikes.',persNote:'Strategist duke — prescient, tactical, and driven.'},
+{id:'jonsnow',name:'Jon Snow',fr:'Game of Thrones',cat:'Fantasy & Sci-Fi',icon:'🐺',hp:1200,atk:135,def:85,sp:1.3,tier:'S',trait:'disciplined',pers:'disciplined',style:'Lord Commander with Longclaw and leadership',sig:'Longclaw Slash',sigMult:1.6,trans:'King in the North Surge',tAtk:25,tDef:10,weak:'Human; honour',feat:'Defeated White Walkers and armies',wiki:'Jon_Snow',alias:'Jon',v2:'Season 8',v2hp:100,v2atk:20,v2def:10,pw:8,dex:8,dur:8,sta:9,tac:9,usage:'Uses Longclaw and leadership to fight, then escalates to king\'s resolve.',persNote:'Disciplined leader — honourable, brave, and loyal.'},
+{id:'daenerys',name:'Daenerys Targaryen',fr:'Game of Thrones',cat:'Fantasy & Sci-Fi',icon:'🐉',hp:1350,atk:140,def:85,sp:1.25,tier:'S+',trait:'protective',pers:'protective',style:'Dragon queen with fire, dragons and armies',sig:'Dragon Fire Blast',sigMult:1.7,trans:'Dragon Queen Surge',tAtk:30,tDef:10,weak:'Dragon dependence; pride',feat:'Freed cities and conquered armies',wiki:'Daenerys_Targaryen',alias:'Daenerys',v2:'Season 8',v2hp:100,v2atk:25,v2def:10,pw:9,dex:7,dur:8,sta:8,tac:8,usage:'Uses dragon fire and armies to overwhelm, then escalates to queen power.',persNote:'Protective queen — fierce, liberating, and proud.'},
+{id:'dumbledore',name:'Albus Dumbledore',fr:'Harry Potter',cat:'Fantasy & Sci-Fi',icon:'🧙',hp:1500,atk:150,def:90,sp:1.25,tier:'S+',trait:'strategist',pers:'strategist',style:'Headmaster with Elder Wand and mastery',sig:'Elder Wand Blast',sigMult:1.7,trans:'Headmaster Surge',tAtk:30,tDef:10,weak:'Age; self-sacrifice',feat:'Defeated Grindelwald and Voldemort\'s forces',wiki:'Albus_Dumbledore',alias:'Dumbledore',v2:'Deathly Hallows',v2hp:150,v2atk:25,v2def:10,pw:9,dex:8,dur:9,sta:8,tac:10,usage:'Uses Elder Wand mastery to control, then lands decisive spells.',persNote:'Strategist wizard — wise, calm, and brilliant.'},
+{id:'voldemort',name:'Lord Voldemort',fr:'Harry Potter',cat:'Fantasy & Sci-Fi',icon:'🐍',hp:1550,atk:150,def:90,sp:1.25,tier:'S+',trait:'ruthless',pers:'ruthless',style:'Dark Lord with Killing Curse and Horcruxes',sig:'Avada Kedavra',sigMult:1.8,trans:'Dark Lord Surge',tAtk:35,tDef:10,weak:'Horcrux dependence; pride',feat:'Terrorised the wizarding world',wiki:'Lord_Voldemort',alias:'Tom Riddle',v2:'Deathly Hallows',v2hp:150,v2atk:25,v2def:10,pw:10,dex:7,dur:9,sta:8,tac:9,usage:'Uses Killing Curse and dark magic to dominate, then escalates to Dark Lord power.',persNote:'Ruthless dark lord — cold, terrifying, and absolute.'}];
+const CATS=['All','Anime','Comics','Video Games','Movies & TV','Animation','Fantasy & Sci-Fi'];
+const BATTLEFIELDS=[
+{id:'arena',name:'Open Arena',desc:'Flat, open ground. No cover, no hazards. Pure speed and power decide exchanges.',atk:0,def:0},
+{id:'ruined',name:'Ruined City',desc:'Broken buildings give cover. All fighters gain +12 DEF, but movement is tighter.',atk:0,def:12},
+{id:'forest',name:'Forest Clearing',desc:'Trees and mist hide movement. All fighters gain +8 DEF; agile fighters use cover best.',atk:0,def:8},
+{id:'desert',name:'Desert Basin',desc:'Open lines and harsh heat. All fighters gain +5 ATK but lose 5 DEF.',atk:5,def:-5},
+{id:'industrial',name:'Industrial Complex',desc:'Machinery and hazards can be weaponised. All fighters gain +8 ATK.',atk:8,def:0}
+];
+/* Dialogue is ORIGINAL, in-character writing for this battle only — never quoted canon.
+   Lines are built from the fighter's own name, signature, variant and opponent, so two
+   fighters with the same personality do NOT say identical lines. No team language is used:
+   v9 is 1v1, so there is no team to protect or fall back on. */
+const DIALOGUE_TEMPLATES={
+proud:['"{name}, you picked the wrong opponent. Watch what {name} can do alone."','"{name} does not need backup — and {opp} is about to learn why."','"Pride is not a flaw when it is earned, {opp}. {sig} will prove it."','"{name} has already decided how this ends, {opp}. {sig} is not a threat — it is a conclusion."','"Watch closely, {opp}. {name} in {variant} form does not repeat mistakes — and {sig} does not miss twice."','"You have {name} attention now, {opp}. That is rarer — and more dangerous — than you think."'],
+strategist:['"Watch {opp} first, {name} tells themself — every fighter has a tell, and {sig} will find it."','"{name} wins by position, not noise. {opp}, your next move is already read."','"Patience, {opp}. {name} has studied you, and {sig} is coming at the right moment."','"{name} has counted your habits, {opp}. The next {sig} will land where you were going, not where you are."','"Every exchange teaches {name} something, {opp}. By the end, there will be nothing left to learn — only {sig}."','"Do not mistake stillness for hesitation, {opp}. {name} is choosing the moment, not avoiding it."'],
+reckless:['"Enough talking, {opp} — let us see who hits harder! {name} is not here to wait."','"If {name} falls, {name} falls swinging, {opp}. {sig} first."','"{variant} or not, {name} only knows one speed: forward, at {opp}."','"{name} does not plan the ending, {opp}. {name} just keeps throwing {sig} until the ending arrives."','"Hit me back if you can, {opp} — {name} would rather trade blows than trade words."','"{variant} changes the power, {opp}, not the plan: forward, fast, and straight through {sig}."'],
+protective:['"{name} will not fall here, {opp} — not while {name} can still stand and use {sig}."','"I take the hit and I give it back, {opp}. That is how {name} fights."','"{name} protects what matters by ending this, {opp} — with {sig}, not with speeches."','"{name} stands here so nothing else has to fall, {opp}. {sig} is the line."','"You will have to go through {name}, {opp} — and {name} is not moving."','"{name} does not need to win beautifully, {opp}. {name} needs to still be standing when {sig} lands."'],
+ruthless:['"Weakness is an opening, {opp}. {name} will find yours, then use {sig}."','"Do not beg, {opp}. It will not change what {name} does next."','"{name} does not fight for applause, {opp}. {name} fights to finish this."','"{name} saw the opening the moment you made it, {opp}. {sig} is already on its way."','"No speeches, {opp}. {name} finishes fights, and {sig} finishes them."','"{name} does not hate you, {opp}. {name} simply does not let an opening close unused."'],
+disciplined:['"Breathe. Form. Strike only when it counts, {opp}. {name} does not waste {sig}."','"Honour is not weakness, {opp}. It is control — and {name} has it."','"{name} has trained for this, {opp}. One clean {sig} is worth ten wild swings."','"Form first, {opp}. {name} will not chase a wild swing when one clean {sig} will do."','"{name} has already fought this fight in their head, {opp}. Now {sig} does the rest."','"Control is a weapon, {opp}. {name} uses it, then uses {sig}."'],
+compassionate:['"{name} does not want to hurt you, {opp}. But {name} will stop you — with {sig} if it comes to that."','"There is always a way that does not end in ruin, {opp}. {name} will look for it, even now."','"Mercy is not surrender, {opp}. {name} will hold back where possible, and not where it costs the fight."','"{name} will give you a way out, {opp}, right up until {sig} is the only way left."','"This does not have to be cruelty, {opp}. {name} can end it cleanly with {sig}."','"{name} fights because someone must stop this, {opp} — not because {name} enjoys {sig}."'],
+humorous:['"Okay, {opp}, this is either brilliant or very stupid. {name} is going with {sig} to find out."','"I have fought weirder days than this, {opp}. {name} is still standing, and {sig} is still ready."','"Note to self, {opp}: do not stand still while {name} is winding up {sig}."','"Great, {opp}, another dramatic showdown. {name} brought {sig} and questionable life choices."','"{name} would make a joke here, {opp}, but {sig} is funnier when it lands."','"If this goes badly, {opp}, {name} is blaming {variant} form and {sig} in that order."']
+};
+let episodeDialogueUsed={};
+function dialogueFor(f, opp, round, kind){
+  const templates=DIALOGUE_TEMPLATES[f.pers]||DIALOGUE_TEMPLATES.disciplined;
+  const oppName=opp?opp.name:'opponent';
+  const sig=f.sig||'their signature';
+  const variant=f.variant||'Base';
+  const key=f.id||f.name;
+  if(!episodeDialogueUsed[key]) episodeDialogueUsed[key]=[];
+  let used=episodeDialogueUsed[key];
+  let candidates=templates.map((_,i)=>i).filter(i=>!used.includes(i));
+  if(!candidates.length){ episodeDialogueUsed[key]=[]; used=[]; candidates=templates.map((_,i)=>i); }
+  const hash=(f.id||f.name).split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  const idx=candidates[(round+hash+(kind==='intro'?0:kind==='transform'?1:2))%candidates.length];
+  episodeDialogueUsed[key]=[...used, idx];
+  return templates[idx].replaceAll('{name}',f.name).replaceAll('{opp}',oppName).replaceAll('{sig}',sig).replaceAll('{variant}',variant);
+}
+// Backwards-compatible name used by older code paths; now fighter-specific.
+const DIALOGUE={};
+let selected=[]; let selectedVariants={}; let researchIntel={}; let catFilter='All'; let searchTerm='';
+/* YouTube research: starter library only. No claim of 400 verified channels.
+   The library is expandable — add channels in the game and they persist on this device.
+   Links are YouTube searches, not direct video claims, so they do not break if a handle changes. */
+const YT_STARTER_CHANNELS=['Death Battle','SethTheProgrammer','Swagkage','Comic Drake','AnimeUproar','Clyde','VSBW','Power Scaling Hub','DBZimran','ScrewAttack'];
+let ytCustomChannels=[]; try{ytCustomChannels=JSON.parse(localStorage.getItem('warroom_yt_channels')||'[]')}catch(e){ytCustomChannels=[]}
+let ytNote='';
+function ytUrl(q){return 'https://www.youtube.com/results?search_query='+encodeURIComponent(q)}
+function renderYT(){
+  const el=document.getElementById('yt-links'); if(!el) return;
+  if(!selected.length){el.innerHTML='Pick fighters to see their YouTube research searches.';return}
+  const matchupLink=selected.length===2?`<div style="margin-bottom:10px"><b style="color:var(--cyan)">▶ Matchup: ${esc(byId(selected[0]).name)} vs ${esc(byId(selected[1]).name)}</b><br><a href="${ytUrl(byId(selected[0]).name+' vs '+byId(selected[1]).name+' death battle analysis')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ ${esc(byId(selected[0]).name)} vs ${esc(byId(selected[1]).name)} death battle analysis</a> • <a href="${ytUrl(byId(selected[0]).name+' vs '+byId(selected[1]).name+' powers speed transformation')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ Matchup powers, speed &amp; transformations</a></div>`:'';
+  el.innerHTML=matchupLink+selected.map(id=>{const f=byId(id); return `<div style="margin-bottom:10px"><b style="color:var(--cyan)">${f.icon} ${esc(f.name)}</b><br>
+  <a href="${ytUrl(f.name+' vs battle analysis')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ ${esc(f.name)} vs battle analysis</a> •
+  <a href="${ytUrl(f.name+' powers strength speed explained')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ Powers, strength &amp; speed</a> •
+  <a href="${ytUrl(f.name+' transformations explained')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ Transformations</a> •
+  <a href="${ytUrl(f.name+' Death Battle')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ Death Battle search</a></div>`}).join('');
+}
+function renderChannels(){
+  const el=document.getElementById('yt-channels'); if(!el) return;
+  const all=[...YT_STARTER_CHANNELS,...ytCustomChannels];
+  el.innerHTML=`<b style="color:var(--cyan)">Battle-channel library: ${all.length} channels saved on this device</b><br><span style="font-size:.78rem;color:var(--dim)">Starter list + your additions. Add more any time — the system has no hard limit, so you can build toward 400 over time instead of pretending 400 were verified at once.</span><br>`+all.map(c=>`<a href="${ytUrl(c+' character battles powerscaling')}" target="_blank" rel="noopener" style="color:var(--main);display:inline-block;margin:4px 8px 0 0">▶ ${esc(c)}</a>`).join('');
+}
+function addChannel(){
+  const inp=document.getElementById('new-channel-name'); const name=(inp.value||'').trim(); if(!name) return;
+  if(!ytCustomChannels.includes(name)) ytCustomChannels.push(name);
+  try{localStorage.setItem('warroom_yt_channels',JSON.stringify(ytCustomChannels))}catch(e){}
+  inp.value=''; renderChannels();
+}
+function saveYTNote(){
+  ytNote=(document.getElementById('yt-note').value||'').trim();
+  document.getElementById('yt-note-display').innerHTML=ytNote?`<b style="color:var(--cyan)">Saved research note (context only):</b><br>${esc(ytNote)}`:'';
+}
+let aiTeam=[]; let currentBattle=null; let playbackTimer=null;
+function byId(id){return ROSTER.find(f=>f.id===id)}
+function variantOf(f){const v=selectedVariants[f.id]||'base'; if(v==='v2') return {label:f.v2,hp:f.v2hp,atk:f.v2atk,def:f.v2def}; return {label:'Base',hp:0,atk:0,def:0}}
+function instanceOf(f){const v=variantOf(f); return {...f,variant:v.label,variantId:selectedVariants[f.id]||'base',hp:f.hp+v.hp,atk:f.atk+v.atk,def:f.def+v.def,currentHp:f.hp+v.hp,maxHp:f.hp+v.hp,cooldown:0,actions:0,transformed:false,alive:true}}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+
+/* ============ ROSTER UI, INFO, VARIANTS ============ */
+function renderChips(){document.getElementById('cat-chips').innerHTML=CATS.map(c=>`<button class="chip ${c===catFilter?'on':''}" onclick="setCat('${c}')">${c}</button>`).join('')}
+function setCat(c){catFilter=c;renderChips();renderRoster()}
+function renderRoster(){
+  const pool=document.getElementById('fighter-pool');
+  const list=ROSTER.filter(f=>(catFilter==='All'||f.cat===catFilter)&&((f.name+' '+f.fr+' '+f.alias).toLowerCase().includes(searchTerm)));
+  document.getElementById('roster-note').innerText=`Showing ${list.length} of ${ROSTER.length} in this build.`;
+  pool.innerHTML=list.map(f=>{
+    const sel=selected.includes(f.id); const v=selectedVariants[f.id]||'base';
+    return `<div class="card ${sel?'sel':''}"><div class="ic">${f.icon}</div><b>${esc(f.name)}</b><small>${esc(f.fr)} • ${esc(f.cat)} • ${f.tier}</small><small>${esc(f.style)}</small>
+    <select onclick="event.stopPropagation()" onchange="setVariant('${f.id}',this.value)"><option value="base" ${v==='base'?'selected':''}>Base</option><option value="v2" ${v==='v2'?'selected':''}>${esc(f.v2)}</option></select>
+    <div class="mini"><button class="btn small" onclick="event.stopPropagation();openInfo('${f.id}')">Info</button><button class="btn small ${sel?'mag':''}" onclick="event.stopPropagation();toggleFighter('${f.id}')">${sel?'Remove':'Select'}</button></div></div>`;
+  }).join('') || '<p class="note">No fighters match that search.</p>';
+  renderSlots();
+}
+function setVariant(id,v){selectedVariants[id]=v;renderRoster(); if(selected.includes(id)) autoResearchFor(id);}
+function toggleFighter(id){
+  const i=selected.indexOf(id);
+  if(i>-1) selected.splice(i,1); else if(selected.length<2) selected.push(id); else {alert('Pick exactly 2 — Fighter A and Fighter B. Remove one first.');return}
+  renderRoster();
+  if(selected.includes(id)) autoResearchFor(id);
+}
+function renderSlots(){
+  const el=document.getElementById('alpha-squad-slots'); el.innerHTML='';
+  const labels=['Fighter A','Fighter B'];
+  for(let i=0;i<2;i++){const id=selected[i]; const f=id?byId(id):null; const v=f?variantOf(f):null;
+    if(f){const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0]; const inst=makeBattleInstance(f,bf); const c=canonResearch[id]||{}; const resStatus=c.time?`Research: Wikipedia ${c.wiki?'✅ found':'❌ no data'} • Fan-run Fandom wiki ${c.fandom?'✅ found':'❌ no data'}`:`Research: fetching automatically…`;
+    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(v.label)})</small></span><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(inst, bf)}</small><small style="color:var(--dim)">${resStatus}</small></div>`;}
+    else el.innerHTML+=`<div class="slot"><span>${labels[i]} (Empty — pick a fighter)</span></div>`;}
+  document.getElementById('roster-count').innerText=`${selected.length}/2 Selected`;
+  document.getElementById('review-btn').disabled=selected.length!==2;
+  renderBattlefields(); renderYT(); renderChannels();
+}
+function renderBattlefields(){
+  const sel=document.getElementById('battlefield-select'); const cur=sel.value||'arena';
+  sel.innerHTML=BATTLEFIELDS.map(b=>`<option value="${b.id}" ${b.id===cur?'selected':''}>${b.name}</option>`).join('');
+  const b=BATTLEFIELDS.find(x=>x.id===sel.value)||BATTLEFIELDS[0];
+  document.getElementById('battlefield-desc').innerText=b.desc+` Combat effect: ATK ${b.atk>=0?'+':''}${b.atk}, DEF ${b.def>=0?'+':''}${b.def} for all fighters.`;
+}
+function openInfo(id){
+  const f=byId(id); const v=variantOf(f);
+  document.getElementById('info-title').innerText=`${f.icon} ${f.name} — ${f.fr}`;
+  document.getElementById('info-content').innerHTML=`
+  <p><b>Category:</b> ${esc(f.cat)} &nbsp; <b>Tier:</b> ${f.tier} &nbsp; <b>Selected variant:</b> ${esc(v.label)}</p>
+  <p><b>Aliases:</b> ${esc(f.alias)}</p>
+  <p><b>Fighting style:</b> ${esc(f.style)}</p>
+  <p><b>Personality:</b> ${esc(f.persNote||f.pers)}</p><p><b>Power usage:</b> ${esc(f.usage||'')}</p><p><b>Scaling (1-10):</b> Power ${f.pw||7} • Speed ${f.sp} • Dexterity ${f.dex||7} • Durability ${f.dur||7} • Stamina ${f.sta||7} • Tactics ${f.tac||7}</p>
+  <p><b>Signature (implemented):</b> ${esc(f.sig)} — used every 4th action, ×${f.sigMult}</p>
+  <p><b>Power set (implemented, cycled in battle):</b> ${esc((typeof POWERS!=='undefined'&&POWERS[f.id]?POWERS[f.id]:[]).join(', ')||'—')}</p>
+  <p><b>Variant power:</b> ${esc((typeof V2POWER!=='undefined'&&V2POWER[f.id])||'—')} (replaces first power when the second variant is selected)</p>
+  <p><b>Transformation (implemented, if listed):</b> ${f.trans?esc(f.trans)+' — triggers below 45% HP, +'+f.tAtk+' ATK, +'+f.tDef+' DEF':'None in this build'}</p>
+  <p><b>Weakness:</b> ${esc(f.weak)}</p>
+  <p><b>Notable feat (context, not a stat):</b> ${esc(f.feat)}</p>
+  <p><b>Base stats:</b> HP ${f.hp} • ATK ${f.atk} • DEF ${f.def} • Speed ${f.sp}</p>
+  <p class="note">Implemented vs canon: only the power set above, signature, transformation (if listed), and the engine traits for Infinity, prep-first-hit, and serious-punch scaling are implemented. Other canon powers for this character are not invented here. Research summaries, when fetched, are context — they do not automatically add new powers.</p>
+  <button class="btn small" onclick="fetchCanonForInfo('${f.id}')">Retest canon sources (optional — canon auto-fetches on pick)</button>
+  <div id="info-canon" class="note" style="margin-top:8px"></div>`;
+  const portrait=document.getElementById('info-portrait'); if(portrait){portrait.style.display='none'; portrait.src='';}
+  document.getElementById('info-modal').classList.add('open');
+  // Canon auto-fetches when a profile is opened — no tap required. Retest button remains optional.
+  try{ fetchCanonForInfo(id); }catch(e){}
+  if(typeof loadPortrait==='function') loadPortrait(id);
+}
+function closeInfo(){document.getElementById('info-modal').classList.remove('open')}
+/* ============ LIVE RESEARCH (Wikipedia, free, no key) ============ */
+async function triggerOnlineResearch(){
+  const badge=document.getElementById('ai-status'); const intel=document.getElementById('research-intel');
+  if(selected.length===0){badge.innerText='AI RESEARCH: PICK FIGHTERS FIRST';intel.innerText='Pick at least 1 fighter first.';return}
+  badge.innerText='AI RESEARCH: FETCHING LIVE DATA...'; intel.innerText='Fetching live Wikipedia summaries...';
+  const results=await Promise.allSettled(selected.map(async id=>{
+    const f=byId(id); const res=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(f.wiki)}`,{headers:{Accept:'application/json'}});
+    if(!res.ok) throw new Error('HTTP '+res.status); const d=await res.json(); if(!d.extract) throw new Error('No summary'); return {f,d};
+  }));
+  let live=0; let html='';
+  results.forEach(r=>{if(r.status==='fulfilled'){live++; researchIntel[r.value.f.id]=r.value.d; const s=r.value.d.extract.length>260?r.value.d.extract.slice(0,260)+'...':r.value.d.extract; html+=`<div style="margin-bottom:10px"><b style="color:var(--cyan)">${r.value.f.icon} ${esc(r.value.f.name)} — ${esc(r.value.d.title)}</b><br>${esc(s)}<br><span style="color:var(--green)">Battle intel bonus: +10 ATK, +60 HP</span></div>`;}});
+  if(live>0){badge.innerText='AI RESEARCH: ONLINE (Wikipedia found for '+live+' fighter(s))';badge.style.color='var(--green)';badge.style.borderColor='var(--green)';intel.innerHTML=html;}
+  else{badge.innerText='AI RESEARCH: OFFLINE — LOCAL SIMULATION';badge.style.color='var(--yellow)';badge.style.borderColor='var(--yellow)';intel.innerText='No live source could be reached. The game falls back to local data and gives no intel bonus. It does not claim verification it did not get.';}
+}
+
+/* ============ TEAM REVIEW & COMBAT ENGINE ============ */
+document.getElementById('review-btn').onclick=async ()=>{
+  if(selected.length!==2){alert('Pick exactly 2 fighters first — Fighter A and Fighter B.');return}
+  const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
+  const teamHtml=(ids,title,inst)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); const finalInst=inst; return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><span>${esc(f.fr)} • Final battle stats: ATK ${finalInst.startAtk||finalInst.atk} • HP ${finalInst.startHp||finalInst.maxHp} • DEF ${finalInst.startDef||finalInst.def}${finalInst.researched?' (includes research intel bonus: +10 ATK, +60 HP)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(finalInst, bf)}</small></div>`}).join('');
+  const aInst=makeBattleInstance(byId(selected[0]),bf); const bInst=makeBattleInstance(byId(selected[1]),bf);
+  const analysis=generateAnalysis(aInst,bInst);
+  document.getElementById('setup-review').style.display='block';
+  document.getElementById('setup-review').innerHTML=teamHtml([selected[0]],'Fighter A',aInst)+teamHtml([selected[1]],'Fighter B',bInst)+`<p class="note">Battlefield: ${bf.name}. ${bf.desc} Final battle stats above include the battlefield effect and, where shown, the research intel bonus. The same final stats appear in Chapter I and in the breakdown.</p><div class="panel" style="margin-top:8px"><h3 style="color:var(--cyan)">Analysis preview — Chapter II in brief</h3>${analysis.html}</div><p class="note">Analysis preview uses current stats; final battle stats are shown in Chapter I and the breakdown.</p><p class="note" id="auto-research-note">Auto-researching both fighters from Wikipedia + Fandom… Research runs automatically — the battle button below is already enabled and does not wait for research.</p><button class="btn mag" style="width:100%" onclick="startBattle()">Start Death Battle on ${esc(bf.name)} →</button>`;
+  const live=await fetchResearchFor([...selected]);
+  const wikiCount=selected.filter(id=>{const c=canonResearch[id]||{}; return !!(c.wiki||researchIntel[id]);}).length; const fandomCount=selected.filter(id=>{const c=canonResearch[id]||{}; return !!c.fandom;}).length;
+  const note=document.getElementById('auto-research-note'); if(note) note.innerText=`Auto-research complete: Wikipedia: ${wikiCount}/2 found, Fan-run Fandom wiki: ${fandomCount}/2 found. The two sources are counted separately; a failed source is never counted as found. Researched fighters get +10 ATK / +60 HP in battle (a research bonus, not a new power), and their summaries feed Chapter I.`;
+  if(wikiCount===0&&fandomCount===0&&note) note.innerText=`Auto-research found no live Wikipedia or Fan-run Fandom data (offline or blocked). The battle will use local profiles only, and the episode will say so — it will not invent researched feats.`;
+  renderCanonResults(selected);
+};
+function chooseTarget(actor, enemies){
+  const alive=enemies.filter(e=>e.alive);
+  if(!alive.length) return null;
+  if(actor.pers==='ruthless') return alive.sort((a,b)=>a.currentHp-b.currentHp)[0];
+  if(actor.pers==='strategist') return alive.sort((a,b)=>b.atk-a.atk)[0];
+  if(actor.pers==='proud') return alive.sort((a,b)=>b.atk-a.atk)[0];
+  if(actor.pers==='protective'){const hurt=alive.sort((a,b)=>a.currentHp-b.currentHp)[0]; return hurt;}
+  return alive[Math.floor(Math.random()*alive.length)];
+}
+function makeBattleInstance(f,bf){
+  const inst=instanceOf(f); inst.atk+=bf.atk; inst.def+=bf.def;
+  const canonOk=(typeof canonResearch!=='undefined'&&canonResearch[f.id]&&(canonResearch[f.id].wiki||canonResearch[f.id].fandom));
+  if(researchIntel[f.id]||canonOk){inst.atk+=10; inst.maxHp+=60; inst.currentHp+=60; inst.researched=true;} else inst.researched=false;
+  inst.startAtk=inst.atk; inst.startDef=inst.def; inst.startHp=inst.maxHp;
+  return inst;
+}
+function simulateBattle(){
+  const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
+  const a=makeBattleInstance(byId(selected[0]),bf);
+  const b=makeBattleInstance(byId(selected[1]),bf);
+  // 1v1: alpha=[Fighter A], beta=[Fighter B] are kept only so playback/render code still works.
+  let alpha=[a], beta=[b];
+  [...alpha,...beta].forEach(f=>{f.staminaMax=70+(f.sta||7)*5; f.stamina=f.staminaMax; f.shield=false; f.studied=false; f.nextBoost=1;});
+  const events=[]; let winner=null; let victoryCondition=null; let stalemate=false; let totalDamage=0;
+  const alive=t=>t.filter(x=>x.alive);
+  const TIER_LEVEL={A:3,'A+':4,S:5,'S+':6,EX:7};
+  for(let round=1; round<=60; round++){
+    // Regeneration heals only a fighter who is still alive. It NEVER revives after HP 0.
+    [...alpha,...beta].forEach(f=>{if(f.alive && f.trait==='regen' && f.currentHp<f.maxHp){const h=Math.min(40,f.maxHp-f.currentHp); f.currentHp+=h; events.push({round,type:'heal',actor:f.name,detail:'regenerates',heal:h});}});
+    const order=[...alive(alpha),...alive(beta)].sort((x,y)=>(y.sp+(y.dex||7)/20)-(x.sp+(x.dex||7)/20));
+    for(const actor of order){
+      if(!actor.alive) continue;
+      const foes=alpha.includes(actor)?beta:alpha;
+      if(!alive(foes).length) break;
+      if(actor.trans && !actor.transformed && actor.currentHp<=actor.maxHp*0.45){
+        actor.transformed=true; actor.atk+=actor.tAtk; actor.def+=actor.tDef;
+        events.push({round,type:'transform',actor:actor.name,detail:actor.trans,transformHp:actor.currentHp,transformMax:actor.maxHp});
+      }
+      if(actor.pers==='strategist' && !actor.studied){
+        actor.studied=true; actor.nextBoost=1.25; actor.actions++;
+        events.push({round,type:'study',actor:actor.name,detail:'studies the enemy and finds a weakness',reason:'strategist studies first'});
+        continue;
+      }
+      // In 1v1 there is no ally to protect, so the protective branch cannot trigger.
+      const target=chooseTarget(actor,foes); if(!target) continue;
+      actor.actions++;
+      const useSig=actor.actions%4===0;
+      let powers=(POWERS[actor.id]||[]).slice();
+      if(actor.variantId==='v2' && V2POWER[actor.id]) powers=[V2POWER[actor.id],...powers.slice(1)];
+      let ability, mult;
+      if(useSig){ability=(actor.transformed&&TRANSSIG[actor.id])?TRANSSIG[actor.id]:actor.sig; mult=actor.sigMult;}
+      else if(powers.length){ability=powers[(actor.actions-1)%powers.length]; mult=1.25;}
+      else {ability=actor.sig; mult=1.2;}
+      let reason=''; let blocked=false, crit=false;
+      if(target.trait==='infinity_void' && actor.tier!=='EX' && Math.random()<0.65) blocked=true;
+      if(!blocked){const dodgeChance=Math.max(0,Math.min(0.30,((target.dex||7)-(actor.dex||7))*0.02+((target.sp||1)-(actor.sp||1))*0.08)); if(Math.random()<dodgeChance){blocked=true; reason='outmanoeuvred — superior dexterity and speed dodge the attack';}}
+      if(actor.trait==='prep' && actor.actions===1) crit=true;
+      else if(Math.random()<0.20) crit=true;
+      let dmg=0;
+      if(actor.pers==='reckless' && actor.actions===1){mult*=0.7; reason='holding back to test a strong opponent';}
+      if(actor.stamina<=20){mult*=0.8; reason=(reason?reason+'; ':'')+'fatigued, stamina low';}
+      if(!blocked){
+        let scale=1; if(actor.trait==='serious_punch') scale=1.35+(1-actor.currentHp/actor.maxHp)*0.5;
+        if(actor.nextBoost && actor.nextBoost!==1){scale*=actor.nextBoost; actor.nextBoost=1; reason=(reason?reason+'; ':'')+'striking a studied weakness';}
+        dmg=Math.max(20,Math.floor((actor.atk*mult*scale-target.def*0.28)*(crit?1.5:1)));
+        const tierDiff=(TIER_LEVEL[target.tier]||5)-(TIER_LEVEL[actor.tier]||5);
+        const isCounter=(actor.trait==='prep' && target.weak && target.weak.includes('Kryptonite'));
+        if(tierDiff>=2 && !isCounter){dmg=Math.floor(dmg*(useSig?0.5:0.25)); reason=(reason?reason+'; ':'')+'power gap: weaker tier barely dents a far stronger foe';}
+        dmg=Math.floor(dmg*(0.85+(actor.pw||7)*0.03)*(1-(target.dur||7)*0.015)); if((target.dex||7)>=(actor.dex||7)+3 && Math.random()<0.12){dmg=Math.floor(dmg*0.7); reason=(reason?reason+'; ':'')+'countered by superior dexterity';}
+        if(target.shield){dmg=Math.floor(dmg*0.5); target.shield=false; reason=(reason?reason+'; ':'')+'ally shield absorbs part of the blow';}
+        actor.stamina=Math.max(0,actor.stamina-(useSig?15:8));
+        totalDamage+=dmg;
+        target.currentHp=Math.max(0,target.currentHp-dmg);
+      }
+      const ev={round,type:'attack',actor:actor.name,target:target.name,ability,damage:dmg,crit,blocked,targetHp:target.currentHp,targetMax:target.maxHp,actorPers:actor.pers,reason};
+      events.push(ev);
+      if(target.currentHp===0 && target.alive){
+        target.alive=false; target.deathRound=round;
+        events.push({round,type:'knockout',actor:actor.name,target:target.name});
+        winner=actor.name; victoryCondition='Death (HP 0)';
+      } else if(target.currentHp>0 && target.currentHp<=target.maxHp*0.10 && target.stamina===0 && target.alive){
+        // Incapacitation: exhausted and barely standing, cannot continue the fight.
+        target.alive=false; target.incapacitated=true;
+        events.push({round,type:'incapacitated',actor:actor.name,target:target.name,detail:'incapacitated — exhausted and unable to continue'});
+        winner=actor.name; victoryCondition='Incapacitation (unable to continue)';
+      }
+      if(!alive(alpha).length||!alive(beta).length) break;
+    }
+    if(!alive(alpha).length||!alive(beta).length) break;
+  }
+  if(!winner){
+    // Round cap reached, both still alive, no death and no incapacitation: do NOT invent a killing blow.
+    stalemate=true; winner='Stalemate'; victoryCondition='Stalemate — no death (round cap reached, neither fighter could kill or incapacitate the other)';
+  }
+  const winnerFighter=stalemate?null:(alpha[0].alive?alpha[0]:beta[0]);
+  const loserFighter=stalemate?null:(alpha[0].alive?beta[0]:alpha[0]);
+  return {alpha,beta,events,winner,winnerFighter,loserFighter,victoryCondition,stalemate,rounds:events.length?events[events.length-1].round:0,battlefield:bf,totalDamage,destruction:Math.min(100,Math.floor(totalDamage/200))};
+}
+function startBattle(){
+  currentBattle=simulateBattle();
+  document.getElementById('draft-screen').classList.remove('active');
+  document.getElementById('battle-screen').classList.add('active');
+  document.getElementById('results-screen').classList.remove('active');
+  document.getElementById('battle-log').innerHTML='<div>Battle simulation complete in the engine. Playing back the recorded events — the story will be built only from these events.</div>';
+  document.getElementById('show-results-btn').style.display='none';
+  playBack();
+}
+function renderCombatants(alpha,beta){
+  const mk=(t)=>t.map(f=>`<div class="fighter ${f.alive?'':'dead'}"><div class="row"><span>${f.icon} ${esc(f.name)}</span><span>${Math.max(0,f.currentHp)}/${f.maxHp} HP</span></div><div class="bar"><div class="fill" style="width:${Math.max(0,f.currentHp/f.maxHp*100)}%"></div></div><small style="color:var(--dim)">${esc(f.variant)}${f.transformed?' • '+esc(f.trans):''}</small></div>`).join('');
+  document.getElementById('alpha-combatants').innerHTML=mk(alpha);
+  document.getElementById('beta-combatants').innerHTML=mk(beta);
+}
+function playBack(){
+  if(playbackTimer) clearInterval(playbackTimer);
+  // Playback copies start at full HP and apply events in order, so HP never contradicts the log.
+  const alpha=currentBattle.alpha.map(f=>({...f,currentHp:f.maxHp,alive:true,transformed:false}));
+  const beta=currentBattle.beta.map(f=>({...f,currentHp:f.maxHp,alive:true,transformed:false}));
+  // Note: transformed flag in playback is visual only; final state is in currentBattle.
+  renderCombatants(alpha,beta);
+  const evs=currentBattle.events; let i=0; const log=document.getElementById('battle-log');
+  playbackTimer=setInterval(()=>{
+    if(i>=evs.length){clearInterval(playbackTimer); document.getElementById('show-results-btn').style.display='block'; return;}
+    const e=evs[i++]; const all=[...alpha,...beta];
+    if(e.type==='attack'){
+      const t=all.find(x=>x.name===e.target); if(t){t.currentHp=e.targetHp; if(e.targetHp===0) t.alive=false;}
+      log.innerHTML+=`<div><b>${esc(e.actor)}</b> ${e.blocked?'is stopped cold by '+esc(e.target)+"'s defence.":'uses '+esc(e.ability)+' on '+esc(e.target)+(e.crit?' — a critical hit!':'')+'.'}</div>`;
+    } else if(e.type==='transform'){const a=all.find(x=>x.name===e.actor); if(a) a.transformed=true; log.innerHTML+=`<div><b>${esc(e.actor)}</b> transforms: ${esc(e.detail)}!</div>`;}
+    else if(e.type==='study'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> studies the enemy instead of attacking — ${esc(e.detail)}.</div>`;}
+    else if(e.type==='protect'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> protects ${esc(e.target)}.</div>`;}
+    else if(e.type==='knockout'){log.innerHTML+=`<div><b>${esc(e.target)}</b> is knocked out.</div>`;}
+    else if(e.type==='incapacitated'){const t=all.find(x=>x.name===e.target); if(t) t.alive=false; log.innerHTML+=`<div><b>${esc(e.target)}</b> is incapacitated and cannot continue.</div>`;}
+    else if(e.type==='heal'){const a=all.find(x=>x.name===e.actor); if(a) a.currentHp=Math.min(a.maxHp,a.currentHp+e.heal); log.innerHTML+=`<div>${esc(e.actor)} recovers some strength.</div>`;}
+    renderCombatants(alpha,beta); log.scrollTop=log.scrollHeight;
+  },550);
+}
+document.getElementById('show-results-btn').onclick=showResults;
+
+/* ============ STORY ENGINE — built ONLY from recorded events ============ */
+function cond(hp,max){if(hp===0) return 'falls and does not rise'; if(hp/max<0.25) return 'is barely standing, breathing hard'; if(hp/max<0.5) return 'is badly hurt and slowing'; return 'staggers, but holds their ground';}
+function condState(hp,max){if(hp===0) return 'fallen and not rising'; if(hp/max<0.25) return 'barely standing, breathing hard'; if(hp/max<0.5) return 'badly hurt and slowing'; return 'staggering, but holding their ground';}
+function narrateAttack(e){
+  if(e.blocked) return `${e.actor} drives forward, but ${e.target}'s defence turns the blow aside completely — the attack never lands.`;
+  const hits=[`${e.actor} unleashes ${e.ability}, forcing ${e.target} back across the broken ground.`, `${e.actor} finds an opening and strikes with ${e.ability}, and ${e.target} ${cond(e.targetHp,e.targetMax)}.`, `${e.actor} presses the attack with ${e.ability}, testing ${e.target}'s guard until it begins to give.`];
+  const base=hits[Math.abs(e.actor.length+e.target.length+e.round)%hits.length];
+  return e.crit?base+' The impact is far heavier than expected, and the whole battlefield seems to shudder.':base;
+}
+function chapter(title,paras){return `<h3>${title}</h3>`+paras.map(p=>`<p>${p}</p>`).join('')}
+function consistencyCheck(b){
+  const dead=new Set(); let ok=true;
+  for(const e of b.events){if(e.type==='attack'||e.type==='transform'){if(dead.has(e.actor)) ok=false;} if(e.type==='knockout') dead.add(e.target);}
+  const aliveAlpha=b.alpha.filter(f=>f.alive).length, aliveBeta=b.beta.filter(f=>f.alive).length;
+  if(!b.stalemate){const winAlive=b.alpha.filter(f=>f.alive).length+b.beta.filter(f=>f.alive).length; if(winAlive!==1) ok=false;}
+  return ok;
+}
+function generateBreakdown(b){
+  const totals={}; b.events.forEach(e=>{if(e.type==='attack'&&!e.blocked) totals[e.actor]=(totals[e.actor]||0)+e.damage;});
+  const statLines=[...b.alpha,...b.beta].map(f=>`<li><b>${esc(f.name)} (${esc(f.variant)}) final battle stats (start of fight):</b> HP ${f.startHp||f.maxHp}, ATK ${f.startAtk||f.atk}, DEF ${f.startDef||f.def}, speed ${f.sp}, tier ${f.tier} — Stat build: ${statBuildString(f, b.battlefield)}${f.transformed?` (later transformed to ${esc(f.trans)}: +${f.tAtk} ATK, +${f.tDef} DEF, applied only on transformation)`:''} — these are the same final stats shown in the selection panel and in Chapter I.</li>`).join('');
+  const summary=`<li><b>Winner:</b> ${b.winner} &nbsp; <b>Battlefield:</b> ${esc(b.battlefield.name)} &nbsp; <b>Rounds in record:</b> ${b.rounds} &nbsp; <b>Events:</b> ${b.events.length} &nbsp; <b>Battlefield destruction:</b> ${b.destruction||0}% (calculated from total damage ${b.totalDamage} — 200 damage per 1%, capped at 100%; this is the same figure used in Chapter VI)</li>`+statLines+Object.entries(totals).map(([n,d])=>`<li><b>${esc(n)}</b> dealt ${d} damage in total.</li>`).join('')+(ytNote?`<li><b>Research note used as story context only (did not add powers):</b> ${esc(ytNote)}</li>`:`<li><b>Research sources:</b> Wikipedia summaries where fetched, plus YouTube battle-analysis searches linked from the draft screen. No YouTube video was automatically watched or transcribed by the game.</li>`);
+  const list=b.events.map(e=>{
+    if(e.type==='attack') return `<li>Round ${e.round}: ${esc(e.actor)} — ${esc(e.ability)} → ${esc(e.target)} — ${e.blocked?'BLOCKED, 0 damage':e.damage+' damage'+(e.crit?' (CRIT)':'')}, target left at ${e.targetHp}/${e.targetMax} HP.</li>`;
+    if(e.type==='transform') return `<li>Round ${e.round}: ${esc(e.actor)} transforms into ${esc(e.detail)}.</li>`;
+    if(e.type==='study') return `<li>Round ${e.round}: ${esc(e.actor)} studies instead of attacking — ${esc(e.detail)}.</li>`;
+    if(e.type==='protect') return `<li>Round ${e.round}: ${esc(e.actor)} protects ${esc(e.target)}.</li>`;
+    if(e.type==='knockout') return `<li>Round ${e.round}: ${esc(e.target)} is knocked out by ${esc(e.actor)}.</li>`;
+    if(e.type==='incapacitated') return `<li>Round ${e.round}: ${esc(e.target)} is incapacitated by ${esc(e.actor)} and cannot continue.</li>`;
+    return `<li>Round ${e.round}: ${esc(e.actor)} recovers ${e.heal} HP.</li>`;
+  }).join('');
+  return summary+list;
+}
+/* ============ RESULTS & HISTORY (localStorage only) ============ */
+function showResults(){
+  const b=currentBattle; if(!b) return;
+  document.getElementById('battle-screen').classList.remove('active');
+  document.getElementById('results-screen').classList.add('active');
+  const a=b.alpha[0], f2=b.beta[0];
+  document.getElementById('result-title').innerText=b.stalemate?'STALEMATE — NO DEATH':('DEATH BATTLE VERDICT — '+b.winner+' Wins');
+  document.getElementById('result-desc').innerText=b.stalemate?`${a.name} vs ${f2.name} on ${b.battlefield.name}: no death. Victory condition: ${b.victoryCondition}.`:`Winner: ${b.winner}. Loser: ${b.stalemate?'—':(b.loserFighter?b.loserFighter.name:'')}. Victory condition: ${b.victoryCondition}. Battlefield: ${b.battlefield.name}. The episode below was generated only from the recorded battle events and the pre-battle analysis.`;
+  document.getElementById('consistency-note').innerText=(typeof continuityReport==='function'?continuityReport(b):'Story consistency check: '+(consistencyCheck(b)?'PASSED.':'FAILED — do not trust this story; check the breakdown.'));
+  const story=generateEpisode(b), breakdown=generateBreakdown(b);
+  document.getElementById('story-output').innerHTML=story;
+  document.getElementById('breakdown-output').innerHTML=breakdown;
+  saveBattle(b,story,breakdown);
+}
+function loadHistory(){try{return JSON.parse(localStorage.getItem('warroom_battles_v3')||'[]')}catch(e){return []}}
+function saveBattle(b,story,breakdown){
+  try{const h=loadHistory(); h.unshift({id:Date.now(),date:new Date().toLocaleString(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),battlefield:b.battlefield.name,winner:b.winner,story,breakdown}); localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));}catch(e){}
+  renderHistory();
+}
+function renderHistory(){
+  const h=loadHistory(); const el=document.getElementById('history-list');
+  if(!h.length){el.innerText='No saved battles yet.';return}
+  el.innerHTML=h.map(x=>`<div style="margin-bottom:10px"><b>${esc(x.date)} — ${esc(x.winner)}</b> on ${esc(x.battlefield)}<br><small>${esc(x.alpha.join(', '))} vs ${esc(x.beta.join(', '))}</small><br><button class="btn small" onclick="viewHistory(${x.id})">View story</button></div>`).join('');
+}
+function viewHistory(id){
+  const x=loadHistory().find(h=>h.id===id); if(!x) return;
+  document.getElementById('draft-screen').classList.remove('active'); document.getElementById('battle-screen').classList.remove('active'); document.getElementById('results-screen').classList.add('active');
+  document.getElementById('result-title').innerText='Saved Battle — '+x.winner; document.getElementById('result-desc').innerText=x.date+' • '+x.battlefield;
+  document.getElementById('consistency-note').innerText='Loaded from history saved on this device only. It is not synced to other devices.';
+  document.getElementById('story-output').innerHTML=x.story; document.getElementById('breakdown-output').innerHTML=x.breakdown;
+}
+function resetSimulator(){
+  if(playbackTimer) clearInterval(playbackTimer);
+  selected=[]; aiTeam=[]; researchIntel={}; currentBattle=null; ytNote=''; if(typeof canonResearch!=='undefined') canonResearch={}; researchFetchedKeys={}; researchTimers={}; researchInFlight={}; episodeDialogueUsed={};
+  const tn=document.getElementById('yt-note'); if(tn) tn.value=''; const nd=document.getElementById('yt-note-display'); if(nd) nd.innerHTML='';
+  document.getElementById('setup-review').style.display='none';
+  document.getElementById('ai-status').innerText='AI RESEARCH: AUTO-TESTING…'; try{ if(typeof testConnections==='function') testConnections(); }catch(e){}
+  document.getElementById('results-screen').classList.remove('active'); document.getElementById('battle-screen').classList.remove('active'); document.getElementById('draft-screen').classList.add('active');
+  renderRoster(); renderHistory();
+}
+/* ============ V5: CANON POWERSETS ============ */
+const POWERS={
+goku:['Ki Blast','Instant Transmission Strike','Dragon Fist'],naruto:['Shadow Clone Barrage','Wind Style Strike','Sage Art Strike'],tanjiro:['Water Breathing Slash','Thunder Breathing Dash','Dance of the Fire God'],gojo:['Cursed Energy Punch','Blue: Attraction','Red: Repulsion'],superman:['Super Punch','Freeze Breath','Tornado Spin'],batman:['Batarang Throw','Smoke Pellet Ambush','Grapple Kick'],spiderman:['Web Shot','Wall-Crawl Kick','Spider-Sense Counter'],wonderwoman:['Shield Bash','Sword of Athena','Bracelet Shockwave'],mario:['Jump Stomp','Fireball','Hammer Swing'],link:['Sword Slash','Bomb Throw','Bow Shot'],chief:['Assault Rifle Burst','Melee Strike','Grenade Toss'],kratos:['Axe Swing','Blades of Chaos Whip','Shield Slam'],vader:['Force Push','Lightsaber Slash','Force Grip'],luke:['Lightsaber Slash','Force Push','Mind Trick Feint'],neo:['Kung Fu Combo','Bullet Dodge Strike','Telekinesis Push'],wick:['Pistol Shot','Knife Strike','Judo Throw'],aang:['Air Blast','Water Whip','Earth Pillar'],ben:['Heatblast Flame','Four Arms Punch','XLR8 Speed Strike'],danny:['Ecto Blast','Intangibility Strike','Overshadow Feint'],jack:['Katana Slash','Jumping Strike','Bow Shot'],gandalf:['Staff Strike','Light Burst','Word of Power'],geralt:['Steel Sword Slash','Igni Sign','Aard Sign'],spock:['Nerve Pinch Attempt','Phaser Strike','Logic Counter'],doctor:['Sonic Distraction','TARDIS Feint','Psychic Paper Trick'],luffy:['Gum-Gum Pistol','Gum-Gum Gatling','Red Hawk'],ichigo:['Getsuga Tensho','Sword Slash','Flash Step Strike'],saitama:['Normal Punch','Consecutive Normal Punches','Serious Punch'],deku:['Delaware Smash','Air Force Strike','Blackwhip Grab'],sasuke:['Chidori','Fireball Jutsu','Sharingan Counter'],levi:['ODM Blade Barrage','Spinning Blade Strike','Thunder Spear'],eren:['Titan Punch','Titan Roar','Hardening Strike'],madara:['Susanoo Slash','Fire Style Blast','Wood Release Bind'],allmight:['Detroit Smash','Texas Smash','California Smash'],yuji:['Divergent Fist','Cursed Energy Punch','Black Flash'],kaneki:['Kagune Strike','Kagune Barrage','Rinkaku Whip'],zoro:['Oni Giri','Tatsumaki','Santoryu Slash'],thor:['Mjolnir Strike','Lightning Blast','Stormbreaker Throw'],hulk:['Thunderclap','Gamma Slam','Seismic Stomp'],ironman:['Repulsor Blast','Missile Barrage','Unibeam'],captainamerica:['Shield Throw','Shield Bash','Combat Combo'],flash:['Speed Force Punch','Lightning Throw','Phase Strike'],blackpanther:['Vibranium Claw Strike','Energy Dagger','Acrobatic Kick'],drstrange:['Mystic Bolt','Portal Slash','Crimson Bands'],thanos:['Titan Punch','Energy Blast','Sword Strike'],wolverine:['Adamantium Claw Slash','Healing Factor Strike','Berserker Lunge'],greenlantern:['Energy Construct Strike','Ring Blast','Construct Shield Bash'],aquaman:['Trident Strike','Water Blast','Atlantean Punch'],daredevil:['Radar Sense Strike','Billy Club Strike','Acrobatic Kick'],sonic:['Spin Dash','Homing Attack','Sonic Boom'],pikachu:['Thunderbolt','Quick Attack','Iron Tail'],samus:['Power Beam','Missile Barrage','Morph Ball Bomb'],doomslayer:['Super Shotgun Blast','Chainsaw Strike','Rocket Blast'],snake:['CQC Strike','Tranquilizer Shot','Knife Strike'],cloud:['Braver','Cross-Slash','Blade Beam'],sephiroth:['Masamune Slash','Shadow Flare','Octaslash'],ryu:['Hadoken','Shoryuken','Tatsumaki'],megaman:['Mega Buster Shot','Charge Shot','Weapon Copy Blast'],kirby:['Inhale Strike','Copy Ability Strike','Star Rod Blast'],dante:['Rebellion Slash','Ebony & Ivory Shot','Stinger'],lara:['Dual Pistol Shot','Bow Shot','Climbing Axe Strike'],harry:['Expelliarmus','Stupefy','Protego Blast'],terminator:['Hydraulic Punch','Shotgun Blast','Minigun Burst'],robocop:['Auto-9 Shot','Armour Punch','Data Spike'],rambo:['Knife Strike','Bow Shot','Trap Strike'],buffy:['Stake Strike','Slayer Kick','Crossbow Shot'],bond:['Walther Shot','Gadget Blast','Martini Strike'],ethan:['Gadget Strike','Pistol Shot','Stunt Kick'],bourne:['Hand-to-Hand Combo','Pistol Shot','Environmental Strike'],godzilla:['Atomic Breath','Tail Swipe','Nuclear Pulse'],predator:['Plasma Caster Shot','Wrist Blade Slash','Cloak Strike'],optimus:['Energon Sword Slash','Blaster Shot','Truck Charge'],irongiant:['Robot Punch','Eye Beam','Flight Slam'],korra:['Water Whip Strike','Fire Blast','Earth Pillar'],steven:['Shield Throw','Bubble Shield','Healing Song'],finn:['Sword Slash','Grass Arm Strike','Demon Sword Blast'],jake:['Stretch Punch','Shapeshift Strike','Dog Blast'],invincible:['Viltrumite Punch','Flight Slam','Speed Strike'],omniman:['Viltrumite Punch','Flight Slam','Moustache Strike'],atomeve:['Matter Construct Strike','Energy Blast','Shield Construct'],rick:['Portal Gun Blast','Gadget Strike','Ray Gun Blast'],robin:['Staff Strike','Gadget Blast','Acrobatic Kick'],raven:['Dark Magic Blast','Telekinesis Strike','Portal Blast'],beastboy:['Animal Form Strike','Tiger Claw','Gorilla Punch'],shera:['Sword of Protection Strike','Healing Light','Energy Slash'],aragorn:['Anduril Slash','Bow Shot','Ranger Strike'],legolas:['Elven Bow Shot','Twin Knife Strike','Acrobatic Shot'],sauron:['Mace of Doom','Dark Magic Blast','Domination Strike'],saruman:['Staff Blast','Voice Command','Fire Blast'],yoda:['Lightsaber Slash','Force Push','Force Leap Strike'],obiwan:['Lightsaber Slash','Force Push','Soresu Counter'],kirk:['Phaser Shot','Captain Punch','Tactical Strike'],paul:['Crysknife Strike','Prescient Counter','Desert Strike'],jonsnow:['Longclaw Slash','Sword Combo','Direwolf Strike'],daenerys:['Dragon Fire Blast','Dothraki Strike','Fire Whip'],dumbledore:['Elder Wand Blast','Transfiguration Strike','Fire Bird Blast'],voldemort:['Avada Kedavra','Cruciatus Strike','Dark Magic Blast']};
+const V2POWER={goku:'God Ki Blast',naruto:'Sage Rasengan',tanjiro:'Sun Halo Slash',gojo:'Domain Expansion Strike',superman:'Solar Flare Punch',batman:'Powered Gauntlet Punch',spiderman:'Symbiote Tendril Strike',wonderwoman:'Godkiller Sword Slash',mario:'Fire Flower Blast',link:'Champion Sword Beam',chief:'Railgun Shot',kratos:'Valhalla Axe Throw',vader:'Sith Lightning',luke:'Jedi Master Saber Throw',neo:'One Code Burst',wick:'Dual Pistol Barrage',aang:'Avatar Elemental Surge',ben:'Ultimate Humungousaur Slam',danny:'Phantom Energy Beam',jack:'Season 5 Katana Fury',gandalf:'White Light Beam',geralt:'Grandmaster Crossbow Shot',spock:'Captain Command Strike',doctor:'Regeneration Energy Burst',luffy:'Gear 4 Kong Gun',ichigo:'Hollow Getsuga',saitama:'Serious Sideways Jump',deku:'One For All Smash',sasuke:'Amaterasu',levi:'Ackerman Slash',eren:'Founding Titan Slam',madara:'Rinnegan Strike',allmight:'United States of Smash',yuji:'Soul Dismantle',kaneki:'Kakuja Slash',zoro:'Asura Slash',thor:'God Blast',hulk:'Worldbreaker Punch',ironman:'Hulkbuster Punch',captainamerica:'Shield Ricochet',flash:'Infinite Mass Punch',blackpanther:'King\'s Claw',drstrange:'Eye of Agamotto Blast',thanos:'Infinity Snap Strike',wolverine:'Claw Frenzy',greenlantern:'Willpower Beam',aquaman:'Trident Storm',daredevil:'Devil\'s Barrage',sonic:'Super Spin',pikachu:'Volt Tackle',samus:'Charge Beam',doomslayer:'Berserk Punch',snake:'Stealth Takedown',cloud:'Omnislash',sephiroth:'One-Winged Slash',ryu:'Shinku Hadoken',megaman:'Super Adaptor Punch',kirby:'Hypernova Inhale',dante:'Devil Trigger Slash',lara:'Survivor Barrage',harry:'Patronus Charge',terminator:'Endoskeleton Slam',robocop:'Prime Directive Blast',rambo:'First Blood Barrage',buffy:'Slayer Barrage',bond:'00 Barrage',ethan:'Impossible Barrage',bourne:'Treadstone Barrage',godzilla:'Burning Breath',predator:'Hunter\'s Wrath Blast',optimus:'Matrix Blast',irongiant:'Weapon Mode Blast',korra:'Avatar State Blast',steven:'Diamond Blast',finn:'Grass Arm Barrage',jake:'Stretch Barrage',invincible:'Viltrumite Barrage',omniman:'Viltrumite Wrath Blast',atomeve:'Matter Barrage',rick:'Portal Barrage',robin:'Leader Barrage',raven:'Demon Barrage',beastboy:'Beast Barrage',shera:'She-Ra Barrage',aragorn:'King\'s Barrage',legolas:'Elven Barrage',sauron:'Dark Lord Barrage',saruman:'White Wizard Barrage',yoda:'Force Mastery Blast',obiwan:'Jedi Master Blast',kirk:'Captain\'s Barrage',paul:'Kwisatz Barrage',jonsnow:'King\'s Barrage',daenerys:'Dragon Queen Barrage',dumbledore:'Headmaster Barrage',voldemort:'Dark Lord Barrage'};
+const TRANSSIG={goku:'God Kamehameha',naruto:'Tailed Beast Bomb',tanjiro:'Sun Breathing Final Form',gojo:'Unlimited Void Crush',superman:'Sun-Charged Heat Vision',spiderman:'Symbiote Rage',wonderwoman:'Divine Lasso Crush',mario:'Star Power Slam',link:'Fierce Deity Sword Beam',chief:'Overshield Charge',kratos:'Spartan Rage Slam',vader:'Dark Side Fury',luke:'Master Force Wave',neo:'The One Blast',wick:'Baba Yaga Final Shot',aang:'Avatar State Blast',ben:'Way Big Slam',danny:'Phantom Rage Wail',jack:'Resolve Katana Finale',gandalf:'Istari Wrath Beam',geralt:'Toxicity Berserk Slash',spock:'Vulcan Fury Strike',doctor:'Regeneration Surge Blast',luffy:'Gear 5 Dawn Rocket',ichigo:'Final Getsuga Tensho',saitama:'Serious Table Flip',deku:'Full Cowling Barrage',sasuke:'Susanoo Slash',levi:'Levi Blade Storm',eren:'Rumbling Charge',madara:'Six Paths Susanoo',allmight:'Plus Ultra Punch',yuji:'Black Flash Barrage',kaneki:'Centipede Kagune',zoro:'Nine Sword Style',thor:'Warrior\'s Madness Slam',hulk:'Hulk Smash',ironman:'Nano Swarm',captainamerica:'Super-Soldier Strike',flash:'Speed Force Vortex',blackpanther:'Vibranium Blast',drstrange:'Astral Barrage',thanos:'Titan Slam',wolverine:'Berserker Barrage',greenlantern:'Lantern Barrage',aquaman:'King\'s Wrath',daredevil:'Radar Counter',sonic:'Chaos Blast',pikachu:'Gigantamax Thunder',samus:'Phazon Blast',doomslayer:'Crucible Slash',snake:'CQC Barrage',cloud:'Limit Break Barrage',sephiroth:'Supernova Strike',ryu:'Evil Shoryuken',megaman:'Mega Barrage',kirby:'Copy Barrage',dante:'Judgement Cut',lara:'Pistol Frenzy',harry:'Avada Counter',terminator:'Terminator Charge',robocop:'Robo Barrage',rambo:'Rambo Assault',buffy:'Stake Finale',bond:'Bond Finale',ethan:'Hunt Finale',bourne:'Bourne Finale',godzilla:'King\'s Roar',predator:'Predator Finale',optimus:'Prime Finale',irongiant:'Giant Finale',korra:'Elemental Barrage',steven:'Steven Finale',finn:'Finn Finale',jake:'Jake Finale',invincible:'Invincible Finale',omniman:'Omni Barrage',atomeve:'Eve Finale',rick:'Rick Finale',robin:'Robin Finale',raven:'Raven Finale',beastboy:'Beast Finale',shera:'Princess Finale',aragorn:'Aragorn Finale',legolas:'Legolas Finale',sauron:'Sauron Finale',saruman:'Saruman Finale',yoda:'Yoda Finale',obiwan:'Obi-Wan Finale',kirk:'Kirk Finale',paul:'Paul Finale',jonsnow:'Jon Finale',daenerys:'Daenerys Finale',dumbledore:'Dumbledore Finale',voldemort:'Voldemort Finale'};
+/* ============ V5: AUTOMATIC RESEARCH FOR BOTH TEAMS ============ */
+async function fetchResearchFor(ids){
+  let live=0;
+  const results=await Promise.allSettled(ids.map(async id=>{const c=await fetchCanonFor(id); return {id,c};}));
+  results.forEach(r=>{if(r.status==='fulfilled'&&r.value&&r.value.c&&(r.value.c.wiki||r.value.c.fandom)){live++;}});
+  return live;
+}
+/* ============ V5: NOVEL STORY ENGINE ============ */
+/* Dialogue here is written in-character for this battle. It is NOT quoted canon dialogue. */
+function powerProse(e,idx){
+  const targetF=[...currentBattle.alpha,...currentBattle.beta].find(x=>x.name===e.target);
+  const isInfinity = targetF && targetF.trait==='infinity_void';
+  if(e.blocked){
+    if(isInfinity) return `${e.actor} commits to ${e.ability}, but ${e.target}'s Infinity defence stops it outright — the attack never reaches ${e.target} at all.`;
+    if(e.reason && e.reason.includes('power gap')) return `${e.actor} commits to ${e.ability}, but the tier gap is real: the blow barely dents ${e.target}, who absorbs it and stays in control.`;
+    return `${e.actor} commits to ${e.ability}, but ${e.target} reads it, turns it aside, and gives nothing away.`;
+  }
+  const heavy = e.damage>=220 ? ' — a heavy blow that visibly shakes the fight' : (e.damage>=150 ? ' — a solid, telling hit' : '');
+  const why = e.reason && e.reason.includes('studied weakness') ? ` This one lands because ${e.actor} studied ${e.target} first and struck the weakness they found.` : (e.reason && e.reason.includes('holding back') ? ` ${e.actor} is still holding back, testing ${e.target} rather than committing fully.` : (e.reason && e.reason.includes('fatigued') ? ` ${e.actor} is fatigued now, and the blow carries less snap than it did earlier.` : (e.reason && e.reason.includes('power gap') ? ` Even with the tier gap, ${e.actor} keeps pressing — the damage is reduced, but the pressure is real.` : '')));
+  const templates=[
+    `${e.actor} moves the way only ${e.actor} moves — ${e.ability} cutting through the noise of ${e.target}'s defence, until ${e.target} ${cond(e.targetHp,e.targetMax)}.${heavy}`,
+    `There is no wasted motion in ${e.ability}. ${e.actor} sets it up with a feint, a shift of weight, a change of angle, and ${e.target} pays for the half-second they were late.${heavy}`,
+    `${e.ability} is not just an attack; it is a statement of how ${e.actor} fights. ${e.target} answers as best they can, but the exchange leaves them ${condState(e.targetHp,e.targetMax)}.${heavy}`,
+    `The battlefield itself reacts to ${e.ability} — dust lifts, cover cracks — and ${e.target} is left ${condState(e.targetHp,e.targetMax)}.${heavy}`,
+    `${e.actor} does not shout the name of the move and wait for applause. They use ${e.ability}, move again, and force ${e.target} to solve a new problem immediately.${heavy}`
+  ];
+  let s=templates[(idx+e.round)%templates.length]+why;
+  if(e.crit) s+=' This one lands with a weight that changes the whole tempo of the fight.';
+  return s;
+}
+function sceneForRound(round,evs){
+  let parts=[];
+  evs.forEach((e,i)=>{
+    if(e.type==='transform') parts.push(`Then the fight changes. ${e.actor} is pushed past what their current form can do, and becomes ${e.detail}. It is not a costume change — their power, reach and choices change, and everyone on the field recalculates in real time.`);
+    else if(e.type==='knockout') parts.push(`${e.target} goes down. Not with a speech, not with a flourish — with the sudden, flat silence that follows a fighter who has nothing left to give.`);
+    else if(e.type==='incapacitated') parts.push(`${e.target} cannot continue. Exhausted and barely standing, they have nothing left to give, and the fight is over for them.`);
+    else if(e.type==='heal') parts.push(`${e.actor} finds a breath, steadies, and recovers enough to keep fighting. Regeneration heals a living fighter only — it does not revive anyone.`);
+    else if(e.type==='study') parts.push(`${e.actor} does not attack yet. Instead they watch, measure range and timing, and look for the weakness every fighter hides. That choice will matter when they finally strike.`);
+    else if(e.type==='protect') parts.push(`${e.actor} braces to meet the next blow head-on, taking the risk themselves rather than giving ground.`);
+    else {parts.push(powerProse(e,i));}
+  });
+  return parts.join(' ');
+}
+/* ============ V5: PORTRAITS & CUSTOM FIGHTERS ============ */
+/* Portraits: Wikipedia thumbnails where available, emoji fallback otherwise.
+   Form-specific licensed artwork is not reliably available free, so v5 does not claim it. */
+async function loadPortrait(id){
+  const f=byId(id); if(!f) return;
+  try{const res=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(f.wiki)}`); const d=await res.json(); const img=document.getElementById('info-portrait'); if(img&&d.thumbnail) {img.src=d.thumbnail.source; img.style.display='block';} }catch(e){}
+}
+function addCustomFighter(){
+  const name=(document.getElementById('custom-name').value||'').trim(); if(!name) {alert('Give the fighter a name first.');return}
+  const powers=(document.getElementById('custom-powers').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const f={id:'custom_'+Date.now(),name,fr:document.getElementById('custom-fr').value||'Custom',cat:document.getElementById('custom-cat').value||'Anime',icon:'⭐',hp:1200,atk:125,def:85,sp:1.2,tier:'A',trait:'',pers:'disciplined',style:document.getElementById('custom-style').value||'Custom fighter',sig:powers[0]||'Custom Power',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Custom — set by creator',feat:'Custom — set by creator',wiki:name.replace(/\s+/g,'_'),alias:name,v2:'Custom Variant',v2hp:100,v2atk:15,v2def:5};
+  ROSTER.push(f); if(powers.length) POWERS[f.id]=powers.slice(0,3);
+  try{const cur=JSON.parse(localStorage.getItem('warroom_custom')||'[]'); cur.push({f,powers}); localStorage.setItem('warroom_custom',JSON.stringify(cur));}catch(e){}
+  renderRoster(); alert(name+' added. Custom fighters help grow the roster toward 100 per category without inventing canon profiles for real characters.');
+}
+/* ============ V6: CONNECTED CANON — WIKIPEDIA + FANDOM ============ */
+const FANDOM={
+goku:{d:'dragonball.fandom.com',t:'Goku'},naruto:{d:'naruto.fandom.com',t:'Naruto Uzumaki'},tanjiro:{d:'kimetsu-no-yaiba.fandom.com',t:'Tanjiro Kamado'},gojo:{d:'jujutsu-kaisen.fandom.com',t:'Satoru Gojo'},superman:{d:'dc.fandom.com',t:'Superman'},batman:{d:'dc.fandom.com',t:'Batman'},spiderman:{d:'marvel.fandom.com',t:'Spider-Man'},wonderwoman:{d:'dc.fandom.com',t:'Wonder Woman'},mario:{d:'mario.fandom.com',t:'Mario'},link:{d:'zelda.fandom.com',t:'Link'},chief:{d:'halo.fandom.com',t:'Master Chief'},kratos:{d:'godofwar.fandom.com',t:'Kratos'},vader:{d:'starwars.fandom.com',t:'Darth Vader'},luke:{d:'starwars.fandom.com',t:'Luke Skywalker'},neo:{d:'matrix.fandom.com',t:'Neo'},wick:{d:'johnwick.fandom.com',t:'John Wick'},aang:{d:'avatar.fandom.com',t:'Aang'},ben:{d:'ben10.fandom.com',t:'Ben Tennyson'},danny:{d:'dannyphantom.fandom.com',t:'Danny Phantom'},jack:{d:'samuraijack.fandom.com',t:'Samurai Jack'},gandalf:{d:'lotr.fandom.com',t:'Gandalf'},geralt:{d:'witcher.fandom.com',t:'Geralt of Rivia'},spock:{d:'memory-alpha.fandom.com',t:'Spock'},doctor:{d:'tardis.fandom.com',t:'The Doctor'},luffy:{d:'one-piece.fandom.com',t:'Monkey D. Luffy'},ichigo:{d:'bleach.fandom.com',t:'Ichigo Kurosaki'},saitama:{d:'onepunchman.fandom.com',t:'Saitama'},deku:{d:'myheroacademia.fandom.com',t:'Izuku Midoriya'},sasuke:{d:'naruto.fandom.com',t:'Sasuke Uchiha'},levi:{d:'attackontitan.fandom.com',t:'Levi Ackerman'},eren:{d:'attackontitan.fandom.com',t:'Eren Yeager'},madara:{d:'naruto.fandom.com',t:'Madara Uchiha'},allmight:{d:'myheroacademia.fandom.com',t:'All Might'},yuji:{d:'jujutsu-kaisen.fandom.com',t:'Yuji Itadori'},kaneki:{d:'tokyoghoul.fandom.com',t:'Ken Kaneki'},zoro:{d:'one-piece.fandom.com',t:'Roronoa Zoro'},thor:{d:'marvel.fandom.com',t:'Thor'},hulk:{d:'marvel.fandom.com',t:'Hulk'},ironman:{d:'marvel.fandom.com',t:'Iron Man'},captainamerica:{d:'marvel.fandom.com',t:'Captain America'},flash:{d:'dc.fandom.com',t:'The Flash'},blackpanther:{d:'marvel.fandom.com',t:'Black Panther'},drstrange:{d:'marvel.fandom.com',t:'Doctor Strange'},thanos:{d:'marvel.fandom.com',t:'Thanos'},wolverine:{d:'marvel.fandom.com',t:'Wolverine'},greenlantern:{d:'dc.fandom.com',t:'Green Lantern'},aquaman:{d:'dc.fandom.com',t:'Aquaman'},daredevil:{d:'marvel.fandom.com',t:'Daredevil'},sonic:{d:'sonic.fandom.com',t:'Sonic the Hedgehog'},pikachu:{d:'pokemon.fandom.com',t:'Pikachu'},samus:{d:'metroid.fandom.com',t:'Samus Aran'},doomslayer:{d:'doom.fandom.com',t:'Doom Slayer'},snake:{d:'metalgear.fandom.com',t:'Solid Snake'},cloud:{d:'finalfantasy.fandom.com',t:'Cloud Strife'},sephiroth:{d:'finalfantasy.fandom.com',t:'Sephiroth'},ryu:{d:'streetfighter.fandom.com',t:'Ryu'},megaman:{d:'megaman.fandom.com',t:'Mega Man'},kirby:{d:'kirby.fandom.com',t:'Kirby'},dante:{d:'devilmaycry.fandom.com',t:'Dante'},lara:{d:'tombraider.fandom.com',t:'Lara Croft'},harry:{d:'harrypotter.fandom.com',t:'Harry Potter'},terminator:{d:'terminator.fandom.com',t:'T-800'},robocop:{d:'robocop.fandom.com',t:'RoboCop'},rambo:{d:'rambo.fandom.com',t:'John Rambo'},buffy:{d:'buffy.fandom.com',t:'Buffy Summers'},bond:{d:'jamesbond.fandom.com',t:'James Bond'},ethan:{d:'missionimpossible.fandom.com',t:'Ethan Hunt'},bourne:{d:'bourne.fandom.com',t:'Jason Bourne'},godzilla:{d:'godzilla.fandom.com',t:'Godzilla'},predator:{d:'predator.fandom.com',t:'Predator'},optimus:{d:'transformers.fandom.com',t:'Optimus Prime'},irongiant:{d:'irongiant.fandom.com',t:'Iron Giant'},korra:{d:'avatar.fandom.com',t:'Korra'},steven:{d:'steven-universe.fandom.com',t:'Steven Universe'},finn:{d:'adventuretime.fandom.com',t:'Finn'},jake:{d:'adventuretime.fandom.com',t:'Jake'},invincible:{d:'invincible.fandom.com',t:'Invincible'},omniman:{d:'invincible.fandom.com',t:'Omni-Man'},atomeve:{d:'invincible.fandom.com',t:'Atom Eve'},rick:{d:'rickandmorty.fandom.com',t:'Rick Sanchez'},robin:{d:'teentitans.fandom.com',t:'Robin'},raven:{d:'teentitans.fandom.com',t:'Raven'},beastboy:{d:'teentitans.fandom.com',t:'Beast Boy'},shera:{d:'she-ra.fandom.com',t:'She-Ra'},aragorn:{d:'lotr.fandom.com',t:'Aragorn'},legolas:{d:'lotr.fandom.com',t:'Legolas'},sauron:{d:'lotr.fandom.com',t:'Sauron'},saruman:{d:'lotr.fandom.com',t:'Saruman'},yoda:{d:'starwars.fandom.com',t:'Yoda'},obiwan:{d:'starwars.fandom.com',t:'Obi-Wan Kenobi'},kirk:{d:'memory-alpha.fandom.com',t:'James T. Kirk'},paul:{d:'dune.fandom.com',t:'Paul Atreides'},jonsnow:{d:'gameofthrones.fandom.com',t:'Jon Snow'},daenerys:{d:'gameofthrones.fandom.com',t:'Daenerys Targaryen'},dumbledore:{d:'harrypotter.fandom.com',t:'Albus Dumbledore'},voldemort:{d:'harrypotter.fandom.com',t:'Lord Voldemort'}};
+let canonResearch={};
+async function fetchWiki(id){
+  const f=byId(id); if(!f) return null;
+  try{const res=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(f.wiki)}`,{headers:{Accept:'application/json'}}); if(!res.ok) return null; const d=await res.json(); if(d.extract) {researchIntel[id]=d; return d;} }catch(e){} return null;
+}
+async function fetchFandom(id){
+  const fm=FANDOM[id]; if(!fm) return null;
+  try{const url=`https://${fm.d}/api.php?action=query&prop=extracts|info&explaintext&exintro&inprop=url&titles=${encodeURIComponent(fm.t)}&format=json&origin=*`;
+  const res=await fetch(url); if(!res.ok) return null; const j=await res.json(); const pages=j.query&&j.query.pages?Object.values(j.query.pages):[]; const p=pages[0]; if(p&&p.extract) return {title:p.title,extract:p.extract,url:p.canonicalurl||`https://${fm.d}/wiki/${encodeURIComponent(fm.t)}`,domain:fm.d}; }catch(e){} return null;
+}
+async function fetchCanonFor(id){
+  const [wiki,fandom]=await Promise.all([fetchWiki(id),fetchFandom(id)]);
+  canonResearch[id]={wiki,fandom,time:new Date().toISOString()};
+  return canonResearch[id];
+}
+async function fetchCanonForSelected(){
+  const el=document.getElementById('canon-results'); if(el) el.innerHTML='Fetching Wikipedia + Fandom for selected fighters…';
+  if(!selected.length){if(el) el.innerHTML='Pick fighters first.';return}
+  await Promise.all(selected.map(id=>fetchCanonFor(id)));
+  renderCanonResults(selected);
+}
+let researchFetchedKeys={}; let researchTimers={}; let researchInFlight={};
+function autoResearchFor(id){
+  const f=byId(id); if(!f) return;
+  const key=id+'|'+(selectedVariants[id]||'base');
+  if(researchFetchedKeys[key] && canonResearch[id] && canonResearch[id].time){ try{renderSlots();}catch(e){} return; }
+  if(researchFetchedKeys[key] && !(canonResearch[id]&&canonResearch[id].time)){ delete researchFetchedKeys[key]; }
+  if(researchInFlight[id]) return;
+  if(researchTimers[id]) clearTimeout(researchTimers[id]);
+  researchTimers[id]=setTimeout(async()=>{
+    researchInFlight[id]=true;
+    try{ await fetchCanonFor(id); researchFetchedKeys[key]=true; }catch(e){}
+    delete researchInFlight[id];
+    try{ renderCanonResults(selected); renderSlots(); }catch(e){}
+  },200);
+}
+function autoResearchSelected(){ selected.forEach(id=>autoResearchFor(id)); }
+function renderCanonResults(ids){
+  const el=document.getElementById('canon-results'); if(!el) return;
+  el.innerHTML=ids.map(id=>{const f=byId(id); const c=canonResearch[id]||{}; const w=c.wiki?`✅ Wikipedia: ${esc(c.wiki.extract.slice(0,200))}…`:`❌ Wikipedia: no data (offline / not found)`; const fa=c.fandom?`✅ Fan-run Fandom wiki (${esc(c.fandom.domain)}, not official canon): ${esc(c.fandom.extract.slice(0,200))}… <a href="${c.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open fan-run wiki page</a>`:`❌ Fan-run Fandom wiki: no data (offline / not found)`; return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)}</b><br>${w}<br>${fa}</div>`}).join('');
+}
+async function fetchCanonForInfo(id){
+  const el=document.getElementById('info-canon'); if(el) el.innerHTML='Fetching canon sources…';
+  const c=await fetchCanonFor(id);
+  if(el) el.innerHTML=`<p><b>Wikipedia:</b> ${c.wiki?esc(c.wiki.extract.slice(0,400))+'…':'No data.'}</p><p><b>Fan-run Fandom wiki (not official canon):</b> ${c.fandom?esc(c.fandom.extract.slice(0,400))+'… <a href="'+c.fandom.url+'" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a>':'No data.'}</p><p class="note">These extracts are context. They do not automatically add new powers to the combat engine.</p>`;
+}
+async function searchCanon(){
+  const q=(document.getElementById('canon-search-input').value||'').trim(); const el=document.getElementById('canon-search-results'); if(!q){el.innerHTML='Type a character name first.';return}
+  el.innerHTML='Searching Wikipedia…';
+  try{const res=await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&srlimit=8&format=json&origin=*`); const j=await res.json(); const list=(j.query&&j.query.search)||[];
+  el.innerHTML=list.length?list.map(r=>`<div style="margin-bottom:8px"><b>${esc(r.title)}</b> — ${esc((r.snippet||'').replace(/<[^>]+>/g,''))} <button class="btn small" onclick="addSearchAsCustom('${esc(r.title).replace(/'/g,"")}')">Add as custom fighter</button></div>`).join(''):'No Wikipedia results found. Try another spelling.';}catch(e){el.innerHTML='Search failed — you may be offline. Try again when connected.';}
+}
+function addSearchAsCustom(title){
+  const f={id:'custom_'+Date.now(),name:title,fr:'From Wikipedia search',cat:'Anime',icon:'⭐',hp:1200,atk:125,def:85,sp:1.2,tier:'A',trait:'',pers:'disciplined',style:'Added from canon search — edit powers in your own research notes',sig:'Custom Power',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Not yet researched in-game',feat:'From Wikipedia search result',wiki:title.replace(/\s+/g,'_'),alias:title,v2:'Custom Variant',v2hp:100,v2atk:15,v2def:5};
+  ROSTER.push(f); renderRoster(); alert(title+' added as a custom fighter. Add its real powers via your research notes — the search result alone does not create a canon profile.');
+}
+function downloadStory(){
+  if(!currentBattle) return;
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>WAR-ROOM Battle Story</title></head><body style="font-family:sans-serif;line-height:1.7;max-width:800px;margin:20px auto;padding:0 16px">${document.getElementById('story-output').innerHTML}<hr>${document.getElementById('breakdown-output').innerHTML}</body></html>`;
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([html],{type:'text/html'})); a.download='war-room-story.html'; a.click();
+}
+function updateOnlineStatus(){
+  const el=document.getElementById('online-status'); if(!el) return;
+  el.innerText=navigator.onLine?'● ONLINE':'○ OFFLINE — local play only';
+  el.style.color=navigator.onLine?'var(--green)':'var(--yellow)';
+}
+/* ============ V7: FIVE BRAINS — KNOWLEDGE, CONTINUITY, STORY ============ */
+/* New fighters added for the Character Brain examples, without changing existing fighters. */
+POWERS.vegeta=['Ki Blast','Final Flash','Big Bang Attack']; POWERS.deadpool=['Katana Slash','Pistol Shot','Chimichanga Throw'];
+V2POWER.vegeta='Majin Final Explosion'; V2POWER.deadpool='X-Force Combo';
+TRANSSIG.vegeta='Blue Evolution Final Flash'; TRANSSIG.deadpool='Maximum Effort Combo';
+FANDOM.vegeta={d:'dragonball.fandom.com',t:'Vegeta'}; FANDOM.deadpool={d:'marvel.fandom.com',t:'Deadpool'};
+/* Knowledge Brain: relationships that change dialogue when both fighters are present. */
+const RELATIONSHIPS={
+'Goku|Vegeta':'Goku and Vegeta are Saiyan rivals — respect, rivalry and a constant need to prove who is stronger.',
+'Batman|Superman':'Batman and Superman are uneasy allies who have fought each other before, and each knows exactly how dangerous the other is.',
+'Goku|Goku':'','Vegeta|Vegeta':''
+};
+function cleanName(n){return (n||'').replace(/^AI-/,'')}
+function relationshipPara(b){
+  const names=[...b.alpha,...b.beta].map(f=>cleanName(f.name));
+  const notes=[];
+  for(const k in RELATIONSHIPS){const [a,c]=k.split('|'); if(a&&c&&a!==c&&names.includes(a)&&names.includes(c)) notes.push(RELATIONSHIPS[k]);}
+  return notes.length?`Relationships in this battle change the tone: ${notes.join(' ')}`:'';
+}
+/* Continuity Brain: checks the five systems against each other before a story is trusted. */
+function validateBattle(b){
+  const issues=[]; const dead=new Set();
+  const fighterByName=n=>ROSTER.find(f=>f.name===cleanName(n));
+  for(const e of b.events){
+    if((e.type==='attack'||e.type==='transform'||e.type==='study'||e.type==='protect') && dead.has(e.actor)) issues.push(`Dead fighter acted: ${e.actor} in round ${e.round}.`);
+    if(e.type==='attack'){
+      const f=fighterByName(e.actor); if(f){const allowed=[...(POWERS[f.id]||[]),f.sig,TRANSSIG[f.id],V2POWER[f.id]].filter(Boolean); if(!allowed.includes(e.ability)) issues.push(`Unknown ability: ${e.actor} used ${e.ability}, which is not in that version's powerset.`);}
+    }
+    if(e.type==='transform' && e.transformHp!==undefined && e.transformMax && e.transformHp>e.transformMax*0.45) issues.push(`Transformation without trigger: ${e.actor} transformed above 45% HP.`);
+    if(e.type==='knockout'||e.type==='incapacitated') dead.add(e.target);
+  }
+  if(b.stalemate){
+    if(!b.alpha[0].alive || !b.beta[0].alive) issues.push('Stalemate declared, but a fighter is not alive.');
+  } else {
+    const winF=b.alpha[0].alive?b.alpha[0]:b.beta[0];
+    if(!winF || winF.name!==b.winner) issues.push('Winner mismatch: declared winner is not the surviving fighter.');
+    const loseF=b.alpha[0].alive?b.beta[0]:b.alpha[0];
+    if(loseF && loseF.alive) issues.push('Winner mismatch: losing fighter is still alive.');
+  }
+  return {passed:issues.length===0,issues};
+}
+function continuityReport(b){
+  const v=validateBattle(b);
+  return v.passed?'Continuity Brain: PASSED — '+['No dead or incapacitated fighter acted after being finished.','All abilities belong to the fighter version used.','Transformations met their trigger.','Winner (or stalemate) matches the surviving fighters.'].join(' '):'Continuity Brain: WARNINGS — '+v.issues.join(' ');
+}
+/* Story Brain additions: scene handling for study/protect, and reason-aware prose. */
+const _origSceneForRound=sceneForRound;
+let sceneAttackCount=0;
+function sceneForRoundV7(round,evs){
+  let parts=[];
+  evs.forEach((e,i)=>{
+    if(e.type==='study') parts.push(`${e.actor} does not attack yet. Instead they watch, measure range and timing, and look for the weakness every fighter hides. That choice will matter when they finally strike.`);
+    else if(e.type==='protect') parts.push(`${e.actor} braces to meet the next blow head-on, taking the risk themselves rather than giving ground.`);
+    else {
+      const scene=_origSceneForRound(round,[e]);
+      parts.push(scene);
+      if(e.type==='attack' && !e.blocked){
+        sceneAttackCount++;
+        if(sceneAttackCount%3===1){
+          const f=[...currentBattle.alpha,...currentBattle.beta].find(x=>x.name===e.actor);
+          const opp=[...currentBattle.alpha,...currentBattle.beta].find(x=>x.name===e.target);
+          if(f) parts.push(`<span class="dia">${e.actor}: "${dialogueFor(f,opp,round,'attack')}"</span>`);
+        }
+      }
+    }
+  });
+  return parts.join(' ');
+}
+/* ============ V8: PROPER INTERNET CONNECTION ============ */
+function getGeminiKey(){try{return localStorage.getItem('warroom_gemini_key')||''}catch(e){return ''}}
+function saveGeminiKey(){
+  const v=(document.getElementById('gemini-key-input').value||'').trim(); if(!v){document.getElementById('gemini-key-status').innerText='Paste a key first.';return}
+  try{localStorage.setItem('warroom_gemini_key',v)}catch(e){}
+  document.getElementById('gemini-key-input').value=''; document.getElementById('gemini-key-status').innerText='✅ Gemini key saved on this device only. It is not sent to Muse. It will only be sent to Google when you tap Generate with my key.';
+}
+function clearGeminiKey(){try{localStorage.removeItem('warroom_gemini_key')}catch(e){} document.getElementById('gemini-key-status').innerText='Gemini key removed from this device.';}
+function updateGeminiStatus(){const el=document.getElementById('gemini-key-status'); if(el) el.innerText=getGeminiKey()?'Gemini key: saved on this device (value hidden).':'Gemini key: not saved. Free public AI is still available without a key.';}
+async function ping(url,opts){
+  try{const c=new AbortController(); const t=setTimeout(()=>c.abort(),9000); const r=await fetch(url,{...opts,signal:c.signal}); clearTimeout(t); return r.ok;}catch(e){return false}
+}
+async function testConnections(){
+  const el=document.getElementById('connection-results'); if(!el) return; el.innerHTML='Testing Wikipedia, Fandom, Pollinations…';
+  const wiki=await ping('https://en.wikipedia.org/api/rest_v1/page/summary/Goku');
+  const fandom=await ping('https://dragonball.fandom.com/api.php?action=query&prop=info&titles=Goku&format=json&origin=*');
+  const poll=await ping('https://text.pollinations.ai/Say%20OK');
+  const gem=getGeminiKey()?'(saved, not tested here to avoid using quota)':' (not saved — optional)';
+  el.innerHTML=`${wiki?'✅':'❌'} Wikipedia &nbsp; ${fandom?'✅':'❌'} Fandom (Dragon Ball Wiki sample only) &nbsp; ${poll?'✅':'❌'} Pollinations free AI &nbsp; Gemini key ${gem}<br><span style="font-size:.78rem">The Fandom check above only tests that one sample wiki responds. It does NOT guarantee a specific fighter's Fandom page exists — the per-fighter Canon Sources result for that fighter is authoritative. If a source shows ❌, it is offline, blocked, or rate-limited right now — the game will fall back to local play and will not pretend that source worked.</span>`;
+  const aiBadge=document.getElementById('ai-status');
+  if(aiBadge){
+    if(wiki&&fandom&&poll){aiBadge.innerText='AI RESEARCH: ONLINE — AUTO-TESTED'; aiBadge.style.color='var(--green)'; aiBadge.style.borderColor='var(--green)';}
+    else if(wiki||fandom||poll){aiBadge.innerText='AI RESEARCH: PARTIAL — SOME SOURCES FAILED'; aiBadge.style.color='var(--yellow)'; aiBadge.style.borderColor='var(--yellow)';}
+    else {aiBadge.innerText='AI RESEARCH: OFFLINE — LOCAL SIMULATION'; aiBadge.style.color='var(--yellow)'; aiBadge.style.borderColor='var(--yellow)';}
+  }
+}
+function aiPromptForBattle(b){
+  const kos=b.events.filter(e=>e.type==='knockout').map(e=>e.actor+' knocked out '+e.target).slice(0,10).join('; ');
+  const inc=b.events.filter(e=>e.type==='incapacitated').map(e=>e.actor+' incapacitated '+e.target).join('; ');
+  const trans=b.events.filter(e=>e.type==='transform').map(e=>e.actor+' transformed into '+e.detail).join('; ');
+  const atks=b.events.filter(e=>e.type==='attack').slice(0,20).map(e=>e.actor+' used '+e.ability+' on '+e.target+(e.blocked?' (blocked)':'')).join('; ');
+  return `Write a short cinematic 1v1 death-battle episode in 6 short chapters: Contenders, Comparison, First Exchange, Turning Point, Final Clash, Verdict. Fighters: ${b.alpha[0].name} vs ${b.beta[0].name} at ${b.battlefield.name}. Winner must be ${b.winner}. Victory condition: ${b.victoryCondition||'unknown'}. Survivors: ${b.alpha.concat(b.beta).filter(f=>f.alive).map(f=>f.name).join(', ')||'none (stalemate)'}. Do NOT change the winner, do NOT revive knocked-out or incapacitated fighters, do NOT give a fighter a power they did not use here. Key events: ${atks}. Knockouts: ${kos||'none listed'}. Incapacitations: ${inc||'none'}. Transformations: ${trans||'none'}. Keep dialogue in-character, not quoted canon. No damage numbers.`;
+}
+async function generateAIStory(mode){
+  const out=document.getElementById('ai-story-output'); if(!out) return; if(!currentBattle){out.innerText='Battle a fight first, then generate an AI story.';return}
+  out.innerText='Generating AI story… this may take 10–30 seconds, or fail if the free service is busy.';
+  const prompt=aiPromptForBattle(currentBattle);
+  try{
+    let text='';
+    if(mode==='gemini'){
+      const key=getGeminiKey(); if(!key){out.innerText='No Gemini key saved. Save one in the Connection panel, or use the free public service button.';return}
+      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+      const j=await res.json(); if(!res.ok) throw new Error((j.error&&j.error.message)||('HTTP '+res.status)); text=j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts?j.candidates[0].content.parts.map(p=>p.text).join(''):'';
+    } else {
+      const res=await fetch('https://text.pollinations.ai/'+encodeURIComponent(prompt));
+      if(!res.ok) throw new Error('HTTP '+res.status); text=await res.text();
+    }
+    if(!text) throw new Error('Empty response');
+    out.innerHTML=`<b>AI draft (${mode==='gemini'?'Gemini, your key':'Pollinations, free, no key'}) — check against the verified story and breakdown:</b><br><br>${esc(text).replace(/\n/g,'<br>')}`;
+  }catch(e){out.innerText='AI story failed: '+e.message+'. The verified template story above still works. Try again later, or try the other AI button.';}
+}
+function updateFileWarning(){
+  const el=document.getElementById('file-warning'); if(!el) return;
+  if(location.protocol==='file:') el.innerText='⚠️ You opened this as a local file (file://). Some Android browsers block internet fetches from file://, which is why research can look broken even with internet on. Open the hosted https link for a proper connection — fetches to Wikipedia/Fandom/AI work far more reliably from https.';
+  else el.innerText='✅ Opened over '+location.protocol+' — this is the proper way to run the connected version. Internet fetches should work if you are online.';
+}
+
+/* ============ V9: ANALYSIS BRAIN + 6-CHAPTER EPISODE ============ */
+function videoNotesText(){const el=document.getElementById('video-notes'); return el?(el.value||'').trim():''}
+function tierScore(t){return {A:3,'A+':4,S:5,'S+':6,EX:7}[t]||5}
+function canHarmNote(att,def){
+  const diff=tierScore(def.tier)-tierScore(att.tier);
+  const counter=(att.trait==='prep' && def.weak && def.weak.includes('Kryptonite'));
+  if(diff>=2 && !counter) return `${att.name} cannot win by ordinary attacks alone against ${def.name}: the tier gap means most blows are reduced to a fraction of their power. A credible path needs a signature, a studied weakness, a transformation, or a weakness exploit.`;
+  if(counter) return `${att.name} has a specific counter here: preparation against a Kryptonite weakness bypasses the usual tier gap against ${def.name}.`;
+  if(def.trait==='infinity_void' && att.tier!=='EX') return `${def.name}'s Infinity defence blocks many non-EX attacks outright, so ${att.name} must find a way around it rather than trading blows head-on.`;
+  return `${att.name} can harm ${def.name} with ordinary powers, though durability and defence still decide how much each hit matters.`;
+}
+function actualPowersFor(f){let ps=(POWERS[f.id]||[]).slice(); const vid=f.variantId||selectedVariants[f.id]||'base'; if(vid==='v2' && V2POWER[f.id]) ps=[V2POWER[f.id],...ps.slice(1)]; return ps;}
+function statBuildString(f, bf){
+  const base=byId(f.id)||f;
+  const isV2=(f.variantId||selectedVariants[f.id]||'base')==='v2';
+  const vb=isV2?{hp:base.v2hp||0,atk:base.v2atk||0,def:base.v2def||0}:{hp:0,atk:0,def:0};
+  const rb=f.researched?{hp:60,atk:10,def:0}:{hp:0,atk:0,def:0};
+  const sa=f.startAtk||f.atk, sd=f.startDef||f.def, sh=f.startHp||f.maxHp;
+  const bb=bf?{atk:bf.atk||0,def:bf.def||0}:{atk:sa-base.atk-vb.atk-rb.atk, def:sd-base.def-vb.def-rb.def};
+  const fmt=n=>(n>=0?'+':'')+n;
+  return `${f.name} (${f.variant||'Base'}): base HP ${base.hp} / ATK ${base.atk} / DEF ${base.def} → variant bonus ${fmt(vb.hp)} HP, ${fmt(vb.atk)} ATK, ${fmt(vb.def)} DEF → battlefield bonus ${fmt(bb.atk)} ATK, ${fmt(bb.def)} DEF → research bonus ${f.researched?'+60 HP, +10 ATK':'none'} = start HP ${sh} / ATK ${sa} / DEF ${sd}`;
+}
+function winConditionsFor(att,def){
+  const out=[];
+  out.push(`Use ${att.sig} (signature) and the actual power set for this version, ${actualPowersFor(att).join(', ')||'listed in the profile'}, to wear down ${def.name}.`);
+  if(att.trans) out.push(`Trigger ${att.trans} at or below 45% HP for +${att.tAtk} ATK / +${att.tDef} DEF.`);
+  if(att.pers==='strategist') out.push(`Study first, then strike the studied weakness for a boosted hit.`);
+  if(def.weak) out.push(`Opponent's known limitation: ${def.weak} — this is a risk to watch, not a plan, unless ${att.name} actually has a power, item or counter that exploits it (for example, a prep fighter against a Kryptonite weakness).`);
+  if(att.trait==='regen') out.push(`Outlast through regeneration — heal between exchanges, but remember regeneration does not revive after HP 0.`);
+  return out;
+}
+function generateAnalysis(a,b){
+  const cats=[];
+  const pick=(label,av,bv,ev)=>{const w=av===bv?'Tie':(av>bv?a.name:b.name); cats.push({label,w,ev}); return w===a.name?1:(w===b.name?-1:0)};
+  let score=0;
+  score+=pick('Strength (ATK)',a.startAtk||a.atk,b.startAtk||b.atk,`${a.name} ATK ${a.startAtk||a.atk} vs ${b.name} ATK ${b.startAtk||b.atk} (start-of-fight stats, before transformation bonuses).`);
+  score+=pick('Speed',a.sp,b.sp,`${a.name} speed ${a.sp} vs ${b.name} speed ${b.sp} — higher speed acts first in the engine order.`);
+  score+=pick('Durability',(a.startDef||a.def)+(a.startHp||a.maxHp)/20,(b.startDef||b.def)+(b.startHp||b.maxHp)/20,`${a.name} DEF ${a.startDef||a.def} / HP ${a.startHp||a.maxHp} vs ${b.name} DEF ${b.startDef||b.def} / HP ${b.startHp||b.maxHp} (start-of-fight stats, before transformation bonuses).`);
+  score+=pick('Special abilities', (POWERS[a.id]||[]).length + a.sigMult, (POWERS[b.id]||[]).length + b.sigMult, `${a.name} signature ${a.sig} (x${a.sigMult}), actual powers for this version: ${actualPowersFor(a).join(', ')} vs ${b.name} signature ${b.sig} (x${b.sigMult}), actual powers for this version: ${actualPowersFor(b).join(', ')}.`);
+  score+=pick('Tier',tierScore(a.tier),tierScore(b.tier),`${a.name} tier ${a.tier} vs ${b.name} tier ${b.tier}.`);
+  score+=pick('Power scaling',a.pw||7,b.pw||7,`${a.name} power ${a.pw||7}/10 vs ${b.name} power ${b.pw||7}/10.`);
+  score+=pick('Dexterity / agility',a.dex||7,b.dex||7,`${a.name} dexterity ${a.dex||7}/10 vs ${b.name} dexterity ${b.dex||7}/10 — dexterity drives dodges and counters.`);
+  score+=pick('Durability',a.dur||7,b.dur||7,`${a.name} durability ${a.dur||7}/10 vs ${b.name} durability ${b.dur||7}/10.`);
+  score+=pick('Stamina / endurance',a.sta||7,b.sta||7,`${a.name} stamina ${a.sta||7}/10 vs ${b.name} stamina ${b.sta||7}/10 — stamina decides late-fight fatigue.`);
+  score+=pick('Experience / tactics',a.tac||7,b.tac||7,`${a.name} tactics ${a.tac||7}/10 vs ${b.name} tactics ${b.tac||7}/10.`);
+  score+=pick('Transformation power',a.trans?a.tAtk+a.tDef:0,b.trans?b.tAtk+b.tDef:0,`${a.name} transformation: ${a.trans||'none'} vs ${b.name} transformation: ${b.trans||'none'}.`);
+  const uncertain=Math.abs(score)<=1;
+  const html=`<p><b>Start-of-fight stats (before transformation bonuses):</b> ${a.name} HP ${a.startHp||a.maxHp} / ATK ${a.startAtk||a.atk} / DEF ${a.startDef||a.def}; ${b.name} HP ${b.startHp||b.maxHp} / ATK ${b.startAtk||b.atk} / DEF ${b.startDef||b.def}. Transformation bonuses are listed separately below and apply only if that fighter transforms: ${a.name} +${a.tAtk||0} ATK / +${a.tDef||0} DEF for ${a.trans||'no transformation'}; ${b.name} +${b.tAtk||0} ATK / +${b.tDef||0} DEF for ${b.trans||'no transformation'}. These start stats are the same numbers shown in Chapter I and in the breakdown.</p><p><b>Stat builds:</b> ${statBuildString(a)}; ${statBuildString(b)}.</p>`+cats.map(c=>`<p><b>${c.label}:</b> ${c.w} — ${c.ev}</p>`).join('')+
+    `<p><b>Can each fighter harm the other?</b> ${canHarmNote(a,b)} ${canHarmNote(b,a)}</p>`+
+    `<p><b>${a.name} win conditions:</b> ${winConditionsFor(a,b).join(' ')}</p>`+
+    `<p><b>${b.name} win conditions:</b> ${winConditionsFor(b,a).join(' ')}</p>`+
+    `<p><b>Uncertainty:</b> ${uncertain?'This matchup is genuinely close on the numbers above. The analysis does not manufacture false precision — the battle itself, including transformations, counters and stamina, will decide it.':'On the numbers above, one fighter has a clearer edge, but transformations, counters, stamina and a single studied or critical hit can still swing a 1v1. The verdict must follow the simulation, not this preview.'}</p>`;
+  return {html,score,uncertain,cats};
+}
+function generateEpisode(b){
+  currentBattle=b; sceneAttackCount=0; episodeDialogueUsed={};
+  const a=b.alpha[0], f2=b.beta[0];
+  const byRound={}; b.events.forEach(e=>{(byRound[e.round]=byRound[e.round]||[]).push(e)});
+  const rounds=Object.keys(byRound).map(Number).sort((x,y)=>x-y);
+  const videoNotes=videoNotesText();
+  const videoPara=videoNotes?`Video-inspired notes (user-pasted, context only — this text did not grant powers or change stats): ${videoNotes}`:'No video-inspired notes were pasted for this battle. This is an Original Death Battle (Mode A).';
+  const actualPowers=f=>{let ps=(POWERS[f.id]||[]).slice(); if(f.variantId==='v2' && V2POWER[f.id]) ps=[V2POWER[f.id],...ps.slice(1)]; return ps;};
+  const introF=(f,opp)=>`${f.name} (${f.variant}, ${f.fr}, ${f.cat}) — ${f.persNote||f.pers}. ${f.style} How ${f.name} actually fights: ${f.usage||f.style} Signature: ${f.sig}. Powers actually used in this build for this version: ${actualPowers(f).join(', ')||f.sig}.${f.trans?` Transformation: ${f.trans}, triggering at or below 45% HP${TRANSSIG[f.id]?`, transformed signature: ${TRANSSIG[f.id]}`:''}.`:` No transformation in this build.`} Weakness that can lose this fight: ${f.weak}. Scaling (1-10): Power ${f.pw||7}, Speed ${f.sp}, Dexterity ${f.dex||7}, Durability ${f.dur||7}, Stamina ${f.sta||7}, Tactics ${f.tac||7}. Final battle stats for this version, at the start of the fight (before any transformation bonus): HP ${f.startHp||f.maxHp}, ATK ${f.startAtk||f.atk}, DEF ${f.startDef||f.def}. Stat build: ${statBuildString(f, b.battlefield)}. <span class="dia">${f.name}: "${dialogueFor(f,opp,0,'intro')}"</span>`;
+  const relPara=(typeof relationshipPara==='function'?relationshipPara(b):'');
+  const analysis=generateAnalysis(a,f2);
+  const scalingLine=(x,y)=>{const edges=[]; if((x.pw||7)>(y.pw||7)) edges.push(`power (${x.pw||7} vs ${y.pw||7})`); if((x.dex||7)>(y.dex||7)) edges.push(`dexterity (${x.dex||7} vs ${y.dex||7})`); if((x.dur||7)>(y.dur||7)) edges.push(`durability (${x.dur||7} vs ${y.dur||7})`); if((x.sta||7)>(y.sta||7)) edges.push(`stamina (${x.sta||7} vs ${y.sta||7})`); if((x.tac||7)>(y.tac||7)) edges.push(`tactics (${x.tac||7} vs ${y.tac||7})`); return edges.length?`${x.name} holds the scaling edge in ${edges.join(', ')}.`:`${x.name} holds no clear scaling edge over ${y.name} — this is decided by counters, timing, and the moment, not by raw numbers alone.`;};
+  const scalingPara=`Power scaling, in plain terms: ${scalingLine(a,f2)} ${scalingLine(f2,a)} Speed matters here because the faster fighter acts first and dodges more; dexterity matters because it lets a fighter counter and slip a blow that should have landed; durability matters because it decides which blows actually hurt; stamina matters because the fighter who fades late loses the exchanges that decide a death battle.`;
+  const attackScene=(e)=>{
+    if(e.type==='transform') return `Then the fight changes. Pushed to the edge, ${e.actor} becomes ${e.detail} — not a costume change, but a new way of fighting, with new reach, new power, and new choices. The opponent has to recalculate everything in a heartbeat.`;
+    if(e.type==='knockout') return `${e.target} goes down. Not with a speech, but with the sudden, flat silence that follows a fighter who has nothing left to give.`;
+    if(e.type==='incapacitated') return `${e.target} cannot continue. Exhausted and barely standing, they have nothing left, and the fight is over for them.`;
+    if(e.type==='heal') return `${e.actor} finds a breath, steadies, and recovers enough to keep fighting. Regeneration heals a living fighter only — it does not revive anyone.`;
+    if(e.type==='study') return `${e.actor} does not attack yet. Instead they watch, measure range and timing, and look for the weakness every fighter hides. That choice will matter when they finally strike.`;
+    if(e.type==='protect') return `${e.actor} braces to meet the next blow head-on, taking the risk themselves rather than giving ground.`;
+    if(e.type==='attack'){
+      if(e.blocked) return `${e.actor} commits to ${e.ability}, but ${e.target} reads it, turns it aside, and gives nothing away.`;
+      return `${e.actor} uses ${e.ability} — the way ${e.actor} fights, in miniature: ${a.name===e.actor?a.usage||a.style:f2.usage||f2.style} ${e.target} answers as best they can, and the exchange leaves a mark that will matter later.`;
+    }
+    return '';
+  };
+  const sceneFromRounds=(rs,phaseLabel)=>{
+    const evs=rs.flatMap(r=>byRound[r]||[]);
+    const parts=[];
+    if(phaseLabel==='start') parts.push(`The air in ${b.battlefield.name} changes before anyone throws a punch. ${b.battlefield.desc} ${a.name} and ${f2.name} do not fight the same way, and that difference is the whole story: ${a.style} against ${f2.style}`);
+    evs.slice(0,6).forEach(e=>{const s=attackScene(e); if(s) parts.push(s);});
+    // dialogue, varied by moment, only occasionally
+    const atk=evs.find(e=>e.type==='attack'&&!e.blocked);
+    if(atk){const f=[a,f2].find(x=>x.name===atk.actor); const opp=[a,f2].find(x=>x.name!==atk.actor); if(f) parts.push(`<span class="dia">${atk.actor}: "${dialogueFor(f,opp,atk.round,phaseLabel)}"</span>`);}
+    return parts.join(' ');
+  };
+  const firstRounds=rounds.slice(0,2), lastRounds=rounds.slice(-2), midRounds=rounds.slice(2,-2);
+  const firstTrans=b.events.find(e=>e.type==='transform');
+  const finalFinish=b.events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0];
+  const attacks=b.events.filter(e=>e.type==='attack'&&!e.blocked);
+  const biggestHit=attacks.slice().sort((x,y)=>y.damage-x.damage)[0];
+  let turningText='';
+  if(firstTrans && (!finalFinish || firstTrans.round < finalFinish.round)){
+    turningText=`Midway through the fight, the balance breaks. Pushed to the edge, ${firstTrans.actor} becomes ${firstTrans.detail} — and from that moment the fight is different. Power, reach and choices change, and the opponent must adapt or lose the initiative. ${firstTrans.actor}'s style does not change, but its scale does: ${[a,f2].find(x=>x.name===firstTrans.actor)?.usage||''}`;
+  } else if(firstTrans && finalFinish && firstTrans.round===finalFinish.round){
+    turningText=`There is no separate turning point before the finish: ${firstTrans.actor} becomes ${firstTrans.detail} in the same exchange that ends the fight, so the transformation came too late to reshape the fight on its own.`;
+  } else if(biggestHit && (!finalFinish || biggestHit.round < finalFinish.round)){
+    turningText=`No transformation reshapes this fight. The turning point is the heaviest clean blow before the finish: ${biggestHit.actor} lands ${biggestHit.ability} on ${biggestHit.target}, and after that blow the balance visibly shifts. The fighter who took it is still standing, but they are no longer fighting on their own terms.`;
+  } else if(finalFinish){
+    turningText=`The turning point is cumulative, not a single declared moment: stamina drains, injuries accumulate, and the fighter who manages the later exchanges better takes control, until the finish.`;
+  } else {
+    turningText=`There is no single transformation or finish to point to. The turning point is cumulative: stamina drains, injuries accumulate, and the fighter who manages the later exchanges better takes control.`;
+  }
+  const midScene=midRounds.length?sceneFromRounds(midRounds.slice(0,2),'middle'):'The middle of the fight is fought in the space between the opening and the end — adaptation, counters, and small advantages that add up.';
+  const ch1=chapter('Chapter I — The Contenders',[
+    `Start: at ${b.battlefield.name}, two fighters stand alone. ${b.battlefield.desc} There is no team to hide behind and no ally to rescue anyone. This is a death battle: one fighter, one opponent, one verdict. Why do they clash? Because their ways of fighting cannot both win in the same space — one closes distance and tests limits, the other controls range, reads, or outlasts. That collision is what this episode follows.`,
+    `Research was checked automatically before this battle and is in the separate Research panel outside this episode — this episode is story only, with no research summaries inside it. Full numbers are in the separate Combat Breakdown, not in the story.`,
+    relPara, videoPara,
+    `Fighter A: ${introF(a,f2)}`, `Fighter B: ${introF(f2,a)}`,
+    `Dialogue in this episode is written in-character for this battle. It is not quoted canon dialogue. What is canon here is the set of powers, forms, variants and weaknesses each fighter brings — and the result the simulation actually produces.`
+  ].filter(Boolean));
+  const ch2=chapter('Chapter II — The Comparison / Analysis',[analysis.html, scalingPara, videoNotes?`Video-inspired notes (user-pasted, context only — this text did not grant powers or change stats): ${esc(videoNotes)}`:''].filter(Boolean));
+  const ch3=chapter('Chapter III — The First Exchange',[sceneFromRounds(firstRounds,'start')]);
+  const ch4=chapter('Chapter IV — The Turning Point',[turningText, midScene]);
+  const ch5paras=[sceneFromRounds(lastRounds,'final')];
+  if(finalFinish){
+    const killingAttack=[...b.events].reverse().find(e=>e.type==='attack'&&e.actor===finalFinish.actor&&e.target===finalFinish.target);
+    if(killingAttack) ch5paras.push(`Climax: the decisive sequence builds to ${finalFinish.actor}'s ${killingAttack.ability} — the blow ${finalFinish.target} cannot answer. It is not luck. It is the end of everything that came before: the style, the counters, the transformation, the stamina that ran out at the wrong moment.`);
+    else ch5paras.push(`Climax: ${finalFinish.actor} finishes ${finalFinish.target} after everything that came before — the injuries, the failed defences, the transformations, the choices.`);
+  } else {
+    ch5paras.push(`Climax, without a finish: both fighters are still standing when the round cap is reached, so this episode does not invent a final blow. The climax is the fight itself, unresolved.`);
+  }
+  const ch5=chapter('Chapter V — The Final Clash',ch5paras);
+  const transList=b.events.filter(e=>e.type==='transform').map(e=>`${e.actor} became ${e.detail}`).join('; ')||'No transformations occurred.';
+  const blockedCount={}; b.events.forEach(e=>{if(e.type==='attack'&&e.blocked) blockedCount[e.target]=(blockedCount[e.target]||0)+1;});
+  const blockedNote=Object.entries(blockedCount).map(([n,c])=>`${n} blocked ${c} attack(s)`).join('; ');
+  const winnerF=b.winnerFighter||null;
+  const loserF=b.loserFighter||null;
+  const costNote=winnerF?((winnerF.currentHp/winnerF.maxHp)>0.5?'The winner walks away with strength to spare, battered but not broken.':((winnerF.currentHp/winnerF.maxHp)>0.2?'The winner walks away battered, breathing hard, and marked by the fight.':'The winner barely stands at the end — this win cost almost everything.')):'Both fighters survive, so there is no winner to cost.';
+  const ch6=chapter('Chapter VI — The Verdict', b.stalemate?[
+    `End: Stalemate — no death. ${a.name} and ${f2.name} both survive to the round cap on ${b.battlefield.name}.`,
+    `Victory condition: ${b.victoryCondition}. No killing blow is invented here, because the simulation did not produce one.`,
+    `Why no one won, in scaling terms: ${scalingPara} Transformations: ${transList}. Battlefield destruction: ${b.destruction||0}%.${blockedNote?' Blocked attacks: '+blockedNote+'.':''}`,
+    `This verdict follows the death rules exactly: a win requires death, incapacitation lasting the rest of the fight, or battlefield removal with no way back. None of those happened, so the honest verdict is that neither fighter proved they could finish the other in this fight.`
+  ]:[
+    `End: ${b.winner} wins. ${loserF?loserF.name:''} is ${b.victoryCondition && b.victoryCondition.includes('Incapacitation')?'incapacitated and cannot continue':'dead (HP 0)'} on ${b.battlefield.name}. ${costNote}`,
+    `Victory condition: ${b.victoryCondition}.`,
+    `Why ${b.winner} prevailed, in scaling terms: ${scalingPara} The winner's style held up under pressure — ${winnerF?(winnerF.usage||winnerF.style):''} — while the loser's key weakness, ${loserF?loserF.weak:''}, was the opening the fight kept returning to. Transformations: ${transList}. Battlefield destruction: ${b.destruction||0}%.${blockedNote?' Blocked attacks: '+blockedNote+'.':''}`,
+    `What this win proves: ${b.winner} did not win by a single invented punch. They won because power, speed, dexterity, durability, stamina and tactics — the scaling above — combined with counters, transformations and timing in the actual fight. The decisive factors are taken only from abilities actually used, transformations actually triggered, and exchanges actually recorded — not a power invented for the ending.`,
+    analysis.uncertain?`The pre-battle analysis called this matchup genuinely close. That uncertainty is part of the verdict: the simulation, not the preview, decided it.`:`The pre-battle analysis gave one fighter a clearer edge, and the simulation confirmed it through the exchanges above — but the verdict still rests on those exchanges, not on the preview alone.`
+  ]);
+  return ch1+ch2+ch3+ch4+ch5+ch6;
+}
+function generateStoryV2(b){return generateEpisode(b);}
+
+/* ============ INIT ============ */
+document.getElementById('search-input').addEventListener('input',e=>{searchTerm=e.target.value.toLowerCase();renderRoster()});
+document.getElementById('battlefield-select').addEventListener('change',renderBattlefields);
+try{JSON.parse(localStorage.getItem('warroom_custom')||'[]').forEach(c=>{if(!ROSTER.find(x=>x.id===c.f.id)){ROSTER.push(c.f); if(c.powers) POWERS[c.f.id]=c.powers.slice(0,3);}})}catch(e){}
+renderChips(); renderRoster(); renderHistory(); renderChannels(); if(typeof updateOnlineStatus==='function'){updateOnlineStatus(); window.addEventListener('online',updateOnlineStatus); window.addEventListener('offline',updateOnlineStatus);} if(typeof updateFileWarning==='function') updateFileWarning(); if(typeof updateGeminiStatus==='function') updateGeminiStatus();
+// Fully automatic research: connection tests run on load, no tap required. Retest buttons remain optional.
+if(typeof testConnections==='function'){ try{ testConnections(); }catch(e){} }
+</script>
+</body>
+</html>
