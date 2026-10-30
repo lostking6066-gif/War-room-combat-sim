@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v13 — 1v1 Death Battles</title>
+<title>WAR-ROOM v13.1 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -59,7 +59,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v13</h1><span>1V1 DEATH BATTLES • STORY • SCALING • PROPERLY CONNECTED</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v13.1</h1><span>1V1 DEATH BATTLES • STORY • SCALING • PROPERLY CONNECTED</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -69,7 +69,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 </div>
 <div class="prep">
 <div class="panel"><h2>Combat Roster <span id="roster-count" style="font-size:.8rem;color:var(--dim)"></span></h2><div class="grid" id="fighter-pool"></div></div>
-<div class="panel"><h2>2 — Death Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. There is no AI team in v12.1: both fighters are chosen by you.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
+<div class="panel"><h2>2 — Death Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. Both fighters are chosen by you — WAR-ROOM v13.1 is 1v1 only.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
 <label style="font-size:.85rem">Battlefield</label><select id="battlefield-select"></select><p class="note" id="battlefield-desc"></p>
 <label style="font-size:.85rem">Victory condition</label><select id="victory-select"><option value="death" selected>Death (default) — a fighter must reach HP 0 to lose by death</option><option value="incapacitation">Incapacitation / Knockout — a knockout is unconsciousness, NOT death</option></select><p class="note">Mirror matches are blocked in this build: the same fighter cannot fight itself. In Death mode a knockout is never labelled death. In Incapacitation mode a knockout is labelled unconscious, not dead. Surrender and escape are not simulated outcomes in this build — the verdict will not claim them.</p>
 <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn yel" onclick="triggerOnlineResearch()" style="flex:1">Retest live research (optional)</button><button class="btn" id="review-btn" disabled style="flex:1">Review Matchup →</button></div>
@@ -99,7 +99,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 </div>
 </div>
 <div class="panel"><h2>Mode B — Video-Inspired Battle (optional, context only)</h2>
-<p class="note">Mode A (default) is an Original Death Battle, made from the game's own profiles and combat engine. Mode B is different: paste a transcript or notes from a video you watched below. That text is shown as "Video-inspired notes" in Chapters I–II only. It does NOT grant new powers, change stats, or replace the simulation. The narration in v12 is always original — it never copies another creator's script.</p>
+<p class="note">Mode A (default) is an Original Death Battle, made from the game's own profiles and combat engine. Mode B is different: paste a transcript or notes from a video you watched below. That text is shown as "Video-inspired notes" in Chapters I–II only. It does NOT grant new powers, change stats, or replace the simulation. The narration in v13.1 is always original — it never copies another creator's script.</p>
 <p class="note"><b>Honest limit:</b> a YouTube link alone does not let this browser file read a video's audio or captions automatically. That would require a YouTube Data API key. Use whatever transcript or notes you can actually access and paste here.</p>
 <label style="font-size:.85rem">YouTube video URL (optional — the game cannot watch or transcribe it)</label><input id="video-url" placeholder="Paste a YouTube URL here, e.g. https://www.youtube.com/watch?v=..." style="width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px"><p class="note">If you paste a URL but no transcript, the game will say so plainly: no video was watched and no transcript was accessed, and the battle continues in ordinary research mode. If you paste notes, claims in them are treated as user-supplied context, not verified facts, and opinions in them are not adopted as facts.</p>
 <label style="font-size:.85rem">Paste transcript or notes (optional)</label>
@@ -110,7 +110,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 <p class="note"><b>Victory is by death</b> (HP reaches 0), <b>or by incapacitation lasting the rest of the fight</b>, <b>or by battlefield removal with no way back</b>. The exact victory condition is stated in the results and in Chapter VI.</p>
 <p class="note"><b>Regeneration can heal, but it does NOT revive after HP 0.</b> A fighter who is knocked out stays knocked out — no dead fighter acts again, and regeneration only heals a fighter who is still alive.</p>
 <p class="note"><b>No invented killing blow:</b> if the battle hits its round cap with both fighters still alive and neither able to kill or incapacitate the other, the result is a <b>stalemate / no-death verdict</b>, explained in Chapter VI — not a fake finish.</p>
-<p class="note"><b>Battlefield removal:</b> removal alone does not count unless the opponent cannot return. No power in the current powersets permanently removes an opponent from the battlefield, so v12 will not claim a BFR victory it did not simulate.</p>
+<p class="note"><b>Battlefield removal:</b> removal alone does not count unless the opponent cannot return. No power in the current powersets permanently removes an opponent from the battlefield, so v13.1 will not claim a BFR victory it did not simulate.</p>
 </div>
 <div class="panel"><h2>Online Storytelling Pipeline — Research → Combat → Narration → Check → Save</h2>
 <p class="note"><b>Stage 1 — Research Dossier:</b> load each fighter's structured profile, then fetch Wikipedia (encyclopedia) and fan-run Fandom wiki sources automatically. Fan sources and YouTube searches are discussion to investigate, not established fact, and never auto-grant powers.<br>
@@ -127,7 +127,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 <b>3. Knowledge Brain + Analysis Brain:</b> identity, continuity, powers, feats, limits, weaknesses, transformations, relationships — plus Wikipedia + Fandom research, shown per source — and a head-to-head comparison of strength, speed, durability, abilities, experience, transformations, weaknesses and win conditions, with an explicit uncertainty note when a matchup is close.<br>
 <b>4. Narrator Brain:</b> turns the analysis and the recorded events into a 6-chapter episode (Contenders, Comparison, First Exchange, Turning Point, Final Clash, Verdict), using tactics and reasons, not just attack names.<br>
 <b>Continuity check (adapted to 1v1):</b> checks the battle before the episode is shown — a dead or incapacitated fighter must not act, powers must belong to that version, transformations must meet their trigger, and the winner must match the survivor / stalemate record.</p>
-<p class="note">Trade-off, stated plainly: this is a sophisticated rule system, not a language model. It can calculate, decide, and narrate from rules reliably, but it cannot write unlimited original prose like an LLM. That last step would need a local open model or a free/paid inference service, which v12 does not require.</p></div>
+<p class="note">Trade-off, stated plainly: this is a sophisticated rule system, not a language model. It can calculate, decide, and narrate from rules reliably, but it cannot write unlimited original prose like an LLM. That last step would need a local open model or a free/paid inference service, which v13.1 does not require.</p></div>
 <div class="panel"><h2>Internet Connection — Properly Connected</h2>
 <p class="note" id="file-warning"></p>
 <p class="note">This version connects, from the browser, to: Wikipedia, fan-run Fandom wikis, YouTube search, and — optionally — a free public AI text service (Pollinations, no key) or your own free Gemini key. No Muse server, no paid API, and no key is sent to Muse. Your Gemini key, if you enter one, is stored only in this device's localStorage and is sent only to Google when you tap Generate.</p>
@@ -409,7 +409,7 @@ const BATTLEFIELDS=[
 /* Dialogue is ORIGINAL, in-character writing for this battle only — never quoted canon.
    Lines are built from the fighter's own name, signature, variant and opponent, so two
    fighters with the same personality do NOT say identical lines. No team language is used:
-   v12 is 1v1, so there is no team to protect or fall back on. */
+   v13.1 is 1v1, so there is no team to protect or fall back on. */
 const DIALOGUE_TEMPLATES={
 proud:['Then come and prove it.','I have heard that confidence before. It did not last.','Watch what happens next. That is all the warning you get.','You wanted this fight. You have it.','Pride is not the problem here. Timing is.','One more step, and we find out who is right.'],
 strategist:['Hold. Watch the feet, not the hands.','Again. Same rhythm.','There. That step.','Patience. The opening will show itself.','Not yet. Wait for the tell.','Measured. Every move has a cost.'],
@@ -572,7 +572,7 @@ document.getElementById('review-btn').onclick=async ()=>{
   const aInst=makeBattleInstance(byId(selected[0]),bf); const bInst=makeBattleInstance(byId(selected[1]),bf);
   const analysis=generateAnalysis(aInst,bInst);
   document.getElementById('setup-review').style.display='block';
-  document.getElementById('setup-review').innerHTML=teamHtml([selected[0]],'Fighter A',aInst)+teamHtml([selected[1]],'Fighter B',bInst)+`<p class="note">Battlefield: ${bf.name}. ${bf.desc} Final battle stats above include the battlefield effect and, where shown, the research intel bonus. The same final stats appear in Chapter I and in the breakdown.</p><div class="panel" style="margin-top:8px"><h3 style="color:var(--cyan)">Analysis preview — Chapter II in brief</h3>${analysis.html}</div><p class="note">Analysis preview uses current stats; final battle stats are shown in Chapter I and the breakdown.</p><p class="note" id="auto-research-note">Auto-researching both fighters from Wikipedia + Fandom… Research runs automatically — the battle button below is already enabled and does not wait for research.</p><button class="btn mag" style="width:100%" onclick="startBattle()">Start Death Battle on ${esc(bf.name)} →</button>`;
+  document.getElementById('setup-review').innerHTML=teamHtml([selected[0]],'Fighter A',aInst)+teamHtml([selected[1]],'Fighter B',bInst)+`<p class="note">Battlefield: ${bf.name}. ${bf.desc} Final battle stats above include the battlefield effect and, where shown, the research intel bonus. The same final stats appear in Chapter I and in the breakdown.</p><div class="panel" style="margin-top:8px"><h3 style="color:var(--cyan)">Analysis preview — Chapter II in brief</h3>${analysis.html}</div><p class="note">Analysis preview uses current stats; final battle stats are shown in Chapter I and the breakdown.</p><p class="note" id="auto-research-note">Auto-researching both fighters from Wikipedia + Fandom… Research runs automatically — the battle button below is already enabled and does not wait for research.</p><button class="btn mag" style="width:100%" onclick="startBattle()">${(document.getElementById('victory-select')&&document.getElementById('victory-select').value==='incapacitation'?'Start Incapacitation Battle':'Start Death Battle')} on ${esc(bf.name)} →</button>`;
   const live=await fetchResearchFor([...selected]);
   const wikiCount=selected.filter(id=>{const c=canonResearch[id]||{}; return !!(c.wiki||researchIntel[id]);}).length; const fandomCount=selected.filter(id=>{const c=canonResearch[id]||{}; return !!c.fandom;}).length;
   const note=document.getElementById('auto-research-note'); if(note) note.innerText=`Auto-research complete: Wikipedia: ${wikiCount}/2 found, Fan-run Fandom wiki: ${fandomCount}/2 found. The two sources are counted separately; a failed source is never counted as found. Researched fighters get +10 ATK / +60 HP in battle (a research bonus, not a new power), and their dossier feeds the Research Dossier below — summaries never appear inside the episode chapters.`;
@@ -784,11 +784,13 @@ function playBack(){
     else if(e.type==='protect'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> protects ${esc(e.target)}.</div>`;}
     else if(e.type==='knockout'){log.innerHTML+=`<div><b>${esc(e.target)}</b> is knocked out.</div>`;}
     else if(e.type==='incapacitated'){const t=all.find(x=>x.name===e.target); if(t) t.alive=false; log.innerHTML+=`<div><b>${esc(e.target)}</b> is incapacitated and cannot continue.</div>`;}
-    else if(e.type==='heal'){const a=all.find(x=>x.name===e.actor); if(a) a.currentHp=Math.min(a.maxHp,a.currentHp+e.heal); log.innerHTML+=`<div>${esc(e.actor)} recovers some strength.</div>`;}
+    else if(e.type==='prepare'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> — PREPARED: ${esc(e.detail)}.</div>`;}
+    else if(e.type==='detected'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> — DETECTED: ${esc(e.detail)}.</div>`;}
+    else if(e.type==='heal'){const a=all.find(x=>x.name===e.actor); if(a) a.currentHp=Math.min(a.maxHp,a.currentHp+(e.heal||0)); log.innerHTML+=`<div>${esc(e.actor)} recovers some strength.</div>`;}
     renderCombatants(alpha,beta); log.scrollTop=log.scrollHeight;
   },550);
 }
-document.getElementById('show-results-btn').onclick=showResults;
+document.getElementById('show-results-btn').onclick=showResults; try{const _vs=document.getElementById('victory-select'); if(_vs&&!_vs.dataset.v131bound){_vs.dataset.v131bound='1'; _vs.addEventListener('change',()=>{try{const _lbl=_vs.value==='incapacitation'?'Start Incapacitation Battle':'Start Death Battle'; document.querySelectorAll('button').forEach(_b=>{if((_b.getAttribute('onclick')||'').includes('startBattle')){ _b.innerText=_b.innerText.replace(/^Start (Death|Incapacitation) Battle/,_lbl); }});}catch(e){}});}}catch(e){}
 
 /* ============ STORY ENGINE — built ONLY from recorded events ============ */
 function cond(hp,max){if(hp===0) return 'falls and does not rise'; if(hp/max<0.25) return 'is barely standing, breathing hard'; if(hp/max<0.5) return 'is badly hurt and slowing'; return 'staggers, but holds their ground';}
@@ -818,7 +820,10 @@ function generateBreakdown(b){
     if(e.type==='protect') return `<li>Round ${e.round}: ${esc(e.actor)} protects ${esc(e.target)}.</li>`;
     if(e.type==='knockout') return `<li>Round ${e.round}: ${esc(e.target)} is knocked out by ${esc(e.actor)}.</li>`;
     if(e.type==='incapacitated') return `<li>Round ${e.round}: ${esc(e.target)} is incapacitated by ${esc(e.actor)} and cannot continue.</li>`;
-    return `<li>Round ${e.round}: ${esc(e.actor)} recovers ${e.heal} HP.</li>`;
+    if(e.type==='prepare') return `<li>Round ${e.round}: ${esc(e.actor)} — PREPARED: ${esc(e.detail||'prepares a counter')} (knowledge stage PREPARED; the counter has not landed yet).</li>`;
+    if(e.type==='detected') return `<li>Round ${e.round}: ${esc(e.actor)} — DETECTED: ${esc(e.detail||'detects the prepared counter and avoids it')} (knowledge stage DETECTED; the counter does not land).</li>`;
+    if(e.type==='heal') return `<li>Round ${e.round}: ${esc(e.actor)} recovers ${e.heal!=null?e.heal+' HP':'some stamina/health'}.</li>`;
+    return `<li>Round ${e.round}: ${esc(e.actor)} — ${esc(e.type)}: ${esc(e.detail||e.ability||'')}.</li>`;
   }).join('');
   return summary+list;
 }
@@ -873,6 +878,7 @@ function viewHistory(id){
   const ql2=document.getElementById('quality-lines'); if(ql2) ql2.innerHTML=x.quality?('<b>Saved Narrative Quality Check:</b><br>'+x.quality.map(c=>(c.passed===true?'✅ ':(c.passed==='unverified'?'❓ UNVERIFIED — ':'❌ '))+esc(c.name)+' — '+esc(c.detail||'')).join('<br>')):'No saved quality check for this entry.';
   const qn2=document.getElementById('quality-note'); if(qn2) qn2.innerText='Loaded from history saved on this device only. Reopening does not rerun the battle.';
   document.getElementById('consistency-note').innerText='Loaded from history saved on this device only. It is not synced to other devices.';
+  const _pl=document.getElementById('pipeline-stages'); if(_pl){ const _fake={rounds:x.rounds||0,events:(x.eventRecord||[]),battlefield:{name:x.battlefield||''},seed:x.seed,narrativePlan:null,chapterCoverage:null}; _pl.innerHTML=`<b>Online Storytelling Pipeline — this saved battle (7 stages):</b><br>Stage 1 Research: saved dossier references are in the result description above.<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${_fake.rounds} rounds, ${_fake.events.length} recorded events on ${esc(x.battlefield||'')}. Battle seed: ${_fake.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Narrative Planning: causal beats from this saved battle's own event record.<br>Stage 5 AI Storytelling: rule-based episode below is the verified default; optional AI episode (if generated) is checked and never replaces a failed verified episode.<br>Stage 6 Consistency Review: see the Saved Consistency Check above.<br>Stage 7 Final Episode: below, followed by the separate Combat Breakdown and verdict. Saved on this device only (see Battle History). This pipeline block is rendered ONLY from this saved entry's own record — never from the most recent battle.`; }
   document.getElementById('story-output').innerHTML=x.story; document.getElementById('breakdown-output').innerHTML=x.breakdown;
 }
 function exportCurrentSavedEpisode(){ if(currentHistoryId!=null) exportSavedEpisode(currentHistoryId); else {const _en=document.getElementById('export-note'); if(_en) _en.innerText='No saved episode is open yet — run a battle or open one from Battle History first.'; else alert('No saved episode is open yet.');} }
@@ -1201,6 +1207,16 @@ function consistencyChecks(b, storyHtml){
   checks.push({name:'Selected starting forms match initial combat states',passed:startOk,detail:startOk?'Each fighter starts with the selected variant\'s start HP/ATK/DEF recorded in the battle.':'Starting forms do not match initial states.'});
   checks.push({name:'Final state agrees with battle history',passed:'unverified',detail:'History is written after this check runs, so agreement is verified on reopen, not at generation time — labelled unverified here, not passed.'});
   checks.push({name:'Combat breakdown HP values agree with the final state',passed:'unverified',detail:'The breakdown is generated from the same battle object as the verdict, so values share one source; a separate string-match proof is not run, so this is labelled unverified.'});
+  const _blockedBad=[];
+  if(Array.isArray(b.blockedSceneTexts)){
+    b.blockedSceneTexts.forEach(rec=>{
+      const s=rec.text||'';
+      const hasBlocked=/blocked|deflect|stopped|turns it aside|never reaches/i.test(s);
+      const hasHit=/\blands\b|decisive|wound|hurts|shakes the fight|finds its mark|lands clean|lands hard/i.test(s);
+      if(!hasBlocked||hasHit) _blockedBad.push((rec.ability||'attack')+' (event '+rec.id+')');
+    });
+  }
+  checks.push({name:'Blocked attacks are not described as hits',passed:_blockedBad.length?false:(Array.isArray(b.blockedSceneTexts)?true:'unverified'),detail:_blockedBad.length?('PRECISE CONTRADICTION: blocked attack described as a hit — '+_blockedBad.join('; ')+'. Blocked events must use blocked/deflected/stopped prose only.'):(Array.isArray(b.blockedSceneTexts)?('Every blocked attack in this episode uses blocked/deflected/stopped prose and no landing/decisive/wound language ('+b.blockedSceneTexts.length+' blocked scene(s) checked).'):'No blocked-scene record for this episode (e.g. a saved episode from an older build) — blocked prose could not be re-checked from the record, so this line is unverified, not passed.')});
   checks.push({name:'No invented decisive event',passed:!!(b.stalemate||b.events.some(e=>e.type==='knockout'||e.type==='incapacitated')),detail:b.stalemate?'Stalemate: no decisive event was invented.':'The decisive event is a recorded knockout/incapacitation.'});
   return checks;
 }
@@ -1427,6 +1443,14 @@ absorb:[
  "{A} lands {M} squarely, and {T} takes it the way a wall takes a wave — shaken, not broken — and stays in the fight on their own terms.",
  "{T} has felt {M} before, in a different form, and that memory is what keeps them standing when the blow lands.",
 ],
+blocked:[
+ "{A} commits to {M}, but {T} reads it, turns it aside, and gives nothing away. The attack is blocked, and the exchange ends with neither fighter wounded by it.",
+ "{M} never reaches {T} cleanly: {T} deflects it, resets, and the blocked attack costs {A} the opening, not {T} any health.",
+ "{A} throws {M} with full intent, but {T} stops it outright — blocked and deflected, and answered with a steadier stance.",
+ "The attack is stopped before it can do its work. {T} blocks {M}, takes no wound from it, and keeps the initiative in the exchange.",
+ "{A} tries {M}, and {T} meets it with a guard that holds. Blocked, not landed — and {A} must find another way in.",
+ "{T} sees {M} coming and turns it aside cleanly. The blocked blow changes nothing about {T}'s footing, and the fight moves on.",
+],
 anticipate:[
  "{A} does not rush this exchange. They have watched {T} move — {SB} — and now they move to where {T} is going to be, not where {T} is standing. The blow that follows is not lucky. It was read.",
  "There is a pause that matters more than the punch. {A} reads {T}'s weight, the angle of their shoulders, the habit they do not know they have, and strikes into the gap between intention and action.",
@@ -1511,7 +1535,7 @@ function pickSceneUnique(arr,e,a,f2){
   }
   // All variants exhausted for this beat: build a unique, event-faithful scene instead of repeating a used sentence.
   episodeDedupSwaps++;
-  const fb=`${e.actor||'The fighter'} presses with ${e.ability||e.detail||'an attack'} while ${e.target||'the opponent'} tries to answer, and the exchange in round ${e.round} leaves its mark on how the rest of the fight will go.`;
+  const fb=e.blocked?`${e.actor||'The fighter'} commits to ${e.ability||e.detail||'an attack'}, but ${e.target||'the opponent'} blocks it cleanly, and the blocked attack wounds no one.`:`${e.actor||'The fighter'} presses with ${e.ability||e.detail||'an attack'} while ${e.target||'the opponent'} tries to answer, and the exchange in round ${e.round} leaves its mark on how the rest of the fight will go.`;
   sentsOf(fb).forEach(s=>episodeUsedSentences.add(s)); return fb;
 }
 
@@ -1556,7 +1580,7 @@ function checkAIDraft(b, text){
 }
 
 function generateEpisode(b, regenAttempt){
-  currentBattle=b; sceneAttackCount=0; episodeDialogueUsed={}; episodeUsedSentences=new Set(); episodeDedupSwaps=0; episodeRegenOffset=(typeof regenAttempt==='number'?regenAttempt:0); b.narrativePlan=buildNarrativePlan(b); b.chapterCoverage={III:[],IV:[],V:[]};
+  currentBattle=b; sceneAttackCount=0; episodeDialogueUsed={}; episodeUsedSentences=new Set(); episodeDedupSwaps=0; b.blockedSceneTexts=[]; episodeRegenOffset=(typeof regenAttempt==='number'?regenAttempt:0); b.narrativePlan=buildNarrativePlan(b); b.chapterCoverage={III:[],IV:[],V:[]};
   const a=b.alpha[0], f2=b.beta[0];
   const byRound={}; b.events.forEach(e=>{(byRound[e.round]=byRound[e.round]||[]).push(e)});
   const rounds=Object.keys(byRound).map(Number).sort((x,y)=>x-y);
@@ -1585,7 +1609,7 @@ function generateEpisode(b, regenAttempt){
     if(e.type==='study') return fillScene(pickSceneUnique(SCENES.anticipate,e,a,f2),e,a,f2);
     if(e.type==='protect') return fillScene(pickSceneUnique(SCENES.absorb,e,a,f2),e,a,f2);
     if(e.type==='attack'){
-      if(e.blocked){ const tgt=[a,f2].find(x=>x.name===e.target); if(tgt&&tgt.trait==='infinity_void') return `${e.actor} commits to ${e.ability}, but ${e.target}'s Infinity defence stops it outright — the attack never reaches ${e.target} at all.`; return fillScene(pickSceneUnique(SCENES.absorb,e,a,f2),e,a,f2); }
+      if(e.blocked){ const tgt=[a,f2].find(x=>x.name===e.target); let _bs; if(tgt&&tgt.trait==='infinity_void') _bs=`${e.actor} commits to ${e.ability}, but ${e.target}'s Infinity defence stops it outright — the attack never reaches ${e.target} at all.`; else _bs=fillScene(pickSceneUnique(SCENES.blocked,e,a,f2),e,a,f2); if(b.blockedSceneTexts) b.blockedSceneTexts.push({id:e.id,ability:e.ability||'',text:_bs}); return _bs; }
       if(e.reason&&e.reason.includes('studied weakness')) return fillScene(pickSceneUnique(SCENES.counter,e,a,f2),e,a,f2);
       if(e.reason&&e.reason.includes('power gap')) return fillScene(pickSceneUnique(SCENES.absorb,e,a,f2),e,a,f2);
       if(e.reason&&e.reason.includes('fatigued')) return fillScene(pickSceneUnique(SCENES.exhaustion,e,a,f2),e,a,f2);
@@ -1658,7 +1682,7 @@ function generateEpisode(b, regenAttempt){
   const ch4=chapter('Chapter IV — The Turning Point / Escalation — Narrator voice: Cinematic', ch4Paras);
   const ch5Paras=parasFromEvents(lastEvents,ch5Max,'final');
   if(finalFinish){
-    const killingAttack=[...b.events].reverse().find(e=>e.type==='attack'&&e.actor===finalFinish.actor&&e.target===finalFinish.target);
+    const killingAttack=[...b.events].reverse().find(e=>e.type==='attack'&&!e.blocked&&e.actor===finalFinish.actor&&e.target===finalFinish.target);
     if(killingAttack) ch5Paras.push(`Climax: the decisive sequence builds to ${finalFinish.actor}'s ${killingAttack.ability} — the blow ${finalFinish.target} cannot answer. It is not luck. It is the end of everything that came before: the style, the counters${transforms.length?', the transformations':''}, the stamina that ran out at the wrong moment.`);
     else ch5Paras.push(`Climax: ${finalFinish.actor} finishes ${finalFinish.target} after everything that came before — the injuries, the failed defences${transforms.length?', the transformations':''}, the choices.`);
   } else {

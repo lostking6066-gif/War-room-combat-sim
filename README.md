@@ -8,7 +8,7 @@ breakdown.
 ## Play it
 
 Open `index.html` in a browser — no install, no build step. This is now
-WAR-ROOM v13, the 1v1 Death Battle game, and the main game on GitHub Pages.
+WAR-ROOM v13.1, the 1v1 Death Battle game, and the main game on GitHub Pages.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -73,15 +73,16 @@ killing blow.
 
 ## Roster
 
-v13 ships 194 playable fighters: Anime 17, Comics 17, Video Games 16,
+v13.1 ships 194 playable fighters: Anime 17, Comics 17, Video Games 16,
 Movies & TV 16, Animation 16, Fantasy & Sci-Fi 16. The long-term target
 is 100 per category; that target is NOT a claim that 600 are implemented.
 New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v13 (1v1 Death Battles, narrative planner + checked AI brief)
-- `war-room-v13.html` — same as `index.html`
+- `index.html` — latest, WAR-ROOM v13.1 (1v1 Death Battles, blocked-attack fix + labelled counter stages)
+- `war-room-v13.1.html` — same as `index.html`
+- `war-room-v13.html` — previous 1v1 version, kept as an archive
 - `war-room-v12.1.html` — previous 1v1 version, kept as an archive
 - `war-room-v12.html` — previous 1v1 version, kept as an archive
 - `war-room-v11.html` — previous 1v1 version, kept as an archive
