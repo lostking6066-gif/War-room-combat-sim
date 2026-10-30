@@ -8,7 +8,7 @@ breakdown.
 ## Play it
 
 Open `index.html` in a browser — no install, no build step. This is now
-WAR-ROOM v11, the 1v1 Death Battle game, and the main game on GitHub Pages.
+WAR-ROOM v12, the 1v1 Death Battle game, and the main game on GitHub Pages.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -48,7 +48,9 @@ scaling numbers, and a key weakness.
 6. Consistency Check — winner, powers, continuity, transforms, injuries,
    knowledge, and verdict checked against the battle record.
 7. Saved Episode — matchup, versions, outcome, research references,
-   consistency results, and full episode, saved on the player's device.
+   consistency + quality results, and full episode, saved on the player's device,
+   with Export/Backup. Victory modes: Death (default) and Incapacitation/Knockout,
+   distinguished in the verdict — a knockout is never labelled a death.
 
 ## Death rules
 
@@ -71,15 +73,16 @@ killing blow.
 
 ## Roster
 
-v11 ships 98 playable fighters: Anime 17, Comics 17, Video Games 16,
+v12 ships 146 playable fighters: Anime 17, Comics 17, Video Games 16,
 Movies & TV 16, Animation 16, Fantasy & Sci-Fi 16. The long-term target
 is 100 per category; that target is NOT a claim that 600 are implemented.
 New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v11 (1v1 Death Battles, online storytelling pipeline)
-- `war-room-v11.html` — same as `index.html`
+- `index.html` — latest, WAR-ROOM v12 (1v1 Death Battles, intelligent combat + cinematic storytelling)
+- `war-room-v12.html` — same as `index.html`
+- `war-room-v11.html` — previous 1v1 version, kept as an archive
 - `war-room-v10.html` — previous 1v1 version, kept as an archive
 - `war-room-v9.html` — previous 1v1 version, kept as an archive
 - `war-room-v8.html` — previous 5v5 version, kept as an archive
