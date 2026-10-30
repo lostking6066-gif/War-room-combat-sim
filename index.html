@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16</h1><span>1V1 DEATH BATTLES • ENGINE v16 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v16.1</h1><span>1V1 DEATH BATTLES • ENGINE v16.1 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -86,7 +86,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 <div id="setup-review" style="display:none"></div>
 </div>
 </div>
-<div class="panel"><h2>Mode B — Video-Inspired Battle (optional, context only)</h2>
+<details class="adv" id="advanced-settings"><summary>Advanced Settings — connection tests, research, custom fighters, Gemini key, Pollinations key, diagnostics (closed by default; nothing here is required to play)</summary><div class="panel" id="mode-b-panel"><h2>Mode B — Video-Inspired Battle (optional, context only)</h2>
 <p class="note">Mode A (default) is an Original Death Battle, made from the game's own profiles and combat engine. Mode B is different: paste a transcript or notes from a video you watched below. That text is shown as "Video-inspired notes" in Chapters I–II only. It does NOT grant new powers, change stats, or replace the simulation. The narration in v15 is always original — it never copies another creator's script.</p>
 <p class="note"><b>Honest limit:</b> a YouTube link alone does not let this browser file read a video's audio or captions automatically. That would require a YouTube Data API key. Use whatever transcript or notes you can actually access and paste here.</p>
 <label style="font-size:.85rem">YouTube video URL (optional — the game cannot watch or transcribe it)</label><input id="video-url" placeholder="Paste a YouTube URL here, e.g. https://www.youtube.com/watch?v=..." style="width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px"><p class="note">If you paste a URL but no transcript, the game will say so plainly: no video was watched and no transcript was accessed, and the battle continues in ordinary research mode. If you paste notes, claims in them are treated as user-supplied context, not verified facts, and opinions in them are not adopted as facts.</p>
@@ -94,20 +94,20 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 <textarea id="video-notes" placeholder="Paste transcript excerpts or notes here, e.g. which versions were discussed, feats mentioned, arguments made..." style="width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px;min-height:80px"></textarea>
 <p class="note">Video-inspired notes are context only. They do not add powers, forms, or stats.</p>
 </div>
-<div class="panel"><h2>Victory Rules — what counts as a win</h2>
+<div class="panel" id="victory-rules-panel"><h2>Victory Rules — what counts as a win</h2>
 <p class="note"><b>Victory is by death</b> (HP reaches 0), <b>or by incapacitation lasting the rest of the fight</b>, <b>or by battlefield removal with no way back</b>. The exact victory condition is stated in the results and in Chapter VI.</p>
 <p class="note"><b>Regeneration can heal, but it does NOT revive after HP 0.</b> A fighter who is knocked out stays knocked out — no dead fighter acts again, and regeneration only heals a fighter who is still alive.</p>
 <p class="note"><b>No invented killing blow:</b> if the battle hits its round cap with both fighters still alive and neither able to kill or incapacitate the other, the result is a <b>stalemate / no-death verdict</b>, explained in Chapter VI — not a fake finish.</p>
 <p class="note"><b>Battlefield removal:</b> removal alone does not count unless the opponent cannot return. No power in the current powersets permanently removes an opponent from the battlefield, so v15 will not claim a BFR victory it did not simulate.</p>
 </div>
-<div class="panel"><h2>WAR-ROOM AI — Four Connected Brains for 1v1 (rule-based, no paid API)</h2>
+<div class="panel" id="four-brains-panel"><h2>WAR-ROOM AI — Four Connected Brains for 1v1 (rule-based, no paid API)</h2>
 <p class="note"><b>1. Combat Brain:</b> tier scaling, counters, stamina, battlefield destruction, transformations at or below 45% HP — a street-level fighter cannot routinely hurt a cosmic foe by luck alone.<br>
 <b>2. Character Brain:</b> personality decisions — Batman studies first, Goku holds back to test a foe, Vegeta's pride seeks the strongest opponent, humorous fighters are unpredictable. In 1v1 there is no ally to protect, so protective shielding cannot trigger.<br>
 <b>3. Knowledge Brain + Analysis Brain:</b> identity, continuity, powers, feats, limits, weaknesses, transformations, relationships — plus Wikipedia + Fandom research, shown per source — and a head-to-head comparison of strength, speed, durability, abilities, experience, transformations, weaknesses and win conditions, with an explicit uncertainty note when a matchup is close.<br>
 <b>4. Narrator Brain:</b> turns the analysis and the recorded events into a 6-chapter episode (Contenders, Comparison, First Exchange, Turning Point, Final Clash, Verdict), using tactics and reasons, not just attack names.<br>
 <b>Continuity check (adapted to 1v1):</b> checks the battle before the episode is shown — a dead or incapacitated fighter must not act, powers must belong to that version, transformations must meet their trigger, and the winner must match the survivor / stalemate record.</p>
 <p class="note">Trade-off, stated plainly: this is a sophisticated rule system, not a language model. It can calculate, decide, and narrate from rules reliably, but it cannot write unlimited original prose like an LLM. That last step would need a local open model or a free/paid inference service, which v15 does not require.</p></div>
-<details class="adv" id="advanced-settings"><summary>Advanced Settings — connection tests, research, custom fighters, Gemini key, diagnostics (closed by default; nothing here is required to play)</summary><div class="panel"><h2>YouTube &amp; Canon Research (Advanced)</h2><h3 style="color:var(--cyan);font-size:.95rem;margin-top:6px">YouTube Battle Research — no API key needed</h3>
+<div class="panel"><h2>YouTube &amp; Canon Research (Advanced)</h2><h3 style="color:var(--cyan);font-size:.95rem;margin-top:6px">YouTube Battle Research — no API key needed</h3>
 <p class="note">YouTube videos cannot be read automatically by a browser file without a YouTube Data API key, and scraping YouTube is blocked. So this version does the honest version that works on a phone: one-tap YouTube searches for each selected fighter, for powers, strength, speed and transformations, plus a channel library you can grow. Watching is research — it does not automatically add new powers to the combat engine.</p>
 <div id="yt-links" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Pick fighters to see their YouTube research searches.</div>
 <div id="yt-channels" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px"></div>
@@ -133,11 +133,11 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 <b>Stage 4 — Episode:</b> the narrator turns the battle record into 6 chapters, with Analytical, Cinematic and Reflective voices.<br>
 <b>Stage 5 — Consistency Check:</b> the episode is checked against the record before it is presented as verified.<br>
 <b>Stage 6 — Saved Episode:</b> matchup, continuities, outcome, research references and the full episode are saved on this device only, so you can re-read them.<br>
-<b>Free storytelling, honestly:</b> the online AI story is now the primary episode and runs automatically after every battle. The rule-based episode is the honest offline fallback, labelled as such, when the online service fails or its draft fails validation. Free services can impose quotas, change availability, or require accounts or keys — internet access alone does not provide a language model, and this game is not built around an assumed free LLM. Automatic YouTube transcript reading still needs a YouTube Data API key; the game uses YouTube search links and your pasted notes instead.</p></div>
+<b>Free storytelling, honestly:</b> the online AI story is now the primary episode and runs automatically after every battle. The rule-based episode is the honest offline fallback, labelled as such, when the online service fails or its draft fails validation. Free services can impose quotas, change availability, or require accounts or keys — internet access alone does not provide a language model, and this game is not built around an assumed free LLM. Automatic YouTube transcript reading still needs a YouTube Data API key; the game uses YouTube search links and your pasted notes instead. Pollinations keyless requests can return HTTP 402 when its anonymous limit is reached; that is reported honestly in the fallback reason (see Technical Details), not hidden, and an optional saved Pollinations key in Advanced Settings is tried only as a secondary attempt.</p></div>
 <div class="panel"><h2>Add a Custom Fighter (grows the roster without inventing canon)</h2><p class="note">Use this for original fighters, or for a version of a real character you have researched yourself. Custom fighters are saved on this device only.</p><input id="custom-name" placeholder="Name"><input id="custom-fr" placeholder="Franchise / universe" style="margin-top:6px"><select id="custom-cat" style="margin-top:6px"><option>Anime</option><option>Comics</option><option>Video Games</option><option>Movies &amp; TV</option><option>Animation</option><option>Fantasy &amp; Sci-Fi</option></select><input id="custom-style" placeholder="Fighting style" style="margin-top:6px"><input id="custom-powers" placeholder="Powers, comma-separated, e.g. Ki Blast, Dragon Fist" style="margin-top:6px"><button class="btn small" onclick="addCustomFighter()" style="margin-top:8px">Add custom fighter</button></div>
 <div class="panel"><h2>Internet Connection — Properly Connected</h2>
 <p class="note" id="file-warning"></p>
-<p class="note">This version connects, from the browser, to: Wikipedia, fan-run Fandom wikis, YouTube search, and — optionally — a free public AI text service (Pollinations, no key) or your own free Gemini key. No Muse server, no paid API, and no key is sent to Muse. Your Gemini key, if you enter one, is stored only in this device's localStorage and is sent only to Google when you tap Generate.</p>
+<p class="note">This version connects, from the browser, to: Wikipedia, fan-run Fandom wikis, YouTube search, and — optionally — a free public AI text service (Pollinations, keyless access subject to its anonymous limits — see Advanced Settings) or your own free Gemini key. No Muse server, no paid API, and no key is sent to Muse. Your Gemini key, if you enter one, is stored only in this device's localStorage and is sent only to Google when you tap Generate.</p>
 <button class="btn small" onclick="testConnectionsV16()">Retest connections — real story-path test (optional)</button>
 <div id="connection-results" class="note" style="margin-top:8px">Testing connections automatically on load — just pick fighters and play. Retest is optional, never required to play. The story-path test sends a tiny POST to the real AI service in the same format as a story request; it proves reachability only, not research accuracy or story validation.</div>
 <label style="font-size:.85rem;display:block;margin-top:10px">Optional: your own free Gemini API key (from Google AI Studio — free tier, no card for basic use in many regions)</label>
@@ -145,7 +145,13 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 <button class="btn small" onclick="saveGeminiKey()" style="margin-top:6px">Save key on this device</button>
 <button class="btn small" onclick="clearGeminiKey()" style="margin-top:6px">Remove key</button>
 <div id="gemini-key-status" class="note"></div>
-<p class="note">Security note: a key in a browser game can be seen in network traffic on that device. Use a free key, never a paid/production key, and rotate it if you share the device.</p></div>
+<p class="note">Security note: a key in a browser game can be seen in network traffic on that device. Use a free key, never a paid/production key, and rotate it if you share the device.</p>
+<label style="font-size:.85rem;display:block;margin-top:10px">Optional: your own Pollinations key (from Pollinations — only a secondary attempt, after keyless fails; never required to play)</label>
+<input id="pollinations-key-input" type="password" placeholder="Paste your Pollinations key here — saved on this device only">
+<button class="btn small" onclick="savePollinationsKey()" style="margin-top:6px">Save Pollinations key on this device</button>
+<button class="btn small" onclick="clearPollinationsKey()" style="margin-top:6px">Remove Pollinations key</button>
+<div id="pollinations-key-status" class="note"></div>
+<p class="note">Pollinations honesty note (v16.1 investigation, 2026-10-30): keyless POST and GET both answered HTTP 200 from Node when not rate-limited, but a second request inside ~30 seconds returned HTTP 402 "Free limit reached: 1 reply every 30 seconds per IP". So a 402 in this game usually means the free anonymous limit was hit, not that keyless access is permanently gone — the fallback reason now says so plainly. If no key is saved, the game never asks for one in the main flow: the honestly labelled offline episode is the result. Live-browser AI generation is still unproven and is not claimed here.</p></div>
 </details><div class="panel"><h2>Battle History (saved on this device only)</h2><div id="history-list" class="note">No saved battles yet.</div></div>
 </section>
 
@@ -158,10 +164,9 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 <div class="panel"><h2 id="result-title">RESULT</h2><p id="result-desc" class="note" style="font-size:.9rem"></p></div>
 <div class="panel story"><h2 id="episode-heading">Death Battle Episode — 6 Chapters (Narrator Style C)</h2><p id="main-story-label" class="note"></p><p id="main-story-status" class="note"></p><p class="note">The main story below is the online AI story when it is available and passes validation. If online generation is unavailable, the offline rule-based episode is shown instead and labelled honestly as offline — it is never presented as online AI.</p><div id="story-output"></div></div>
 <button class="btn" onclick="resetSimulator()">New Battle</button>
-<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" onclick="downloadStory()">Download story as HTML</button> <button class="btn" onclick="exportCurrentSavedEpisode()">Export saved episode (JSON + story)</button></div><p id="export-note" class="note"></p>
 <details class="adv"><summary>Combat Details — breakdown and numbers (numbers live here, not in the story)</summary><ul class="break" id="breakdown-output"></ul></details>
 <details class="adv"><summary>Character Research — dossier for this battle</summary><div id="result-dossier-output" class="note">Research dossier for this battle appears here after the battle.</div></details>
-<details class="adv"><summary>Technical Details — validation, provider, session, retry</summary><p id="consistency-note" class="note"></p><div id="pipeline-stages" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px"></div><div id="consistency-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="quality-note" class="note"></p><div id="quality-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="integrity-note" class="note"></p><div id="integrity-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="accuracy-note" class="note"></p><div id="accuracy-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><div id="main-story-diagnostics" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">No story generated yet for this battle.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn small" id="retry-online-story-btn" onclick="retryMainStoryV16()">Retry online story</button></div><div id="ai-story-output" class="note" style="margin-top:10px;line-height:1.7">The main story above is the online AI story (or the labelled offline fallback). This box holds no separate AI draft in v16.</div></details>
+<details class="adv"><summary>Technical Details — validation, provider, session, retry</summary><p id="consistency-note" class="note"></p><div id="pipeline-stages" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px"></div><div id="consistency-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="quality-note" class="note"></p><div id="quality-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="integrity-note" class="note"></p><div id="integrity-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="accuracy-note" class="note"></p><div id="accuracy-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><div id="main-story-diagnostics" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">No story generated yet for this battle.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn small" id="retry-online-story-btn" onclick="retryMainStoryV16()">Retry online story</button></div><div id="ai-story-output" class="note" style="margin-top:10px;line-height:1.7">The main story above is the online AI story (or the labelled offline fallback). This box holds no separate AI draft in v16.1.</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" onclick="downloadStory()">Download story as HTML</button> <button class="btn" onclick="exportCurrentSavedEpisode()">Export saved episode (JSON + story)</button></div><p id="export-note" class="note"></p></details>
 </section>
 </main>
 
@@ -780,6 +785,7 @@ function restoreSettingsV151(){ try{ const raw=localStorage.getItem('warroom_set
 function updateModeHeadings(mode){const m=mode||((typeof document!=='undefined'&&document.getElementById('victory-select'))?document.getElementById('victory-select').value:'death'); const mh=typeof document!=='undefined'?document.getElementById('match-heading'):null; if(mh) mh.innerText=(m==='incapacitation'?'2 — Incapacitation Match: Pick Fighter A and Fighter B':'2 — Death Match: Pick Fighter A and Fighter B'); const eh=typeof document!=='undefined'?document.getElementById('episode-heading'):null; if(eh) eh.innerText=(m==='incapacitation'?'Incapacitation Episode — 6 Chapters (Narrator Style C)':'Death Battle Episode — 6 Chapters (Narrator Style C)'); return m;}
 function startBattle(){
   try{ if(typeof abortCurrentStoryV16==='function') abortCurrentStoryV16(); }catch(e){}
+  try{ currentStorySessionId=null; if(typeof resetMainStoryUIV161==='function') resetMainStoryUIV161(null); }catch(e){}
   const _vs15=validateSelectionV15(selected); if(!_vs15.ok){alert(_vs15.reason);return;}
   if(selected.length===2 && selected[0]===selected[1]){alert('Mirror match blocked: the same fighter cannot fight itself in this build. Pick two different fighters.');return;}
   updateModeHeadings();
@@ -823,7 +829,7 @@ function playBack(){
     renderCombatants(alpha,beta); log.scrollTop=log.scrollHeight;
   },550);
 }
-document.getElementById('show-results-btn').onclick=showResults; try{const _vs=document.getElementById('victory-select'); if(_vs&&!_vs.dataset.v131bound){_vs.dataset.v131bound='1'; _vs.addEventListener('change',()=>{try{const _lbl=_vs.value==='incapacitation'?'Start Incapacitation Battle':'Start Death Battle';try{ saveSettingsV151(); }catch(e){}  document.querySelectorAll('button').forEach(_b=>{if((_b.getAttribute('onclick')||'').includes('startBattle')){ _b.innerText=_b.innerText.replace(/^Start (Death|Incapacitation) Battle/,_lbl); }});}catch(e){}});}}catch(e){}
+document.getElementById('show-results-btn').onclick=showResults; try{const _vs=document.getElementById('victory-select'); if(_vs&&!_vs.dataset.v131bound){_vs.dataset.v131bound='1'; _vs.addEventListener('change',()=>{try{const _lbl=_vs.value==='incapacitation'?'Start Incapacitation Battle':'Start Death Battle';try{ saveSettingsV151(); }catch(e){} try{ if(typeof updateModeHeadings==='function') updateModeHeadings(_vs.value); }catch(e){}  document.querySelectorAll('button').forEach(_b=>{if((_b.getAttribute('onclick')||'').includes('startBattle')){ _b.innerText=_b.innerText.replace(/^Start (Death|Incapacitation) Battle/,_lbl); }});}catch(e){}});}}catch(e){}
 
 /* ============ STORY ENGINE — built ONLY from recorded events ============ */
 function cond(hp,max){if(hp===0) return 'falls and does not rise'; if(hp/max<0.25) return 'is barely standing, breathing hard'; if(hp/max<0.5) return 'is badly hurt and slowing'; return 'staggers, but holds their ground';}
@@ -919,6 +925,7 @@ function exportSavedEpisode(id){
 }
 function resetSimulator(){
   try{ if(typeof abortCurrentStoryV16==='function') abortCurrentStoryV16(); }catch(e){}
+  try{ currentStorySessionId=null; if(typeof resetMainStoryUIV161==='function') resetMainStoryUIV161(null); }catch(e){}
   if(playbackTimer) clearInterval(playbackTimer);
   selected=[]; aiTeam=[]; researchIntel={}; currentBattle=null; ytNote=''; if(typeof canonResearch!=='undefined') canonResearch={}; researchFetchedKeys={}; researchTimers={}; researchInFlight={}; episodeDialogueUsed={};
   const tn=document.getElementById('yt-note'); if(tn) tn.value=''; const nd=document.getElementById('yt-note-display'); if(nd) nd.innerHTML='';
@@ -1381,12 +1388,12 @@ async function generateAIStory(mode){
       const aiChecks=checkAIDraft(b, text);
       const failed=aiChecks.filter(c=>!c.passed);
       if(!failed.length){
-        out.innerHTML=`<b>AI episode — CONSISTENCY: PASSED (${mode==='gemini'?'Gemini, your key':'Pollinations, free, no key'}) — checked against the verified battle record with the same winner/finishing-ability/transform/death-vs-KO checks. This is an additional checked telling; the verified rule-based episode above remains the primary episode, and the breakdown is authoritative:</b><br><br>${esc(text).replace(/\n/g,'<br>')}<br><br><b>AI checks:</b><br>${aiChecks.map(c=>'✅ '+esc(c.name)+' — '+esc(c.detail)).join('<br>')}`;
+        out.innerHTML=`<b>AI episode — CONSISTENCY: PASSED (${mode==='gemini'?'Gemini, your key':'Pollinations (keyless, subject to anonymous limits)'}) — checked against the verified battle record with the same winner/finishing-ability/transform/death-vs-KO checks. This is an additional checked telling; the verified rule-based episode above remains the primary episode, and the breakdown is authoritative:</b><br><br>${esc(text).replace(/\n/g,'<br>')}<br><br><b>AI checks:</b><br>${aiChecks.map(c=>'✅ '+esc(c.name)+' — '+esc(c.detail)).join('<br>')}`;
         return;
       }
       lastFailures=failed.map(c=>c.name+': '+c.detail).join(' | ');
       if(attempt===1){
-        out.innerHTML=`<b>AI draft — FAILED consistency check (${mode==='gemini'?'Gemini, your key':'Pollinations, free, no key'}) — NOT presented as the final episode. The verified rule-based episode above remains the final episode. Precise failures:</b><br>${aiChecks.map(c=>(c.passed?'✅ ':'❌ ')+esc(c.name)+' — '+esc(c.detail)).join('<br>')}<br><br><b>AI draft text (for review only):</b><br>${esc(text).replace(/\n/g,'<br>')}`;
+        out.innerHTML=`<b>AI draft — FAILED consistency check (${mode==='gemini'?'Gemini, your key':'Pollinations (keyless, subject to anonymous limits)'}) — NOT presented as the final episode. The verified rule-based episode above remains the final episode. Precise failures:</b><br>${aiChecks.map(c=>(c.passed?'✅ ':'❌ ')+esc(c.name)+' — '+esc(c.detail)).join('<br>')}<br><br><b>AI draft text (for review only):</b><br>${esc(text).replace(/\n/g,'<br>')}`;
         return;
       }
       out.innerText='AI draft failed its consistency check on attempt 1; regenerating once with the failure list included…';
@@ -2430,6 +2437,7 @@ function showResults(){
   document.getElementById('breakdown-output').innerHTML=breakdown;
   try{ const _rd=document.getElementById('result-dossier-output'); if(_rd){ const _refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]); _rd.innerHTML=_refs.map(r=>'<b>'+esc(r.fighter)+' ('+esc(r.continuity)+'):</b> '+r.sources.map(x=>esc(x.name)+' '+esc(x.status)).join('; ')).join('<br>')+'<br><span class="note">Fan wikis are leads, not authorities. Research never changed battle stats or powers.</span>'; } }catch(e){}
   currentStorySavedSessionId=null;
+  try{ resetMainStoryUIV161('pending'); }catch(e){}
   try{
     const _sid=makeSessionIdV16(b);
     generateMainStoryV16(b,_sid,{onReady:function(meta,storyHtml){
@@ -2449,7 +2457,7 @@ function saveBattle(b,story,breakdown,integrity,accuracy,quality){
     const h=loadHistory();
     const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]);
     const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant));
-    h.unshift({id:Date.now(),formatVersion:'v16',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16 online AI main story, or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
+    h.unshift({id:Date.now(),formatVersion:'v16.1',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.1 online AI main story, or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
     localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));
   }catch(e){}
   renderHistory();
@@ -2600,8 +2608,8 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16'].includes(x.formatVersion);
-  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16 record.'};
+  const legacy=!['v15','v15.1','v16','v16.1'].includes(x.formatVersion);
+  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
 
@@ -2859,6 +2867,45 @@ function countStoryChecksV16(checks) {
 function storyChecksHtmlV16(checks) {
   return checks.map(function (c) { return (c.state === 'PASSED' ? '✅ ' : (c.state === 'UNVERIFIED' ? '❓ UNVERIFIED — ' : '❌ ')) + esc(c.name) + ' — ' + esc(c.detail); }).join('<br>');
 }
+/* v16.1 — Pollinations, investigated 2026-10-30 (see report table). Findings:
+   GET /models returns anonymous-tier models (openai-fast observed); keyless
+   POST and GET both returned HTTP 200 from Node when NOT rate-limited, but a
+   second request inside ~30s returned HTTP 402 with body "Free limit reached:
+   1 reply every 30 seconds per IP" — so 402 here is the anonymous rate limit,
+   NOT proof that keyless access is gone. The live-browser GET 404 was NOT
+   reproduced from Node at all: GET "Say OK" = 200, and a 2000-char GET
+   prompt in the v16 fallback shape = 200 with a full story, so the browser
+   404 may have been transient, edge- or prompt-content-specific, or an
+   aborted request racing the fallback. The GET fallback is therefore kept
+   only as a same-attempt fallback and its 404 is now explained, never
+   hidden. The /models list returned exactly one model (openai-fast, tier
+   anonymous); no model field is sent by default, matching the v16 body
+   that returned 200 after the 30s window. Keyless stays primary; a saved
+   Pollinations key (optional, device
+   localStorage only, Bearer header, never embedded, never required) is a
+   SECONDARY attempt only after keyless fails. No key is ever requested in
+   the main flow — the honestly labelled offline fallback is the result. */
+function explainPollinationsErrorV161(text) {
+  const t = String(text || '');
+  let out = t;
+  if (/\b402\b/.test(t) && out.indexOf('payment-required (402)') === -1) {
+    out += ' — Pollinations returned payment-required (402) — keyless access appears unavailable for this request';
+    if (/free limit/i.test(t)) out += ' (the service message says the free anonymous limit was reached: 1 reply every 30 seconds per IP — waiting 30+ seconds, or saving an optional Pollinations key in Advanced Settings, may let a later attempt succeed)';
+  }
+  if (/\b404\b/.test(t) && out.indexOf('endpoint not found (404)') === -1) {
+    out += ' — Pollinations endpoint not found (404)';
+  }
+  return out;
+}
+function getPollinationsKey(){try{return localStorage.getItem('warroom_pollinations_key')||''}catch(e){return ''}}
+function savePollinationsKey(){
+  const inp=document.getElementById('pollinations-key-input'); const v=inp?inp.value.trim():'';
+  if(!v){const st=document.getElementById('pollinations-key-status'); if(st) st.innerText='Paste a key first.'; return;}
+  try{localStorage.setItem('warroom_pollinations_key',v)}catch(e){}
+  if(inp) inp.value=''; const st=document.getElementById('pollinations-key-status'); if(st) st.innerText='✅ Pollinations key saved on this device only. It is not sent to Muse. It will only be sent to Pollinations, and only as a secondary attempt after a keyless attempt fails.';
+}
+function clearPollinationsKey(){try{localStorage.removeItem('warroom_pollinations_key')}catch(e){} const st=document.getElementById('pollinations-key-status'); if(st) st.innerText='Pollinations key removed from this device.';}
+function updatePollinationsKeyStatus(){const el=document.getElementById('pollinations-key-status'); if(el) el.innerText=getPollinationsKey()?'Pollinations key: saved on this device (value hidden). Used only as a secondary attempt after keyless fails; never required to play.':'Pollinations key: not saved (optional). Keyless generation is attempted first; if it fails you still get the honestly labelled offline episode — no key is ever requested in the main flow.';}
 /* Provider calls. Pollinations POST is primary; a transport-level POST
    failure falls back to one short GET as part of the same attempt. Response
    may be plain text (observed) or a JSON choices payload — both are read. */
@@ -2879,23 +2926,56 @@ function extractPollinationsTextV16(res, raw) {
 async function fetchPollinationsStoryV16(prompt, timeoutMs) {
   const body = JSON.stringify({ messages: [{ role: 'system', content: 'You are a battle-story writer. Follow the brief exactly and never change the winner, the finishing event, or the final states.' }, { role: 'user', content: prompt }] });
   let lastError = null;
+  let lastExplained = '';
+  // Attempt 1 — keyless POST (primary, same body format as v16).
   try {
     const res = await fetchWithTimeoutV16('https://text.pollinations.ai/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body }, timeoutMs || V16_AI_TIMEOUT_MS);
-    if (!res.ok) throw new Error('Pollinations POST HTTP ' + res.status);
+    if (!res.ok) {
+      let snippet = '';
+      try { snippet = (await res.text()).slice(0, 200); } catch (e) {}
+      throw new Error('Pollinations POST HTTP ' + res.status + (snippet ? ': ' + snippet : ''));
+    }
     const raw = await res.text();
     const text = extractPollinationsTextV16(res, raw);
     if (!text) throw new Error('Pollinations POST returned an empty response');
-    return { text: text, provider: 'Pollinations (POST, free, no key)', via: 'post' };
-  } catch (e) { lastError = e; }
+    return { text: text, provider: 'Pollinations (POST, keyless)', via: 'post' };
+  } catch (e) { lastError = e; lastExplained = explainPollinationsErrorV161(e.message || 'Provider request failed'); }
+  // Attempt 1b — keyless GET fallback, same attempt (short prompt only: a
+  // 2000-char GET URL is fragile, so this stays a fallback, not a primary).
   try {
     const shortPrompt = String(prompt).slice(0, 2000);
     const res = await fetchWithTimeoutV16('https://text.pollinations.ai/' + encodeURIComponent(shortPrompt), { method: 'GET' }, timeoutMs || V16_AI_TIMEOUT_MS);
-    if (!res.ok) throw new Error('Pollinations GET HTTP ' + res.status);
+    if (!res.ok) {
+      let snippet = '';
+      try { snippet = (await res.text()).slice(0, 200); } catch (e) {}
+      throw new Error('Pollinations GET HTTP ' + res.status + (snippet ? ': ' + snippet : ''));
+    }
     const raw = await res.text();
     const text = extractPollinationsTextV16(res, raw);
     if (!text) throw new Error('Pollinations GET returned an empty response');
-    return { text: text, provider: 'Pollinations (GET fallback, free, no key)', via: 'get' };
-  } catch (e) { throw new Error('Pollinations request failed: ' + (lastError ? lastError.message : '') + ' / GET: ' + e.message); }
+    return { text: text, provider: 'Pollinations (GET fallback, keyless)', via: 'get' };
+  } catch (e) {
+    const explained = explainPollinationsErrorV161(e.message || 'Provider request failed');
+    throw new Error('Pollinations request failed: ' + lastExplained + ' / GET: ' + explained);
+  }
+}
+async function fetchPollinationsStoryWithKeyV161(prompt, timeoutMs) {
+  // v16.1 secondary attempt ONLY: a saved Pollinations key (device
+  // localStorage only, Bearer header, sent only to Pollinations). Never
+  // called when no key is saved; never requested in the main flow.
+  const key = (typeof getPollinationsKey === 'function' ? getPollinationsKey() : '');
+  if (!key) throw new Error('No Pollinations key saved');
+  const body = JSON.stringify({ messages: [{ role: 'system', content: 'You are a battle-story writer. Follow the brief exactly and never change the winner, the finishing event, or the final states.' }, { role: 'user', content: prompt }] });
+  const res = await fetchWithTimeoutV16('https://text.pollinations.ai/', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key }, body: body }, timeoutMs || V16_AI_TIMEOUT_MS);
+  if (!res.ok) {
+    let snippet = '';
+    try { snippet = (await res.text()).slice(0, 200); } catch (e) {}
+    throw new Error(explainPollinationsErrorV161('Pollinations keyed POST HTTP ' + res.status + (snippet ? ': ' + snippet : '')));
+  }
+  const raw = await res.text();
+  const text = extractPollinationsTextV16(res, raw);
+  if (!text) throw new Error('Pollinations keyed POST returned an empty response');
+  return { text: text, provider: 'Pollinations (POST, your saved key)', via: 'post-key' };
 }
 async function fetchGeminiStoryV16(prompt) {
   const key = (typeof getGeminiKey === 'function' ? getGeminiKey() : '');
@@ -2908,7 +2988,33 @@ async function fetchGeminiStoryV16(prompt) {
   if (!text) throw new Error('Gemini returned an empty response');
   return { text: text, provider: 'Gemini (your saved key)', via: 'gemini' };
 }
-function renderMainStoryLabelV16(meta) {
+/* v16.1 fix 1 — STALE STORY HEADER. generateMainStoryV16 in v16 cleared only
+   the status line and the story body during "Preparing…", so the label,
+   diagnostics (old session/reason), validation lines and ai-story box kept
+   showing the PREVIOUS battle until the new story resolved. Every render
+   below is now gated on the session it belongs to, and this reset runs
+   BEFORE "Preparing…" is shown, and again from startBattle / New Battle. */
+function resetMainStoryUIV161(sid) {
+  try {
+    const label = document.getElementById('main-story-label');
+    if (label) label.innerText = sid ? ('Preparing battle story… (session ' + sid + ')') : '';
+    const status = document.getElementById('main-story-status');
+    if (status) status.innerText = sid ? 'Preparing battle story…' : '';
+    const diag = document.getElementById('main-story-diagnostics');
+    if (diag) diag.innerHTML = sid ? ('Session: ' + esc(sid) + '<br>Provider: —<br>Attempts: 0<br>Prompt size: —<br>Validation: pending — this battle only, no previous battle\'s session, reason, or validation is shown.') : 'No story generated yet for this battle.';
+    const ai = document.getElementById('ai-story-output');
+    if (ai) ai.innerText = sid ? 'Preparing battle story for this battle…' : 'The main story above is the online AI story (or the labelled offline fallback). This box holds no separate AI draft in v16.1.';
+    const so = document.getElementById('story-output');
+    if (so && sid) so.innerHTML = '<p>Preparing battle story… Online AI generation runs automatically for this battle.</p>';
+    lastMainStoryMeta = null;
+  } catch (e) {}
+}
+function isCurrentStorySessionV161(sid) {
+  if (!sid) return true;
+  try { return currentStorySessionId === sid; } catch (e) { return true; }
+}
+function renderMainStoryLabelV16(meta, expectedSession) {
+  if (expectedSession && !isCurrentStorySessionV161(expectedSession)) return;
   const label = document.getElementById('main-story-label');
   if (!label) return;
   if (!meta) { label.innerText = ''; return; }
@@ -2917,7 +3023,8 @@ function renderMainStoryLabelV16(meta) {
   else if (meta.kind === 'saved') label.innerText = 'Saved episode — shown exactly as saved on this device.';
   else label.innerText = '';
 }
-function renderMainStoryDiagnosticsV16(meta) {
+function renderMainStoryDiagnosticsV16(meta, expectedSession) {
+  if (expectedSession && !isCurrentStorySessionV161(expectedSession)) return;
   const el = document.getElementById('main-story-diagnostics');
   if (!el) return;
   if (!meta) { el.innerHTML = 'No story generated yet for this battle.'; return; }
@@ -2947,8 +3054,8 @@ function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, qual
       try {
         const h = loadHistory();
         if (h.length) {
-          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
-          h[0].formatVersion = 'v16';
+          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.1) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.1) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
+          h[0].formatVersion = 'v16.1';
           h[0].mainStoryMeta = meta ? { kind: meta.kind, provider: meta.provider, passed: meta.passed, unverified: meta.unverified, attempts: meta.attempts, promptSize: meta.promptSize, sessionId: meta.sessionId, reason: meta.reason || '' } : null;
           // Saved validation note, stated plainly: System A is battle integrity
           // (story-independent). When the main story is AI, System B below is
@@ -2984,6 +3091,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
   function setStatus(t) { try { if (statusEl) statusEl.innerText = t; } catch (e) {} }
   function setStory(html) { try { if (storyEl) storyEl.innerHTML = html; } catch (e) {} }
   if (retryBtn) { try { retryBtn.disabled = true; } catch (e) {} }
+  resetMainStoryUIV161(sid);
   setStatus('Preparing battle story…');
   setStory('<p>Preparing battle story… Online AI generation runs automatically for this battle.</p>');
   let prompt = '';
@@ -3023,14 +3131,42 @@ async function generateMainStoryV16(b, sessionId, opts) {
           if (isCurrent()) {
             setStatus('Online AI story ready.');
             setStory(esc(draft.text).replace(/\n/g, '<br>'));
-            renderMainStoryLabelV16(meta);
-            renderMainStoryDiagnosticsV16(meta);
+            renderMainStoryLabelV16(meta, sid);
+            renderMainStoryDiagnosticsV16(meta, sid);
             if (opts.onReady) { try { opts.onReady(meta, esc(draft.text).replace(/\n/g, '<br>')); } catch (e) {} }
           }
           return meta;
         }
         lastReason = 'Draft did not pass validation';
       }
+    }
+    // v16.1 secondary attempt: saved Pollinations key ONLY, after the keyless
+    // attempt failed. Never runs (and never asks) when no key is saved.
+    if (!draft) {
+      try {
+        const hasPKey = (typeof getPollinationsKey === 'function' ? !!getPollinationsKey() : false);
+        if (hasPKey) {
+          attempts++;
+          const k = await fetchPollinationsStoryWithKeyV161(prompt, V16_AI_TIMEOUT_MS);
+          lastProvider = k.provider;
+          const kChecks = checkMainStoryV16(b, k.text);
+          lastChecks = kChecks;
+          const kc = countStoryChecksV16(kChecks);
+          if (kc.failed === 0) {
+            const meta = { kind: 'ai', provider: lastProvider, passed: kc.passed, unverified: kc.unverified, attempts: attempts, promptSize: prompt.length, sessionId: sid, checks: kChecks, pollinationsKeyTried: true };
+            lastMainStoryMeta = meta;
+            if (isCurrent()) {
+              setStatus('Online AI story ready.');
+              setStory(esc(k.text).replace(/\n/g, '<br>'));
+              renderMainStoryLabelV16(meta, sid);
+              renderMainStoryDiagnosticsV16(meta, sid);
+              if (opts.onReady) { try { opts.onReady(meta, esc(k.text).replace(/\n/g, '<br>')); } catch (e) {} }
+            }
+            return meta;
+          }
+          lastReason = 'Draft did not pass validation';
+        }
+      } catch (e) { if (!lastReason) lastReason = e.message || 'Provider request failed'; }
     }
     // Optional Gemini attempt, only with a previously saved key, only after
     // Pollinations failed or failed validation (any failure reason qualifies).
@@ -3050,8 +3186,8 @@ async function generateMainStoryV16(b, sessionId, opts) {
             if (isCurrent()) {
               setStatus('Online AI story ready.');
               setStory(esc(g.text).replace(/\n/g, '<br>'));
-              renderMainStoryLabelV16(meta);
-              renderMainStoryDiagnosticsV16(meta);
+              renderMainStoryLabelV16(meta, sid);
+              renderMainStoryDiagnosticsV16(meta, sid);
               if (opts.onReady) { try { opts.onReady(meta, esc(g.text).replace(/\n/g, '<br>')); } catch (e) {} }
             }
             return meta;
@@ -3066,8 +3202,8 @@ async function generateMainStoryV16(b, sessionId, opts) {
     if (isCurrent()) {
       setStatus('Online AI generation was unavailable — showing the offline episode instead.');
       setStory(fallbackStoryHtmlV16(b, lastReason));
-      renderMainStoryLabelV16(meta);
-      renderMainStoryDiagnosticsV16(meta);
+      renderMainStoryLabelV16(meta, sid);
+      renderMainStoryDiagnosticsV16(meta, sid);
       if (opts.onReady) { try { opts.onReady(meta, null); } catch (e) {} }
     }
     return meta;
@@ -3077,8 +3213,8 @@ async function generateMainStoryV16(b, sessionId, opts) {
     if (isCurrent()) {
       setStatus('Online AI generation was unavailable — showing the offline episode instead.');
       setStory(fallbackStoryHtmlV16(b, meta.reason));
-      renderMainStoryLabelV16(meta);
-      renderMainStoryDiagnosticsV16(meta);
+      renderMainStoryLabelV16(meta, sid);
+      renderMainStoryDiagnosticsV16(meta, sid);
       if (opts.onReady) { try { opts.onReady(meta, null); } catch (e) {} }
     }
     return meta;
@@ -3120,7 +3256,9 @@ async function testConnectionsV16() {
   const wiki = await ping('https://en.wikipedia.org/api/rest_v1/page/summary/Goku');
   const fandom = await ping('https://dragonball.fandom.com/api.php?action=query&prop=info&titles=Goku&format=json&origin=*');
   const gem = getGeminiKey() ? '(saved, not tested here to avoid using quota)' : '(not saved — optional)';
-  if (el) el.innerHTML = (story.ok ? '✅' : '❌') + ' Story provider (Pollinations POST, same format as a story request): ' + (story.ok ? ('reachable — HTTP ' + story.status + ' in ' + story.ms + 'ms') : ('not reachable — ' + esc(story.text))) + '<br>' + (wiki ? '✅' : '❌') + ' Wikipedia &nbsp; ' + (fandom ? '✅' : '❌') + ' Fandom (Dragon Ball Wiki sample only) &nbsp; Gemini key ' + gem + '<br><span style="font-size:.78rem">Provider reachable means only that the story service answered this tiny test. It does NOT verify character research accuracy, and it does NOT prove a full story will validate — story validation is reported separately in Technical Details on the results screen. The Fandom check only tests that one sample wiki responds; the per-fighter Canon Sources result for that fighter is authoritative. If a source shows ❌, it is offline, blocked, or rate-limited right now — the game falls back to local play and will not pretend that source worked.</span>';
+  const storyText = story.ok ? ('reachable — HTTP ' + story.status + ' in ' + story.ms + 'ms') : ('not reachable — ' + esc(typeof explainPollinationsErrorV161 === 'function' ? explainPollinationsErrorV161((story.status ? ('Pollinations POST HTTP ' + story.status + ': ') : '') + story.text) : story.text));
+  const pollKey = (typeof getPollinationsKey === 'function' && getPollinationsKey()) ? '(saved on this device — secondary attempt only)' : '(not saved — optional, never required)';
+  if (el) el.innerHTML = (story.ok ? '✅' : '❌') + ' Story provider (Pollinations POST, same format as a story request): ' + storyText + '<br>' + (wiki ? '✅' : '❌') + ' Wikipedia &nbsp; ' + (fandom ? '✅' : '❌') + ' Fandom (Dragon Ball Wiki sample only) &nbsp; Gemini key ' + gem + ' &nbsp; Pollinations key ' + pollKey + '<br><span style="font-size:.78rem">HTTP 402 from Pollinations means payment-required — keyless access appears unavailable for this request (often its free anonymous limit: 1 reply every 30 seconds per IP). HTTP 404 means the Pollinations endpoint was not found. Either way the game falls back to the honestly labelled offline episode; no key is ever required to play.</span><br>' + '<span style="font-size:.78rem">Provider reachable means only that the story service answered this tiny test. It does NOT verify character research accuracy, and it does NOT prove a full story will validate — story validation is reported separately in Technical Details on the results screen. The Fandom check only tests that one sample wiki responds; the per-fighter Canon Sources result for that fighter is authoritative. If a source shows ❌, it is offline, blocked, or rate-limited right now — the game falls back to local play and will not pretend that source worked.</span>';
   return { story: story, wiki: wiki, fandom: fandom };
 }
 
@@ -3129,7 +3267,7 @@ try{ restoreSettingsV151(); }catch(e){}
 document.getElementById('search-input').addEventListener('input',e=>{searchTerm=e.target.value.toLowerCase();renderRoster()});
 document.getElementById('battlefield-select').addEventListener('change',()=>{renderBattlefields(); try{ saveSettingsV151(); }catch(e){}});
 try{JSON.parse(localStorage.getItem('warroom_custom')||'[]').forEach(c=>{if(!ROSTER.find(x=>x.id===c.f.id)){ROSTER.push(c.f); if(c.powers) POWERS[c.f.id]=c.powers.slice(0,3);}})}catch(e){}
-renderChips(); renderRoster(); renderHistory(); renderChannels(); if(typeof updateOnlineStatus==='function'){updateOnlineStatus(); window.addEventListener('online',updateOnlineStatus); window.addEventListener('offline',updateOnlineStatus);} if(typeof updateFileWarning==='function') updateFileWarning(); if(typeof updateGeminiStatus==='function') updateGeminiStatus();
+renderChips(); renderRoster(); renderHistory(); renderChannels(); if(typeof updateOnlineStatus==='function'){updateOnlineStatus(); window.addEventListener('online',updateOnlineStatus); window.addEventListener('offline',updateOnlineStatus);} if(typeof updateFileWarning==='function') updateFileWarning(); if(typeof updateGeminiStatus==='function') updateGeminiStatus(); if(typeof updatePollinationsKeyStatus==='function') updatePollinationsKeyStatus();
 // Fully automatic research: connection tests run on load, no tap required. Retest buttons remain optional.
 if(typeof testConnections==='function'){ try{ testConnections(); }catch(e){} }
 </script>
