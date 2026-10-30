@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.4 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.5 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.4</h1><span>1V1 DEATH BATTLES • ENGINE v16.4 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v16.5</h1><span>1V1 DEATH BATTLES • ENGINE v16.5 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -2459,7 +2459,7 @@ function saveBattle(b,story,breakdown,integrity,accuracy,quality){
     const h=loadHistory();
     const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]);
     const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant));
-    h.unshift({id:Date.now(),formatVersion:'v16.4',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.4 online AI main story, or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
+    h.unshift({id:Date.now(),formatVersion:'v16.5',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.5 online AI main story, or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
     localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));
   }catch(e){}
   renderHistory();
@@ -2481,8 +2481,8 @@ function renderHistory(){
 function savedStoryMetaV162(x) {
   const m = x.mainStoryMeta;
   if (!m) return { label: 'Saved before story-kind tracking — chapters shown as saved; story kind not recorded.', diagnostics: 'Story kind not recorded for this saved entry (saved before story-kind tracking). Chapters shown exactly as saved.' };
-  if (m.kind === 'ai') return { label: 'Saved online AI story — ' + (m.provider || 'online AI') + ' — checked: ' + (m.passed || 0) + ' passed, ' + (m.unverified || 0) + ' unverified (unverified is not counted as passed). Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || '—') + '<br>Attempts: ' + (m.attempts || 0) + '<br>Prompt size: ' + (m.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')' };
-  return { label: V16_OFFLINE_LABEL + ' Reason: ' + (m.reason || 'Online AI generation was unavailable.') + ' This saved entry used the offline fallback — it is not an online AI story. Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || 'Offline fallback (rule-based episode)') + '<br>Attempts: ' + (m.attempts || 0) + '<br>Prompt size: ' + (m.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')<br>Fallback reason: ' + (m.reason || 'Online AI generation was unavailable.') + (m.rejectedDraftExcerpt ? '<br>' + rejectedDraftDetailsHtmlV164(m) : '') };
+  if (m.kind === 'ai') return { label: 'Saved online AI story — ' + (m.provider || 'online AI') + ' — checked: ' + (m.passed || 0) + ' passed, ' + (m.unverified || 0) + ' unverified (unverified is not counted as passed). Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || '—') + '<br>Provider attempts: ' + (m.attempts || 0) + ' (initial + at most one revision + automatic retries within a stage)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + '<br>Prompt size: ' + (m.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')' };
+  return { label: V16_OFFLINE_LABEL + ' Reason: ' + (m.reason || 'Online AI generation was unavailable.') + ' This saved entry used the offline fallback — it is not an online AI story. Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || 'Offline fallback (rule-based episode)') + '<br>Provider attempts: ' + (m.attempts || 0) + ' (initial + at most one revision + automatic retries within a stage)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + '<br>Prompt size: ' + (m.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')<br>Fallback reason: ' + (m.reason || 'Online AI generation was unavailable.') + (m.rejectedDraftExcerpt ? '<br>' + rejectedDraftDetailsHtmlV164(m) : '') };
 }
 function viewHistory(id){
   const x=loadHistory().find(h=>h.id===id); if(!x) return;
@@ -2645,8 +2645,8 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4'].includes(x.formatVersion);
-  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4 record.'};
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5'].includes(x.formatVersion);
+  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
 
@@ -2804,14 +2804,14 @@ function buildCondensedPromptV162(b) {
   }).join(' | ');
   const rounds = s.roundLines.map(function (ln) { return truncV162(ln, 120); }).join('\n');
   const turns = (s.turningPoints || []).map(function (x) { return truncV162(x, 100); }).join('; ') || 'No turning point — do not invent one.';
-  return 'Write a shorter immersive action story of about 600–800 words, in scenes (not a list, not a chapter for every round), about this one battle. ' + V163_NAMING_RULE + ' Winner (do not change): ' + s.winner + '. Finishing ability (climax): ' + (s.finishingAbility || 'none — stalemate, no finish') + '. Loser: ' + (s.loser || 'none') + ' (' + s.victoryMode + '). FIGHTERS: ' + fighters + '. KEY MOMENTS: ' + turns + '. EVENT SEQUENCE (one short line per round):\n' + rounds + '\nRULES — never break these: NO damage numbers, NO HP numbers, NO stats in prose. NO invented winner, transform, ability, equipment, death, or recovery. NO knowledge a fighter has not acquired in this battle. In Incapacitation mode the loser is unconscious, NEVER dead. Write the shorter story now.' + (s.finishingAbility ? ' ' + verbatimClimaxRuleV164(s.finishingAbility) : '');
+  return 'Write a shorter immersive action story of about 600–800 words, in scenes (not a list, not a chapter for every round), about this one battle. ' + V163_NAMING_RULE + ' Winner (do not change): ' + s.winner + '. Finishing ability (climax): ' + (s.finishingAbility || 'none — stalemate, no finish') + '. Loser: ' + (s.loser || 'none') + ' (' + s.victoryMode + '). FIGHTERS: ' + fighters + '. KEY MOMENTS: ' + turns + '. EVENT SEQUENCE (one short line per round):\n' + rounds + '\nRULES — never break these: NO damage numbers, NO HP numbers, NO stats in prose. NO invented winner, transform, ability, equipment, death, or recovery. NO knowledge a fighter has not acquired in this battle. In Incapacitation mode the loser is unconscious, NEVER dead. Write the shorter story now, in scenes, ending with the aftermath. The story must not end on a planning, opening, or mid-fight scene.' + (s.finishingAbility ? ' ' + verbatimClimaxRuleV164(s.finishingAbility) : '');
 }
 /* Stage C — compact prompt, capped, never containing the full roster. */
 function buildPromptV16(b) {
   const summary = buildBattleSummaryV16(b);
   const plan = narrativePlanSummaryV16(b);
   const dossier = dossierExtractsV16(b);
-  let instructions = 'Write an immersive action story of about 800–1000 words about this one battle — in scenes, not a summary, report, or list, and not a chapter for every round. ' + V163_NAMING_RULE + ' Open with setting, atmosphere, and tension. Show where the fighters stand relative to each other and how that changes. Give each fighter a distinct voice and character-specific dialogue, or silence / a brief reaction where silence fits that character. Group related events into cause-and-effect scenes: a decision causes a response, which opens a weakness, which causes an injury, which drives the next decision. Let tension escalate. The climax MUST be the actual finishing ability/event from the record. The aftermath MUST match the final winner and loser states. RULES — never break these: NO damage numbers, NO HP numbers, NO stats in prose. NO invented winner, transform, ability, equipment, death, or recovery. NO knowledge a fighter has not acquired in this battle (a weakness counts as known only after OBSERVED, then PREPARED, then EXPLOITED in the record; DETECTED means the counter fails). NO forced friendship, rivalry, or villainy. A fighter never names themselves in dialogue and never announces their own signature attack as strategy. In Incapacitation mode the loser is unconscious, NEVER dead. If the record is a stalemate, say so plainly — do not invent a finish.';
+  let instructions = 'Write an immersive action story of about 800–1000 words about this one battle — in scenes, not a summary, report, or list, and not a chapter for every round. ' + V163_NAMING_RULE + ' Open with setting, atmosphere, and tension. Show where the fighters stand relative to each other and how that changes. Give each fighter a distinct voice and character-specific dialogue, or silence / a brief reaction where silence fits that character. Group related events into cause-and-effect scenes: a decision causes a response, which opens a weakness, which causes an injury, which drives the next decision. Let tension escalate. The climax MUST be the actual finishing ability/event from the record. The aftermath MUST match the final winner and loser states. The story must END with the aftermath: the decisive sequence comes before the final paragraph, never after it, and the story must not end on a planning, opening, or mid-fight scene. RULES — never break these: NO damage numbers, NO HP numbers, NO stats in prose. NO invented winner, transform, ability, equipment, death, or recovery. NO knowledge a fighter has not acquired in this battle (a weakness counts as known only after OBSERVED, then PREPARED, then EXPLOITED in the record; DETECTED means the counter fails). NO forced friendship, rivalry, or villainy. A fighter never names themselves in dialogue and never announces their own signature attack as strategy. In Incapacitation mode the loser is unconscious, NEVER dead. If the record is a stalemate, say so plainly — do not invent a finish.';
   if (summary.finishingAbility) instructions += ' ' + verbatimClimaxRuleV164(summary.finishingAbility);
   const fighterBrief = summary.fighters.map(function (f) {
     return 'FIGHTER: ' + f.name + ' — continuity/version: ' + f.continuity + '. Personality: ' + truncV162(f.personality, 100) + '. Fighting style: ' + truncV162(f.style, 100) + '. Powers in this version: ' + truncV162(f.powers.join(', ') || '[NOT KNOWN]', 200) + '. Signature: ' + f.signature + '. Transformation in this version: ' + f.transform + '. Weakness/limits: ' + truncV162(f.weakness, 100) + '. How they use their powers: ' + truncV162(f.powerUsage || '[NOT KNOWN]', 100);
@@ -2821,7 +2821,7 @@ function buildPromptV16(b) {
   let eventLines = summary.roundLines.map(function (ln) { if (finishingRound0 != null && ln.indexOf('Round ' + finishingRound0 + ':') === 0) return ln.slice(0, 400); return truncV162(ln, 200); });
   let planLines = plan.beats.map(function (x) { return truncV162(x, 140); });
   function assemble() {
-    return header + '\n\nNARRATIVE PLAN (cause-and-effect beats, in order):\n' + planLines.join('\n') + '\n\nEVENT SEQUENCE, summarised per round (qualitative state changes only):\n' + eventLines.join('\n') + '\n\nWrite the story now, in chapters, with no numbers for damage or health.';
+    return header + '\n\nNARRATIVE PLAN (cause-and-effect beats, in order):\n' + planLines.join('\n') + '\n\nEVENT SEQUENCE, summarised per round (qualitative state changes only):\n' + eventLines.join('\n') + '\n\nWrite the story now, in scenes, ending with the aftermath, with no numbers for damage or health.';
   }
   let prompt = assemble();
   // Cap: drop oldest event detail first, never the finishing round's lines.
@@ -2844,9 +2844,62 @@ function buildPromptV16(b) {
    "and" or a space, because natural prose writes "Web and Impact Combo",
    not "Web + Impact Combo" — this accepts recorded phrasing variants only,
    never a single keyword: every token of the ability phrase must match. */
-function normTextV162(s) { return String(s || '').toLowerCase().replace(/[-_]/g, ' ').replace(/\s+/g, ' ').trim(); }
+/* v16.5 — checker normalisation: Unicode dashes (U+2010–U+2015, U+2212)
+   count as spaces, zero-width characters are stripped, and curly
+   apostrophes count as straight apostrophes, so a draft that spells
+   "Spider-Man" with a non-breaking hyphen or as one word still matches
+   the recorded name. This is spelling equivalence for the FULL phrase
+   only: a paraphrase or a single keyword still fails, because the
+   separator-stripped form requires the entire concatenated phrase. */
+function normTextV162(s) { return String(s || '').toLowerCase().replace(/[\u2010-\u2015\u2212]/g, ' ').replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/[\u2018\u2019]/g, "'").replace(/[-_]/g, ' ').replace(/\s+/g, ' ').trim(); }
 function phraseVariantsV162(ph) { const base = String(ph || ''); return [base, base.replace(/\+/g, ' and '), base.replace(/\+/g, ' '), base.replace(/&/g, ' and ')]; }
-function storyHasPhraseV162(text, phrase) { const nt = normTextV162(text); return phraseVariantsV162(phrase).some(function (v) { return nt.indexOf(normTextV162(v)) !== -1; }); }
+function stripSeparatorsV165(s) { return String(s || '').replace(/[\s\-_:\/·'’+]/g, ''); }
+function phraseMatchFormsV165(text, phrase) {
+  const nt = normTextV162(text);
+  const strippedText = stripSeparatorsV165(nt);
+  let spaced = false, stripped = false;
+  phraseVariantsV162(phrase).forEach(function (v) {
+    const nv = normTextV162(v);
+    if (nt.indexOf(nv) !== -1) spaced = true;
+    if (strippedText.indexOf(stripSeparatorsV165(nv)) !== -1) stripped = true;
+  });
+  return { spaced: spaced, stripped: stripped, matched: spaced || stripped };
+}
+function storyHasPhraseV162(text, phrase) { return phraseMatchFormsV165(text, phrase).matched; }
+function storyHasPhraseProbeV165(text, phrase) { const f = phraseMatchFormsV165(text, phrase); return { phrase: phrase, spaced: f.spaced, stripped: f.stripped, matched: f.matched }; }
+function finishingAttackOfV165(b) {
+  const fin = (b.events || []).filter(function (e) { return e.type === 'knockout' || e.type === 'incapacitated'; }).slice(-1)[0] || null;
+  if (!fin) return null;
+  return [...(b.events || [])].reverse().find(function (e) { return e.type === 'attack' && e.actor === fin.actor && e.target === fin.target; }) || null;
+}
+/* v16.5 — per-check probe for the rejected-draft diagnostics: for each
+   FAILED name/ability check, which candidate forms were tested and
+   whether the spaced form, the separator-stripped form, or neither
+   matched. Diagnostic only; it never changes a check outcome. */
+function buildRejectedProbeV165(b, plain, checks) {
+  const probe = [];
+  if (!checks || !plain) return probe;
+  function add(checkName, candidate) {
+    if (!candidate) return;
+    const f = phraseMatchFormsV165(plain, candidate);
+    probe.push({ check: checkName, candidate: candidate, spaced: f.spaced, stripped: f.stripped });
+  }
+  const fighters = [...(b.alpha || []), ...(b.beta || [])];
+  checks.forEach(function (c) {
+    if (c.state !== 'FAILED') return;
+    if (c.name === 'Participants named') {
+      fighters.forEach(function (f) { [f.name, f.alias, rosterAliasForV162(f)].filter(Boolean).forEach(function (cand) { add(c.name, cand); }); });
+    } else if (c.name === 'Winner / final outcome matches the record') {
+      const wf = fighters.find(function (f) { return f.name === b.winner; });
+      if (wf) [wf.name, wf.alias, rosterAliasForV162(wf)].filter(Boolean).forEach(function (cand) { add(c.name, cand); });
+      else add(c.name, b.winner);
+    } else if (c.name === 'Finishing ability / event matches the record' || c.name === 'No invented decisive event') {
+      const fa = finishingAttackOfV165(b);
+      if (fa) add(c.name, fa.ability);
+    }
+  });
+  return probe;
+}
 function rosterAliasForV162(f) { try { const r = (typeof ROSTER !== 'undefined' ? ROSTER : []).find(function (x) { return (f.id && x.id === f.id) || x.name === f.name; }); return r ? (r.alias || '') : ''; } catch (e) { return ''; } }
 function fighterNameMatchV162(text, f) { const cands = [f.name, f.alias, rosterAliasForV162(f)].filter(Boolean); return cands.some(function (c) { return storyHasPhraseV162(text, c); }); }
 function checkMainStoryV16(b, text) {
@@ -2861,7 +2914,7 @@ function checkMainStoryV16(b, text) {
   push('Participants named', allNames ? 'PASSED' : 'FAILED', allNames ? 'Both fighters are named in the story.' : 'PRECISE: story does not name both fighters (' + names.join(' / ') + ').');
   const nonBase = variants.filter(function (v) { return v !== 'Base'; });
   if (!nonBase.length) push('Variants correct', 'PASSED', 'Both fighters are in their Base version; no variant label is required.');
-  else if (nonBase.every(function (v) { return plain.indexOf(v) !== -1; })) push('Variants correct', 'PASSED', 'Variant labels are named in the story.');
+  else if (nonBase.every(function (v) { return storyHasPhraseV162(plain, v); })) push('Variants correct', 'PASSED', 'Variant labels are named in the story.');
   else push('Variants correct', 'UNVERIFIED', 'A non-Base variant label is not named in the story, so the variant cannot be confirmed from the text alone — it is not counted as passed.');
   if (b.stalemate) {
     const st = /stalemate|no winner|no death/i.test(plain);
@@ -2876,17 +2929,19 @@ function checkMainStoryV16(b, text) {
   if (!finAtk) push('Finishing ability / event matches the record', 'PASSED', 'No finishing attack in the record (stalemate) — no finish is required.');
   else push('Finishing ability / event matches the record', storyHasPhraseV162(plain, finAtk.ability) ? 'PASSED' : 'FAILED', storyHasPhraseV162(plain, finAtk.ability) ? ('Story names finishing ability ' + finAtk.ability + '.') : ('PRECISE: story does not name finishing ability ' + finAtk.ability + ' from the record (recorded phrasing or its "and"/space variant).'));
   if (b.victoryMode === 'incapacitation') {
-    const bad = /\bdead\b|\bkilled\b|\bdied\b/i.test(plain);
+    const _cleanInc = plain.replace(/not\s+(dead|killed|died)/gi, '').replace(/never\s+(dead|killed|died)/gi, '').replace(/unconscious,?\s+not\s+dead/gi, '');
+    const bad = /\bdead\b|\bkilled\b|\bdied\b/i.test(_cleanInc);
     push('Loser state matches the mode (unconscious, not dead)', bad ? 'FAILED' : 'PASSED', bad ? 'PRECISE: Incapacitation mode, but the story uses death wording.' : 'Incapacitation mode: no death wording found.');
   } else if (b.victoryMode === 'death' && !b.stalemate) {
-    const bad = /unconscious, not dead|merely unconscious/i.test(plain);
+    const _cleanDeath = plain.replace(/not\s+merely\s+unconscious/gi, '');
+    const bad = /unconscious, not dead|merely unconscious/i.test(_cleanDeath);
     push('Loser state matches the mode (dead, not merely unconscious)', bad ? 'FAILED' : 'PASSED', bad ? 'PRECISE: Death mode, but the story describes the loser as merely unconscious.' : 'Death mode: no contradictory unconscious wording found.');
   } else {
     push('Loser state matches the mode', 'PASSED', 'Stalemate — no loser state is required.');
   }
   const hasTrans = (b.events || []).some(function (e) { return e.type === 'transform'; });
   const transNames = [...(b.alpha || []), ...(b.beta || [])].map(function (f) { return f.trans || ''; }).filter(Boolean);
-  const claimsTrans = /transforms into|transformed into|becomes (Super|Gear|Kurama|Sun-Charged|Symbiote)/i.test(plain) || transNames.some(function (t) { return plain.indexOf(t) !== -1; });
+  const claimsTrans = /transforms into|transformed into|becomes (Super|Gear|Kurama|Sun-Charged|Symbiote)/i.test(plain) || transNames.some(function (t) { return storyHasPhraseV162(plain, t); });
   if (hasTrans) push('No transform claimed without a record event', claimsTrans ? 'PASSED' : 'UNVERIFIED', claimsTrans ? 'Transform events exist in the record and a transformation is named.' : 'Transform events exist, but the story does not name the transformation — not counted as passed.');
   else push('No transform claimed without a record event', claimsTrans ? 'FAILED' : 'PASSED', claimsTrans ? 'PRECISE: story claims a transformation, but the record has no transform event.' : 'No transformation claimed, matching the record.');
   const allowed = new Set();
@@ -2900,7 +2955,7 @@ function checkMainStoryV16(b, text) {
     const roster = (typeof ROSTER !== 'undefined' ? ROSTER : []);
     roster.forEach(function (rf) {
       if (names.indexOf(rf.name) !== -1) return;
-      if (rf.sig && rf.sig.length >= 8 && plain.indexOf(rf.sig) !== -1 && !allowed.has(rf.sig)) outside = rf.sig + ' (signature of ' + rf.name + ', not a participant)';
+      if (rf.sig && rf.sig.length >= 8 && storyHasPhraseV162(plain, rf.sig) && !allowed.has(rf.sig)) outside = rf.sig + ' (signature of ' + rf.name + ', not a participant)';
     });
   } catch (e) {}
   push('No ability outside the selected versions', outside ? 'FAILED' : 'PASSED', outside ? ('PRECISE: story uses ' + outside + '.') : 'No non-participant signature ability was found in the story.');
@@ -2910,7 +2965,7 @@ function checkMainStoryV16(b, text) {
   else push('No blocked attack described as landed', 'UNVERIFIED', 'Blocked attacks exist in the record; whether prose describes one as landed cannot be proven mechanically — not counted as passed.');
   const chEv = (b.events || []).filter(function (e) { return e.type === 'attack' && e.cannotHarm; });
   if (!chEv.length) push('No cannot-harm attack described as dealing damage', 'PASSED', 'No cannot-harm attacks in the record.');
-  else if (chEv.some(function (e) { return plain.indexOf(e.ability || '') !== -1; })) push('No cannot-harm attack described as dealing damage', 'UNVERIFIED', 'A cannot-harm ability is named in prose; whether it is described as dealing damage cannot be proven mechanically — not counted as passed.');
+  else if (chEv.some(function (e) { return storyHasPhraseV162(plain, e.ability || ''); })) push('No cannot-harm attack described as dealing damage', 'UNVERIFIED', 'A cannot-harm ability is named in prose; whether it is described as dealing damage cannot be proven mechanically — not counted as passed.');
   else push('No cannot-harm attack described as dealing damage', 'PASSED', 'No cannot-harm ability is named in the story.');
   if (fin) push('No defeated fighter acts after defeat', 'UNVERIFIED', 'Whether a defeated fighter acts after defeat in prose order cannot be proven mechanically — not counted as passed.');
   else push('No defeated fighter acts after defeat', 'PASSED', 'No defeat event in the record (stalemate).');
@@ -2984,20 +3039,29 @@ function updatePollinationsKeyStatus(){const el=document.getElementById('pollina
 /* Provider calls. Pollinations POST is primary; a transport-level POST
    failure falls back to one short GET as part of the same attempt. Response
    may be plain text (observed) or a JSON choices payload — both are read. */
-function extractPollinationsTextV16(res, raw) {
+/* v16.5 — provider response extraction now also returns the finish
+   signal (choices[0].finish_reason when the response is JSON) and the
+   raw shape, so a draft cut short by the provider's output budget can
+   be told apart from a draft that simply wrote a wrong climax. The
+   text itself is returned verbatim, exactly as before. */
+function extractPollinationsResultV165(res, raw) {
   const t = String(raw || '').trim();
-  if (!t) return '';
+  if (!t) return { text: '', finishReason: '', rawKind: 'empty' };
   if (t.charAt(0) === '{' || t.charAt(0) === '[') {
     try {
       const j = JSON.parse(t);
-      if (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) return String(j.choices[0].message.content);
-      if (j.choices && j.choices[0] && j.choices[0].text) return String(j.choices[0].text);
-      if (typeof j.text === 'string') return j.text;
-      if (typeof j.response === 'string') return j.response;
+      if (j.choices && j.choices[0]) {
+        const c = j.choices[0];
+        const content = (c.message && c.message.content) ? String(c.message.content) : (c.text ? String(c.text) : '');
+        if (content) return { text: content, finishReason: c.finish_reason || c.finishReason || '', rawKind: 'json-choices' };
+      }
+      if (typeof j.text === 'string') return { text: j.text, finishReason: '', rawKind: 'json-text' };
+      if (typeof j.response === 'string') return { text: j.response, finishReason: '', rawKind: 'json-text' };
     } catch (e) {}
   }
-  return t;
+  return { text: t, finishReason: '', rawKind: 'plain-text' };
 }
+function extractPollinationsTextV16(res, raw) { return extractPollinationsResultV165(res, raw).text; }
 /* v16.2 — keyless Pollinations story fetch, POST ONLY. The GET story
    fallback is REMOVED: it returned HTTP 404 in the live browser in both
    v16 and v16.1, while Node never reproduced a GET 404 (tiny GET "Say OK"
@@ -3014,9 +3078,9 @@ async function pollinationsPostOnceV162(prompt, timeoutMs) {
     throw new Error('Pollinations POST HTTP ' + res.status + (snippet ? ': ' + snippet : ''));
   }
   const raw = await res.text();
-  const text = extractPollinationsTextV16(res, raw);
-  if (!text) throw new Error('Pollinations POST returned an empty response');
-  return { text: text, provider: 'Pollinations (POST, keyless)', via: 'post' };
+  const _r = extractPollinationsResultV165(res, raw);
+  if (!_r.text) throw new Error('Pollinations POST returned an empty response');
+  return { text: _r.text, provider: 'Pollinations (POST, keyless)', via: 'post', finishReason: _r.finishReason, rawKind: _r.rawKind };
 }
 async function fetchPollinationsStoryV16(prompt, timeoutMs, condensedPrompt) {
   try {
@@ -3054,9 +3118,9 @@ async function fetchPollinationsStoryWithKeyV161(prompt, timeoutMs, condensedPro
       throw new Error(explainPollinationsErrorV161('Pollinations keyed POST HTTP ' + res.status + (snippet ? ': ' + snippet : '')));
     }
     const raw = await res.text();
-    const text = extractPollinationsTextV16(res, raw);
-    if (!text) throw new Error('Pollinations keyed POST returned an empty response');
-    return { text: text, provider: 'Pollinations (POST, your saved key)', via: 'post-key' };
+    const _r = extractPollinationsResultV165(res, raw);
+    if (!_r.text) throw new Error('Pollinations keyed POST returned an empty response');
+    return { text: _r.text, provider: 'Pollinations (POST, your saved key)', via: 'post-key', finishReason: _r.finishReason, rawKind: _r.rawKind };
   }
   try { return await postOnce(prompt); }
   catch (e) {
@@ -3076,7 +3140,7 @@ async function fetchGeminiStoryV16(prompt) {
   if (!res.ok) throw new Error((j && j.error && j.error.message) || ('Gemini HTTP ' + res.status));
   const text = (j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) ? j.candidates[0].content.parts.map(function (p) { return p.text; }).join('') : '';
   if (!text) throw new Error('Gemini returned an empty response');
-  return { text: text, provider: 'Gemini (your saved key)', via: 'gemini' };
+  return { text: text, provider: 'Gemini (your saved key)', via: 'gemini', finishReason: (j && j.candidates && j.candidates[0] && j.candidates[0].finishReason) || '', rawKind: 'gemini-json' };
 }
 /* v16.1 fix 1 — STALE STORY HEADER. generateMainStoryV16 in v16 cleared only
    the status line and the story body during "Preparing…", so the label,
@@ -3121,6 +3185,11 @@ function rejectedDraftDetailsHtmlV164(meta) {
   let html = '<details><summary>Rejected AI draft (troubleshooting only — NOT the story)</summary><p>Opening — first 500 characters of the rejected draft:</p><p>' + esc(opening) + '</p>';
   if (climax && !overlap) html += '<p>Climax — last 500 characters of the rejected draft:</p><p>' + esc(climax) + '</p>';
   else if (overlap) html += '<p>Note: this draft is 500 characters or shorter, so the opening above is also the whole draft; the climax excerpt overlaps it and is not repeated.</p>';
+  if (meta.rejectedDraftLength != null) html += '<p>Rejected draft length: ' + esc(String(meta.rejectedDraftLength)) + ' characters.</p>';
+  if (meta.rejectedDraftStage) html += '<p>Rejected draft stage: ' + esc(meta.rejectedDraftStage) + '.</p>';
+  if (meta.rejectedDraftFinishReason) html += '<p>Provider finish reason: ' + esc(meta.rejectedDraftFinishReason) + '.</p>';
+  if (meta.rejectedDraftPromptSize != null) html += '<p>Prompt size for this draft: ' + esc(String(meta.rejectedDraftPromptSize)) + ' characters.</p>';
+  if (meta.rejectedDraftProbe && meta.rejectedDraftProbe.length) html += '<p>Per-check probe (which candidate forms matched — diagnostic only):</p><p>' + meta.rejectedDraftProbe.map(function (pr) { return esc(pr.check) + ' — ' + esc(pr.candidate) + ': spaced form ' + (pr.spaced ? 'matched' : 'no match') + ', separator-stripped form ' + (pr.stripped ? 'matched' : 'no match'); }).join('<br>') + '</p>';
   if (meta.rejectedChecks && meta.rejectedChecks.length) html += '<p>Failed checks: ' + esc(meta.rejectedChecks.join(' | ')) + '</p>';
   return html + '</details>';
 }
@@ -3132,7 +3201,7 @@ function renderMainStoryDiagnosticsV16(meta, expectedSession) {
   const lines = [];
   lines.push('Session: ' + (meta.sessionId || '—'));
   lines.push('Provider: ' + (meta.provider || '—'));
-  lines.push('Attempts: ' + (meta.attempts || 0) + ' (initial + at most one revision' + (meta.geminiTried ? ' + one Gemini attempt' : '') + ')');
+  lines.push('Provider attempts: ' + (meta.attempts || 0) + ' (initial + at most one revision + automatic retries within a stage)' + (meta.attemptsBreakdown ? '; breakdown: ' + meta.attemptsBreakdown : '') + (meta.geminiTried ? ' + one Gemini attempt' : ''));
   lines.push('Prompt size: ' + (meta.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')');
   if (meta.checks) lines.push('Validation:<br>' + storyChecksHtmlV16(meta.checks));
   if (meta.reason) lines.push('Fallback reason: ' + meta.reason);
@@ -3156,16 +3225,16 @@ function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, qual
       try {
         const h = loadHistory();
         if (h.length) {
-          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.4) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.4) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
-          h[0].formatVersion = 'v16.4';
-          h[0].mainStoryMeta = meta ? { kind: meta.kind, provider: meta.provider, passed: meta.passed, unverified: meta.unverified, attempts: meta.attempts, promptSize: meta.promptSize, sessionId: meta.sessionId, reason: meta.reason || '', rejectedDraftExcerpt: meta.rejectedDraftExcerpt || '', rejectedDraftClimax: meta.rejectedDraftClimax || '', rejectedChecks: meta.rejectedChecks || [] } : null;
+          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.5) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.5) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
+          h[0].formatVersion = 'v16.5';
+          h[0].mainStoryMeta = meta ? { kind: meta.kind, provider: meta.provider, passed: meta.passed, unverified: meta.unverified, attempts: meta.attempts, attemptsBreakdown: meta.attemptsBreakdown || '', promptSize: meta.promptSize, sessionId: meta.sessionId, reason: meta.reason || '', rejectedDraftExcerpt: meta.rejectedDraftExcerpt || '', rejectedDraftClimax: meta.rejectedDraftClimax || '', rejectedChecks: meta.rejectedChecks || [], rejectedDraftLength: meta.rejectedDraftLength != null ? meta.rejectedDraftLength : '', rejectedDraftStage: meta.rejectedDraftStage || '', rejectedDraftFinishReason: meta.rejectedDraftFinishReason || '', rejectedDraftPromptSize: meta.rejectedDraftPromptSize != null ? meta.rejectedDraftPromptSize : '', rejectedDraftProbe: meta.rejectedDraftProbe || [] } : null;
           // Saved validation note, stated plainly: System A is battle integrity
           // (story-independent). When the main story is AI, System B below is
           // the AI main-story validation, not the fallback-episode check.
           if (meta && meta.kind === 'ai' && Array.isArray(meta.checks)) {
             h[0].validation = h[0].validation || {};
             h[0].validation.accuracy = meta.checks.map(function (c) { return { name: c.name, passed: (c.state === 'PASSED' ? true : (c.state === 'UNVERIFIED' ? 'unverified' : false)), detail: c.detail }; });
-            h[0].validationNote = 'Saved validation: System A is battle integrity; System B is the v16.4 AI main-story validation; System C is the fallback-episode quality check.';
+            h[0].validationNote = 'Saved validation: System A is battle integrity; System B is the v16.5 AI main-story validation; System C is the fallback-episode quality check.';
           }
           localStorage.setItem('warroom_battles_v3', JSON.stringify(h.slice(0, 20)));
         }
@@ -3229,6 +3298,19 @@ async function generateMainStoryV16(b, sessionId, opts) {
   let lastProvider = '';
   let lastDraftText = '';
   let lastFailedChecks = null;
+  let lastDraftStage = '';
+  let lastDraftFinishReason = '';
+  let lastDraftPromptSize = 0;
+  let stageAttemptCounts = { initial: 0, revision: 0, keyed: 0, gemini: 0 };
+  let retryCountsByStage = {};
+  function attemptsBreakdownV165() {
+    const parts = [];
+    [['initial', 'initial'], ['revision', 'revision'], ['keyed', 'keyed'], ['gemini', 'gemini']].forEach(function (pair) {
+      const base = stageAttemptCounts[pair[0]] || 0; const ret = retryCountsByStage[pair[1]] || 0;
+      if (base > 0) parts.push(pair[1] + ' ×' + (base + ret) + (ret > 0 ? ' (' + ret + ' retr' + (ret === 1 ? 'y' : 'ies') + ')' : ''));
+    });
+    return parts.join(', ');
+  }
   v163PostCount = 0;
   v163PostBudget = V163_MAX_POSTS_PER_BATTLE;
   async function fetchStageV163(stage, fn) {
@@ -3243,7 +3325,8 @@ async function generateMainStoryV16(b, sessionId, opts) {
         if (isRateLimit402V162(msg) && !wait402Done) {
           wait402Done = true;
           attempts++;
-          setStatus('Free anonymous limit reached — waiting about 35 seconds, then retrying once…');
+          retryCountsByStage[stage] = (retryCountsByStage[stage] || 0) + 1;
+          setStatus('Free anonymous limit reached — waiting about 35 seconds, then retrying once… (' + stage + ' stage)');
           await delayV162(typeof V162_402_WAIT_MS !== 'undefined' ? V162_402_WAIT_MS : 35000);
           if (!isCurrent()) throw new Error('Superseded by a newer battle');
           continue;
@@ -3251,7 +3334,8 @@ async function generateMainStoryV16(b, sessionId, opts) {
         if (isAbortErrorV163(msg) && !abortDone) {
           abortDone = true;
           attempts++;
-          setStatus('Connection interrupted — retrying once…');
+          retryCountsByStage[stage] = (retryCountsByStage[stage] || 0) + 1;
+          setStatus('Connection interrupted — retrying once… (' + stage + ' stage)');
           await delayV162(typeof V163_ABORT_RETRY_DELAY_MS !== 'undefined' ? V163_ABORT_RETRY_DELAY_MS : 3000);
           if (!isCurrent()) throw new Error('Superseded by a newer battle');
           continue;
@@ -3267,6 +3351,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
     let draft = null;
     try {
       attempts++;
+      stageAttemptCounts.initial++;
       draft = await fetchStageV163('initial', function () { return fetchPollinationsStoryV16(prompt, V16_AI_TIMEOUT_MS, condensedPrompt); });
       lastProvider = draft.provider;
     } catch (e) {
@@ -3276,25 +3361,37 @@ async function generateMainStoryV16(b, sessionId, opts) {
       let checks = checkMainStoryV16(b, draft.text);
       lastChecks = checks;
       lastDraftText = draft.text;
+      lastDraftStage = (draft.via === 'post-condensed' ? 'initial-condensed' : 'initial');
+      lastDraftPromptSize = (draft.via === 'post-condensed' ? condensedPrompt.length : prompt.length);
+      lastDraftFinishReason = draft.finishReason || '';
       const counts = countStoryChecksV16(checks);
       if (counts.failed > 0) {
         const failures = checks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }).join(' | ');
         try {
           attempts++;
+          stageAttemptCounts.revision++;
           const _finAbV164 = (function () { try { const _s = buildBattleSummaryV16(b); return _s.finishingAbility || ''; } catch (e) { return ''; } })();
-          const revisionPrompt = prompt + '\n\nREVISION — your previous draft failed these checks. Fix ONLY these, change nothing else, and do not change events, the winner, or the final state:\n' + failures + '\n\n' + V163_NAMING_RULE + ' This naming rule applies even if the failed checks do not mention names: the revised draft must still name both fighters by their full recorded names in its opening paragraph and again in the climax.\n\n' + (_finAbV164 ? verbatimClimaxRuleV164(_finAbV164) + ' This verbatim-climax rule applies even if the failed checks do not mention the finishing ability.\n\n' : '') + 'Previous draft:\n' + draft.text;
-          const revised = await fetchStageV163('revision', function () { return fetchPollinationsStoryV16(revisionPrompt, V16_AI_TIMEOUT_MS); });
+          /* v16.5 — revision prompt is built from the condensed brief, not
+             the full 4500-char prompt, so it stays bounded instead of
+             ~9,000–11,000 chars, and it requires the COMPLETE revised
+             story (opening to aftermath) rather than inviting a partial
+             correction with "Fix ONLY these, change nothing else". */
+          const revisionPrompt = condensedPrompt + '\n\nREVISION — your previous draft failed these checks:\n' + failures + '\n\n' + V163_NAMING_RULE + ' This naming rule applies even if the failed checks do not mention names: the revised draft must still name both fighters by their full recorded names in its opening paragraph and again in the climax.\n\n' + (_finAbV164 ? verbatimClimaxRuleV164(_finAbV164) + ' This verbatim-climax rule applies even if the failed checks do not mention the finishing ability.\n\n' : '') + 'REVISED STORY INSTRUCTION — Return the COMPLETE revised story, from opening to aftermath, not only the changed passages. The final paragraph must be the aftermath matching the final winner and loser states. Length: about 600–800 words. Do not change events, the winner, or the final state.\n\nPrevious draft:\n' + draft.text;
+          const revised = await fetchStageV163('revision', function () { return fetchPollinationsStoryV16(revisionPrompt, V16_AI_TIMEOUT_MS, condensedPrompt); });
           lastProvider = revised.provider;
           draft = revised;
           checks = checkMainStoryV16(b, revised.text);
           lastChecks = checks;
           lastDraftText = revised.text;
-        } catch (e) { lastReason = 'Revision request failed: ' + (e.message || 'Provider request failed'); draft = null; }
+          lastDraftStage = (revised.via === 'post-condensed' ? 'revision-condensed' : 'revision');
+          lastDraftPromptSize = (revised.via === 'post-condensed' ? condensedPrompt.length : revisionPrompt.length);
+          lastDraftFinishReason = revised.finishReason || '';
+        } catch (e) { lastReason = 'Revision request failed (no revised draft returned) — diagnostics below are for the initial draft. Last error: ' + (e.message || 'Provider request failed'); draft = null; }
       }
       if (draft) {
         const counts2 = countStoryChecksV16(lastChecks);
         if (counts2.failed === 0) {
-          const meta = { kind: 'ai', provider: lastProvider, passed: counts2.passed, unverified: counts2.unverified, attempts: attempts, promptSize: prompt.length, sessionId: sid, checks: lastChecks };
+          const meta = { kind: 'ai', provider: lastProvider, passed: counts2.passed, unverified: counts2.unverified, attempts: attempts, attemptsBreakdown: attemptsBreakdownV165(), promptSize: prompt.length, sessionId: sid, checks: lastChecks };
           lastMainStoryMeta = meta;
           if (isCurrent()) {
             setStatus('Online AI story ready.');
@@ -3315,14 +3412,18 @@ async function generateMainStoryV16(b, sessionId, opts) {
         const hasPKey = (typeof getPollinationsKey === 'function' ? !!getPollinationsKey() : false);
         if (hasPKey) {
           attempts++;
+          stageAttemptCounts.keyed++;
           const k = await fetchStageV163('keyed', function () { return fetchPollinationsStoryWithKeyV161(prompt, V16_AI_TIMEOUT_MS, condensedPrompt); });
           lastProvider = k.provider;
           const kChecks = checkMainStoryV16(b, k.text);
           lastChecks = kChecks;
           lastDraftText = k.text;
+          lastDraftStage = (k.via === 'post-key-condensed' ? 'keyed-condensed' : 'keyed');
+          lastDraftPromptSize = (k.via === 'post-key-condensed' ? condensedPrompt.length : prompt.length);
+          lastDraftFinishReason = k.finishReason || '';
           const kc = countStoryChecksV16(kChecks);
           if (kc.failed === 0) {
-            const meta = { kind: 'ai', provider: lastProvider, passed: kc.passed, unverified: kc.unverified, attempts: attempts, promptSize: prompt.length, sessionId: sid, checks: kChecks, pollinationsKeyTried: true };
+            const meta = { kind: 'ai', provider: lastProvider, passed: kc.passed, unverified: kc.unverified, attempts: attempts, attemptsBreakdown: attemptsBreakdownV165(), promptSize: prompt.length, sessionId: sid, checks: kChecks, pollinationsKeyTried: true };
             lastMainStoryMeta = meta;
             if (isCurrent()) {
               setStatus('Online AI story ready.');
@@ -3344,14 +3445,18 @@ async function generateMainStoryV16(b, sessionId, opts) {
         const hasKey = (typeof getGeminiKey === 'function' ? !!getGeminiKey() : false);
         if (hasKey) {
           attempts++;
+          stageAttemptCounts.gemini++;
           const g = await fetchGeminiStoryV16(prompt);
           lastProvider = g.provider;
           const gChecks = checkMainStoryV16(b, g.text);
           lastChecks = gChecks;
           lastDraftText = g.text;
+          lastDraftStage = 'gemini';
+          lastDraftPromptSize = prompt.length;
+          lastDraftFinishReason = g.finishReason || '';
           const gc = countStoryChecksV16(gChecks);
           if (gc.failed === 0) {
-            const meta = { kind: 'ai', provider: lastProvider, passed: gc.passed, unverified: gc.unverified, attempts: attempts, promptSize: prompt.length, sessionId: sid, checks: gChecks, geminiTried: true };
+            const meta = { kind: 'ai', provider: lastProvider, passed: gc.passed, unverified: gc.unverified, attempts: attempts, attemptsBreakdown: attemptsBreakdownV165(), promptSize: prompt.length, sessionId: sid, checks: gChecks, geminiTried: true };
             lastMainStoryMeta = meta;
             if (isCurrent()) {
               setStatus('Online AI story ready.');
@@ -3368,7 +3473,11 @@ async function generateMainStoryV16(b, sessionId, opts) {
     }
     if (!lastReason) lastReason = 'Provider request failed';
     if (lastChecks) { const _fc = countStoryChecksV16(lastChecks); if (_fc.failed > 0) lastFailedChecks = lastChecks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }); }
-    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attempts, promptSize: prompt.length, sessionId: sid, checks: lastChecks, reason: lastReason, rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: lastFailedChecks || [] };
+    /* v16.5 — truncation-aware reason: a draft the provider stopped
+       before finishing is reported as such, never as a plain validation
+       failure and never as a pass or a story. */
+    if (lastDraftText && (lastDraftFinishReason === 'length' || lastDraftFinishReason === 'MAX_TOKENS') && lastReason === 'Draft did not pass validation') lastReason = 'Draft stopped before finishing (provider output limit) — draft did not pass validation';
+    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attempts, attemptsBreakdown: attemptsBreakdownV165(), promptSize: prompt.length, sessionId: sid, checks: lastChecks, reason: lastReason, rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: lastFailedChecks || [], rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks) };
     lastMainStoryMeta = meta;
     if (isCurrent()) {
       setStatus('Online AI generation was unavailable — showing the offline episode instead.');
@@ -3379,7 +3488,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
     }
     return meta;
   } catch (e) {
-    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attempts, promptSize: prompt.length, sessionId: sid, checks: lastChecks, reason: (e && e.message) || 'Provider request failed', rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: lastFailedChecks || [] };
+    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attempts, attemptsBreakdown: attemptsBreakdownV165(), promptSize: prompt.length, sessionId: sid, checks: lastChecks, reason: (e && e.message) || 'Provider request failed', rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: (lastFailedChecks && lastFailedChecks.length ? lastFailedChecks : (lastChecks ? lastChecks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }) : [])), rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks) };
     lastMainStoryMeta = meta;
     if (isCurrent()) {
       setStatus('Online AI generation was unavailable — showing the offline episode instead.');
