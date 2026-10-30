@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v14 — 1v1 Death Battles</title>
+<title>WAR-ROOM v15 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -59,7 +59,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v14</h1><span>1V1 DEATH BATTLES • ENGINE v14 • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v15</h1><span>1V1 DEATH BATTLES • ENGINE v15 • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -69,11 +69,11 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 </div>
 <div class="prep">
 <div class="panel"><h2>Combat Roster <span id="roster-count" style="font-size:.8rem;color:var(--dim)"></span></h2><div class="grid" id="fighter-pool"></div></div>
-<div class="panel"><h2>2 — Death Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. Both fighters are chosen by you — WAR-ROOM v14 is 1v1 only.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
+<div class="panel"><h2 id="match-heading">2 — Death Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. Both fighters are chosen by you — WAR-ROOM v15 is 1v1 only.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
 <label style="font-size:.85rem">Battlefield</label><select id="battlefield-select"></select><p class="note" id="battlefield-desc"></p>
 <label style="font-size:.85rem">Victory condition</label><select id="victory-select"><option value="death" selected>Death (default) — a fighter must reach HP 0 to lose by death</option><option value="incapacitation">Incapacitation / Knockout — a knockout is unconsciousness, NOT death</option></select><p class="note">Mirror matches are blocked in this build: the same fighter cannot fight itself. In Death mode a knockout is never labelled death. In Incapacitation mode a knockout is labelled unconscious, not dead. Surrender and escape are not simulated outcomes in this build — the verdict will not claim them.</p>
 <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn yel" onclick="triggerOnlineResearch()" style="flex:1">Retest live research (optional)</button><button class="btn" id="review-btn" disabled style="flex:1">Review Matchup →</button></div>
-<div id="research-intel" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Live research intel will appear here. Research is optional. Without internet it falls back to local data. Research never changes battle stats in v14.</div>
+<div id="research-intel" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Live research intel will appear here. Research is optional. Without internet it falls back to local data. Research never changes battle stats in v15.</div>
 <h3 style="color:var(--cyan);font-size:.95rem;margin-top:6px">YouTube Battle Research — no API key needed</h3>
 <p class="note">YouTube videos cannot be read automatically by a browser file without a YouTube Data API key, and scraping YouTube is blocked. So this version does the honest version that works on a phone: one-tap YouTube searches for each selected fighter, for powers, strength, speed and transformations, plus a channel library you can grow. Watching is research — it does not automatically add new powers to the combat engine.</p>
 <div id="yt-links" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Pick fighters to see their YouTube research searches.</div>
@@ -88,7 +88,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 <p class="note">Research panel — outside the episode: Fandom wikis are fan-run wikis for each franchise (Dragon Ball Wiki, Narutopedia, Wookieepedia, etc.). They are more canon-specific than Wikipedia, but they are still fan sources — the game shows which source succeeded and which failed, and never claims a failed fetch was verified. Canon extracts are context for the story; they do not automatically add new powers.</p>
 <button class="btn small" onclick="fetchCanonForSelected()">Retest canon for selected fighters (optional)</button>
 <div id="canon-results" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">Canon results appear here automatically when you pick a fighter. Review also refreshes canon for both fighters — no tap is required to proceed to battle.</div><div style="margin-top:10px"><h3 style="color:var(--cyan)">Research Dossier — Pipeline Stage 1: Evidence, Not Verdict</h3>
-<p class="note">Per fighter: source name, source type, found/not-found status, link, and fetched or cached date. Short excerpts appear ONLY here, never inside episode chapters. <b>Demonstrated feats</b> (from the local profile, in general terms) are kept separate from <b>fan opinion / discussion</b> (fan-run wikis and YouTube searches), which is discussion to investigate, not established fact, and never auto-grants a power. <b>Conflicting versions:</b> the game uses ONLY the selected continuity's profile and does not silently merge versions. Research is cached per fighter + continuity on this device and reused on the next encounter; use Refresh for missing or outdated info. A failed source shows ❌ honestly and the game still plays from local profiles. Research never changes battle stats in v14 — the old +10 ATK / +60 HP bonus was removed; research fills dossier fields only.</p>
+<p class="note">Per fighter: source name, source type, found/not-found status, link, and fetched or cached date. Short excerpts appear ONLY here, never inside episode chapters. <b>Demonstrated feats</b> (from the local profile, in general terms) are kept separate from <b>fan opinion / discussion</b> (fan-run wikis and YouTube searches), which is discussion to investigate, not established fact, and never auto-grants a power. <b>Conflicting versions:</b> the game uses ONLY the selected continuity's profile and does not silently merge versions. Research is cached per fighter + continuity on this device and reused on the next encounter; use Refresh for missing or outdated info. A failed source shows ❌ honestly and the game still plays from local profiles. Research never changes battle stats — the old +10 ATK / +60 HP bonus was removed; research fills dossier fields only.</p>
 <button class="btn small" onclick="refreshDossier()">Refresh dossier (re-fetch selected fighters)</button>
 <div id="dossier-output" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">Pick fighters to see their Research Dossier.</div></div>
 <h3 style="color:var(--cyan);font-size:.95rem;margin-top:10px">Search canon for any character</h3>
@@ -99,7 +99,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 </div>
 </div>
 <div class="panel"><h2>Mode B — Video-Inspired Battle (optional, context only)</h2>
-<p class="note">Mode A (default) is an Original Death Battle, made from the game's own profiles and combat engine. Mode B is different: paste a transcript or notes from a video you watched below. That text is shown as "Video-inspired notes" in Chapters I–II only. It does NOT grant new powers, change stats, or replace the simulation. The narration in v13.1 is always original — it never copies another creator's script.</p>
+<p class="note">Mode A (default) is an Original Death Battle, made from the game's own profiles and combat engine. Mode B is different: paste a transcript or notes from a video you watched below. That text is shown as "Video-inspired notes" in Chapters I–II only. It does NOT grant new powers, change stats, or replace the simulation. The narration in v15 is always original — it never copies another creator's script.</p>
 <p class="note"><b>Honest limit:</b> a YouTube link alone does not let this browser file read a video's audio or captions automatically. That would require a YouTube Data API key. Use whatever transcript or notes you can actually access and paste here.</p>
 <label style="font-size:.85rem">YouTube video URL (optional — the game cannot watch or transcribe it)</label><input id="video-url" placeholder="Paste a YouTube URL here, e.g. https://www.youtube.com/watch?v=..." style="width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px"><p class="note">If you paste a URL but no transcript, the game will say so plainly: no video was watched and no transcript was accessed, and the battle continues in ordinary research mode. If you paste notes, claims in them are treated as user-supplied context, not verified facts, and opinions in them are not adopted as facts.</p>
 <label style="font-size:.85rem">Paste transcript or notes (optional)</label>
@@ -110,7 +110,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 <p class="note"><b>Victory is by death</b> (HP reaches 0), <b>or by incapacitation lasting the rest of the fight</b>, <b>or by battlefield removal with no way back</b>. The exact victory condition is stated in the results and in Chapter VI.</p>
 <p class="note"><b>Regeneration can heal, but it does NOT revive after HP 0.</b> A fighter who is knocked out stays knocked out — no dead fighter acts again, and regeneration only heals a fighter who is still alive.</p>
 <p class="note"><b>No invented killing blow:</b> if the battle hits its round cap with both fighters still alive and neither able to kill or incapacitate the other, the result is a <b>stalemate / no-death verdict</b>, explained in Chapter VI — not a fake finish.</p>
-<p class="note"><b>Battlefield removal:</b> removal alone does not count unless the opponent cannot return. No power in the current powersets permanently removes an opponent from the battlefield, so v13.1 will not claim a BFR victory it did not simulate.</p>
+<p class="note"><b>Battlefield removal:</b> removal alone does not count unless the opponent cannot return. No power in the current powersets permanently removes an opponent from the battlefield, so v15 will not claim a BFR victory it did not simulate.</p>
 </div>
 <div class="panel"><h2>Online Storytelling Pipeline — Research → Combat → Narration → Check → Save</h2>
 <p class="note"><b>Stage 1 — Research Dossier:</b> load each fighter's structured profile, then fetch Wikipedia (encyclopedia) and fan-run Fandom wiki sources automatically. Fan sources and YouTube searches are discussion to investigate, not established fact, and never auto-grant powers.<br>
@@ -127,7 +127,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 <b>3. Knowledge Brain + Analysis Brain:</b> identity, continuity, powers, feats, limits, weaknesses, transformations, relationships — plus Wikipedia + Fandom research, shown per source — and a head-to-head comparison of strength, speed, durability, abilities, experience, transformations, weaknesses and win conditions, with an explicit uncertainty note when a matchup is close.<br>
 <b>4. Narrator Brain:</b> turns the analysis and the recorded events into a 6-chapter episode (Contenders, Comparison, First Exchange, Turning Point, Final Clash, Verdict), using tactics and reasons, not just attack names.<br>
 <b>Continuity check (adapted to 1v1):</b> checks the battle before the episode is shown — a dead or incapacitated fighter must not act, powers must belong to that version, transformations must meet their trigger, and the winner must match the survivor / stalemate record.</p>
-<p class="note">Trade-off, stated plainly: this is a sophisticated rule system, not a language model. It can calculate, decide, and narrate from rules reliably, but it cannot write unlimited original prose like an LLM. That last step would need a local open model or a free/paid inference service, which v13.1 does not require.</p></div>
+<p class="note">Trade-off, stated plainly: this is a sophisticated rule system, not a language model. It can calculate, decide, and narrate from rules reliably, but it cannot write unlimited original prose like an LLM. That last step would need a local open model or a free/paid inference service, which v15 does not require.</p></div>
 <div class="panel"><h2>Internet Connection — Properly Connected</h2>
 <p class="note" id="file-warning"></p>
 <p class="note">This version connects, from the browser, to: Wikipedia, fan-run Fandom wikis, YouTube search, and — optionally — a free public AI text service (Pollinations, no key) or your own free Gemini key. No Muse server, no paid API, and no key is sent to Muse. Your Gemini key, if you enter one, is stored only in this device's localStorage and is sent only to Google when you tap Generate.</p>
@@ -149,7 +149,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 
 <section id="results-screen" class="screen">
 <div class="panel"><h2 id="result-title">RESULT</h2><p id="result-desc" class="note" style="font-size:.9rem"></p><p id="consistency-note" class="note"></p><div id="pipeline-stages" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px"></div><div id="consistency-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="quality-note" class="note"></p><div id="quality-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="integrity-note" class="note"></p><div id="integrity-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="accuracy-note" class="note"></p><div id="accuracy-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div></div>
-<div class="panel story"><h2>Death Battle Episode — 6 Chapters (Narrator Style C)</h2><p class="note">Style C: analytical comparison first, then a cinematic battle story, then a verdict. The episode is built only from the recorded battle events and the pre-battle analysis. Dialogue is written in-character for this battle, not quoted canon.</p><div id="story-output"></div></div>
+<div class="panel story"><h2 id="episode-heading">Death Battle Episode — 6 Chapters (Narrator Style C)</h2><p class="note">Style C: analytical comparison first, then a cinematic battle story, then a verdict. The episode is built only from the recorded battle events and the pre-battle analysis. Dialogue is written in-character for this battle, not quoted canon.</p><div id="story-output"></div></div>
 <div class="panel story"><h2>AI Story — Optional, Online (draft, not the verified story)</h2>
 <p class="note">The 6-chapter episode above is the verified one — it is built only from recorded events and checked by the Continuity Brain. This AI version is an extra draft, separate from the verified episode. It may invent details, so always check it against the breakdown above. If the AI service is down or rate-limited, this panel will say so and the verified story still works. Free services can impose quotas, change availability, or require accounts or keys; internet access alone does not provide a language model, and the rule-based episode above remains the free default.</p>
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" onclick="generateAIStory('pollinations')">Generate AI story — free public service, no key</button><button class="btn small" onclick="generateAIStory('gemini')">Generate AI story — with my saved Gemini key</button></div>
@@ -409,7 +409,7 @@ const BATTLEFIELDS=[
 /* Dialogue is ORIGINAL, in-character writing for this battle only — never quoted canon.
    Lines are built from the fighter's own name, signature, variant and opponent, so two
    fighters with the same personality do NOT say identical lines. No team language is used:
-   v13.1 is 1v1, so there is no team to protect or fall back on. */
+   v15 is 1v1, so there is no team to protect or fall back on. */
 const DIALOGUE_TEMPLATES={
 proud:['Then come and prove it.','I have heard that confidence before. It did not last.','Watch what happens next. That is all the warning you get.','You wanted this fight. You have it.','Pride is not the problem here. Timing is.','One more step, and we find out who is right.'],
 strategist:['Hold. Watch the feet, not the hands.','Again. Same rhythm.','There. That step.','Patience. The opening will show itself.','Not yet. Wait for the tell.','Measured. Every move has a cost.'],
@@ -461,6 +461,7 @@ function renderYT(){
   <a href="${ytUrl(f.name+' transformations explained')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ Transformations</a> •
   <a href="${ytUrl(f.name+' Death Battle')}" target="_blank" rel="noopener" style="color:var(--cyan)">▶ Death Battle search</a></div>`}).join('');
 }
+/* v15: channel names are user-controlled text and are esc()'d below; ytUrl() encodeURIComponent()s them for hrefs. */
 function renderChannels(){
   const el=document.getElementById('yt-channels'); if(!el) return;
   const all=[...YT_STARTER_CHANNELS,...ytCustomChannels];
@@ -480,7 +481,10 @@ let aiTeam=[]; let currentBattle=null; let playbackTimer=null;
 function byId(id){return ROSTER.find(f=>f.id===id)}
 function variantOf(f){const v=selectedVariants[f.id]||'base'; if(v==='v2') return {label:f.v2,hp:f.v2hp,atk:f.v2atk,def:f.v2def}; return {label:'Base',hp:0,atk:0,def:0}}
 function instanceOf(f){const v=variantOf(f); return {...f,variant:v.label,variantId:selectedVariants[f.id]||'base',hp:f.hp+v.hp,atk:f.atk+v.atk,def:f.def+v.def,currentHp:f.hp+v.hp,maxHp:f.hp+v.hp,cooldown:0,actions:0,transformed:false,alive:true}}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+function escapeHtml(s){return esc(s);}
+function safeUrl(u){const s=String(u||''); return /^https:\/\//.test(s)?s:'#';}
+function sanitizeStoryHtml(html){let s=String(html||''); s=s.replace(/<script[\s\S]*?<\/script>/gi,''); s=s.replace(/\s+on[a-zA-Z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi,''); s=s.replace(/href\s*=\s*["']\s*javascript:[^"']*["']/gi,'href="#"'); return s;}
 
 /* ============ ROSTER UI, INFO, VARIANTS ============ */
 function renderChips(){document.getElementById('cat-chips').innerHTML=CATS.map(c=>`<button class="chip ${c===catFilter?'on':''}" onclick="setCat('${c}')">${c}</button>`).join('')}
@@ -509,7 +513,7 @@ function renderSlots(){
   const labels=['Fighter A','Fighter B'];
   for(let i=0;i<2;i++){const id=selected[i]; const f=id?byId(id):null; const v=f?variantOf(f):null;
     if(f){const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0]; const inst=makeBattleInstance(f,bf); const c=canonResearch[id]||{}; const resStatus=c.time?`Research: Wikipedia ${c.wiki?'✅ found':'❌ no data'} • Fan-run Fandom wiki ${c.fandom?'✅ found':'❌ no data'}`:`Research: fetching automatically…`;
-    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(continuityFor(f))})</small></span><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (no research bonus in v14 — research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(inst, bf)}</small><small style="color:var(--dim)">Research details live in the Research Dossier below, not on this card.</small></div>`;}
+    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(continuityFor(f))})</small></span><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (no research bonus in v15 — research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(inst, bf)}</small><small style="color:var(--dim)">Research details live in the Research Dossier below, not on this card.</small></div>`;}
     else el.innerHTML+=`<div class="slot"><span>${labels[i]} (Empty — pick a fighter)</span></div>`;}
   document.getElementById('roster-count').innerText=`${selected.length}/2 Selected`;
   document.getElementById('review-btn').disabled=selected.length!==2;
@@ -559,23 +563,23 @@ async function triggerOnlineResearch(){
     if(!res.ok) throw new Error('HTTP '+res.status); const d=await res.json(); if(!d.extract) throw new Error('No summary'); return {f,d};
   }));
   let live=0; let html='';
-  results.forEach(r=>{if(r.status==='fulfilled'){live++; researchIntel[r.value.f.id]=r.value.d; const s=r.value.d.extract.length>260?r.value.d.extract.slice(0,260)+'...':r.value.d.extract; html+=`<div style="margin-bottom:10px"><b style="color:var(--cyan)">${r.value.f.icon} ${esc(r.value.f.name)} — ${esc(r.value.d.title)}</b><br>${esc(s)}<br><span style="color:var(--green)">No battle stat bonus in v14 — research fills the dossier only.</span></div>`;}});
+  results.forEach(r=>{if(r.status==='fulfilled'){live++; researchIntel[r.value.f.id]=r.value.d; const s=r.value.d.extract.length>260?r.value.d.extract.slice(0,260)+'...':r.value.d.extract; html+=`<div style="margin-bottom:10px"><b style="color:var(--cyan)">${r.value.f.icon} ${esc(r.value.f.name)} — ${esc(r.value.d.title)}</b><br>${esc(s)}<br><span style="color:var(--green)">No battle stat bonus in v15 — research fills the dossier only.</span></div>`;}});
   if(live>0){setBadge('AI RESEARCH: ONLINE (Wikipedia found for '+live+' fighter(s))');if(badge){badge.style.color='var(--green)';badge.style.borderColor='var(--green)';}intel.innerHTML=html;}
-  else{setBadge('AI RESEARCH: OFFLINE — LOCAL SIMULATION');if(badge){badge.style.color='var(--yellow)';badge.style.borderColor='var(--yellow)';}intel.innerText='No live source could be reached. The game falls back to local data. Research never changes battle stats in v14. It does not claim verification it did not get.';}
+  else{setBadge('AI RESEARCH: OFFLINE — LOCAL SIMULATION');if(badge){badge.style.color='var(--yellow)';badge.style.borderColor='var(--yellow)';}intel.innerText='No live source could be reached. The game falls back to local data. Research never changes battle stats in v15. It does not claim verification it did not get.';}
 }
 
 /* ============ TEAM REVIEW & COMBAT ENGINE ============ */
 document.getElementById('review-btn').onclick=async ()=>{
   if(selected.length!==2){alert('Pick exactly 2 fighters first — Fighter A and Fighter B.');return}
   const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
-  const teamHtml=(ids,title,inst)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); const finalInst=inst; return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><span>${esc(f.fr)} • Final battle stats: ATK ${finalInst.startAtk||finalInst.atk} • HP ${finalInst.startHp||finalInst.maxHp} • DEF ${finalInst.startDef||finalInst.def}${finalInst.researched?' (no research bonus in v14 — research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(finalInst, bf)}</small></div>`}).join('');
+  const teamHtml=(ids,title,inst)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); const finalInst=inst; return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><span>${esc(f.fr)} • Final battle stats: ATK ${finalInst.startAtk||finalInst.atk} • HP ${finalInst.startHp||finalInst.maxHp} • DEF ${finalInst.startDef||finalInst.def}${finalInst.researched?' (no research bonus in v15 — research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(finalInst, bf)}</small></div>`}).join('');
   const aInst=makeBattleInstance(byId(selected[0]),bf); const bInst=makeBattleInstance(byId(selected[1]),bf);
   const analysis=generateAnalysis(aInst,bInst);
   document.getElementById('setup-review').style.display='block';
-  document.getElementById('setup-review').innerHTML=teamHtml([selected[0]],'Fighter A',aInst)+teamHtml([selected[1]],'Fighter B',bInst)+`<p class="note">Battlefield: ${bf.name}. ${bf.desc} Final battle stats above include the battlefield effect only. Research never changes battle stats in v14. The same final stats appear in Chapter I and in the breakdown.</p><div class="panel" style="margin-top:8px"><h3 style="color:var(--cyan)">Analysis preview — Chapter II in brief</h3>${analysis.html}</div><p class="note">Analysis preview uses current stats; final battle stats are shown in Chapter I and the breakdown.</p><p class="note" id="auto-research-note">Auto-researching both fighters from Wikipedia + Fandom… Research runs automatically — the battle button below is already enabled and does not wait for research.</p><button class="btn mag" style="width:100%" onclick="startBattle()">${(document.getElementById('victory-select')&&document.getElementById('victory-select').value==='incapacitation'?'Start Incapacitation Battle':'Start Death Battle')} on ${esc(bf.name)} →</button>`;
+  document.getElementById('setup-review').innerHTML=teamHtml([selected[0]],'Fighter A',aInst)+teamHtml([selected[1]],'Fighter B',bInst)+`<p class="note">Battlefield: ${bf.name}. ${bf.desc} Final battle stats above include the battlefield effect only. Research never changes battle stats in v15. The same final stats appear in Chapter I and in the breakdown.</p><div class="panel" style="margin-top:8px"><h3 style="color:var(--cyan)">Analysis preview — Chapter II in brief</h3>${analysis.html}</div><p class="note">Analysis preview uses current stats; final battle stats are shown in Chapter I and the breakdown.</p><p class="note" id="auto-research-note">Auto-researching both fighters from Wikipedia + Fandom… Research runs automatically — the battle button below is already enabled and does not wait for research.</p><button class="btn mag" style="width:100%" onclick="startBattle()">${(document.getElementById('victory-select')&&document.getElementById('victory-select').value==='incapacitation'?'Start Incapacitation Battle':'Start Death Battle')} on ${esc(bf.name)} →</button>`;
   const live=await fetchResearchFor([...selected]);
   const wikiCount=selected.filter(id=>{const c=canonResearch[id]||{}; return !!(c.wiki||researchIntel[id]);}).length; const fandomCount=selected.filter(id=>{const c=canonResearch[id]||{}; return !!c.fandom;}).length;
-  const note=document.getElementById('auto-research-note'); if(note) note.innerText=`Auto-research complete: Wikipedia: ${wikiCount}/2 found, Fan-run Fandom wiki: ${fandomCount}/2 found. The two sources are counted separately; a failed source is never counted as found. Research never changes battle stats in v14 (the old bonus was removed), and their dossier feeds the Research Dossier below — summaries never appear inside the episode chapters.`;
+  const note=document.getElementById('auto-research-note'); if(note) note.innerText=`Auto-research complete: Wikipedia: ${wikiCount}/2 found, Fan-run Fandom wiki: ${fandomCount}/2 found. The two sources are counted separately; a failed source is never counted as found. Research never changes battle stats in v15 (the old bonus was removed), and their dossier feeds the Research Dossier below — summaries never appear inside the episode chapters.`;
   if(wikiCount===0&&fandomCount===0&&note) note.innerText=`Auto-research found no live Wikipedia or Fan-run Fandom data (offline or blocked). The battle will use local profiles only, and the episode will say so — it will not invent researched feats.`;
   renderCanonResults(selected);
 };
@@ -591,7 +595,8 @@ function chooseTarget(actor, enemies){
 function makeBattleInstanceLegacy(f,bf){
   const inst=instanceOf(f); inst.atk+=bf.atk; inst.def+=bf.def;
   const canonOk=(typeof canonResearch!=='undefined'&&canonResearch[f.id]&&(canonResearch[f.id].wiki||canonResearch[f.id].fandom));
-  if(researchIntel[f.id]||canonOk){inst.atk+=10; inst.maxHp+=60; inst.currentHp+=60; inst.researched=true;} else inst.researched=false;
+  /* v15: legacy path neutralised — research NEVER adds stats (the old +10 ATK / +60 HP bonus stays removed). */ inst.researched=false;
+  inst.instanceId=inst.id+'|'+(inst.variantId||'base');
   inst.startAtk=inst.atk; inst.startDef=inst.def; inst.startHp=inst.maxHp; inst.legalTransitions=legalTransitionsFor(inst);
   return inst;
 }
@@ -638,7 +643,12 @@ function simulateBattle(){
   let alpha=[a], beta=[b];
   [...alpha,...beta].forEach(f=>{f.staminaMax=70+(f.sta||7)*5; f.stamina=f.staminaMax; f.shield=false; f.studied=false; f.nextBoost=1; f.knowledgeStage='UNKNOWN'; f.knowledgePattern=''; f.preparedCounter=false; f.restrained=false; f.regenTotal=0; f.fieldPool=(typeof fieldPoolForV14==='function'?fieldPoolForV14(f):0); f.fieldBroken=false; f.mercyChoiceUsed=false; f.prideRefusalDone=false; f.kryptoniteExploit=false; f.tierUnknown=(typeof tierScore==='function'?tierScore(f.tier)===null:false);});
   const events=[]; let winner=null; let victoryCondition=null; let stalemate=false; let totalDamage=0;
+  /* v15: battlefield effect is applied exactly once (see applyBattlefieldOnceV15) and recorded as the first event, so the log, playback, and story all agree on it. */
+  const _bfEv={round:0,type:'battlefield',actor:'Battlefield',target:'',detail:bf.name+' — effect applied exactly once: '+(bf.atk>=0?'+':'')+bf.atk+' ATK, '+(bf.def>=0?'+':'')+bf.def+' DEF to each fighter. '+bf.desc,ability:bf.name}; _bfEv.id=0; _bfEv.battlefield=bf.name; events.push(_bfEv);
   const pushEvent=(ev)=>{ev.id=events.length; ev.battlefield=bf.name; ev.victoryMode=victoryMode; ev.seed=battleSeed;
+    /* v15: stable instance ids travel with every event so two fighters with similar names, or two versions of one character, can never cross-target in playback or checks. */
+    if(ev.actor){const _ai=[...alpha,...beta].find(x=>x.name===ev.actor); if(_ai) ev.actorId=_ai.instanceId||_ai.id;}
+    if(ev.target){const _ti=[...alpha,...beta].find(x=>x.name===ev.target); if(_ti) ev.targetId=_ti.instanceId||_ti.id;}
     if(ev.type==='attack'){ev.damageType=damageTypeFor(ev.ability); ev.result=ev.blocked?'blocked':(ev.damage>0?'hit':'no damage'); ev.remainingHp=ev.targetHp; ev.explanation=ev.reason||'A recorded exchange in the simulation.'; ev.preconditions='Both fighters alive at the start of the round.';}
     else {ev.result=ev.type; ev.explanation=ev.detail||ev.reason||'A recorded event in the simulation.'; ev.preconditions='Recorded in the battle record.';}
     events.push(ev);};
@@ -674,7 +684,11 @@ function simulateBattle(){
       if(actor.pers==='proud'&&!actor.prideRefusalDone&&actor.currentHp<=actor.maxHp*0.25&&foes.length&&foes[0].currentHp>actor.currentHp){actor.prideRefusalDone=true; pushEvent({round,type:'refused',actor:actor.name,target:foes[0].name,detail:'refuses to retreat or seek a dishonourable opening — pride forbids it',reason:'proud fighter refuses retreat / dishonourable opening when that contradicts their beliefs'});}
       const target=chooseTarget(actor,foes); if(!target) continue;
       actor.actions++;
-      let useSig=actor.actions%4===0; if(actor.pers==='strategist'&&!actor.studied) useSig=false; else if(actor.pers==='reckless'&&actor.actions%3===0&&!useSig){useSig=true; actor._impulsiveSig=true;}
+      let useSig=false;
+      /* v15: signature is a tactical decision, NOT a fixed action number. Conditions: stamina >= 15, at least 2 rounds since the last signature, and (a prepared counter is ready OR the target is at/below 35% HP OR a strategist who has studied takes the opening OR a reckless fighter takes an impulsive opening OR a general opening roll). If stamina is too low the engine uses a cycled power instead and records why. */
+      const sigGapOk=(actor.lastSigRound===undefined||round-actor.lastSigRound>=2);
+      if(actor.stamina>=15&&sigGapOk&&(actor.preparedCounter||target.currentHp<=target.maxHp*0.35||(actor.pers==='strategist'&&actor.studied&&rng()<0.4)||(actor.pers==='reckless'&&rng()<0.30)||rng()<0.22)){useSig=true; actor.lastSigRound=round; if(actor.pers==='reckless'&&!actor.preparedCounter&&target.currentHp>target.maxHp*0.35) actor._impulsiveSig=true;}
+      else if(actor.stamina<15){reason=(reason?reason+'; ':'')+'signature held — stamina below 15, so a cycled power is used instead';}
       let powers=(POWERS[actor.id]||[]).slice();
       if(actor.variantId==='v2' && V2POWER[actor.id]) powers=[V2POWER[actor.id],...powers.slice(1)];
       let ability, mult;
@@ -750,12 +764,15 @@ function simulateBattle(){
   const loserFighter=stalemate?null:(alpha[0].alive?beta[0]:alpha[0]);
   const _fin=events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0]||null;
   const _finAtk=_fin?[...events].reverse().find(e=>e.type==='attack'&&e.actor===_fin.actor&&e.target===_fin.target&&e.id<_fin.id):null;
-  const finalRecord={winner:stalemate?'Stalemate':winner,loserName:loserFighter?loserFighter.name:null,loserHp:loserFighter?loserFighter.currentHp:null,loserDead:loserFighter?!!loserFighter.dead:null,loserUnconscious:loserFighter?!!loserFighter.unconscious:null,loserIncapacitated:loserFighter?!!loserFighter.incapacitated:null,loserAlive:loserFighter?!!loserFighter.alive:null,victoryMode, victoryCondition,stalemate,finishingEventId:_fin?_fin.id:null,finishingActor:_fin?_fin.actor:null,finishingTarget:_fin?_fin.target:null,finishingAbility:_finAtk?_finAtk.ability:null,finishingEventType:_fin?_fin.type:null,formatVersion:'v14',loserState:loserFighter?(typeof fighterStateForV14==='function'?fighterStateForV14(loserFighter).state:'unknown'):null,winnerState:winnerFighter?(typeof fighterStateForV14==='function'?fighterStateForV14(winnerFighter).state:'unknown'):null,seed:battleSeed,battlefield:bf.name};
+  const finalRecord={winner:stalemate?'Stalemate':winner,loserName:loserFighter?loserFighter.name:null,loserHp:loserFighter?loserFighter.currentHp:null,loserDead:loserFighter?!!loserFighter.dead:null,loserUnconscious:loserFighter?!!loserFighter.unconscious:null,loserIncapacitated:loserFighter?!!loserFighter.incapacitated:null,loserAlive:loserFighter?!!loserFighter.alive:null,victoryMode, victoryCondition,stalemate,finishingEventId:_fin?_fin.id:null,finishingActor:_fin?_fin.actor:null,finishingTarget:_fin?_fin.target:null,finishingAbility:_finAtk?_finAtk.ability:null,finishingEventType:_fin?_fin.type:null,formatVersion:'v15',loserState:loserFighter?(typeof fighterStateForV14==='function'?fighterStateForV14(loserFighter).state:'unknown'):null,winnerState:winnerFighter?(typeof fighterStateForV14==='function'?fighterStateForV14(winnerFighter).state:'unknown'):null,seed:battleSeed,battlefield:bf.name};
   const finalState=[...alpha,...beta].map(f=>({name:f.name,alive:f.alive,dead:!!f.dead,unconscious:!!f.unconscious,incapacitated:!!f.incapacitated,transformed:!!f.transformed,currentHp:f.currentHp,maxHp:f.maxHp,stamina:f.stamina,state:(typeof fighterStateForV14==='function'?fighterStateForV14(f).state:'unknown'),stateReason:(typeof fighterStateForV14==='function'?fighterStateForV14(f).reason:'')}));
   return {alpha,beta,events,winner,winnerFighter,loserFighter,victoryCondition,stalemate,rounds:events.length?events[events.length-1].round:0,battlefield:bf,totalDamage,destruction:Math.min(100,Math.floor(totalDamage/200)),seed:battleSeed,victoryMode,finalState,finalRecord:_fin?finalRecord:{...finalRecord}};
 }
+function updateModeHeadings(mode){const m=mode||((typeof document!=='undefined'&&document.getElementById('victory-select'))?document.getElementById('victory-select').value:'death'); const mh=typeof document!=='undefined'?document.getElementById('match-heading'):null; if(mh) mh.innerText=(m==='incapacitation'?'2 — Incapacitation Match: Pick Fighter A and Fighter B':'2 — Death Match: Pick Fighter A and Fighter B'); const eh=typeof document!=='undefined'?document.getElementById('episode-heading'):null; if(eh) eh.innerText=(m==='incapacitation'?'Incapacitation Episode — 6 Chapters (Narrator Style C)':'Death Battle Episode — 6 Chapters (Narrator Style C)'); return m;}
 function startBattle(){
+  const _vs15=validateSelectionV15(selected); if(!_vs15.ok){alert(_vs15.reason);return;}
   if(selected.length===2 && selected[0]===selected[1]){alert('Mirror match blocked: the same fighter cannot fight itself in this build. Pick two different fighters.');return;}
+  updateModeHeadings();
   currentBattle=simulateBattle();
   document.getElementById('draft-screen').classList.remove('active');
   document.getElementById('battle-screen').classList.add('active');
@@ -781,16 +798,18 @@ function playBack(){
     if(i>=evs.length){clearInterval(playbackTimer); document.getElementById('show-results-btn').style.display='block'; return;}
     const e=evs[i++]; const all=[...alpha,...beta];
     if(e.type==='attack'){
-      const t=all.find(x=>x.name===e.target); if(t){t.currentHp=e.targetHp; if(e.targetHp===0) t.alive=false;}
-      log.innerHTML+=`<div><b>${esc(e.actor)}</b> ${e.blocked?'is stopped cold by '+esc(e.target)+"'s defence.":'uses '+esc(e.ability)+' on '+esc(e.target)+(e.crit?' — a critical hit!':'')+'.'}</div>`;
-    } else if(e.type==='transform'){const a=all.find(x=>x.name===e.actor); if(a) a.transformed=true; log.innerHTML+=`<div><b>${esc(e.actor)}</b> transforms: ${esc(e.detail)}!</div>`;}
-    else if(e.type==='study'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> studies the enemy instead of attacking — ${esc(e.detail)}.</div>`;}
+      const t=all.find(x=>(e.targetId&&x.instanceId===e.targetId)||x.name===e.target); if(t){t.currentHp=e.targetHp; if(e.targetHp===0) t.alive=false;}
+      log.innerHTML+=`<div><b>${esc(e.actor)}</b> ${e.blocked?'is stopped cold by '+esc(e.target)+"'s defence.":'uses '+esc(e.ability)+' on '+esc(e.target)+(e.crit?' — a critical hit!':'')+(e.counterExploited?' (EXPLOITED counter)':'')+(e.counterDetected?' (counter DETECTED — avoided)':'')+'.'}</div>`;
+    } else if(e.type==='transform'){const a=all.find(x=>(e.actorId&&x.instanceId===e.actorId)||x.name===e.actor); if(a) a.transformed=true; log.innerHTML+=`<div><b>${esc(e.actor)}</b> transforms: ${esc(e.detail)}!</div>`;}
+    else if(e.type==='study'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> — OBSERVED: studies the enemy instead of attacking — ${esc(e.detail)}.</div>`;}
+    else if(e.type==='choice'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> — CHOICE (MERCY / HELD FINISH): ${esc(e.detail)} — reason: ${esc(e.reason||'a belief that prefers incapacitation over a killing blow')}.</div>`;}
+    else if(e.type==='battlefield'){log.innerHTML+=`<div>BATTLEFIELD: ${esc(e.detail)}.</div>`;}
     else if(e.type==='protect'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> protects ${esc(e.target)}.</div>`;}
     else if(e.type==='knockout'){log.innerHTML+=`<div><b>${esc(e.target)}</b> is knocked out.</div>`;}
-    else if(e.type==='incapacitated'){const t=all.find(x=>x.name===e.target); if(t) t.alive=false; log.innerHTML+=`<div><b>${esc(e.target)}</b> is incapacitated and cannot continue.</div>`;}
+    else if(e.type==='incapacitated'){const t=all.find(x=>(e.targetId&&x.instanceId===e.targetId)||x.name===e.target); if(t) t.alive=false; log.innerHTML+=`<div><b>${esc(e.target)}</b> is incapacitated and cannot continue.</div>`;}
     else if(e.type==='prepare'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> — PREPARED: ${esc(e.detail)}.</div>`;}
     else if(e.type==='detected'){log.innerHTML+=`<div><b>${esc(e.actor)}</b> — DETECTED: ${esc(e.detail)}.</div>`;}
-    else if(e.type==='heal'){const a=all.find(x=>x.name===e.actor); if(a) a.currentHp=Math.min(a.maxHp,a.currentHp+(e.heal||0)); log.innerHTML+=`<div>${esc(e.actor)} recovers some strength.</div>`;}
+    else if(e.type==='heal'){const a=all.find(x=>(e.actorId&&x.instanceId===e.actorId)||x.name===e.actor); if(a&&!a.alive){/* v15 playback never revives: heal on a defeated fighter is ignored */} else  if(a) a.currentHp=Math.min(a.maxHp,a.currentHp+(e.heal||0)); log.innerHTML+=`<div>${esc(e.actor)} recovers some strength.</div>`;}
     renderCombatants(alpha,beta); log.scrollTop=log.scrollHeight;
   },550);
 }
@@ -806,9 +825,9 @@ function generateBreakdown(b){
   const statLines=[...b.alpha,...b.beta].map(f=>`<li><b>${esc(f.name)} (${esc(f.variant)}) final battle stats (start of fight):</b> HP ${f.startHp||f.maxHp}, ATK ${f.startAtk||f.atk}, DEF ${f.startDef||f.def}, speed ${f.sp}, tier ${f.tier} — Stat build: ${statBuildString(f, b.battlefield)}${f.transformed?` (later transformed to ${esc(f.trans)}: +${f.tAtk} ATK, +${f.tDef} DEF, applied only on transformation)`:''} — these are the same final stats shown in the selection panel and in Chapter I.</li>`).join('');
   const summary=`<li><b>Winner:</b> ${b.winner} &nbsp; <b>Battlefield:</b> ${esc(b.battlefield.name)} &nbsp; <b>Rounds in record:</b> ${b.rounds} &nbsp; <b>Events:</b> ${b.events.length} &nbsp; <b>Battle seed:</b> ${b.seed} — same seed + fighters + variants + battlefield reproduces the same battle &nbsp; <b>Battlefield destruction:</b> ${b.destruction||0}% (calculated from total damage ${b.totalDamage} — 200 damage per 1%, capped at 100%; this is the same figure used in Chapter VI)</li>`+statLines+Object.entries(totals).map(([n,d])=>`<li><b>${esc(n)}</b> dealt ${d} damage in total.</li>`).join('')+(ytNote?`<li><b>Research note used as story context only (did not add powers):</b> ${esc(ytNote)}</li>`:`<li><b>Research sources:</b> Wikipedia summaries where fetched, plus YouTube battle-analysis searches linked from the draft screen. No YouTube video was automatically watched or transcribed by the game.</li>`);
   const list=b.events.map(e=>{
-    if(e.type==='attack') return `<li>Round ${e.round}: ${esc(e.actor)} — ${esc(e.ability)} → ${esc(e.target)} — ${e.blocked?'BLOCKED, 0 damage':e.damage+' damage'+(e.crit?' (CRIT)':'')}, target left at ${e.targetHp}/${e.targetMax} HP.</li>`;
+    if(e.type==='attack') return `<li>Round ${e.round}: ${esc(e.actor)} — ${esc(e.ability)} → ${esc(e.target)} — ${e.blocked?'BLOCKED, 0 damage':e.damage+' damage'+(e.crit?' (CRIT)':'')}${e.counterExploited?' (EXPLOITED: a prepared counter landed)':''}${e.counterDetected?' (DETECTED: the prepared counter was detected and avoided)':''}, target left at ${e.targetHp}/${e.targetMax} HP.</li>`;
     if(e.type==='transform') return `<li>Round ${e.round}: ${esc(e.actor)} transforms into ${esc(e.detail)}.</li>`;
-    if(e.type==='study') return `<li>Round ${e.round}: ${esc(e.actor)} studies instead of attacking — ${esc(e.detail)}.</li>`;
+    if(e.type==='study') return `<li>Round ${e.round}: ${esc(e.actor)} — OBSERVED: studies instead of attacking — ${esc(e.detail)} (knowledge stage OBSERVED; a pattern was observed, no counter prepared yet).</li>`;
     if(e.type==='protect') return `<li>Round ${e.round}: ${esc(e.actor)} protects ${esc(e.target)}.</li>`;
     if(e.type==='knockout') return `<li>Round ${e.round}: ${esc(e.target)} is knocked out by ${esc(e.actor)}.</li>`;
     if(e.type==='incapacitated') return `<li>Round ${e.round}: ${esc(e.target)} is incapacitated by ${esc(e.actor)} and cannot continue.</li>`;
@@ -816,9 +835,10 @@ function generateBreakdown(b){
     if(e.type==='detected') return `<li>Round ${e.round}: ${esc(e.actor)} — DETECTED: ${esc(e.detail||'detects the prepared counter and avoids it')} (knowledge stage DETECTED; the counter does not land).</li>`;
     if(e.type==='heal') return `<li>Round ${e.round}: ${esc(e.actor)} recovers ${e.heal!=null?e.heal+' HP':'some stamina/health'}.</li>`;
     if(e.type==='refused') return `<li>Round ${e.round}: ${esc(e.actor)} REFUSES an action — ${esc(e.detail||'refused on belief grounds')}.</li>`;
-    if(e.type==='choice') return `<li>Round ${e.round}: ${esc(e.actor)} CHOICE — ${esc(e.detail||'recorded choice')}.</li>`;
+    if(e.type==='choice') return `<li>Round ${e.round}: ${esc(e.actor)} CHOICE — MERCY / HELD FINISH (a personality decision, not a finish): ${esc(e.detail||'recorded choice')} — reason: ${esc(e.reason||'a belief that prefers incapacitation over a killing blow')}. The finish is delayed by this choice; it does not change the victory condition.</li>`;
     if(e.type==='cannot-harm') return `<li>Round ${e.round}: ${esc(e.actor)} — CANNOT-HARM vs ${esc(e.target||'')} — ${esc(e.detail||'ordinary attacks cannot harm this defender')}.</li>`;
     if(e.type==='field-break') return `<li>Round ${e.round}: ${esc(e.actor)} — force field of ${esc(e.target||'')} breaks (absorb pool exhausted).</li>`;
+    if(e.type==='battlefield') return `<li>Round ${e.round}: BATTLEFIELD — ${esc(e.detail||'battlefield effect applied once')}.</li>`;
     return `<li>Round ${e.round}: ${esc(e.actor)} — ${esc(e.type)}: ${esc(e.detail||e.ability||'')}.</li>`;
   }).join('');
   return summary+list;
@@ -855,7 +875,7 @@ function showResultsLegacy(){
   document.getElementById('breakdown-output').innerHTML=breakdown;
   saveBattle(b,story,breakdown,checks,quality); try{const _h=loadHistory(); if(_h.length) currentHistoryId=_h[0].id;}catch(e){}
 }
-function loadHistory(){try{return JSON.parse(localStorage.getItem('warroom_battles_v3')||'[]')}catch(e){return []}}
+function loadHistory(){try{const v=JSON.parse(localStorage.getItem('warroom_battles_v3')||'[]'); return Array.isArray(v)?v:[];}catch(e){return [];}}
 function saveBattleLegacy(b,story,breakdown,checks,quality){
   try{const h=loadHistory(); const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]); const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant)); h.unshift({id:Date.now(),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,checks:(checks||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'rule-based narrator (offline, verified episode) — AI draft, if generated, is separate and not consistency-checked',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'}); localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));}catch(e){}
   renderHistory();
@@ -875,7 +895,7 @@ function viewHistoryLegacy(id){
   const qn2=document.getElementById('quality-note'); if(qn2) qn2.innerText='Loaded from history saved on this device only. Reopening does not rerun the battle.';
   document.getElementById('consistency-note').innerText='Loaded from history saved on this device only. It is not synced to other devices.';
   const _pl=document.getElementById('pipeline-stages'); if(_pl){ const _fake={rounds:x.rounds||0,events:(x.eventRecord||[]),battlefield:{name:x.battlefield||''},seed:x.seed,narrativePlan:null,chapterCoverage:null}; _pl.innerHTML=`<b>Online Storytelling Pipeline — this saved battle (7 stages):</b><br>Stage 1 Research: saved dossier references are in the result description above.<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${_fake.rounds} rounds, ${_fake.events.length} recorded events on ${esc(x.battlefield||'')}. Battle seed: ${_fake.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Narrative Planning: causal beats from this saved battle's own event record.<br>Stage 5 AI Storytelling: rule-based episode below is the verified default; optional AI episode (if generated) is checked and never replaces a failed verified episode.<br>Stage 6 Consistency Review: see the Saved Consistency Check above.<br>Stage 7 Final Episode: below, followed by the separate Combat Breakdown and verdict. Saved on this device only (see Battle History). This pipeline block is rendered ONLY from this saved entry's own record — never from the most recent battle.`; }
-  document.getElementById('story-output').innerHTML=x.story; document.getElementById('breakdown-output').innerHTML=x.breakdown;
+  document.getElementById('story-output').innerHTML=sanitizeStoryHtml(x.story); document.getElementById('breakdown-output').innerHTML=sanitizeStoryHtml(x.breakdown);
 }
 function exportCurrentSavedEpisode(){ if(currentHistoryId!=null) exportSavedEpisode(currentHistoryId); else {const _en=document.getElementById('export-note'); if(_en) _en.innerText='No saved episode is open yet — run a battle or open one from Battle History first.'; else alert('No saved episode is open yet.');} }
 function exportSavedEpisode(id){
@@ -899,6 +919,13 @@ function resetSimulator(){
 /* ============ V5: CANON POWERSETS ============ */
 const POWERS={
 goku:['Ki Blast','Instant Transmission Strike','Dragon Fist'],naruto:['Shadow Clone Barrage','Wind Style Strike','Sage Art Strike'],tanjiro:['Water Breathing Slash','Thunder Breathing Dash','Dance of the Fire God'],gojo:['Cursed Energy Punch','Blue: Attraction','Red: Repulsion'],superman:['Super Punch','Freeze Breath','Tornado Spin'],batman:['Batarang Throw','Smoke Pellet Ambush','Grapple Kick'],spiderman:['Web Shot','Wall-Crawl Kick','Spider-Sense Counter'],wonderwoman:['Shield Bash','Sword of Athena','Bracelet Shockwave'],mario:['Jump Stomp','Fireball','Hammer Swing'],link:['Sword Slash','Bomb Throw','Bow Shot'],chief:['Assault Rifle Burst','Melee Strike','Grenade Toss'],kratos:['Axe Swing','Blades of Chaos Whip','Shield Slam'],vader:['Force Push','Lightsaber Slash','Force Grip'],luke:['Lightsaber Slash','Force Push','Mind Trick Feint'],neo:['Kung Fu Combo','Bullet Dodge Strike','Telekinesis Push'],wick:['Pistol Shot','Knife Strike','Judo Throw'],aang:['Air Blast','Water Whip','Earth Pillar'],ben:['Heatblast Flame','Four Arms Punch','XLR8 Speed Strike'],danny:['Ecto Blast','Intangibility Strike','Overshadow Feint'],jack:['Katana Slash','Jumping Strike','Bow Shot'],gandalf:['Staff Strike','Light Burst','Word of Power'],geralt:['Steel Sword Slash','Igni Sign','Aard Sign'],spock:['Nerve Pinch Attempt','Phaser Strike','Logic Counter'],doctor:['Sonic Distraction','TARDIS Feint','Psychic Paper Trick'],luffy:['Gum-Gum Pistol','Gum-Gum Gatling','Red Hawk'],ichigo:['Getsuga Tensho','Sword Slash','Flash Step Strike'],saitama:['Normal Punch','Consecutive Normal Punches','Serious Punch'],deku:['Delaware Smash','Air Force Strike','Blackwhip Grab'],sasuke:['Chidori','Fireball Jutsu','Sharingan Counter'],levi:['ODM Blade Barrage','Spinning Blade Strike','Thunder Spear'],eren:['Titan Punch','Titan Roar','Hardening Strike'],madara:['Susanoo Slash','Fire Style Blast','Wood Release Bind'],allmight:['Detroit Smash','Texas Smash','California Smash'],yuji:['Divergent Fist','Cursed Energy Punch','Black Flash'],kaneki:['Kagune Strike','Kagune Barrage','Rinkaku Whip'],zoro:['Oni Giri','Tatsumaki','Santoryu Slash'],thor:['Mjolnir Strike','Lightning Blast','Stormbreaker Throw'],hulk:['Thunderclap','Gamma Slam','Seismic Stomp'],ironman:['Repulsor Blast','Missile Barrage','Unibeam'],captainamerica:['Shield Throw','Shield Bash','Combat Combo'],flash:['Speed Force Punch','Lightning Throw','Phase Strike'],blackpanther:['Vibranium Claw Strike','Energy Dagger','Acrobatic Kick'],drstrange:['Mystic Bolt','Portal Slash','Crimson Bands'],thanos:['Titan Punch','Energy Blast','Sword Strike'],wolverine:['Adamantium Claw Slash','Healing Factor Strike','Berserker Lunge'],greenlantern:['Energy Construct Strike','Ring Blast','Construct Shield Bash'],aquaman:['Trident Strike','Water Blast','Atlantean Punch'],daredevil:['Radar Sense Strike','Billy Club Strike','Acrobatic Kick'],sonic:['Spin Dash','Homing Attack','Sonic Boom'],pikachu:['Thunderbolt','Quick Attack','Iron Tail'],samus:['Power Beam','Missile Barrage','Morph Ball Bomb'],doomslayer:['Super Shotgun Blast','Chainsaw Strike','Rocket Blast'],snake:['CQC Strike','Tranquilizer Shot','Knife Strike'],cloud:['Braver','Cross-Slash','Blade Beam'],sephiroth:['Masamune Slash','Shadow Flare','Octaslash'],ryu:['Hadoken','Shoryuken','Tatsumaki'],megaman:['Mega Buster Shot','Charge Shot','Weapon Copy Blast'],kirby:['Inhale Strike','Copy Ability Strike','Star Rod Blast'],dante:['Rebellion Slash','Ebony & Ivory Shot','Stinger'],lara:['Dual Pistol Shot','Bow Shot','Climbing Axe Strike'],harry:['Expelliarmus','Stupefy','Protego Blast'],terminator:['Hydraulic Punch','Shotgun Blast','Minigun Burst'],robocop:['Auto-9 Shot','Armour Punch','Data Spike'],rambo:['Knife Strike','Bow Shot','Trap Strike'],buffy:['Stake Strike','Slayer Kick','Crossbow Shot'],bond:['Walther Shot','Gadget Blast','Martini Strike'],ethan:['Gadget Strike','Pistol Shot','Stunt Kick'],bourne:['Hand-to-Hand Combo','Pistol Shot','Environmental Strike'],godzilla:['Atomic Breath','Tail Swipe','Nuclear Pulse'],predator:['Plasma Caster Shot','Wrist Blade Slash','Cloak Strike'],optimus:['Energon Sword Slash','Blaster Shot','Truck Charge'],irongiant:['Robot Punch','Eye Beam','Flight Slam'],korra:['Water Whip Strike','Fire Blast','Earth Pillar'],steven:['Shield Throw','Bubble Shield','Healing Song'],finn:['Sword Slash','Grass Arm Strike','Demon Sword Blast'],jake:['Stretch Punch','Shapeshift Strike','Dog Blast'],invincible:['Viltrumite Punch','Flight Slam','Speed Strike'],omniman:['Viltrumite Punch','Flight Slam','Moustache Strike'],atomeve:['Matter Construct Strike','Energy Blast','Shield Construct'],rick:['Portal Gun Blast','Gadget Strike','Ray Gun Blast'],robin:['Staff Strike','Gadget Blast','Acrobatic Kick'],raven:['Dark Magic Blast','Telekinesis Strike','Portal Blast'],beastboy:['Animal Form Strike','Tiger Claw','Gorilla Punch'],shera:['Sword of Protection Strike','Healing Light','Energy Slash'],aragorn:['Anduril Slash','Bow Shot','Ranger Strike'],legolas:['Elven Bow Shot','Twin Knife Strike','Acrobatic Shot'],sauron:['Mace of Doom','Dark Magic Blast','Domination Strike'],saruman:['Staff Blast','Voice Command','Fire Blast'],yoda:['Lightsaber Slash','Force Push','Force Leap Strike'],obiwan:['Lightsaber Slash','Force Push','Soresu Counter'],kirk:['Phaser Shot','Captain Punch','Tactical Strike'],paul:['Crysknife Strike','Prescient Counter','Desert Strike'],jonsnow:['Longclaw Slash','Sword Combo','Direwolf Strike'],daenerys:['Dragon Fire Blast','Dothraki Strike','Fire Whip'],dumbledore:['Elder Wand Blast','Transfiguration Strike','Fire Bird Blast'],voldemort:['Avada Kedavra','Cruciatus Strike','Dark Magic Blast']};
+/* v15 AUDIT CORRECTION (profile batch): the v14 "98 signature-only" claim was a literal-only audit error.
+   The POWERS literal holds 96 fighters, but the V7 block later in this file assigns 3-power entries to the
+   other 98 (union = 194/194, overlap = 0, verified at runtime). No fighter is signature-only in the shipped
+   build, so no batch-1 completion was needed and no duplicate batch block is kept here: an earlier v15 draft
+   added one, but the V7 block overwrites it, so it was removed rather than left as misleading dead code.
+   The remaining profile gap is depth (feats/limits/equipment detail), not missing 3-power entries. */
+
 const V2POWER={goku:'God Ki Blast',naruto:'Sage Rasengan',tanjiro:'Sun Halo Slash',gojo:'Domain Expansion Strike',superman:'Solar Flare Punch',batman:'Powered Gauntlet Punch',spiderman:'Symbiote Tendril Strike',wonderwoman:'Godkiller Sword Slash',mario:'Fire Flower Blast',link:'Champion Sword Beam',chief:'Railgun Shot',kratos:'Valhalla Axe Throw',vader:'Sith Lightning',luke:'Jedi Master Saber Throw',neo:'One Code Burst',wick:'Dual Pistol Barrage',aang:'Avatar Elemental Surge',ben:'Ultimate Humungousaur Slam',danny:'Phantom Energy Beam',jack:'Season 5 Katana Fury',gandalf:'White Light Beam',geralt:'Grandmaster Crossbow Shot',spock:'Captain Command Strike',doctor:'Regeneration Energy Burst',luffy:'Gear 4 Kong Gun',ichigo:'Hollow Getsuga',saitama:'Serious Sideways Jump',deku:'One For All Smash',sasuke:'Amaterasu',levi:'Ackerman Slash',eren:'Founding Titan Slam',madara:'Rinnegan Strike',allmight:'United States of Smash',yuji:'Soul Dismantle',kaneki:'Kakuja Slash',zoro:'Asura Slash',thor:'God Blast',hulk:'Worldbreaker Punch',ironman:'Hulkbuster Punch',captainamerica:'Shield Ricochet',flash:'Infinite Mass Punch',blackpanther:'King\'s Claw',drstrange:'Eye of Agamotto Blast',thanos:'Infinity Snap Strike',wolverine:'Claw Frenzy',greenlantern:'Willpower Beam',aquaman:'Trident Storm',daredevil:'Devil\'s Barrage',sonic:'Super Spin',pikachu:'Volt Tackle',samus:'Charge Beam',doomslayer:'Berserk Punch',snake:'Stealth Takedown',cloud:'Omnislash',sephiroth:'One-Winged Slash',ryu:'Shinku Hadoken',megaman:'Super Adaptor Punch',kirby:'Hypernova Inhale',dante:'Devil Trigger Slash',lara:'Survivor Barrage',harry:'Patronus Charge',terminator:'Endoskeleton Slam',robocop:'Prime Directive Blast',rambo:'First Blood Barrage',buffy:'Slayer Barrage',bond:'00 Barrage',ethan:'Impossible Barrage',bourne:'Treadstone Barrage',godzilla:'Burning Breath',predator:'Hunter\'s Wrath Blast',optimus:'Matrix Blast',irongiant:'Weapon Mode Blast',korra:'Avatar State Blast',steven:'Diamond Blast',finn:'Grass Arm Barrage',jake:'Stretch Barrage',invincible:'Viltrumite Barrage',omniman:'Viltrumite Wrath Blast',atomeve:'Matter Barrage',rick:'Portal Barrage',robin:'Leader Barrage',raven:'Demon Barrage',beastboy:'Beast Barrage',shera:'She-Ra Barrage',aragorn:'King\'s Barrage',legolas:'Elven Barrage',sauron:'Dark Lord Barrage',saruman:'White Wizard Barrage',yoda:'Force Mastery Blast',obiwan:'Jedi Master Blast',kirk:'Captain\'s Barrage',paul:'Kwisatz Barrage',jonsnow:'King\'s Barrage',daenerys:'Dragon Queen Barrage',dumbledore:'Headmaster Barrage',voldemort:'Dark Lord Barrage'};
 const TRANSSIG={goku:'God Kamehameha',naruto:'Tailed Beast Bomb',tanjiro:'Sun Breathing Final Form',gojo:'Unlimited Void Crush',superman:'Sun-Charged Heat Vision',spiderman:'Symbiote Rage',wonderwoman:'Divine Lasso Crush',mario:'Star Power Slam',link:'Fierce Deity Sword Beam',chief:'Overshield Charge',kratos:'Spartan Rage Slam',vader:'Dark Side Fury',luke:'Master Force Wave',neo:'The One Blast',wick:'Baba Yaga Final Shot',aang:'Avatar State Blast',ben:'Way Big Slam',danny:'Phantom Rage Wail',jack:'Resolve Katana Finale',gandalf:'Istari Wrath Beam',geralt:'Toxicity Berserk Slash',spock:'Vulcan Fury Strike',doctor:'Regeneration Surge Blast',luffy:'Gear 5 Dawn Rocket',ichigo:'Final Getsuga Tensho',saitama:'Serious Table Flip',deku:'Full Cowling Barrage',sasuke:'Susanoo Slash',levi:'Levi Blade Storm',eren:'Rumbling Charge',madara:'Six Paths Susanoo',allmight:'Plus Ultra Punch',yuji:'Black Flash Barrage',kaneki:'Centipede Kagune',zoro:'Nine Sword Style',thor:'Warrior\'s Madness Slam',hulk:'Hulk Smash',ironman:'Nano Swarm',captainamerica:'Super-Soldier Strike',flash:'Speed Force Vortex',blackpanther:'Vibranium Blast',drstrange:'Astral Barrage',thanos:'Titan Slam',wolverine:'Berserker Barrage',greenlantern:'Lantern Barrage',aquaman:'King\'s Wrath',daredevil:'Radar Counter',sonic:'Chaos Blast',pikachu:'Gigantamax Thunder',samus:'Phazon Blast',doomslayer:'Crucible Slash',snake:'CQC Barrage',cloud:'Limit Break Barrage',sephiroth:'Supernova Strike',ryu:'Evil Shoryuken',megaman:'Mega Barrage',kirby:'Copy Barrage',dante:'Judgement Cut',lara:'Pistol Frenzy',harry:'Avada Counter',terminator:'Terminator Charge',robocop:'Robo Barrage',rambo:'Rambo Assault',buffy:'Stake Finale',bond:'Bond Finale',ethan:'Hunt Finale',bourne:'Bourne Finale',godzilla:'King\'s Roar',predator:'Predator Finale',optimus:'Prime Finale',irongiant:'Giant Finale',korra:'Elemental Barrage',steven:'Steven Finale',finn:'Finn Finale',jake:'Jake Finale',invincible:'Invincible Finale',omniman:'Omni Barrage',atomeve:'Eve Finale',rick:'Rick Finale',robin:'Robin Finale',raven:'Raven Finale',beastboy:'Beast Finale',shera:'Princess Finale',aragorn:'Aragorn Finale',legolas:'Legolas Finale',sauron:'Sauron Finale',saruman:'Saruman Finale',yoda:'Yoda Finale',obiwan:'Obi-Wan Finale',kirk:'Kirk Finale',paul:'Paul Finale',jonsnow:'Jon Finale',daenerys:'Daenerys Finale',dumbledore:'Dumbledore Finale',voldemort:'Voldemort Finale'};
 /* ============ V5: AUTOMATIC RESEARCH FOR BOTH TEAMS ============ */
@@ -991,7 +1018,7 @@ function renderDossierLegacy(ids){
     const fmt=d=>{try{return new Date(d).toLocaleString()}catch(e){return d||'not fetched'}};
     const wikiRow=used.wiki?`✅ Wikipedia (Encyclopedia) — FOUND ${fmt(used.time)}${isCached?' — CACHED, reused from a previous encounter (not re-fetched)':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(f.wiki)}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only, never in the episode): ${esc(used.wiki.extract.slice(0,200))}…</span>`:`${researchStatusLabel(used.wikiStatus||'NO_DATA')} — continuity: ${esc(continuityFor(f))}`;
     const fm=(typeof FANDOM!=='undefined'&&FANDOM[id])||null;
-    const fanRow=fm?(used.fandom?`✅ Fan-run Fandom wiki (${esc(fm.d)}, fan-run, not official canon) — FOUND ${fmt(used.time)}${isCached?' — CACHED':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="${used.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only): ${esc(used.fandom.extract.slice(0,200))}…</span>`:`${researchStatusLabel(used.fandomStatus||'NO_DATA')} — continuity: ${esc(continuityFor(f))}`):'No Fandom mapping in this build.';
+    const fanRow=fm?(used.fandom?`✅ Fan-run Fandom wiki (${esc(fm.d)}, fan-run, not official canon) — FOUND ${fmt(used.time)}${isCached?' — CACHED':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="${safeUrl(used.fandom.url)}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only): ${esc(used.fandom.extract.slice(0,200))}…</span>`:`${researchStatusLabel(used.fandomStatus||'NO_DATA')} — continuity: ${esc(continuityFor(f))}`):'No Fandom mapping in this build — NOT KNOWN for this fighter.';
     return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)} — ${f?esc(continuityFor(f)):''}</b><br>${wikiRow}<br>${fanRow}<br><b>Demonstrated feats (local profile, general terms):</b> ${esc(f?f.feat:'Not established in this profile')}<br><b>Fan opinion / discussion:</b> fan-run wiki pages and YouTube searches are discussion to investigate, not established fact. They never auto-grant powers.<br><b>Conflicting versions:</b> only the selected continuity above is used; versions are not silently merged.<br><b>Disagreements:</b> different continuities and fan sources may disagree on power level or feats. A search result is a lead, not proof — only the selected continuity's local profile decides combat.</div>`;}).join('');
 }
 function refreshDossierLegacy(){
@@ -1050,7 +1077,7 @@ function renderCanonResults(ids){
   try{if(typeof renderDossier==='function') renderDossier(ids);}catch(e){}
   const el=document.getElementById('canon-results'); if(!el) return;
   if(!ids||!ids.length){el.innerHTML='No fighters selected.';return}
-  el.innerHTML=ids.map(id=>{const f=byId(id); const c=canonResearch[id]||{}; const w=c.wiki?`✅ Wikipedia (FOUND): ${esc(c.wiki.extract.slice(0,200))}…`:`${researchStatusLabel(c.wikiStatus||'NO_DATA')}`; const fa=c.fandom?`✅ Fan-run Fandom wiki (${esc(c.fandom.domain)}, not official canon, FOUND): ${esc(c.fandom.extract.slice(0,200))}… <a href="${c.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open fan-run wiki page</a>`:`${researchStatusLabel(c.fandomStatus||'NO_DATA')}`; return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)}</b> — continuity: ${f?esc(continuityFor(f)):''}<br>${w}<br>${fa}</div>`}).join('');
+  el.innerHTML=ids.map(id=>{const f=byId(id); const c=canonResearch[id]||{}; const w=c.wiki?`✅ Wikipedia (FOUND): ${esc(c.wiki.extract.slice(0,200))}…`:`${researchStatusLabel(c.wikiStatus||'NO_DATA')}`; const fa=c.fandom?`✅ Fan-run Fandom wiki (${esc(c.fandom.domain)}, not official canon, FOUND): ${esc(c.fandom.extract.slice(0,200))}… <a href="${safeUrl(c.fandom.url)}" target="_blank" rel="noopener" style="color:var(--cyan)">Open fan-run wiki page</a>`:`${researchStatusLabel(c.fandomStatus||'NO_DATA')}`; return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)}</b> — continuity: ${f?esc(continuityFor(f)):''}<br>${w}<br>${fa}</div>`}).join('');
 }
 async function fetchCanonForInfo(id){
   const el=document.getElementById('info-canon'); if(el) el.innerHTML='Fetching canon sources…';
@@ -1707,10 +1734,10 @@ function generateEpisodeLegacy(b, regenAttempt){
   ]);
   return ch1+ch2+ch3+ch4+ch5+ch6;
 }
-function generateStoryV2(b){return generateEpisode(b);}
+/* v15: duplicate generateStoryV2 removed — the single live definition is the v15 wrapper below (generateEpisodeV14). */
 
 /* ================= WAR-ROOM v14 MODULE =================
-   Senior-engineer rebuild on top of v13.1, in this order:
+   Senior-engineer rebuild on top of v14, in this order (v15 repair-and-upgrade):
    dedicated combat resolution, structured profiles, victory-state
    tracking with three separate validation systems, event-driven
    narration, research as a model (never a stat bonus), personality
@@ -1746,7 +1773,12 @@ function rosterLabelIssuesV14(){
 }
 function damageTypeCanonicalV14(ability){
   const s=(ability||'').toLowerCase();
-  if(/mind|psychic|overshadow|tardis feint/.test(s)) return 'mental';
+  if(/poison|venom|toxin/.test(s)) return 'poison';
+  if(/seal|sealing/.test(s)) return 'sealing';
+  if(/reality|rewrite/.test(s)) return 'reality';
+  if(/magic|spell|hex|chaos|witch/.test(s)) return 'magic';
+  if(/mind|psychic|overshadow|tardis feint/.test(s)) return 'psychic';
+  if(/mental/.test(s)) return 'psychic';
   if(/force grip|nerve pinch|internal|curse|word of power/.test(s)) return 'internal';
   if(/web|grip|pinch|restrain/.test(s)) return 'restraint';
   if(/freeze|smoke|gravity|tornado|sonic/.test(s)) return 'environmental';
@@ -1755,9 +1787,9 @@ function damageTypeCanonicalV14(ability){
   return 'physical';
 }
 function defenseProfileForV14(f){
-  const res={physical:1,energy:1,internal:1,mental:1,restraint:1,environmental:1,healing:1,nonlethal:1,death:1};
+  const res={physical:1,energy:1,internal:1,mental:1,psychic:1,magic:1,reality:1,sealing:1,poison:1,restraint:1,environmental:1,healing:1,nonlethal:1,death:1};
   let armorFlat=0, armorPct=0, notes=[];
-  if(f.trait==='invulnerable'){ res.physical=0.25; res.energy=0.6; res.internal=0.8; res.mental=1; res.restraint=0.5; res.environmental=0.6; notes.push('Invulnerable profile: physical force is sharply reduced, energy partly reduced, mental/internal effects bypass much of the durability (recorded weakness: magic bypasses much of his durability).'); }
+  if(f.trait==='invulnerable'){ res.physical=0.25; res.energy=0.6; res.internal=0.8; res.mental=1; res.psychic=1; res.restraint=0.5; res.environmental=0.6; notes.push('Invulnerable profile: physical force is sharply reduced, energy partly reduced, mental/internal effects bypass much of the durability (recorded weakness: magic bypasses much of his durability).'); }
   if(f.trait==='infinity_void'){ res.physical=0.1; res.energy=0.1; res.internal=0.5; res.mental=0.5; notes.push('Infinity defence: most incoming attacks are stopped before contact; only EX-tier attackers or a recorded bypass get through at meaningful strength.'); }
   if(f.variantId==='v2' && f.id==='batman'){ armorFlat=15; armorPct=0.25; notes.push('Armoured variant: flat reduction plus a share of physical blows absorbed by armour (engine parameters for this variant, not a canon measurement).'); }
   if((f.dur||7)>=9 && f.trait!=='invulnerable' && f.trait!=='infinity_void'){ res.physical*=0.9; res.energy*=0.9; notes.push('High durability reduces physical and energy blows modestly (durability enters once here, via resistance, not again as a second factor).'); }
@@ -1781,14 +1813,14 @@ function legalTransitionsFor(f){
   return [{from:from,to:f.trans,trigger:'HP at or below 45% of maximum',cost:eff.cost,duration:eff.duration,reversible:eff.reversibility,continuity:eff.continuity,legal:true}];
 }
 function signatureDefForV14(f){
-  return {name:f.sig||'Not established',mult:f.sigMult||1,cost:'15 stamina; used every 4th action (strategists only after studying; reckless fighters may commit it early on an apparent opening)',condition:'Every 4th action, through the single resolveAttack pipeline.',effect:'Signature multiplier x'+(f.sigMult||1)+' applied through resolveAttack; the signature grants no effect beyond its damage type and multiplier unless its structured power entry records a bypass or restraint.'};
+  return {name:f.sig||'Not established',mult:f.sigMult||1,cost:'15 stamina; used only as a tactical decision (prepared counter ready, target at/below 35% HP, studied opening, or impulsive opening) with at least 2 rounds between signatures',condition:'Tactical decision through the single resolveAttack pipeline — never a fixed action number.',effect:'Signature multiplier x'+(f.sigMult||1)+' applied through resolveAttack; the signature grants no effect beyond its damage type and multiplier unless its structured power entry records a bypass or restraint.'};
 }
 function structuredPowersForV14(f){
   let ps=[];
   try{ ps=(typeof actualPowersFor==='function'?actualPowersFor(f):((typeof POWERS!=='undefined'&&POWERS[f.id])||[])); }catch(e){ ps=[]; }
-  const out=ps.map((name,i)=>{ const dt=damageTypeCanonicalV14(name); return {name:name,effect:dt+' attack through the single resolveAttack pipeline',combatUse:(i===0 && f.variantId==='v2')?'Variant power — replaces the first power for this version':'Cycled power in battle',requirements:'Must belong to the selected version\'s powerset; no other requirement is listed in this profile.',limits:'No limit is established in this profile beyond the engine\'s damage, defence, stamina and cannot-harm rules.',canBypass:(dt==='mental'||dt==='internal'),canEscapeRestraint:/transmission|teleport|dash|flight/i.test(name),versionHasIt:true,damageType:dt}; });
-  if(f.transformed && typeof TRANSSIG!=='undefined' && TRANSSIG[f.id]) out.push({name:TRANSSIG[f.id],effect:damageTypeCanonicalV14(TRANSSIG[f.id])+' transformed signature attack through resolveAttack',combatUse:'Transformed signature — used instead of the base signature after transformation',requirements:'Fighter must have transformed in this battle.',limits:'No extra effect beyond multiplier and damage type is established in this profile.',canBypass:(damageTypeCanonicalV14(TRANSSIG[f.id])==='mental'||damageTypeCanonicalV14(TRANSSIG[f.id])==='internal'),canEscapeRestraint:false,versionHasIt:true,damageType:damageTypeCanonicalV14(TRANSSIG[f.id]),isSignature:true});
-  if(f.sig) out.push({name:f.sig,effect:damageTypeCanonicalV14(f.sig)+' signature attack through resolveAttack',combatUse:'Signature — every 4th action',requirements:'Signature action slot (see signature definition).',limits:'No extra effect beyond multiplier and damage type is established in this profile.',canBypass:(damageTypeCanonicalV14(f.sig)==='mental'||damageTypeCanonicalV14(f.sig)==='internal'),canEscapeRestraint:false,versionHasIt:true,damageType:damageTypeCanonicalV14(f.sig),isSignature:true});
+  const out=ps.map((name,i)=>{ const dt=damageTypeCanonicalV14(name); return {name:name,effect:dt+' attack through the single resolveAttack pipeline',combatUse:(i===0 && f.variantId==='v2')?'Variant power — replaces the first power for this version':'Cycled power in battle',requirements:'Must belong to the selected version\'s powerset; no other requirement is listed in this profile.',limits:'No limit is established in this profile beyond the engine\'s damage, defence, stamina and cannot-harm rules.',canBypass:(dt==='mental'||dt==='psychic'||dt==='internal'||dt==='magic'),canEscapeRestraint:/transmission|teleport|dash|flight/i.test(name),versionHasIt:true,damageType:dt}; });
+  if(f.transformed && typeof TRANSSIG!=='undefined' && TRANSSIG[f.id]) out.push({name:TRANSSIG[f.id],effect:damageTypeCanonicalV14(TRANSSIG[f.id])+' transformed signature attack through resolveAttack',combatUse:'Transformed signature — used instead of the base signature after transformation',requirements:'Fighter must have transformed in this battle.',limits:'No extra effect beyond multiplier and damage type is established in this profile.',canBypass:(['mental','psychic','internal','magic'].includes(damageTypeCanonicalV14(TRANSSIG[f.id]))),canEscapeRestraint:false,versionHasIt:true,damageType:damageTypeCanonicalV14(TRANSSIG[f.id]),isSignature:true});
+  if(f.sig) out.push({name:f.sig,effect:damageTypeCanonicalV14(f.sig)+' signature attack through resolveAttack',combatUse:'Signature — tactical decision (see signature definition)',requirements:'Signature action slot (see signature definition).',limits:'No extra effect beyond multiplier and damage type is established in this profile.',canBypass:(['mental','psychic','internal','magic'].includes(damageTypeCanonicalV14(f.sig))),canEscapeRestraint:false,versionHasIt:true,damageType:damageTypeCanonicalV14(f.sig),isSignature:true});
   return out;
 }
 function moralRestrictionForV14(f){
@@ -1826,9 +1858,9 @@ function structuredProfileHtml(f){
   const res=p.resistances;
   const resHtml=Object.entries(res.resistances).map(([k,v])=>k+' x'+v).join(', ');
   const transHtml=p.transformation?(`${esc(p.transformation.from)} → ${esc(p.transformation.to)}; stat changes +${p.transformation.statChanges.atk} ATK / +${p.transformation.statChanges.def} DEF; new power: ${esc(p.transformation.newPowers||'same signature')}; cost: ${esc(p.transformation.cost)}; duration: ${esc(p.transformation.duration)}; reversibility: ${esc(p.transformation.reversibility)}; conditions: ${esc(p.transformation.conditions)}`):'No transformation in this build — none will be invented in battle.';
-  return `<div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px"><b style="color:var(--cyan)">Structured Character Profile (v14) — ${esc(f.name)}</b>
-  <p><b>How to read this panel:</b> [CHARACTER RECORD] = information in the character record. [RESEARCH] = fetched dossier material, shown in the Research Dossier, never in the episode. [NOT KNOWN] = not established — never invented. Research never changes battle stats in v14.</p>
-  ${p.tier.unknown?`<p style="border:1px solid var(--yellow);padding:6px;border-radius:4px"><b>PROFILE-DATA NOTE:</b> Tier "${esc(f.tier)}" is not recognised. Tier is UNKNOWN in v14 — it is never silently treated as S-tier, and tier-gap rules do not assume a tier for this fighter.</p>`:''}
+  return `<div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px"><b style="color:var(--cyan)">Structured Character Profile (v15) — ${esc(f.name)}</b>
+  <p><b>How to read this panel:</b> [CHARACTER RECORD] = information in the character record. [RESEARCH] = fetched dossier material, shown in the Research Dossier, never in the episode. [NOT KNOWN] = not established — never invented. Research never changes battle stats in v15.</p>
+  ${p.tier.unknown?`<p style="border:1px solid var(--yellow);padding:6px;border-radius:4px"><b>PROFILE-DATA NOTE:</b> Tier "${esc(f.tier)}" is not recognised. Tier is UNKNOWN in v15 — it is never silently treated as S-tier, and tier-gap rules do not assume a tier for this fighter.</p>`:''}
   ${labelIssues.length?`<p style="border:1px solid var(--yellow);padding:6px;border-radius:4px"><b>VERSION-LABEL NOTE:</b> ${esc(labelIssues.map(x=>x.issue).join(' '))}</p>`:''}
   <p><b>Identity + Continuity [CHARACTER RECORD]:</b> ${esc(p.identity.name)} (${esc(p.identity.alias)}), ${esc(p.identity.franchise)}, ${esc(p.identity.category)} — selected continuity: ${esc(p.identity.version)}. A different version can have different abilities, feats, limits, and power levels; only this continuity's profile is used.</p>
   <p><b>Tier [CHARACTER RECORD]:</b> ${esc(p.tier.label)}${p.tier.unknown?' (UNKNOWN)':''}</p>
@@ -1845,22 +1877,28 @@ function structuredProfileHtml(f){
   <p><b>Transformations — full effect table [CHARACTER RECORD]:</b> ${transHtml}</p>
   <p><b>Equipment / resources [${esc(p.equipment.provenance)}]:</b> ${esc(p.equipment.text)} ${esc(p.equipment.quantities)}</p>
   <p><b>Regeneration [ENGINE MECHANISM]:</b> ${esc(p.regen.text)} Per-round heal in this build: ${p.regen.perRound} HP, total cap ${Math.round(p.regen.capFrac*100)}% of maximum HP per battle, only while alive — never revives after HP 0.</p>
-  <p><b>Research [RESEARCH — see dossier]:</b> Fetched Wikipedia / fan-run Fandom extracts live in the Research Dossier only. They never auto-grant powers and never change stats in v14. Uncertain research stays uncertain; it is never presented as established fact.</p>
+  <p><b>Research [RESEARCH — see dossier]:</b> Fetched Wikipedia / fan-run Fandom extracts live in the Research Dossier only. They never auto-grant powers and never change stats in v15. Uncertain research stays uncertain; it is never presented as established fact.</p>
   <p><b>Sources:</b> <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(f.wiki||f.name.replace(/\s+/g,'_'))}" target="_blank" rel="noopener" style="color:var(--cyan)">Wikipedia (encyclopedia)</a> • Official publisher / franchise pages, interviews, and creator statements are preferred sources when available; a search link alone does not verify a feat.</p></div>`;
 }
 
 /* ---- 2. Single combat-resolution pipeline ---- */
+function immunitiesForV15(f){const im=[]; if(f&&Array.isArray(f.immunities)) f.immunities.forEach(x=>im.push(String(x).toLowerCase())); return im;}
+function damageTypeInfoV15(ability){const s=(ability||'').toLowerCase(); const known=/poison|venom|toxin|seal|reality|rewrite|magic|spell|hex|chaos|witch|mind|psychic|overshadow|force grip|nerve pinch|internal|curse|word of power|web|grip|pinch|restrain|freeze|smoke|gravity|tornado|sonic|blast|beam|energy|fire|flame|lightning|heat vision|ki |kamehameha|rasengan|chakra|ecto|igni|light burst|heal|regen|recover/.test(s); return {type:damageTypeCanonicalV14(ability),source:known?'established keyword mapping':'inferred/default (physical — the profile does not establish a type for this power, so it is NOT presented as canon)'};}
 function resolveAttackV14(o){
   const att=o.attacker, def=o.target;
   const dtype=damageTypeCanonicalV14(o.ability);
+  /* v15: an explicit per-type immunity is absolute for that type unless the caller records a bypass mechanism for this specific ability. A generic resistance multiplier never overrides it (checked before any resistance is applied). */
+  if(immunitiesForV15(def).includes(dtype)&&!o.bypassMechanism){ return {damage:0,outcome:'immune',cannotHarm:false,immune:true,notes:'immune: defender is immune to '+dtype+' damage; no damage is dealt unless a recorded bypass mechanism for this specific ability exists',fieldBreak:false,boostUsed:false}; }
   const defProf=defenseProfileForV14(def);
   const attTier=tierScore(att.tier), defTier=tierScore(def.tier);
   const tierGap=(attTier!==null&&defTier!==null)?(defTier-attTier):null;
   const isKryptoniteCounter=(att.trait==='prep'&&def.weak&&def.weak.indexOf('Kryptonite')!==-1&&(o.counterExploited||att.kryptoniteExploit||att.preparedCounter));
-  const isBypass=(dtype==='mental'||dtype==='internal')||isKryptoniteCounter;
+  const isBypass=(dtype==='mental'||dtype==='psychic'||dtype==='internal'||dtype==='magic')||isKryptoniteCounter;
   const isInfinity=def.trait==='infinity_void';
-  if(tierGap!==null&&tierGap>=2&&(def.dur||7)>=9&&!isBypass){
-    return {damage:0,outcome:'cannot-harm',cannotHarm:true,notes:'cannot-harm: tier gap plus high durability makes ordinary attacks implausible; crits do not bypass this; only a recorded weakness exploit, demonstrated counter, or bypass can harm this defender',fieldBreak:false,boostUsed:false};
+  /* v15: the tier-gap cannot-harm gate is a PHYSICAL-durability gate. Physical durability does not block nonphysical effects by default, so magic/psychic/internal/reality/sealing/poison attacks skip this gate (they still pass through resistances, field pools, and the per-hit cap below). Crits never bypass the gate for gated types. */
+  const nonPhysical=['magic','psychic','mental','internal','reality','sealing','poison'];
+  if(tierGap!==null&&tierGap>=2&&(def.dur||7)>=9&&!isBypass&&!nonPhysical.includes(dtype)){
+    return {damage:0,outcome:'cannot-harm',cannotHarm:true,harmScope:'cannot harm under current rules (no counter, knowledge, or bypass in this matchup — NOT "cannot ever harm")',notes:'cannot-harm: tier gap plus high durability makes ordinary attacks implausible; crits do not bypass this; only a recorded weakness exploit, demonstrated counter, or bypass can harm this defender',fieldBreak:false,boostUsed:false};
   }
   let notes=[];
   let scale=1;
@@ -1888,9 +1926,11 @@ function resolveAttackV14(o){
   return {damage:dmg,outcome:dmg>0?'hit':'no damage',cannotHarm:false,notes:notes.join('; '),fieldBreak:fieldBreak,boostUsed:!!(o.boost&&o.boost!==1)};
 }
 /* ---- 3. Battle-instance and stat build: NO research bonus ---- */
+function applyBattlefieldOnceV15(inst,bf){if(!inst||!bf) return inst; if(inst.battlefieldApplied===bf.id) return inst; if(inst.battlefieldApplied&&inst._bfAtk!==undefined){inst.atk-=inst._bfAtk; inst.def-=inst._bfDef;} inst.atk+=bf.atk; inst.def+=bf.def; inst._bfAtk=bf.atk; inst._bfDef=bf.def; inst.battlefieldApplied=bf.id; return inst;}
 function makeBattleInstance(f,bf){
-  const inst=instanceOf(f); inst.atk+=bf.atk; inst.def+=bf.def;
+  const inst=instanceOf(f); applyBattlefieldOnceV15(inst,bf);
   inst.researched=false; inst.researchBonusRemoved=true;
+  inst.instanceId=inst.id+'|'+(inst.variantId||'base');
   inst.startAtk=inst.atk; inst.startDef=inst.def; inst.startHp=inst.maxHp; inst.legalTransitions=legalTransitionsFor(inst);
   return inst;
 }
@@ -1901,7 +1941,7 @@ function statBuildString(f, bf){
   const sa=f.startAtk||f.atk, sd=f.startDef||f.def, sh=f.startHp||f.maxHp;
   const bb=bf?{atk:bf.atk||0,def:bf.def||0}:{atk:sa-base.atk-vb.atk, def:sd-base.def-vb.def};
   const fmt=n=>(n>=0?'+':'')+n;
-  return `${f.name} (${f.variant||'Base'}): base HP ${base.hp} / ATK ${base.atk} / DEF ${base.def} → variant bonus ${fmt(vb.hp)} HP, ${fmt(vb.atk)} ATK, ${fmt(vb.def)} DEF → battlefield bonus ${fmt(bb.atk)} ATK, ${fmt(bb.def)} DEF → research bonus none (REMOVED in v14 — research fills dossier fields only, never changes battle stats) = start HP ${sh} / ATK ${sa} / DEF ${sd}`;
+  return `${f.name} (${f.variant||'Base'}): base HP ${base.hp} / ATK ${base.atk} / DEF ${base.def} → variant bonus ${fmt(vb.hp)} HP, ${fmt(vb.atk)} ATK, ${fmt(vb.def)} DEF → battlefield bonus ${fmt(bb.atk)} ATK, ${fmt(bb.def)} DEF → research bonus none (REMOVED, kept removed in v15 — research fills dossier fields only, never changes battle stats) = start HP ${sh} / ATK ${sa} / DEF ${sd}`;
 }
 /* ---- 4. Victory states + three separate validation systems ---- */
 function fighterStateForV14(f){
@@ -1971,7 +2011,7 @@ function narrativeAccuracyChecksV14(b, storyHtml){
   const blockedRecs=Array.isArray(b.blockedSceneTexts)?b.blockedSceneTexts:[];
   let blockedBad=[];
   blockedRecs.forEach(rec=>{ const s=rec.text||''; const hasBlocked=/blocked|deflect|stopped|turns it aside|never reaches/i.test(s); const hasHit=/\blands\b|decisive|wound|hurts|shakes the fight|finds its mark|lands clean|lands hard/i.test(s); if(!hasBlocked||hasHit) blockedBad.push(rec); });
-  checks.push({name:'B5 Blocked attacks are described only as blocked (v13.1 blocked check, kept)',passed:blockedBad.length===0,detail:blockedBad.length?('PRECISE: '+blockedBad.length+' blocked scene(s) fail the blocked wording test.'):(blockedRecs.length+' blocked scene(s) checked; all use blocked/deflected wording with no hit wording.')});
+  checks.push({name:'B5 Blocked attacks are described only as blocked (v14 blocked check, kept in v15)',passed:blockedBad.length===0,detail:blockedBad.length?('PRECISE: '+blockedBad.length+' blocked scene(s) fail the blocked wording test.'):(blockedRecs.length+' blocked scene(s) checked; all use blocked/deflected wording with no hit wording.')});
   const cannotEvs=b.events.filter(e=>e.type==='attack'&&e.cannotHarm);
   let cannotBad=false;
   if(cannotEvs.length&&plain.indexOf('cannot harm')===-1) cannotBad=true;
@@ -2062,7 +2102,7 @@ function generateAnalysis(a,b){
   const harmAB=canHarmV14(a,b), harmBA=canHarmV14(b,a);
   const tierGapAB=(tierScore(a.tier)!==null&&tierScore(b.tier)!==null)?Math.abs(tierScore(a.tier)-tierScore(b.tier)):null;
   const uncertain=(tierGapAB!==null&&tierGapAB<=1&&Math.abs((a.pw||7)-(b.pw||7))<=2);
-  const html=`<p><b>Preview — not a prediction. The preview does not determine the winner; the combat engine does. No aggregate score is used in v14, and durability is counted once only.</b></p><p><b>Start-of-fight stats (before transformation bonuses):</b> ${a.name} HP ${a.startHp||a.maxHp} / ATK ${a.startAtk||a.atk} / DEF ${a.startDef||a.def}; ${b.name} HP ${b.startHp||b.maxHp} / ATK ${b.startAtk||b.atk} / DEF ${b.startDef||b.def}. Transformation bonuses are listed separately below and apply only if that fighter transforms: ${a.name} +${a.tAtk||0} ATK / +${a.tDef||0} DEF for ${a.trans||'no transformation'}; ${b.name} +${b.tAtk||0} ATK / +${b.tDef||0} DEF for ${b.trans||'no transformation'}. These start stats are the same numbers shown in Chapter I and in the breakdown. Research bonus: none in v14.</p><p><b>Stat builds:</b> ${statBuildString(a)}; ${statBuildString(b)}.</p>`+cats.map(c=>`<p><b>${c.label}:</b> ${c.w} — ${c.ev}</p>`).join('')+
+  const html=`<p><b>Preview — not a prediction. The preview does not determine the winner; the combat engine does. No aggregate score is used in v15, and durability is counted once only.</b></p><p><b>Start-of-fight stats (before transformation bonuses):</b> ${a.name} HP ${a.startHp||a.maxHp} / ATK ${a.startAtk||a.atk} / DEF ${a.startDef||a.def}; ${b.name} HP ${b.startHp||b.maxHp} / ATK ${b.startAtk||b.atk} / DEF ${b.startDef||b.def}. Transformation bonuses are listed separately below and apply only if that fighter transforms: ${a.name} +${a.tAtk||0} ATK / +${a.tDef||0} DEF for ${a.trans||'no transformation'}; ${b.name} +${b.tAtk||0} ATK / +${b.tDef||0} DEF for ${b.trans||'no transformation'}. These start stats are the same numbers shown in Chapter I and in the breakdown. Research bonus: none in v15.</p><p><b>Stat builds:</b> ${statBuildString(a)}; ${statBuildString(b)}.</p>`+cats.map(c=>`<p><b>${c.label}:</b> ${c.w} — ${c.ev}</p>`).join('')+
   `<p><b>Can ${a.name} hurt ${b.name} with ordinary attacks?</b> ${harmAB.canOrdinary?'Yes.':'No.'} ${harmAB.path}</p><p><b>Can ${b.name} hurt ${a.name} with ordinary attacks?</b> ${harmBA.canOrdinary?'Yes.':'No.'} ${harmBA.path}</p>`+
   `<p><b>Can ${b.name} resist ${a.name}'s strongest abilities?</b> Resistances for ${b.name}: ${Object.entries(defenseProfileForV14(b).resistances).map(([k,v])=>k+' x'+v).join(', ')}. Force-field pool (engine parameter): ${fieldPoolForV14(b)} HP, if any. ${a.name}'s signature is ${a.sig} (x${a.sigMult}); whether it gets through depends on the recorded exchanges, not on this preview.</p><p><b>Can ${a.name} resist ${b.name}'s strongest abilities?</b> Resistances for ${a.name}: ${Object.entries(defenseProfileForV14(a).resistances).map(([k,v])=>k+' x'+v).join(', ')}. Force-field pool (engine parameter): ${fieldPoolForV14(a)} HP, if any. ${b.name}'s signature is ${b.sig} (x${b.sigMult}).</p>`+
   `<p><b>Demonstrated counters — ${a.name} vs ${b.name}:</b> ${demonstratedCounterV14(a,b).join(' ')}</p><p><b>Demonstrated counters — ${b.name} vs ${a.name}:</b> ${demonstratedCounterV14(b,a).join(' ')}</p>`+
@@ -2147,6 +2187,7 @@ function decisionParaV14(e){
     ];
     return variants[e.id%variants.length];
   }
+  if(e.type==='battlefield') return 'The fight takes place on '+ (e.detail||'the recorded battlefield') +'. Its effect was applied once at the start and is not reapplied later.';
   if(e.type==='field-break') return 'The force field that was absorbing blows gives way. The absorb pool is exhausted, and later blows will meet the defender directly.';
   if(e.type==='cannot-harm') return e.actor+' attacks, and the record is blunt about it: ordinary attacks cannot harm this defender at this power gap, so no comparable damage is recorded. Only a recorded exploit, counter, or bypass could change that.';
   if(e.type==='knockout') return e.target+' is knocked out by '+e.actor+'. In Death mode this is death at HP 0, and the fight ends here.';
@@ -2311,13 +2352,13 @@ function renderDossier(ids){
     const fmt=d=>{ try{ return new Date(d).toLocaleString(); }catch(e){ return d||'not fetched'; } };
     const wikiRow=used.wiki?`✅ Wikipedia (Encyclopedia) — FOUND ${fmt(used.time)}${isCached?' — CACHED, reused from a previous encounter (not re-fetched)':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(f.wiki)}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only, never in the episode): ${esc(used.wiki.extract.slice(0,200))}…</span>`:`${researchStatusLabel(used.wikiStatus||'NO_DATA')} — continuity: ${esc(continuityFor(f))}`;
     const fm=(typeof FANDOM!=='undefined'&&FANDOM[id])||null;
-    const fanRow=fm?(used.fandom?`✅ Fan-run Fandom wiki (${esc(fm.d)}, fan-run, not official canon) — FOUND ${fmt(used.time)}${isCached?' — CACHED':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="${used.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only): ${esc(used.fandom.extract.slice(0,200))}…</span>`:`${researchStatusLabel(used.fandomStatus||'NO_DATA')} — continuity: ${esc(continuityFor(f))}`):'No Fandom mapping in this build.';
+    const fanRow=fm?(used.fandom?`✅ Fan-run Fandom wiki (${esc(fm.d)}, fan-run, not official canon) — FOUND ${fmt(used.time)}${isCached?' — CACHED':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="${safeUrl(used.fandom.url)}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only): ${esc(used.fandom.extract.slice(0,200))}…</span>`:`${researchStatusLabel(used.fandomStatus||'NO_DATA')} — continuity: ${esc(continuityFor(f))}`):'No Fandom mapping in this build — NOT KNOWN for this fighter.';
     const prof=f?structuredProfileForV14(f):null;
     const conflict=((used.wikiStatus==='FOUND')!==(used.fandomStatus==='FOUND'))?'Conflict/coverage flag: sources disagree in coverage (one found, one no entry) — treated as uncertain coverage, not as proof. Only the selected continuity\'s record decides combat.':'Conflict/coverage flag: sources agree in coverage, but excerpts may still disagree — uncertain stays uncertain; only the selected continuity\'s record decides combat.';
-    return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)} — ${f?esc(continuityFor(f)):''}</b><br>${wikiRow}<br>${fanRow}<br><b>Cache key (v14, version-keyed):</b> fighter + variant + continuity — changing version never reuses another version's research.<br><b>Abilities (character record, per source model):</b> ${prof?esc(prof.powers.map(x=>x.name).join(', ')):'Not established'}<br><b>Feats (character record):</b> ${prof?esc(prof.feats.text):'Not established'}<br><b>Limitations (character record):</b> ${prof?esc(prof.limitations.text):'Not established'}<br><b>Fan opinion / discussion:</b> fan-run wiki pages and YouTube searches are discussion to investigate, not established fact. They never auto-grant powers and never change stats in v14.<br><b>Conflicting versions:</b> only the selected continuity above is used; versions are not silently merged.<br><b>${esc(conflict)}</b><br><b>Research stat bonus:</b> none in v14 — REMOVED. Research fills dossier fields only.</div>`;
+    return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)} — ${f?esc(continuityFor(f)):''}</b><br>${wikiRow}<br>${fanRow}<br><b>Cache key (v15, version-keyed):</b> fighter + variant + continuity — changing version never reuses another version's research.<br><b>Abilities (character record, per source model):</b> ${prof?esc(prof.powers.map(x=>x.name).join(', ')):'NOT KNOWN'}<br><b>Feats (character record):</b> ${prof?esc(prof.feats.text):'NOT KNOWN'}<br><b>Limitations (character record):</b> ${prof?esc(prof.limitations.text):'NOT KNOWN'}<br><b>Fan opinion / discussion:</b> fan-run wiki pages and YouTube searches are discussion to investigate, not established fact. They never auto-grant powers and never change stats in v15.<br><b>Conflicting versions:</b> only the selected continuity above is used; versions are not silently merged.<br><b>${esc(conflict)}</b><br><b>Research stat bonus:</b> none in v15 — REMOVED. Research fills dossier fields only.</div>`;
   }).join('');
 }
-/* ---- 8. Results, history (v14 format, validated, never mutating on reopen) ---- */
+/* ---- 8. Results, history (v15 format, validated, never mutating on reopen) ---- */
 function validationSummaryV14(lines){
   const failed=lines.filter(c=>c.passed===false).length;
   const unver=lines.filter(c=>c.passed==='unverified').length;
@@ -2329,6 +2370,7 @@ function validationLinesHtmlV14(lines){
 }
 function showResults(){
   const b=currentBattle; if(!b) return;
+  updateModeHeadings(b.victoryMode);
   document.getElementById('battle-screen').classList.remove('active');
   document.getElementById('results-screen').classList.add('active');
   const a=b.alpha[0], f2=b.beta[0];
@@ -2343,7 +2385,7 @@ function showResults(){
   const intFail=integrity.filter(c=>c.passed===false).length, accFail=accuracy.filter(c=>c.passed===false).length, qFail=quality.filter(c=>c.passed===false).length;
   const factuallyVerified=(intFail===0&&accFail===0);
   document.getElementById('consistency-note').innerText='Three separate systems below — never combined into one pass/fail. Battle Integrity and Narrative Accuracy decide whether the episode is verified; Story Quality alone never verifies or unverifies it.';
-  const cl=document.getElementById('consistency-lines'); if(cl) cl.innerHTML='<b>Legacy combined check is not used in v14.</b> See Systems A, B, and C below, each with its own result.';
+  const cl=document.getElementById('consistency-lines'); if(cl) cl.innerHTML='<b>Legacy combined check is not used in v15.</b> See Systems A, B, and C below, each with its own result.';
   const il=document.getElementById('integrity-lines'); if(il) il.innerHTML='<b>System A — Battle Integrity:</b> '+validationSummaryV14(integrity)+'<br>'+validationLinesHtmlV14(integrity);
   const in2=document.getElementById('integrity-note'); if(in2) in2.innerText='System A — Battle Integrity: '+validationSummaryV14(integrity)+'. Authoritative record: winner='+fr.winner+', loser='+fr.loserName+', victoryMode='+fr.victoryMode+', finishingEventId='+(fr.finishingEventId!=null?fr.finishingEventId:'none')+', finishingAbility='+(fr.finishingAbility||'none')+'.';
   const al=document.getElementById('accuracy-lines'); if(al) al.innerHTML='<b>System B — Narrative Factual Accuracy:</b> '+validationSummaryV14(accuracy)+'<br>'+validationLinesHtmlV14(accuracy);
@@ -2356,19 +2398,15 @@ function showResults(){
   saveBattle(b,story,breakdown,integrity,accuracy,quality);
   try{ const _h=loadHistory(); if(_h.length) currentHistoryId=_h[0].id; }catch(e){}
 }
-function validateSavedEpisodeV14(x){
-  if(!x||typeof x!=='object') return {ok:false,reason:'Saved record is missing or is not an object.'};
-  if(!x.winner||!x.story||typeof x.story!=='string') return {ok:false,reason:'Saved record is missing its winner or its episode text, so it cannot be opened as a complete episode.'};
-  if(x.eventRecord&&!Array.isArray(x.eventRecord)) return {ok:false,reason:'Saved record has a malformed event record (not a list of events).'};
-  if(x.validation&&typeof x.validation!=='object') return {ok:false,reason:'Saved record has a malformed validation block.'};
-  return {ok:true,legacy:x.formatVersion!=='v14',reason:x.formatVersion!=='v14'?'Saved in an older format — read-only, format differs.':'Valid v14 record.'};
+function validateSavedEpisodeV14(x){ /* v15: delegates to the stricter importer; v14 records are legacy read-only, v15 records are current. */
+  const v=validateImportedEpisodeV15(x); return {ok:v.ok,legacy:v.legacy,reason:v.reason};
 }
 function saveBattle(b,story,breakdown,integrity,accuracy,quality){
   try{
     const h=loadHistory();
     const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]);
     const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant));
-    h.unshift({id:Date.now(),formatVersion:'v14',date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'rule-based narrator (offline, verified episode) — AI draft, if generated, is separate and not consistency-checked',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
+    h.unshift({id:Date.now(),formatVersion:'v15',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'rule-based narrator (offline, verified episode) — AI draft, if generated, is separate and not consistency-checked',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
     localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));
   }catch(e){}
   renderHistory();
@@ -2378,7 +2416,7 @@ function renderHistory(){
   if(!h.length){ el.innerText='No saved battles yet.'; return; }
   el.innerHTML=h.map(x=>{
     const v=validateSavedEpisodeV14(x);
-    const flag=!v.ok?`<br><small>⚠️ Unopenable saved record — ${esc(v.reason)}</small>`:(!v.legacy?'':`<br><small>⚠️ Saved in v13.1 — read-only, format differs (v14 format not present). Opening it does not change its original result.</small>`);
+    const flag=!v.ok?`<br><small>⚠️ Unopenable saved record — ${esc(v.reason)}</small>`:(!v.legacy?'':`<br><small>⚠️ Saved in an older format — read-only, format differs. Opening it does not change its original result.</small>`);
     return `<div style="margin-bottom:10px"><b>${esc(x.date)} — ${esc(x.winner)}</b> on ${esc(x.battlefield)}<br><small>${esc((x.alpha||[]).join(', '))} vs ${esc((x.beta||[]).join(', '))}</small>${x.continuities?`<br><small>Continuities: ${esc(x.continuities.join(' vs '))}</small>`:''}${x.victoryType?`<br><small>Victory: ${esc(x.victoryType)}</small>`:''}${x.victoryMode?`<br><small>Mode: ${esc(x.victoryMode)}</small>`:''}${flag}<br><button class="btn small" onclick="viewHistory(${x.id})">View saved episode</button> <button class="btn small" onclick="exportSavedEpisode(${x.id})">Export / Backup (JSON + story)</button></div>`;
   }).join('')+'<p class="note">Saved episodes are stored on this device only (localStorage) and can be lost if browser storage is cleared. They are not saved online. Reopening a saved episode does not rerun the battle and never mutates its original result.</p>';
 }
@@ -2398,8 +2436,8 @@ function viewHistory(id){
     const al2=document.getElementById('accuracy-lines'); if(al2) al2.innerHTML='No validation available for an unopenable record.';
     return;
   }
-  document.getElementById('result-title').innerText='Saved Battle — '+x.winner+(v.legacy?' (v13.1 legacy — read-only)':'');
-  document.getElementById('result-desc').innerText=x.date+' • '+x.battlefield+(x.continuities?' • Continuities: '+x.continuities.join(' vs '):'')+(x.victoryType?' • Victory: '+x.victoryType:'')+(x.seed!=null?' • Battle seed: '+x.seed+' — same seed + fighters + variants + battlefield reproduces the same battle':'')+(x.researchRefs?' • Research: '+x.researchRefs.map(r=>r.fighter+': '+r.sources.map(s=>s.name+' '+s.status).join(', ')).join(' | '):'')+(v.legacy?' • ⚠️ Saved in v13.1 — read-only, format differs.':' • Format: v14.');
+  document.getElementById('result-title').innerText='Saved Battle — '+x.winner+(v.legacy?' (older-format legacy — read-only)':'');
+  document.getElementById('result-desc').innerText=x.date+' • '+x.battlefield+(x.continuities?' • Continuities: '+x.continuities.join(' vs '):'')+(x.victoryType?' • Victory: '+x.victoryType:'')+(x.seed!=null?' • Battle seed: '+x.seed+' — same seed + fighters + variants + battlefield reproduces the same battle':'')+(x.researchRefs?' • Research: '+x.researchRefs.map(r=>r.fighter+': '+r.sources.map(s=>s.name+' '+s.status).join(', ')).join(' | '):'')+(v.legacy?' • ⚠️ Saved in an older format — read-only, format differs.':' • Format: v15 (or older-format legacy, as flagged above).');
   const cl2=document.getElementById('consistency-lines'); if(cl2) cl2.innerHTML='See Systems A, B, and C below for this saved entry. Reopening does not rerun the battle and does not change the saved result.';
   const il2=document.getElementById('integrity-lines'); if(il2) il2.innerHTML=x.validation&&x.validation.integrity?('<b>Saved System A — Battle Integrity:</b><br>'+validationLinesHtmlV14(x.validation.integrity)):'<b>Saved System A — Battle Integrity:</b> Not stored for this legacy entry (UNVERIFIED on reopen — not recomputed from a different battle).';
   const al2=document.getElementById('accuracy-lines'); if(al2) al2.innerHTML=x.validation&&x.validation.accuracy?('<b>Saved System B — Narrative Factual Accuracy:</b><br>'+validationLinesHtmlV14(x.validation.accuracy)):'<b>Saved System B — Narrative Factual Accuracy:</b> Not stored for this legacy entry (UNVERIFIED on reopen — not recomputed from a different battle).';
@@ -2407,10 +2445,120 @@ function viewHistory(id){
   const qn2=document.getElementById('quality-note'); if(qn2) qn2.innerText='Loaded from history saved on this device only. Reopening does not rerun the battle and never mutates the original result.';
   document.getElementById('consistency-note').innerText='Loaded from history saved on this device only. It is not synced to other devices.';
   const _pl=document.getElementById('pipeline-stages'); if(_pl){ const _fake={rounds:x.rounds||0,events:(x.eventRecord||[]),battlefield:{name:x.battlefield||''},seed:x.seed}; _pl.innerHTML=`<b>Online Storytelling Pipeline — this saved battle (7 stages):</b><br>Stage 1 Research: saved dossier references are in the result description above.<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${_fake.rounds} rounds, ${_fake.events.length} recorded events on ${esc(x.battlefield||'')}. Battle seed: ${_fake.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Narrative Planning: causal beats from this saved battle's own event record.<br>Stage 5 AI Storytelling: rule-based episode below is the verified default; optional AI episode (if generated) is checked and never replaces a failed verified episode.<br>Stage 6 Consistency Review: see Systems A, B, and C above for this saved entry.<br>Stage 7 Final Episode: below, followed by the separate Combat Breakdown and verdict. Saved on this device only (see Battle History). This pipeline block is rendered ONLY from this saved entry's own record — never from the most recent battle.`; }
-  document.getElementById('story-output').innerHTML=x.story; document.getElementById('breakdown-output').innerHTML=x.breakdown;
+  document.getElementById('story-output').innerHTML=sanitizeStoryHtml(x.story); document.getElementById('breakdown-output').innerHTML=sanitizeStoryHtml(x.breakdown);
 }
-/* ---- v14 roster validation note (visible in the console and usable by tests) ---- */
-try{ if(typeof console!=='undefined'&&console.log) console.log('WAR-ROOM v14 roster tier issues:',JSON.stringify(validateRosterTiersV14()),'label issues:',JSON.stringify(rosterLabelIssuesV14())); }catch(e){}
+
+/* ================= WAR-ROOM v15 MODULE =================
+   Generic battle-state/victory system over combatant lists per side
+   (the UI stays 1v1-only; this engine is what a team UI would reuse, and
+   it is what the regression tests exercise for multi-combatant sides).
+   One knockout never ends a side with eligible fighters remaining.
+   Simultaneous elimination in the same round is an explicit tie /
+   mutual destruction, never an arbitrary winner. Round cap = stalemate. */
+function makeGenericCombatant(spec, side, index){
+  const base={id:spec.id||('fighter-'+index),name:spec.name||('Fighter '+(index+1)),variant:spec.variant||'Base',variantId:spec.variantId||'base',hp:spec.hp||1000,atk:spec.atk||100,def:spec.def||50,sp:spec.sp||1,dex:spec.dex||7,dur:spec.dur||7,pw:spec.pw||7,sta:spec.sta||7,tac:spec.tac||7,tier:spec.tier||'A',trait:spec.trait||'',pers:spec.pers||'disciplined',sig:spec.sig||'Strike',sigMult:spec.sigMult||1.5,trans:spec.trans||'',tAtk:spec.tAtk||0,tDef:spec.tDef||0,weak:spec.weak||'',style:spec.style||'',usage:spec.usage||'',immunities:spec.immunities||null,powers:spec.powers||null};
+  const inst=Object.assign({},base,{side:side,instanceId:side+'|'+base.id+'|'+base.variantId+'|'+index,currentHp:base.hp,maxHp:base.hp,alive:true,dead:false,unconscious:false,incapacitated:false,transformed:false,stamina:70+(base.sta||7)*5,regenTotal:0,studied:false,preparedCounter:false,knowledgeStage:'UNKNOWN',knowledgePattern:'',prideRefusalDone:false,kryptoniteExploit:false,fieldPool:(typeof fieldPoolForV14==='function'?fieldPoolForV14(base):0),fieldBroken:false,lastSigRound:undefined,actions:0});
+  return inst;
+}
+function genericSideAlive(side){return side.some(f=>f.alive);}
+function targetNameForGeneric(f){return f?f.name:'opponent';}
+function deriveOutcomeV15(aliveSides, victoryMode, teams){
+  const aliveCount=aliveSides.filter(Boolean).length;
+  if(aliveCount===0) return {decided:true,mutualDestruction:true,stalemate:false,winner:'Tie',winnerSide:null,victoryCondition:'Mutual destruction — both sides eliminated in the same round; no arbitrary winner is awarded'};
+  if(aliveCount===1){const wi=aliveSides.indexOf(true); const survivors=(teams&&teams[wi])?teams[wi].filter(f=>f.alive):[]; return {decided:true,mutualDestruction:false,stalemate:false,winner:survivors.length?survivors[0].name:'side'+wi,winnerSide:'side'+wi,victoryCondition:(victoryMode==='incapacitation'?'Incapacitation — opposing side has no eligible fighters remaining':'Death — opposing side has no eligible fighters remaining')};}
+  return {decided:false,mutualDestruction:false,stalemate:false,winner:null,winnerSide:null,victoryCondition:null};
+}
+function runGenericBattle(sides, opts){
+  opts=opts||{}; const victoryMode=opts.victoryMode||'death'; const maxRounds=opts.maxRounds||60; const seed=(opts.seed!==undefined&&opts.seed!==null)?opts.seed:12345; const rng=mulberry32(seed);
+  const teams=sides.map((list,si)=>list.map((spec,i)=>makeGenericCombatant(spec,'side'+si,i)));
+  const events=[]; let evId=0;
+  const push=(ev)=>{ev.id=evId++; ev.round=ev.round||0; ev.battlefield=(opts.battlefield&&opts.battlefield.name)||'Open Arena'; ev.victoryMode=victoryMode; ev.seed=seed; events.push(ev); return ev;};
+  let totalDamage=0;
+  if(opts.battlefield){ teams.forEach(team=>team.forEach(f=>applyBattlefieldOnceV15(f,opts.battlefield))); push({round:0,type:'battlefield',actor:'Battlefield',detail:opts.battlefield.name+' — effect applied exactly once: '+(opts.battlefield.atk>=0?'+':'')+opts.battlefield.atk+' ATK, '+(opts.battlefield.def>=0?'+':'')+opts.battlefield.def+' DEF to each fighter.'}); }
+  let winner=null, winnerSide=null, victoryCondition=null, stalemate=false, mutualDestruction=false;
+  for(let round=1; round<=maxRounds; round++){
+    const order=[]; teams.forEach(team=>team.forEach(f=>{if(f.alive) order.push(f);})); order.sort((x,y)=>(y.sp+(y.dex||7)/20)-(x.sp+(x.dex||7)/20));
+    for(const actor of order){
+      if(!actor.alive) continue;
+      const foeTeams=teams.filter(t=>t!==teams[actor.side==='side0'?0:1]);
+      const foes=[]; foeTeams.forEach(t=>t.forEach(f=>{if(f.alive) foes.push(f);}));
+      if(!foes.length) break;
+      if(actor.trait==='regen'&&actor.currentHp<actor.maxHp&&actor.alive){const cap=Math.floor(actor.maxHp*0.5); const rem=Math.max(0,cap-(actor.regenTotal||0)); const h=Math.min(40,actor.maxHp-actor.currentHp,rem); if(h>0){actor.currentHp+=h; actor.regenTotal+=h; push({round:round,type:'heal',actor:actor.name,actorId:actor.instanceId,detail:'regenerates',heal:h});}}
+      if(actor.trans&&!actor.transformed&&actor.currentHp<=actor.maxHp*0.45&&actor.variant!==actor.trans){actor.transformed=true; actor.atk+=actor.tAtk; actor.def+=actor.tDef; push({round:round,type:'transform',actor:actor.name,actorId:actor.instanceId,detail:actor.trans,transformHp:actor.currentHp,transformMax:actor.maxHp,trigger:'HP at or below 45% of maximum',legalTransition:true,fromForm:actor.variant,toForm:actor.trans,effectTable:(typeof transformEffectForV14==='function'?transformEffectForV14(actor):null)});}
+      if(actor.pers==='strategist'&&!actor.studied){actor.studied=true; actor.knowledgeStage='OBSERVED'; actor.knowledgePattern='repeated '+targetNameForGeneric(foes[0])+' approach'; actor.actions++; push({round:round,type:'study',actor:actor.name,actorId:actor.instanceId,detail:'observes a pattern: '+actor.knowledgePattern,reason:'strategist studies first — pattern observed, not yet a prepared counter',knowledgeState:'OBSERVED',pattern:actor.knowledgePattern,knowledgeStage:'OBSERVED'}); continue;}
+      if(actor.pers==='strategist'&&actor.studied&&!actor.preparedCounter&&actor.stamina>10){actor.preparedCounter=true; actor.stamina-=10; actor.actions++; push({round:round,type:'prepare',actor:actor.name,actorId:actor.instanceId,detail:'counter prepared against the '+actor.knowledgePattern,reason:'countermeasure prepared from an observed pattern; it has not landed yet',knowledgeState:'PREPARED',pattern:actor.knowledgePattern,knowledgeStage:'PREPARED'}); continue;}
+      if(actor.pers==='proud'&&!actor.prideRefusalDone&&actor.currentHp<=actor.maxHp*0.25&&foes[0].currentHp>actor.currentHp){actor.prideRefusalDone=true; push({round:round,type:'refused',actor:actor.name,actorId:actor.instanceId,target:foes[0].name,targetId:foes[0].instanceId,detail:'refuses to exploit a prepared counter against a weakened foe — pride forbids a dishonourable opening',reason:'proud fighter refuses to exploit a dishonourable opening when that contradicts their beliefs'});}
+      const target=foes[0]; if(!target) continue;
+      actor.actions++;
+      let useSig=false; if(actor.stamina>=15&&(actor.lastSigRound===undefined||round-actor.lastSigRound>=2)&&(target.currentHp<=target.maxHp*0.35||rng()<0.25)){useSig=true; actor.lastSigRound=round;}
+      const powers=(actor.powers&&actor.powers.length)?actor.powers.slice():[];
+      let ability, mult; if(useSig){ability=actor.sig; mult=actor.sigMult;} else if(powers.length){ability=powers[(actor.actions-1)%powers.length]; mult=1.25;} else {ability=actor.sig; mult=1.2;}
+      let blocked=false; if(target.trait==='infinity_void'&&actor.tier!=='EX'&&rng()<0.65) blocked=true;
+      if(!blocked){let dc=Math.max(0,Math.min(0.30,((target.dex||7)-(actor.dex||7))*0.02+((target.sp||1)-(actor.sp||1))*0.08)); if(rng()<dc) blocked=true;}
+      const crit=!blocked&&rng()<0.20;
+      let counterDetected=false, counterExploited=false;
+      if(actor.preparedCounter&&!blocked){
+        if(target.id==='spiderman'){let det=Math.max(0.15,Math.min(0.85,0.45)); if(rng()<det){counterDetected=true; blocked=true; push({round:round,type:'detected',actor:target.name,actorId:target.instanceId,target:actor.name,targetId:actor.instanceId,detail:'detects the prepared counter and avoids it',reason:'spider-sense detection check succeeded; counter does not land',knowledgeState:'DETECTED',pattern:actor.knowledgePattern,knowledgeStage:'DETECTED'});} else counterExploited=true;}
+        else counterExploited=true;
+        if(counterExploited&&actor.trait==='prep'&&target.weak&&target.weak.indexOf('Kryptonite')!==-1) actor.kryptoniteExploit=true;
+        actor.preparedCounter=false;
+      }
+      let resolved={damage:0,outcome:blocked?'blocked':'no damage',cannotHarm:false,notes:'',fieldBreak:false,boostUsed:false};
+      if(!blocked) resolved=resolveAttackV14({attacker:actor,target:target,ability:ability,mult:mult,isSig:useSig,crit:crit,boost:counterExploited?1.25:1,counterExploited:counterExploited,rng:rng});
+      const hpBefore=target.currentHp;
+      if(!blocked){target.currentHp=Math.max(0,target.currentHp-resolved.damage); if(resolved.fieldBreak) push({round:round,type:'field-break',actor:actor.name,actorId:actor.instanceId,target:target.name,targetId:target.instanceId,detail:'force field breaks — the absorb pool is exhausted'});}
+      actor.stamina=Math.max(0,actor.stamina-(useSig?15:8));
+      if(!blocked) totalDamage+=resolved.damage;
+      push({round:round,type:'attack',actor:actor.name,actorId:actor.instanceId,target:target.name,targetId:target.instanceId,ability:ability,damage:blocked?0:resolved.damage,crit:crit,blocked:blocked,targetHp:target.currentHp,targetMax:target.maxHp,hpBefore:hpBefore,cannotHarm:!!resolved.cannotHarm,immune:!!resolved.immune,counterDetected:counterDetected,counterExploited:counterExploited,knowledgeStage:counterDetected?'DETECTED':(counterExploited?'EXPLOITED':(actor.knowledgeStage||'UNKNOWN')),outcome:resolved.outcome||(blocked?'blocked':'hit'),reason:resolved.notes||''});
+      if(target.currentHp===0&&target.alive){
+        target.alive=false;
+        if(victoryMode==='incapacitation'){target.unconscious=true; target.incapacitated=true; target.dead=false; push({round:round,type:'incapacitated',actor:actor.name,actorId:actor.instanceId,target:target.name,targetId:target.instanceId,detail:'knocked out — unconscious, not dead'});}
+        else {target.dead=true; target.unconscious=false; push({round:round,type:'knockout',actor:actor.name,actorId:actor.instanceId,target:target.name,targetId:target.instanceId});}
+      }
+    }
+    const aliveSides=teams.map(t=>genericSideAlive(t));
+    const _out=deriveOutcomeV15(aliveSides,victoryMode,teams);
+    if(_out.decided){mutualDestruction=_out.mutualDestruction; stalemate=_out.stalemate; winner=_out.winner; winnerSide=_out.winnerSide; victoryCondition=_out.victoryCondition; break;}
+  }
+  if(!winner){stalemate=true; winner='Stalemate'; winnerSide=null; victoryCondition='Stalemate — round cap reached with eligible fighters remaining on more than one side; no win is awarded to a fighter who did not earn it';}
+  const finalState=teams.flat().map(f=>({instanceId:f.instanceId,name:f.name,side:f.side,alive:f.alive,dead:!!f.dead,unconscious:!!f.unconscious,incapacitated:!!f.incapacitated,transformed:!!f.transformed,currentHp:f.currentHp,maxHp:f.maxHp,state:(typeof fighterStateForV14==='function'?fighterStateForV14(f).state:'unknown')}));
+  const fin=events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0]||null;
+  const finAtk=fin?[...events].reverse().find(e=>e.type==='attack'&&e.actorId===fin.actorId&&e.targetId===fin.targetId&&e.id<fin.id):null;
+  const finalRecord={winner:winner,winnerSide:winnerSide,stalemate:stalemate,mutualDestruction:mutualDestruction,victoryMode:victoryMode,victoryCondition:victoryCondition,finishingEventId:fin?fin.id:null,finishingActor:fin?fin.actor:null,finishingTarget:fin?fin.target:null,finishingAbility:finAtk?finAtk.ability:null};
+  return {teams:teams,alpha:teams[0]||[],beta:teams[1]||[],events:events,totalDamage:totalDamage,destruction:Math.min(100,Math.floor(totalDamage/200)),winner:winner,winnerSide:winnerSide,winnerFighter:teams.flat().find(f=>f.name===winner)||null,loserFighter:null,victoryCondition:victoryCondition,stalemate:stalemate,mutualDestruction:mutualDestruction,rounds:events.length?events[events.length-1].round:0,battlefield:opts.battlefield||{name:'Open Arena',desc:'Flat, open ground.',atk:0,def:0},seed:seed,victoryMode:victoryMode,finalState:finalState,finalRecord:finalRecord};
+}
+function playbackApplyEvents(events, initialStates){
+  const states={}; (initialStates||[]).forEach(s=>{states[s.instanceId||s.name]={instanceId:s.instanceId||s.name,name:s.name,currentHp:s.currentHp,maxHp:s.maxHp,alive:s.alive!==false,dead:!!s.dead,unconscious:!!s.unconscious,incapacitated:!!s.incapacitated,transformed:!!s.transformed};});
+  const violations=[];
+  (events||[]).forEach(e=>{
+    if(e.type==='attack'&&e.targetId&&states[e.targetId]){states[e.targetId].currentHp=e.targetHp; if(e.targetHp===0) states[e.targetId].alive=false;}
+    else if(e.type==='transform'&&e.actorId&&states[e.actorId]){if(states[e.actorId].alive) states[e.actorId].transformed=true; else violations.push('transform by defeated fighter '+e.actor);}
+    else if(e.type==='heal'&&e.actorId&&states[e.actorId]){if(states[e.actorId].alive) states[e.actorId].currentHp=Math.min(states[e.actorId].maxHp,states[e.actorId].currentHp+(e.heal||0)); else violations.push('heal ignored for defeated fighter '+e.actor+' (playback never revives)');}
+    else if(e.type==='knockout'&&e.targetId&&states[e.targetId]){states[e.targetId].alive=false; states[e.targetId].dead=true; states[e.targetId].currentHp=0;}
+    else if(e.type==='incapacitated'&&e.targetId&&states[e.targetId]){states[e.targetId].alive=false; states[e.targetId].unconscious=true; states[e.targetId].incapacitated=true;}
+  });
+  return {states:Object.values(states),violations:violations};
+}
+function validateSelectionV15(ids){
+  if(!Array.isArray(ids)||ids.length!==2) return {ok:false,reason:'Exactly 2 distinct fighters are required; got '+(Array.isArray(ids)?ids.length:'not a list')+'.'};
+  if(ids[0]===ids[1]) return {ok:false,reason:'Mirror match blocked: the same fighter cannot fight itself.'};
+  const missing=ids.filter(id=>!(typeof byId==='function'?byId(id):null)); if(missing.length) return {ok:false,reason:'Unknown fighter id(s): '+missing.join(', ')+'.'};
+  return {ok:true,reason:'Valid 1v1 selection: two distinct fighters.'};
+}
+function validateImportedEpisodeV15(x){
+  if(!x||typeof x!=='object') return {ok:false,legacy:false,reason:'Imported record is missing or is not an object.'};
+  if(!x.winner||typeof x.story!=='string') return {ok:false,legacy:false,reason:'Imported record is missing its winner or its episode text, so it cannot be opened as a complete episode.'};
+  if(x.eventRecord!==undefined&&!Array.isArray(x.eventRecord)) return {ok:false,legacy:false,reason:'Imported record has a malformed event record (not a list of events).'};
+  if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
+  if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
+  if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
+  const legacy=x.formatVersion!=='v15';
+  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15 record.'};
+}
+function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
+
+/* ---- v15 roster validation note (visible in the console and usable by tests) ---- */
+try{ if(typeof console!=='undefined'&&console.log) console.log('WAR-ROOM v15 roster tier issues:',JSON.stringify(validateRosterTiersV14()),'label issues:',JSON.stringify(rosterLabelIssuesV14())); }catch(e){}
 
 /* ============ INIT ============ */
 document.getElementById('search-input').addEventListener('input',e=>{searchTerm=e.target.value.toLowerCase();renderRoster()});

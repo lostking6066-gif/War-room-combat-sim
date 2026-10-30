@@ -1,0 +1,410 @@
+/* WAR-ROOM v15 regression harness — Node, DOM-stub, deterministic.
+   Usage: node war-room-v15-tests.js [path-to-war-room-v15.html]
+   Loads the extracted <script> from the v15 file (truncated before the
+   browser INIT block), evaluates it in a vm context with stubbed
+   document/localStorage, then runs the 20 required tests + the 8 v14
+   regression scenarios + the all-194-vs-Batman no-crash check + source
+   audits. A failing test is a bug in the implementation, not in the
+   test: do not weaken an assertion to match current behaviour.
+   Exit code 0 = all pass, 1 = any failure. */
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const vm = require('vm');
+
+const htmlPath = process.argv[2] || path.join(__dirname, 'war-room-v15.html');
+const html = fs.readFileSync(htmlPath, 'utf8');
+const scriptMatch = html.match(/<script>([\s\S]*)<\/script>/);
+if (!scriptMatch) { console.error('FATAL: no <script> block found in ' + htmlPath); process.exit(2); }
+let script = scriptMatch[1];
+const initIdx = script.indexOf('/* ============ INIT ============ */');
+if (initIdx !== -1) script = script.slice(0, initIdx);
+
+function makeElement() {
+  return {
+    innerHTML: '', innerText: '', textContent: '', value: '', style: {},
+    dataset: {}, classList: { add() {}, remove() {}, contains() { return false; } },
+    addEventListener() {}, removeEventListener() {}, click() {},
+    setAttribute() {}, getAttribute() { return null; }, querySelectorAll() { return []; },
+    scrollTop: 0,
+  };
+}
+function makeLocalStorage(corrupt) {
+  const store = {};
+  if (corrupt === 'garbage') store['warroom_battles_v3'] = 'not-json{{{';
+  if (corrupt === 'nonarray') store['warroom_battles_v3'] = '{"a":1}';
+  return {
+    getItem(k) { return Object.prototype.hasOwnProperty.call(store, k) ? store[k] : null; },
+    setItem(k, v) { store[k] = String(v); },
+    removeItem(k) { delete store[k]; },
+    _store: store,
+  };
+}
+const els = {};
+const sandbox = {
+  console, setTimeout, clearTimeout, setInterval, clearInterval,
+  document: {
+    getElementById(id) { if (!els[id]) els[id] = makeElement(); return els[id]; },
+    createElement() { return makeElement(); },
+    querySelectorAll() { return []; },
+  },
+  window: {}, navigator: { onLine: true },
+  localStorage: makeLocalStorage(false),
+  alert(msg) { sandbox._lastAlert = msg; },
+  fetch: async () => { throw new Error('network disabled in harness'); },
+};
+sandbox.window = sandbox;
+vm.createContext(sandbox);
+vm.runInContext(script, sandbox, { filename: 'war-room-v15-extracted.js' });
+// Expose the script's globals to the test code running in the same context.
+const ctx = sandbox;
+
+let passed = 0, failed = 0;
+const failures = [];
+function check(name, cond, detail) {
+  if (cond) { passed++; console.log('PASS  ' + name); }
+  else { failed++; failures.push(name + ' :: ' + (detail || '')); console.log('FAIL  ' + name + (detail ? ' — ' + detail : '')); }
+}
+function eq(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
+function runInCtx(code) { return vm.runInContext(code, ctx); }
+
+// ---- Fixture helpers (run inside the vm context so roster globals resolve) ----
+// Simpler: build specs in plain JS from the vm-visible roster via a JSON round-trip.
+function spec(id, over) {
+  const json = runInCtx(`JSON.stringify((function(){ const f = byId(${JSON.stringify(id)}); if(!f) return null; return {id:f.id,name:f.name,hp:f.hp,atk:f.atk,def:f.def,sp:f.sp,dex:f.dex||7,dur:f.dur||7,pw:f.pw||7,sta:f.sta||7,tac:f.tac||7,tier:f.tier,trait:f.trait||'',pers:f.pers,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',tAtk:f.tAtk||0,tDef:f.tDef||0,weak:f.weak||'',style:f.style||'',usage:f.usage||'',powers:(POWERS[f.id]||[]).slice()}; })())`);
+  const s = JSON.parse(json);
+  if (!s) throw new Error('unknown fighter ' + id);
+  s.variant = 'Base'; s.variantId = 'base';
+  return Object.assign(s, over || {});
+}
+function battle(sides, opts) {
+  // Pass specs into the vm context as JSON, run, return JSON out.
+  const code = `JSON.stringify(runGenericBattle(JSON.parse(${JSON.stringify(JSON.stringify(sides))}), JSON.parse(${JSON.stringify(JSON.stringify(opts || {}))})))`;
+  return JSON.parse(runInCtx(code));
+}
+function call(fn, argJson) {
+  return JSON.parse(runInCtx(`JSON.stringify(${fn}(JSON.parse(${JSON.stringify(argJson)})))`));
+}
+function noPostDefeatActions(b) {
+  const dead = new Set();
+  for (const e of b.events) {
+    if (e.type === 'knockout' || e.type === 'incapacitated') dead.add(e.actorId || e.target);
+    // track by target id for defeat:
+  }
+  const defeated = new Set();
+  for (const e of b.events) {
+    if (e.type === 'knockout' || e.type === 'incapacitated') defeated.add(e.targetId);
+    if ((e.type === 'attack' || e.type === 'transform' || e.type === 'heal' || e.type === 'study' || e.type === 'prepare') && defeated.has(e.actorId)) return false;
+  }
+  return true;
+}
+function stateOf(b, name) { return b.finalState.find(s => s.name === name); }
+
+// ================= 20 REQUIRED TESTS =================
+// 1. Stronger defeats substantially weaker when justified.
+{
+  const b = battle([[spec('superman')], [spec('rocky')]], { seed: 12345, victoryMode: 'death' });
+  check('1 stronger defeats weaker (Superman beats Rocky)', b.winner === 'Superman' && stateOf(b, 'Rocky Balboa').dead === true && stateOf(b, 'Rocky Balboa').currentHp === 0, 'winner=' + b.winner);
+}
+// 2. Weaker exploits a legitimate canonical weakness.
+{
+  const b = battle([[spec('batman')], [spec('superman')]], { seed: 12345, victoryMode: 'death' });
+  const exploited = b.events.filter(e => e.type === 'attack' && e.counterExploited && e.damage > 0);
+  check('2 weaker exploits canonical weakness (Batman Kryptonite counter lands for damage)', exploited.length >= 1, 'exploited damaging attacks=' + exploited.length + ' winner=' + b.winner);
+  const direct = runInCtx(`JSON.stringify(resolveAttackV14({attacker:{name:'Batman',tier:'S',atk:110,def:85,dex:8,pw:6,dur:6,trait:'prep',kryptoniteExploit:true,currentHp:1000,maxHp:1000},target:{name:'Superman',tier:'EX',atk:160,def:115,dex:7,pw:10,dur:10,weak:'Kryptonite; magic bypasses much of his durability',currentHp:1800,maxHp:1800},ability:'Gadget Barrage',mult:1.5,isSig:true,crit:false,boost:1.25,counterExploited:true,rng:()=>0.5}))`);
+  const d = JSON.parse(direct);
+  check('2b Kryptonite bypass via resolveAttackV14 deals damage (not cannot-harm)', d.damage > 0 && !d.cannotHarm, JSON.stringify(d));
+}
+// 3. Immune target takes no damage from a canonically-immune attack type.
+{
+  const att = { name: 'Attacker', tier: 'A', atk: 200, def: 50, dex: 7, pw: 7, dur: 7, currentHp: 1000, maxHp: 1000 };
+  const def = { name: 'Immune', tier: 'A', atk: 100, def: 50, dex: 7, pw: 7, dur: 7, currentHp: 1000, maxHp: 1000, immunities: ['poison'] };
+  const r1 = JSON.parse(runInCtx(`JSON.stringify(resolveAttackV14({attacker:JSON.parse(${JSON.stringify(JSON.stringify(att))}),target:JSON.parse(${JSON.stringify(JSON.stringify(def))}),ability:'Venom Strike',mult:1,isSig:false,crit:false,boost:1,rng:()=>0.5}))`));
+  const r2 = JSON.parse(runInCtx(`JSON.stringify(resolveAttackV14({attacker:JSON.parse(${JSON.stringify(JSON.stringify(att))}),target:JSON.parse(${JSON.stringify(JSON.stringify(def))}),ability:'Heavy Punch',mult:1,isSig:false,crit:false,boost:1,rng:()=>0.5}))`));
+  const r3 = JSON.parse(runInCtx(`JSON.stringify(resolveAttackV14({attacker:JSON.parse(${JSON.stringify(JSON.stringify(att))}),target:JSON.parse(${JSON.stringify(JSON.stringify(def))}),ability:'Venom Strike',mult:1,isSig:false,crit:false,boost:1,bypassMechanism:true,rng:()=>0.5}))`));
+  check('3 immune target takes 0 poison damage', r1.damage === 0 && r1.outcome === 'immune', JSON.stringify(r1));
+  check('3b same target takes physical damage', r2.damage > 0, JSON.stringify(r2));
+  check('3c recorded bypass mechanism overrides immunity', r3.damage > 0, JSON.stringify(r3));
+}
+// 4. Valid special ability bypasses a defence when its mechanics justify it.
+{
+  const att = { name: 'Psychic', tier: 'A', atk: 130, def: 50, dex: 7, pw: 7, dur: 7, currentHp: 1000, maxHp: 1000 };
+  const def = { name: 'Titan', tier: 'EX', atk: 100, def: 100, dex: 7, pw: 7, dur: 10, currentHp: 2000, maxHp: 2000 };
+  const r = JSON.parse(runInCtx(`JSON.stringify(resolveAttackV14({attacker:JSON.parse(${JSON.stringify(JSON.stringify(att))}),target:JSON.parse(${JSON.stringify(JSON.stringify(def))}),ability:'Mind Blast',mult:1.5,isSig:true,crit:false,boost:1,rng:()=>0.5}))`));
+  const rPhys = JSON.parse(runInCtx(`JSON.stringify(resolveAttackV14({attacker:JSON.parse(${JSON.stringify(JSON.stringify(att))}),target:JSON.parse(${JSON.stringify(JSON.stringify(def))}),ability:'Heavy Punch',mult:1.5,isSig:true,crit:false,boost:1,rng:()=>0.5}))`));
+  check('4 psychic bypass deals damage despite tier gap + high durability', r.damage > 0 && !r.cannotHarm, JSON.stringify(r));
+  check('4b ordinary physical attack at same gap is cannot-harm', rPhys.cannotHarm === true && rPhys.damage === 0, JSON.stringify(rPhys));
+}
+// 5. Defeated character takes no further ordinary turns.
+{
+  const b = battle([[spec('superman')], [spec('rocky')]], { seed: 99, victoryMode: 'death' });
+  check('5 no defeated fighter acts after defeat', noPostDefeatActions(b), 'events=' + b.events.length);
+}
+// 6. Knockout does NOT end a multi-combatant side while teammates remain.
+{
+  const weak = { id: 'weak1', name: 'Weak Teammate', hp: 300, atk: 50, def: 50, sp: 1, dex: 7, dur: 7, pw: 7, sta: 7, tier: 'A', pers: 'disciplined', sig: 'Tap', sigMult: 1.2, trans: '', tAtk: 0, tDef: 0, weak: '', powers: ['Tap'] };
+  const strong = spec('superman');
+  const foe = spec('goku');
+  const b = battle([[weak, strong], [foe]], { seed: 12345, victoryMode: 'death' });
+  const weakId = b.teams[0][0].instanceId;
+  const koIdx = b.events.findIndex(e => (e.type === 'knockout' || e.type === 'incapacitated') && e.targetId === weakId);
+  const strongActsAfter = koIdx >= 0 && b.events.slice(koIdx + 1).some(e => e.actorId === b.teams[0][1].instanceId && e.type === 'attack');
+  check('6 side survives first knockout: teammate acts after it', koIdx >= 0 && strongActsAfter, 'koIdx=' + koIdx + ' winner=' + b.winner);
+}
+// 7. Simultaneous defeat = explicit tie / mutual destruction.
+{
+  const o0 = JSON.parse(runInCtx(`JSON.stringify(deriveOutcomeV15([false,false],'death',[[{name:'A',alive:false}],[{name:'B',alive:false}]]))`));
+  const o1 = JSON.parse(runInCtx(`JSON.stringify(deriveOutcomeV15([true,false],'death',[[{name:'A',alive:true}],[{name:'B',alive:false}]]))`));
+  const o2 = JSON.parse(runInCtx(`JSON.stringify(deriveOutcomeV15([true,true],'death',[[{name:'A',alive:true}],[{name:'B',alive:true}]]))`));
+  check('7 simultaneous elimination is Tie, not an arbitrary winner', o0.winner === 'Tie' && o0.mutualDestruction === true && o0.winnerSide === null, JSON.stringify(o0));
+  check('7b single surviving side wins that side', o1.winner === 'A' && o1.winnerSide === 'side0', JSON.stringify(o1));
+  check('7c both sides alive is not decided', o2.decided === false, JSON.stringify(o2));
+}
+// 8. Healing/regen within caps, never revives.
+{
+  const b = battle([[spec('deadpool')], [spec('goku')]], { seed: 12345, victoryMode: 'death' });
+  const heals = b.events.filter(e => e.type === 'heal' && e.actor === 'Deadpool');
+  const totalHeal = heals.reduce((s, e) => s + (e.heal || 0), 0);
+  const dp = stateOf(b, 'Deadpool');
+  check('8 regen total within 50% max-HP cap (650)', totalHeal <= 650 && totalHeal > 0, 'totalHeal=' + totalHeal);
+  check('8b final HP never exceeds max', b.finalState.every(s => s.currentHp <= s.maxHp), JSON.stringify(b.finalState));
+  check('8c playback never revives a defeated fighter', (() => {
+    const init = [{ instanceId: 'x', name: 'Dead', currentHp: 0, maxHp: 1000, alive: false, dead: true }];
+    const out = JSON.parse(runInCtx(`JSON.stringify(playbackApplyEvents([{type:'heal',actorId:'x',actor:'Dead',heal:40}], JSON.parse(${JSON.stringify(JSON.stringify(init))})))`));
+    return out.states[0].currentHp === 0 && out.states[0].alive === false && out.violations.length >= 1;
+  })(), '');
+}
+// 9. Transforms modify the correct character/attributes only.
+{
+  const x = { id: 'x', name: 'Fighter X', hp: 1000, atk: 100, def: 50, sp: 1, dex: 7, dur: 7, pw: 7, sta: 7, tier: 'A', pers: 'disciplined', sig: 'Strike', sigMult: 1.5, trans: 'Mega Form', tAtk: 150, tDef: 10, weak: '', powers: ['Punch'] };
+  const y = { id: 'y', name: 'Fighter Y', hp: 1000, atk: 140, def: 50, sp: 1, dex: 7, dur: 7, pw: 7, sta: 7, tier: 'A', pers: 'disciplined', sig: 'Smash', sigMult: 1.5, trans: '', tAtk: 0, tDef: 0, weak: '', powers: ['Kick'] };
+  const withT = battle([[x], [y]], { seed: 12345, victoryMode: 'death' });
+  const withoutT = battle([[{ ...x, trans: '', tAtk: 0, tDef: 0 }], [y]], { seed: 12345, victoryMode: 'death' });
+  const tEv = withT.events.find(e => e.type === 'transform');
+  check('9 transform flips winner via its recorded effect (not by removal alone)', withT.winner === 'Fighter X' && withoutT.winner === 'Fighter Y' && !!tEv && tEv.detail === 'Mega Form', 'with=' + withT.winner + ' without=' + withoutT.winner);
+  check('9b transform changes only the transforming fighter', withT.teams[1][0].atk === 140 && withT.teams[0][0].atk === 250, 'xAtk=' + withT.teams[0][0].atk + ' yAtk=' + withT.teams[1][0].atk);
+  const same = battle([[spec('luffy', { variant: 'Gear 5', variantId: 'base' })], [spec('rocky')]], { seed: 5, victoryMode: 'death' });
+  // Luffy variant equals its transform: the generic engine must not grant a second transform.
+  const luffyTrans = same.events.filter(e => e.type === 'transform' && e.actor === 'Monkey D. Luffy');
+  check('9c a variant that IS the transform form gets no second transform', luffyTrans.length === 0, 'transforms=' + luffyTrans.length);
+}
+// 10. Battlefield effects applied exactly once.
+{
+  const inst = JSON.parse(runInCtx(`JSON.stringify((function(){ const f={id:'t',name:'T',atk:100,def:50}; applyBattlefieldOnceV15(f,{id:'ruined',name:'Ruined City',atk:0,def:12}); const a={atk:f.atk,def:f.def}; applyBattlefieldOnceV15(f,{id:'ruined',name:'Ruined City',atk:0,def:12}); return {first:a,second:{atk:f.atk,def:f.def}}; })())`));
+  check('10 battlefield applied exactly once (second apply is a no-op)', inst.first.atk === 100 && inst.first.def === 62 && inst.second.atk === 100 && inst.second.def === 62, JSON.stringify(inst));
+  const b = battle([[spec('superman')], [spec('rocky')]], { seed: 3, victoryMode: 'death', battlefield: { id: 'ruined', name: 'Ruined City', desc: 'Broken buildings give cover.', atk: 0, def: 12 } });
+  check('10b exactly one battlefield event in the record', b.events.filter(e => e.type === 'battlefield').length === 1, 'bf events=' + b.events.filter(e => e.type === 'battlefield').length);
+}
+// 11. Playback reproduces recorded events exactly (no recalculation).
+{
+  const b = battle([[spec('superman')], [spec('rocky')]], { seed: 12345, victoryMode: 'death' });
+  const init = b.teams.flat().map(f => ({ instanceId: f.instanceId, name: f.name, currentHp: f.maxHp, maxHp: f.maxHp, alive: true, dead: false }));
+  const out = JSON.parse(runInCtx(`JSON.stringify(playbackApplyEvents(JSON.parse(${JSON.stringify(JSON.stringify(b.events))}), JSON.parse(${JSON.stringify(JSON.stringify(init))})))`));
+  const match = out.states.every(s => { const fs = b.finalState.find(x => x.instanceId === s.instanceId); return fs && fs.currentHp === s.currentHp && fs.alive === s.alive && fs.dead === s.dead; });
+  check('11 playback final state equals authoritative final state', match && out.violations.length === 0, JSON.stringify(out.states) + ' vs ' + JSON.stringify(b.finalState));
+}
+// 12. Final winner agrees with final combat state.
+{
+  const b = battle([[spec('superman')], [spec('rocky')]], { seed: 12345, victoryMode: 'death' });
+  check('12 winner alive, loser dead, finalRecord agrees', b.finalRecord.winner === b.winner && stateOf(b, 'Superman').alive === true && stateOf(b, 'Rocky Balboa').dead === true, 'winner=' + b.winner + ' finalRecord=' + b.finalRecord.winner);
+}
+// 13. Invalid selections cannot start a battle.
+{
+  const v = (ids) => JSON.parse(runInCtx(`JSON.stringify(validateSelectionV15(JSON.parse(${JSON.stringify(JSON.stringify(ids))})))`));
+  check('13 mirror blocked', v(['batman', 'batman']).ok === false, '');
+  check('13b single fighter blocked', v(['batman']).ok === false, '');
+  check('13c three fighters blocked', v(['batman', 'superman', 'goku']).ok === false, '');
+  check('13d unknown id blocked', v(['nope', 'superman']).ok === false, '');
+  check('13e valid distinct pair allowed', v(['batman', 'superman']).ok === true, '');
+}
+// 14. Missing research data does not crash.
+{
+  let ok = true, detail = '';
+  try {
+    const prof = runInCtx(`structuredProfileHtml(byId('frodo'))`);
+    if (typeof prof !== 'string' || prof.indexOf('NOT KNOWN') === -1) { ok = false; detail = 'profile html lacks NOT KNOWN'; }
+    const b = battle([[spec('frodo')], [spec('samwise')]], { seed: 11, victoryMode: 'death' });
+    if (!b.winner) { ok = false; detail = 'battle without research did not finish'; }
+  } catch (e) { ok = false; detail = String(e && e.message || e); }
+  check('14 missing research does not crash; unknown fields show NOT KNOWN', ok, detail); // NOT KNOWN here is the unknown equipment field, not a missing powerset
+}
+// 15. Failed story generation does not destroy battle results.
+{
+  const b = battle([[spec('superman')], [spec('rocky')]], { seed: 12345, victoryMode: 'death' });
+  const beforeEvents = JSON.stringify(b.events), beforeWinner = b.winner;
+  let threw = false;
+  try { runInCtx(`generateEpisodeV14(null)`); } catch (e) { threw = true; }
+  check('15 failed story attempt leaves the battle record intact', threw === true && JSON.stringify(b.events) === beforeEvents && b.winner === beforeWinner, 'threw=' + threw);
+}
+// 16. Corrupted saved data does not crash startup.
+{
+  const ok = runInCtx(`(function(){ const old = localStorage; try{ localStorage = { getItem: function(k){ return k==='warroom_battles_v3' ? 'not-json{{{' : null; }, setItem: function(){}, removeItem: function(){} }; const a = loadHistory(); localStorage = { getItem: function(k){ return k==='warroom_battles_v3' ? '{"a":1}' : null; }, setItem: function(){}, removeItem: function(){} }; const c = loadHistory(); return JSON.stringify({a:a,c:c}); } finally { localStorage = old; } })()`);
+  const o = JSON.parse(ok);
+  check('16 corrupted / non-array localStorage returns [] without throwing', Array.isArray(o.a) && o.a.length === 0 && Array.isArray(o.c) && o.c.length === 0, ok);
+}
+// 17. Imported history is validated (malformed rejected safely).
+{
+  const v = (x) => JSON.parse(runInCtx(`JSON.stringify(validateImportedEpisodeV15(JSON.parse(${JSON.stringify(JSON.stringify(x))})))`));
+  check('17 null rejected', v(null).ok === false, '');
+  check('17b missing story rejected', v({ winner: 'X' }).ok === false, '');
+  check('17c non-array eventRecord rejected', v({ winner: 'X', story: 's', eventRecord: {} }).ok === false, '');
+  check('17d malformed event entry rejected', v({ winner: 'X', story: 's', eventRecord: [{ type: 'attack' }] }).ok === false, '');
+  check('17e contradicting finalRecord rejected', v({ winner: 'X', story: 's', finalRecord: { winner: 'Y' } }).ok === false, '');
+  check('17f valid v15 accepted', v({ winner: 'X', story: 's', formatVersion: 'v15', eventRecord: [] }).ok === true && v({ winner: 'X', story: 's', formatVersion: 'v15', eventRecord: [] }).legacy === false, '');
+  check('17g v14 flagged legacy read-only (still openable)', (() => { const r = v({ winner: 'X', story: 's', formatVersion: 'v14', eventRecord: [] }); return r.ok === true && r.legacy === true; })(), '');
+}
+// 18. Similar names / two versions of one character do not cross-target.
+{
+  const g1 = spec('gandalf', { variant: 'Base', variantId: 'base' });
+  const g2 = spec('gandalf', { variant: 'Gandalf the White', variantId: 'v2' });
+  const b = battle([[g1], [g2]], { seed: 12345, victoryMode: 'death' });
+  const ids = new Set(b.teams.flat().map(f => f.instanceId));
+  const selfHit = b.events.some(e => e.type === 'attack' && e.actorId && e.actorId === e.targetId);
+  check('18 two versions of one character have distinct instance ids and never self-target', ids.size === 2 && !selfHit, 'ids=' + [...ids].join(','));
+  const init = b.teams.flat().map(f => ({ instanceId: f.instanceId, name: f.name, currentHp: f.maxHp, maxHp: f.maxHp, alive: true, dead: false }));
+  const out = JSON.parse(runInCtx(`JSON.stringify(playbackApplyEvents(JSON.parse(${JSON.stringify(JSON.stringify(b.events))}), JSON.parse(${JSON.stringify(JSON.stringify(init))})))`));
+  check('18b playback keeps the two versions separate', out.states.length === 2 && out.states[0].instanceId !== out.states[1].instanceId, '');
+}
+// 19. Battle cannot run indefinitely (round cap + stalemate).
+{
+  const tankA = { id: 'ta', name: 'Tank A', hp: 5000, atk: 10, def: 200, sp: 1, dex: 7, dur: 7, pw: 7, sta: 7, tier: 'A', pers: 'disciplined', sig: 'Tap', sigMult: 1.1, trans: '', tAtk: 0, tDef: 0, weak: '', powers: ['Tap'] };
+  const tankB = { id: 'tb', name: 'Tank B', hp: 5000, atk: 10, def: 200, sp: 1, dex: 7, dur: 7, pw: 7, sta: 7, tier: 'A', pers: 'disciplined', sig: 'Tap', sigMult: 1.1, trans: '', tAtk: 0, tDef: 0, weak: '', powers: ['Tap'] };
+  const b = battle([[tankA], [tankB]], { seed: 1, victoryMode: 'death', maxRounds: 5 });
+  check('19 round cap ends in an explained stalemate, never an arbitrary win', b.winner === 'Stalemate' && b.stalemate === true && b.rounds <= 5, 'winner=' + b.winner + ' rounds=' + b.rounds);
+}
+// 20. Generated story does not contradict recorded deaths/transforms/final result.
+{
+  const b = battle([[spec('superman')], [spec('rocky')]], { seed: 12345, victoryMode: 'death' });
+  const story = runInCtx(`(function(){ const bb = JSON.parse(${JSON.stringify(JSON.stringify(b))}); bb.alpha = bb.teams[0]; bb.beta = bb.teams[1]; bb.winnerFighter = bb.teams[0].find(f=>f.alive)||null; bb.loserFighter = bb.teams[1].find(f=>!f.alive)||bb.teams[1][0]; return generateEpisodeV14(bb); })()`);
+  const plain = story.replace(/<[^>]+>/g, ' ');
+  const finAtk = [...b.events].reverse().find(e => e.type === 'attack' && e.actor === 'Superman');
+  check('20 story names winner and real finishing ability', plain.indexOf('Superman') !== -1 && finAtk && plain.indexOf(finAtk.ability) !== -1, 'finAbility=' + (finAtk && finAtk.ability));
+  const bi = battle([[spec('kakashi')], [spec('batman')]], { seed: 12345, victoryMode: 'incapacitation' });
+  if (bi.winner !== 'Stalemate' && bi.winner !== 'Tie') {
+    const storyI = runInCtx(`(function(){ const bb = JSON.parse(${JSON.stringify(JSON.stringify(bi))}); bb.alpha = bb.teams[0]; bb.beta = bb.teams[1]; bb.winnerFighter = bb.teams.flat().find(f=>f.name===bb.winner)||null; bb.loserFighter = bb.teams.flat().find(f=>f.name!==bb.winner)||null; return generateEpisodeV14(bb); })()`);
+    const plainI = storyI.replace(/<[^>]+>/g, ' ');
+    const loserName = bi.teams.flat().find(f => f.name !== bi.winner).name;
+    check('20b incapacitation story never calls the loser dead', plainI.indexOf(loserName + ' is dead') === -1 && plainI.indexOf(' is dead (HP 0)') === -1, 'winner=' + bi.winner);
+  } else {
+    check('20b incapacitation story never calls the loser dead (skipped: stalemate)', false, 'unexpected stalemate winner=' + bi.winner);
+  }
+}
+// Breakdown labels: OBSERVED / PREPARED / EXPLOITED / DETECTED / mercy CHOICE.
+{
+  const fake = {
+    alpha: [{ name: 'Batman', variant: 'Base', startHp: 1000, maxHp: 1000, startAtk: 110, atk: 110, startDef: 85, def: 85, sp: 1.3, tier: 'S', transformed: false }],
+    beta: [{ name: 'Superman', variant: 'Base', startHp: 1800, maxHp: 1800, startAtk: 160, atk: 160, startDef: 115, def: 115, sp: 1.1, tier: 'EX', transformed: false }],
+    battlefield: { name: 'Open Arena', atk: 0, def: 0 }, winner: 'Batman', rounds: 3, seed: 1, destruction: 0, totalDamage: 100,
+    events: [
+      { id: 0, round: 1, type: 'study', actor: 'Batman', detail: 'observes a pattern: repeated flight approach' },
+      { id: 1, round: 2, type: 'prepare', actor: 'Batman', detail: 'counter prepared' },
+      { id: 2, round: 3, type: 'attack', actor: 'Batman', target: 'Superman', ability: 'Gadget Barrage', damage: 150, crit: false, blocked: false, targetHp: 1650, targetMax: 1800, counterExploited: true },
+      { id: 3, round: 3, type: 'attack', actor: 'Superman', target: 'Batman', ability: 'Super Punch', damage: 100, crit: false, blocked: false, targetHp: 900, targetMax: 1000, counterDetected: true },
+      { id: 4, round: 3, type: 'choice', actor: 'Superman', target: 'Batman', detail: 'holds the lethal finish', reason: 'merciful fighter chooses incapacitation over a lethal finishing move' },
+    ],
+  };
+  const bd = runInCtx(`generateBreakdown(JSON.parse(${JSON.stringify(JSON.stringify(fake))}))`);
+  check('labels breakdown shows OBSERVED / PREPARED / EXPLOITED / DETECTED / MERCY-HELD-FINISH', bd.indexOf('OBSERVED') !== -1 && bd.indexOf('PREPARED') !== -1 && bd.indexOf('EXPLOITED') !== -1 && bd.indexOf('DETECTED') !== -1 && bd.indexOf('MERCY / HELD FINISH') !== -1, bd.slice(0, 300));
+}
+
+// ================= v14 REGRESSION SCENARIOS (retained) =================
+// R1 Superman vs Rocky cannot-harm.
+{
+  const b = battle([[spec('superman')], [spec('rocky')]], { seed: 12345, victoryMode: 'death' });
+  const rockyHits = b.events.filter(e => e.type === 'attack' && e.actor === 'Rocky Balboa');
+  check('R1 Superman vs Rocky: Rocky cannot harm Superman by ordinary attacks', rockyHits.length >= 1 && rockyHits.every(e => e.cannotHarm === true || e.damage === 0), 'rocky attacks=' + rockyHits.length);
+}
+// R2 Batman vs Superman Kryptonite exploit (mechanism, see test 2).
+{
+  const b = battle([[spec('batman')], [spec('superman')]], { seed: 12345, victoryMode: 'death' });
+  const study = b.events.some(e => e.type === 'study' && e.knowledgeStage === 'OBSERVED');
+  const prep = b.events.some(e => e.type === 'prepare' && e.knowledgeStage === 'PREPARED');
+  check('R2 Batman vs Superman: study OBSERVED then PREPARED then exploit', study && prep && b.events.some(e => e.counterExploited), 'study=' + study + ' prep=' + prep);
+}
+// R3 Deadpool vs Goku regen.
+{
+  const b = battle([[spec('deadpool')], [spec('goku')]], { seed: 12345, victoryMode: 'death' });
+  const heals = b.events.filter(e => e.type === 'heal');
+  check('R3 Deadpool vs Goku: regen heals while alive, capped, never revives', heals.length >= 1 && heals.reduce((s, e) => s + (e.heal || 0), 0) <= 650 && noPostDefeatActions(b), 'heals=' + heals.length + ' winner=' + b.winner);
+}
+// R4 Transform flips winner (see test 9) — re-asserted with roster fighters.
+{
+  const x = { id: 'x', name: 'Fighter X', hp: 1000, atk: 100, def: 50, sp: 1, dex: 7, dur: 7, pw: 7, sta: 7, tier: 'A', pers: 'disciplined', sig: 'Strike', sigMult: 1.5, trans: 'Mega Form', tAtk: 150, tDef: 10, weak: '', powers: ['Punch'] };
+  const y = { id: 'y', name: 'Fighter Y', hp: 1000, atk: 140, def: 50, sp: 1, dex: 7, dur: 7, pw: 7, sta: 7, tier: 'A', pers: 'disciplined', sig: 'Smash', sigMult: 1.5, trans: '', tAtk: 0, tDef: 0, weak: '', powers: ['Kick'] };
+  const a = battle([[x], [y]], { seed: 12345, victoryMode: 'death' });
+  const c = battle([[{ ...x, trans: '' }], [y]], { seed: 12345, victoryMode: 'death' });
+  check('R4 transform flips winner with the effect identified', a.winner === 'Fighter X' && c.winner === 'Fighter Y' && a.events.some(e => e.type === 'transform' && e.detail === 'Mega Form'), 'with=' + a.winner + ' without=' + c.winner);
+}
+// R5 Kakashi vs Batman incapacitation.
+{
+  let found = null;
+  for (const seed of [12345, 7, 42, 99, 2024]) {
+    const b = battle([[spec('kakashi')], [spec('batman')]], { seed, victoryMode: 'incapacitation' });
+    if (b.winner === 'Kakashi Hatake') { found = b; break; }
+  }
+  check('R5 Kakashi vs Batman incapacitation: loser unconscious, dead=false', !!found && stateOf(found, 'Batman').unconscious === true && stateOf(found, 'Batman').dead === false && stateOf(found, 'Batman').incapacitated === true, found ? 'winner=' + found.winner : 'no Kakashi win in tried seeds');
+}
+// R6 Gojo pride refusal.
+{
+  const proudWeak = { id: 'pw', name: 'Proud Weak', hp: 1000, atk: 80, def: 50, sp: 1, dex: 7, dur: 7, pw: 7, sta: 7, tier: 'A', pers: 'proud', sig: 'Strike', sigMult: 1.5, trans: '', tAtk: 0, tDef: 0, weak: '', powers: ['Punch'] };
+  const strong = { id: 'st', name: 'Strong Foe', hp: 2000, atk: 220, def: 50, sp: 1, dex: 7, dur: 7, pw: 7, sta: 7, tier: 'S', pers: 'disciplined', sig: 'Smash', sigMult: 1.5, trans: '', tAtk: 0, tDef: 0, weak: '', powers: ['Kick'] };
+  const b = battle([[proudWeak], [strong]], { seed: 12345, victoryMode: 'death' });
+  const refused = b.events.filter(e => e.type === 'refused' && e.actor === 'Proud Weak');
+  check('R6 proud fighter records a refusal (not every turn)', refused.length >= 1 && refused.length <= 2, 'refusals=' + refused.length);
+}
+// R7 Chapter V = real finish.
+{
+  const b = battle([[spec('superman')], [spec('rocky')]], { seed: 12345, victoryMode: 'death' });
+  const story = runInCtx(`(function(){ const bb = JSON.parse(${JSON.stringify(JSON.stringify(b))}); bb.alpha = bb.teams[0]; bb.beta = bb.teams[1]; bb.winnerFighter = bb.teams[0].find(f=>f.alive)||null; bb.loserFighter = bb.teams[1].find(f=>!f.alive)||bb.teams[1][0]; return generateEpisodeV14(bb); })()`);
+  const ch5 = story.split('<h3>Chapter V')[1] || '';
+  const finAtk = [...b.events].reverse().find(e => e.type === 'attack' && e.actor === 'Superman');
+  check('R7 Chapter V names the real finishing ability', !!finAtk && ch5.indexOf(finAtk.ability) !== -1, 'finAbility=' + (finAtk && finAtk.ability));
+}
+// R8 Same-seed determinism.
+{
+  const a = battle([[spec('superman')], [spec('rocky')]], { seed: 777, victoryMode: 'death' });
+  const c = battle([[spec('superman')], [spec('rocky')]], { seed: 777, victoryMode: 'death' });
+  check('R8 same seed + fighters + battlefield = identical events and winner', eq(a.events, c.events) && a.winner === c.winner, '');
+}
+// All-194 vs Batman no-crash.
+{
+  const ids = JSON.parse(runInCtx(`JSON.stringify(ROSTER.map(f=>f.id))`));
+  let crashed = null, badWinner = null;
+  for (const id of ids) {
+    if (id === 'batman') continue;
+    try {
+      const b = battle([[spec('batman')], [spec(id)]], { seed: 7, victoryMode: 'death' });
+      if (!['Batman', 'Stalemate', 'Tie'].includes(b.winner) && !b.teams.flat().some(f => f.name === b.winner)) badWinner = id + ' -> ' + b.winner;
+      if (!noPostDefeatActions(b)) badWinner = id + ' post-defeat action';
+    } catch (e) { crashed = id + ': ' + (e && e.message || e); break; }
+  }
+  check('ALL-194 vs Batman: no crash, sane winners, no post-defeat actions', crashed === null && badWinner === null, crashed || badWinner || '');
+}
+// Profile batch 1: 20 completed, 78 remain signature-only.
+{
+  // Audit correction: the POWERS literal holds 96, but the V7 block assigns the other 98 at runtime
+  // (union 194/194, overlap 0). No fighter is signature-only in the shipped build, so the batch
+  // count is 194 with powers / 0 remaining — not 116/78. The earlier literal-only count was wrong.
+  const counts = JSON.parse(runInCtx(`JSON.stringify({total:ROSTER.length, withPowers:ROSTER.filter(f=>POWERS[f.id]&&POWERS[f.id].length===3).length, without:ROSTER.filter(f=>!(POWERS[f.id]&&POWERS[f.id].length)).length})`));
+  check('BATCH-1 roster (runtime truth): 194 fighters, 194 with 3 powers, 0 signature-only', counts.total === 194 && counts.withPowers === 194 && counts.without === 0, JSON.stringify(counts));
+  const batchOk = ['vegeta', 'deadpool', 'kakashi', 'rocky', 'gaara', 'killua', 'storm', 'toph', 'zuko', 'katara', 'ezio', 'blackwidow', 'supergirl', 'nightwing', 'leonkennedy', 'crashbandicoot', 'spyro', 'chunli', 'scorpion', 'subzero'].every(id => {
+    const p = JSON.parse(runInCtx(`JSON.stringify(POWERS[${JSON.stringify(id)}]||[])`));
+    return Array.isArray(p) && p.length === 3;
+  });
+  check('BATCH-1 all 20 named fighters have 3-power entries', batchOk, '');
+}
+// Source audits.
+{
+  check('AUDIT exactly one generateStoryV2 definition', (html.match(/function generateStoryV2/g) || []).length === 1, 'count=' + (html.match(/function generateStoryV2/g) || []).length);
+  check('AUDIT no fixed-action-number signature triggers (actions%4 / actions%3)', script.indexOf('actions%4') === -1 && script.indexOf('actions%3') === -1, '');
+  check('AUDIT no v13.1 user-visible references remain', html.indexOf('v13.1') === -1, '');
+  check('AUDIT escapeHtml escapes quotes and angle brackets', runInCtx(`escapeHtml('<a "b" \\'c\\'>&')`) === '&lt;a &quot;b&quot; &#39;c&#39;&gt;&amp;', runInCtx(`escapeHtml('<a "b">')`));
+  check('AUDIT safeUrl rejects javascript: URLs', runInCtx(`safeUrl('javascript:alert(1)')`) === '#', '');
+  check('AUDIT v15 format in save path', html.indexOf("formatVersion:'v15'") !== -1, '');
+  check('AUDIT mode-aware headings helper exists', script.indexOf('function updateModeHeadings') !== -1, '');
+  check('AUDIT no research stat bonus in live instance path', script.indexOf('inst.atk+=10') === -1, '');
+}
+
+console.log('\n' + passed + ' passed, ' + failed + ' failed.');
+if (failures.length) { console.log('Failures:'); failures.forEach(f => console.log(' - ' + f)); }
+process.exit(failed ? 1 : 0);
