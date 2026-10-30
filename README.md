@@ -8,7 +8,7 @@ breakdown.
 ## Play it
 
 Open `index.html` in a browser — no install, no build step. This is now
-WAR-ROOM v10, the 1v1 Death Battle game, and the main game on GitHub Pages.
+WAR-ROOM v11, the 1v1 Death Battle game, and the main game on GitHub Pages.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -34,6 +34,22 @@ stamina, and tactics, plus counters, transformations, and weaknesses.
 Every fighter profile now shows personality, fighting style, power usage,
 scaling numbers, and a key weakness.
 
+## Online storytelling pipeline
+
+1. Choose fighters and their Continuity / Version.
+2. Research Dossier — cached per fighter + continuity, with source type,
+   found/not-found status, link, and date. Fan sources are discussion,
+   not established fact, and never auto-grant powers.
+3. Matchup Analysis — powers, advantages, limitations, win conditions,
+   and stated assumptions where feats are not directly comparable.
+4. Combat Simulation — WAR-ROOM's own engine determines the battle.
+5. Episode — rule-based cinematic narrator, analytical / cinematic /
+   reflective voices, chapter length following the battle itself.
+6. Consistency Check — winner, powers, continuity, transforms, injuries,
+   knowledge, and verdict checked against the battle record.
+7. Saved Episode — matchup, versions, outcome, research references,
+   consistency results, and full episode, saved on the player's device.
+
 ## Death rules
 
 Victory is by death (HP 0), by incapacitation lasting the rest of the
@@ -55,15 +71,16 @@ killing blow.
 
 ## Roster
 
-v10 ships 98 playable fighters: Anime 17, Comics 17, Video Games 16,
+v11 ships 98 playable fighters: Anime 17, Comics 17, Video Games 16,
 Movies & TV 16, Animation 16, Fantasy & Sci-Fi 16. The long-term target
 is 100 per category; that target is NOT a claim that 600 are implemented.
 New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v10 (1v1 Death Battles, narrative story)
-- `war-room-v10.html` — same as `index.html`
+- `index.html` — latest, WAR-ROOM v11 (1v1 Death Battles, online storytelling pipeline)
+- `war-room-v11.html` — same as `index.html`
+- `war-room-v10.html` — previous 1v1 version, kept as an archive
 - `war-room-v9.html` — previous 1v1 version, kept as an archive
 - `war-room-v8.html` — previous 5v5 version, kept as an archive
 - Earlier 5v5 versions: `war-room-v7.html` down to `war-room.html`
