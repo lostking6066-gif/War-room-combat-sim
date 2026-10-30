@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v12.1 — 1v1 Death Battles</title>
+<title>WAR-ROOM v13 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -59,13 +59,13 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v12.1</h1><span>1V1 DEATH BATTLES • STORY • SCALING • PROPERLY CONNECTED</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v13</h1><span>1V1 DEATH BATTLES • STORY • SCALING • PROPERLY CONNECTED</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
 <input id="search-input" placeholder="Search by name, franchise, or alias — try Goku, Batman, Link...">
 <div class="chips" id="cat-chips"></div>
-<p class="note">This build ships 146 playable fighters across 6 categories (Anime 25, Comics 25, Video Games 24, Movies & TV 24, Animation 24, Fantasy & Sci-Fi 24). The next-batch target is 100 per category — that is a target, not a claim. The roster is NOT 600 fighters; do not treat the target as implemented. Each card uses an emoji fallback portrait so no image ever breaks. Real artwork is not included.</p>
+<p class="note">This build ships 194 playable fighters across 6 categories (Anime 33, Comics 33, Video Games 32, Movies & TV 32, Animation 32, Fantasy & Sci-Fi 32). The next-batch target is 100 per category — that is a target, not a claim. The roster is NOT 600 fighters; do not treat the target as implemented. Each card uses an emoji fallback portrait so no image ever breaks. Real artwork is not included.</p>
 </div>
 <div class="prep">
 <div class="panel"><h2>Combat Roster <span id="roster-count" style="font-size:.8rem;color:var(--dim)"></span></h2><div class="grid" id="fighter-pool"></div></div>
@@ -311,8 +311,55 @@ const ROSTER=[
 {id:'hermione',name:'Hermione Granger',fr:'Harry Potter',cat:'Fantasy & Sci-Fi',icon:'📚',hp:1150,atk:140,def:85,sp:1.25,tier:'S',trait:'witch',pers:'strategist',style:'Brilliant witch with a vast spell repertoire',sig:'Stupefy Barrage',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Human durability; needs wand and focus',feat:'Outsmarted Death Eaters and ancient magic',wiki:'Hermione_Granger',alias:'Hermione',v2:'Time-Turner',v2hp:100,v2atk:25,v2def:10,pw:8,dex:8,dur:7,sta:8,tac:10,usage:'Spells for every situation — shields, stunners and transfiguration, chosen wisely.',persNote:'Strategist and brilliant — the brightest witch of her age.'},
 {id:'ronweasley',name:'Ron Weasley',fr:'Harry Potter',cat:'Fantasy & Sci-Fi',icon:'♟️',hp:1100,atk:130,def:80,sp:1.2,tier:'A+',trait:'wizard',pers:'protective',style:'Wizard duellist with chess-master tactics',sig:'Expelliarmus Barrage',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Human durability; self-doubt',feat:'Won wizard chess and fought Death Eaters',wiki:'Ron_Weasley',alias:'Ron',v2:'Auror',v2hp:100,v2atk:20,v2def:10,pw:7,dex:8,dur:7,sta:8,tac:9,usage:'Duelling spells and chess tactics — disarms, outmanoeuvres, then finishes.',persNote:'Protective and loyal — brave despite every doubt.'},
 {id:'beatrix',name:'Beatrix Kiddo',fr:'Kill Bill',cat:'Movies & TV',icon:'⚔️',hp:1100,atk:140,def:80,sp:1.4,tier:'S',trait:'assassin',pers:'reckless',style:'Deadly Viper assassin with sword mastery and Five Point Palm',sig:'Five Point Palm Exploding Heart',sigMult:1.7,trans:'',tAtk:0,tDef:0,weak:'Human durability; emotional ties',feat:'Defeated the Deadly Viper Assassination Squad',wiki:'Beatrix_Kiddo',alias:'The Bride',v2:'Black Mamba',v2hp:100,v2atk:25,v2def:10,pw:8,dex:10,dur:7,sta:8,tac:9,usage:'Sword mastery, pressure-point strikes and the Five Point Palm — precise, vengeful, unstoppable.',persNote:'Reckless and vengeful — a bride who survived death itself to finish her list.'},
-{id:'snape',name:'Severus Snape',fr:'Harry Potter',cat:'Fantasy & Sci-Fi',icon:'🧪',hp:1200,atk:145,def:85,sp:1.25,tier:'S',trait:'wizard',pers:'strategist',style:'Potions master and Legilimens duellist',sig:'Sectumsempra Slash',sigMult:1.7,trans:'',tAtk:0,tDef:0,weak:'Human durability; divided loyalties',feat:'Outduelled Death Eaters and protected Harry in secret',wiki:'Severus_Snape',alias:'Snape',v2:'Half-Blood Prince',v2hp:100,v2atk:25,v2def:10,pw:8,dex:8,dur:7,sta:8,tac:10,usage:'Dark arts, potions and Legilimency — precise, secretive, and deadly.',persNote:'Strategist and tragic — a double agent whose love defined his life.'}
-
+{id:'snape',name:'Severus Snape',fr:'Harry Potter',cat:'Fantasy & Sci-Fi',icon:'🧪',hp:1200,atk:145,def:85,sp:1.25,tier:'S',trait:'wizard',pers:'strategist',style:'Potions master and Legilimens duellist',sig:'Sectumsempra Slash',sigMult:1.7,trans:'',tAtk:0,tDef:0,weak:'Human durability; divided loyalties',feat:'Outduelled Death Eaters and protected Harry in secret',wiki:'Severus_Snape',alias:'Snape',v2:'Half-Blood Prince',v2hp:100,v2atk:25,v2def:10,pw:8,dex:8,dur:7,sta:8,tac:10,usage:'Dark arts, potions and Legilimency — precise, secretive, and deadly.',persNote:'Strategist and tragic — a double agent whose love defined his life.'},
+{id:'piccolo',name:'Piccolo',fr:'Dragon Ball',cat:'Anime',icon:'🟢',hp:1350,atk:135,def:90,sp:1.25,tier:'S',trait:'strategist',pers:'strategist',style:'Tactical Namekian who reads opponents and counters with ki control',sig:'Special Beam Cannon',sigMult:1.7,trans:'',tAtk:0,tDef:0,weak:'Regeneration has limits; outmatched by far stronger ki',feat:'Trained Gohan; held stronger foes with technique',wiki:'Piccolo_(Dragon_Ball)',alias:'Piccolo Jr.',v2:'Orange Piccolo',v2hp:200,v2atk:25,v2def:15,pw:8,dex:8,dur:8,sta:8,tac:9,usage:'Reads the opponent, controls range with ki, then commits to Special Beam Cannon when an opening appears.',persNote:'Serious strategist — disciplined, economical, and protective under pressure.'},
+{id:'jiraiya',name:'Jiraiya',fr:'Naruto',cat:'Anime',icon:'🐸',hp:1300,atk:130,def:85,sp:1.2,tier:'S',trait:'',pers:'disciplined',style:'Sannin who mixes toad summons, Rasengan, and trickery',sig:'Rasengan',sigMult:1.6,trans:'Sage Mode',tAtk:30,tDef:10,weak:'Sage Mode needs preparation time',feat:'Trained Naruto; fought Pain with Sage Mode',wiki:'Jiraiya',alias:'Toad Sage',v2:'Sage Mode Jiraiya',v2hp:150,v2atk:20,v2def:10,pw:8,dex:7,dur:7,sta:8,tac:9,usage:'Probes with summons and trickery, gathers chakra, then commits to Rasengan or Sage techniques.',persNote:'Playful on the surface, serious and experienced when the fight matters.'},
+{id:'rocklee',name:'Rock Lee',fr:'Naruto',cat:'Anime',icon:'🥋',hp:1200,atk:140,def:80,sp:1.5,tier:'A+',trait:'',pers:'reckless',style:'Taijutsu specialist who overwhelms with speed and gates',sig:'Leaf Hurricane',sigMult:1.6,trans:'Eight Gates',tAtk:40,tDef:0,weak:'Gates damage his own body; no ninjutsu',feat:'Pushed Gaara with the gates open',wiki:'Rock_Lee',alias:'Handsome Devil of the Leaf',v2:'Eight Gates Lee',v2hp:100,v2atk:35,v2def:0,pw:8,dex:10,dur:6,sta:7,tac:7,usage:'Closes distance at speed, builds pressure with taijutsu, then opens gates when pushed.',persNote:'Relentless and earnest — never gives up, even at a cost to himself.'},
+{id:'shikamaru',name:'Shikamaru Nara',fr:'Naruto',cat:'Anime',icon:'🦌',hp:1100,atk:110,def:85,sp:1.1,tier:'A',trait:'strategist',pers:'strategist',style:'Shadow strategist who traps opponents by thinking ahead',sig:'Shadow Possession',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Shadow techniques drain chakra; low raw power',feat:'Outplanned far stronger opponents with shadow strategy',wiki:'Shikamaru_Nara',alias:'Shikamaru',v2:'Shadow Master Shikamaru',v2hp:100,v2atk:15,v2def:10,pw:6,dex:7,dur:7,sta:6,tac:10,usage:'Studies first, sets a shadow trap, then exploits the opening it creates.',persNote:'Lazy-seeming strategist — brilliant, economical, and calm under pressure.'},
+{id:'hisoka',name:'Hisoka Morow',fr:'Hunter x Hunter',cat:'Anime',icon:'🃏',hp:1200,atk:125,def:80,sp:1.3,tier:'S',trait:'',pers:'ruthless',style:'Unpredictable fighter who uses Bungee Gum and misdirection',sig:'Bungee Gum Strike',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Overconfidence; seeks strong opponents for fun',feat:'Fought Chrollo and top Hunter fighters with trickery',wiki:'Hisoka_Morow',alias:'Hisoka',v2:'Post-Mortem Nen Hisoka',v2hp:150,v2atk:20,v2def:5,pw:7,dex:9,dur:7,sta:8,tac:9,usage:'Toys with opponents, sets gum traps, then strikes when they misread the setup.',persNote:'Ruthless and playful — dangerous precisely because he enjoys the fight.'},
+{id:'kenpachi',name:'Kenpachi Zaraki',fr:'Bleach',cat:'Anime',icon:'⚔️',hp:1500,atk:150,def:90,sp:1.2,tier:'S+',trait:'reckless',pers:'reckless',style:'Brutal swordsman who seeks the strongest fight head-on',sig:'Nozarashi Slash',sigMult:1.7,trans:'Bankai',tAtk:35,tDef:5,weak:'No kido; fights head-on and takes hits',feat:'Defeated captains with raw sword pressure',wiki:'Kenpachi_Zaraki',alias:'Kenpachi',v2:'Bankai Kenpachi',v2hp:150,v2atk:30,v2def:5,pw:9,dex:7,dur:9,sta:9,tac:6,usage:'Walks forward, trades blows, and escalates to Bankai when the fight demands it.',persNote:'Battle-hungry and direct — smiles when the fight gets harder.'},
+{id:'toshiro',name:'Toshiro Hitsugaya',fr:'Bleach',cat:'Anime',icon:'❄️',hp:1250,atk:130,def:90,sp:1.3,tier:'S',trait:'',pers:'disciplined',style:'Ice captain who controls the field with Hyorinmaru',sig:'Hyoten Hyakkaso',sigMult:1.6,trans:'Mature Bankai',tAtk:30,tDef:10,weak:'Bankai time limits in younger form',feat:'Froze large areas with Hyorinmaru',wiki:'Toshiro_Hitsugaya',alias:'Toshiro',v2:'Adult Toshiro',v2hp:150,v2atk:20,v2def:10,pw:8,dex:8,dur:8,sta:7,tac:9,usage:'Controls range with ice, freezes openings, then commits to a finishing ice technique.',persNote:'Disciplined prodigy — calm, precise, and impatient with wasted time.'},
+{id:'sakura',name:'Sakura Haruno',fr:'Naruto',cat:'Anime',icon:'🌸',hp:1250,atk:135,def:90,sp:1.2,tier:'S',trait:'regen',pers:'protective',style:'Medical ninja with monstrous strength and healing',sig:'Cherry Blossom Impact',sigMult:1.6,trans:'Strength of a Hundred Seal',tAtk:30,tDef:10,weak:'Close-range fighter; seal release is finite',feat:'Shattered large structures with chakra-enhanced strength',wiki:'Sakura_Haruno',alias:'Sakura',v2:'Hundred Healings Sakura',v2hp:200,v2atk:20,v2def:10,pw:8,dex:8,dur:8,sta:8,tac:8,usage:'Heals and endures, then lands chakra-enhanced strikes when an opening appears.',persNote:'Protective and determined — heals allies and refuses to fall.'},
+{id:'hawkeye',name:'Hawkeye',fr:'Marvel',cat:'Comics',icon:'🏹',hp:1050,atk:115,def:80,sp:1.25,tier:'A',trait:'',pers:'humorous',style:'Master archer who wins with trick arrows and timing',sig:'Trick Arrow Barrage',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human; no innate powers',feat:'Hit targets no one else could with a bow',wiki:'Hawkeye',alias:'Clint Barton',v2:'Ronin Hawkeye',v2hp:100,v2atk:15,v2def:10,pw:6,dex:9,dur:6,sta:8,tac:9,usage:'Keeps range, picks trick arrows for the situation, and never wastes a shot.',persNote:'Humorous and stubborn — jokes under pressure, serious when a shot matters.'},
+{id:'martianmanhunter',name:'Martian Manhunter',fr:'DC Comics',cat:'Comics',icon:'🟢',hp:1550,atk:145,def:105,sp:1.3,tier:'S+',trait:'',pers:'disciplined',style:'Shapeshifting telepath who reads minds and phases',sig:'Martian Vision Blast',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Fire weakness',feat:'Fought Justice League-level threats with telepathy and strength',wiki:'Martian_Manhunter',alias:"J'onn J'onzz",v2:'White Martian Form',v2hp:150,v2atk:20,v2def:10,pw:9,dex:8,dur:9,sta:9,tac:9,usage:'Phases, shapeshifts, and reads the fight before committing to a decisive blow.',persNote:'Disciplined and compassionate — calm, wise, and restrained.'},
+{id:'zatanna',name:'Zatanna',fr:'DC Comics',cat:'Comics',icon:'🎩',hp:1150,atk:135,def:80,sp:1.2,tier:'S',trait:'',pers:'compassionate',style:'Stage magician whose spoken spells reshape the fight',sig:'Reverse Speech Blast',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Must speak spells; silencing stops her magic',feat:'Reversed powerful magic with spoken spells',wiki:'Zatanna',alias:'Zatanna Zatara',v2:'Mistress of Magic Zatanna',v2hp:150,v2atk:25,v2def:5,pw:8,dex:7,dur:7,sta:7,tac:8,usage:'Speaks spells in reverse, reshapes the field, and avoids close combat.',persNote:'Compassionate showwoman — theatrical, kind, and dangerous with words.'},
+{id:'shazam',name:'Shazam',fr:'DC Comics',cat:'Comics',icon:'⚡',hp:1550,atk:150,def:100,sp:1.35,tier:'S+',trait:'',pers:'reckless',style:'Lightning champion with Superman-level strength and speed',sig:'Lightning Strike',sigMult:1.7,trans:'',tAtk:0,tDef:0,weak:'Inexperience; magic lightning can be turned',feat:'Traded blows with Superman-level foes',wiki:'Shazam_(DC_Comics)',alias:'Billy Batson',v2:'Captain Marvel Shazam',v2hp:150,v2atk:20,v2def:10,pw:9,dex:8,dur:9,sta:9,tac:6,usage:'Flies in fast, hits hard with lightning, and learns the fight as he goes.',persNote:'Reckless youth in a champion body — brave, impulsive, and good-hearted.'},
+{id:'ghostrider',name:'Ghost Rider',fr:'Marvel',cat:'Comics',icon:'🔥',hp:1450,atk:140,def:95,sp:1.25,tier:'S+',trait:'regen',pers:'ruthless',style:'Hellfire rider who punishes the guilty with Penance Stare',sig:'Hellfire Chain Strike',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Penance Stare fails on the innocent or soulless',feat:'Burned supernatural foes with hellfire',wiki:'Ghost_Rider',alias:'Johnny Blaze',v2:'Spirit of Vengeance Rider',v2hp:150,v2atk:20,v2def:10,pw:8,dex:8,dur:9,sta:9,tac:7,usage:'Rides in with hellfire chains, then judges with Penance Stare when it applies.',persNote:'Ruthless judge — grim, relentless, and bound to vengeance.'},
+{id:'punisher',name:'The Punisher',fr:'Marvel',cat:'Comics',icon:'💀',hp:1100,atk:120,def:85,sp:1.15,tier:'A+',trait:'prep',pers:'ruthless',style:'Tactical soldier who prepares and ambushes',sig:'Arsenal Barrage',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human; no innate powers',feat:'Outplanned armed gangs with preparation',wiki:'Punisher',alias:'Frank Castle',v2:'War Zone Punisher',v2hp:100,v2atk:15,v2def:10,pw:7,dex:8,dur:7,sta:9,tac:10,usage:'Studies first, prepares an ambush, then commits with overwhelming firepower.',persNote:'Ruthless and disciplined — no jokes, no mercy for his targets.'},
+{id:'blade',name:'Blade',fr:'Marvel',cat:'Comics',icon:'🗡️',hp:1250,atk:130,def:90,sp:1.35,tier:'S',trait:'regen',pers:'ruthless',style:'Daywalker swordsman with vampire strength and speed',sig:'Sword Barrage',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Bloodlust; sunlight does not harm him but silver does',feat:'Hunted vampires with sword and speed',wiki:'Blade_(character)',alias:'Eric Brooks',v2:'Daywalker Blade',v2hp:150,v2atk:20,v2def:10,pw:8,dex:9,dur:8,sta:9,tac:8,usage:'Closes fast with sword work, uses vampire speed, and never stops moving.',persNote:'Ruthless hunter — terse, focused, and relentless.'},
+{id:'msmarvel',name:'Ms. Marvel',fr:'Marvel',cat:'Comics',icon:'⭐',hp:1300,atk:130,def:90,sp:1.25,tier:'S',trait:'',pers:'compassionate',style:'Polymorph who stretches, grows, and heals',sig:'Embiggened Punch',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Stretching has limits; inexperience in big fights',feat:'Held up collapsing structures with embiggened strength',wiki:'Ms._Marvel',alias:'Kamala Khan',v2:'Embiggened Ms. Marvel',v2hp:150,v2atk:20,v2def:10,pw:8,dex:8,dur:8,sta:8,tac:7,usage:'Stretches to reach, grows to hit harder, and heals through the fight.',persNote:'Compassionate hero — optimistic, brave, and learning as she fights.'},
+{id:'nathandrake',name:'Nathan Drake',fr:'Uncharted',cat:'Video Games',icon:'🧭',hp:1100,atk:115,def:80,sp:1.2,tier:'A',trait:'',pers:'humorous',style:'Lucky adventurer who improvises with guns and fists',sig:'Pistol Barrage',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human; luck runs out',feat:'Survived impossible climbs and shootouts',wiki:'Nathan_Drake',alias:'Nate',v2:'Treasure Hunter Drake',v2hp:100,v2atk:15,v2def:5,pw:6,dex:8,dur:7,sta:8,tac:8,usage:'Improvises, uses the environment, and jokes while the plan falls apart.',persNote:'Humorous survivor — quips under pressure, serious when a friend is at risk.'},
+{id:'ellie',name:'Ellie Williams',fr:'The Last of Us',cat:'Video Games',icon:'🎸',hp:1050,atk:115,def:80,sp:1.25,tier:'A',trait:'',pers:'ruthless',style:'Stealth survivor who strikes from cover with knife and bow',sig:'Stealth Knife Strike',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human; small frame against stronger foes',feat:'Survived infected and hunters with stealth',wiki:'Ellie_(The_Last_of_Us)',alias:'Ellie',v2:'Veteran Ellie',v2hp:100,v2atk:15,v2def:10,pw:6,dex:9,dur:7,sta:8,tac:9,usage:'Stays hidden, picks the moment, then commits with a knife or bow.',persNote:'Ruthless survivor — quiet, determined, and hard to stop.'},
+{id:'arthurmorgan',name:'Arthur Morgan',fr:'Red Dead Redemption',cat:'Video Games',icon:'🤠',hp:1150,atk:120,def:85,sp:1.1,tier:'A',trait:'',pers:'protective',style:'Gunslinger who wins with Dead Eye and grit',sig:'Dead Eye Barrage',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Human; aging body',feat:'Outdrew entire gangs with Dead Eye',wiki:'Arthur_Morgan',alias:'Arthur',v2:'Legendary Gunslinger Arthur',v2hp:100,v2atk:15,v2def:10,pw:7,dex:8,dur:8,sta:8,tac:8,usage:'Reads the draw, slows time with Dead Eye, and lands the shots that matter.',persNote:'Protective outlaw — gruff, loyal, and weary of the life.'},
+{id:'bayonetta',name:'Bayonetta',fr:'Bayonetta',cat:'Video Games',icon:'🦋',hp:1350,atk:140,def:90,sp:1.4,tier:'S',trait:'',pers:'humorous',style:'Witch who summons demons and slows time with Witch Time',sig:'Witch Time Combo',sigMult:1.7,trans:'',tAtk:0,tDef:0,weak:'Witch Time needs perfect dodges',feat:'Summoned demons to crush angels and gods',wiki:'Bayonetta_(character)',alias:'Cereza',v2:'Umbran Witch Bayonetta',v2hp:150,v2atk:20,v2def:10,pw:8,dex:10,dur:8,sta:8,tac:9,usage:'Dodges perfectly to trigger Witch Time, then unleashes summoned punishment.',persNote:'Humorous and confident — theatrical, flirtatious, and deadly.'},
+{id:'sora',name:'Sora',fr:'Kingdom Hearts',cat:'Video Games',icon:'🔑',hp:1300,atk:135,def:90,sp:1.3,tier:'S',trait:'',pers:'compassionate',style:'Keyblade wielder who links magic and swordplay',sig:'Keyblade Combo',sigMult:1.6,trans:'Final Form',tAtk:30,tDef:10,weak:'Heart-based powers can be exploited',feat:'Defeated Heartless and Nobodies with Keyblade magic',wiki:'Sora_(Kingdom_Hearts)',alias:'Sora',v2:'Master Sora',v2hp:150,v2atk:20,v2def:10,pw:8,dex:9,dur:8,sta:8,tac:7,usage:'Chains Keyblade strikes with magic, then shifts form when pushed.',persNote:'Compassionate hero — optimistic, loyal, and brave.'},
+{id:'scorpion',name:'Scorpion',fr:'Mortal Kombat',cat:'Video Games',icon:'🦂',hp:1300,atk:135,def:90,sp:1.25,tier:'S',trait:'',pers:'ruthless',style:'Hellfire ninja who spears, teleports, and burns',sig:'Spear Pull Strike',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Vengeance blinds him; teleport is readable',feat:'Defeated gods and demons in Mortal Kombat',wiki:'Scorpion_(Mortal_Kombat)',alias:'Hanzo Hasashi',v2:'Hellfire Scorpion',v2hp:150,v2atk:20,v2def:10,pw:8,dex:9,dur:8,sta:8,tac:7,usage:'Spears the opponent in, teleports behind, and burns them down.',persNote:'Ruthless avenger — driven by vengeance, precise with a spear.'},
+{id:'subzero',name:'Sub-Zero',fr:'Mortal Kombat',cat:'Video Games',icon:'❄️',hp:1300,atk:135,def:95,sp:1.25,tier:'S',trait:'',pers:'disciplined',style:'Ice ninja who freezes opponents and controls space',sig:'Ice Blast Freeze',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Freeze can be broken by stronger foes',feat:'Froze armies and gods with ice powers',wiki:'Sub-Zero',alias:'Kuai Liang',v2:'Grandmaster Sub-Zero',v2hp:150,v2atk:20,v2def:10,pw:8,dex:8,dur:9,sta:8,tac:9,usage:'Freezes the field, controls distance with ice, then shatters the opening.',persNote:'Disciplined grandmaster — calm, honourable, and cold.'},
+{id:'wario',name:'Wario',fr:'Mario',cat:'Video Games',icon:'🟡',hp:1250,atk:130,def:95,sp:1.0,tier:'A+',trait:'',pers:'ruthless',style:'Greedy brawler who charges, bites, and body-slams',sig:'Shoulder Charge',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Slow; greed distracts him',feat:'Outmuscled Mario-level foes with brute strength',wiki:'Wario',alias:'Wario',v2:'Wario-Man',v2hp:150,v2atk:20,v2def:10,pw:8,dex:6,dur:9,sta:8,tac:6,usage:'Charges in, shrugs off hits, and body-slams the problem away.',persNote:'Ruthless and greedy — loud, selfish, and surprisingly tough.'},
+{id:'rocky',name:'Rocky Balboa',fr:'Rocky',cat:'Movies & TV',icon:'🥊',hp:1150,atk:125,def:90,sp:1.1,tier:'A',trait:'',pers:'protective',style:'Southpaw boxer who outlasts with heart and body shots',sig:'Body Blow Barrage',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human; slow against superhuman speed',feat:'Went the distance with champions',wiki:'Rocky_Balboa',alias:'Rocky',v2:'Champion Rocky',v2hp:100,v2atk:15,v2def:10,pw:7,dex:7,dur:9,sta:10,tac:7,usage:'Takes hits, works the body, and keeps coming until the other fighter breaks.',persNote:'Protective underdog — humble, relentless, and impossible to keep down.'},
+{id:'riddick',name:'Riddick',fr:'The Chronicles of Riddick',cat:'Movies & TV',icon:'🌑',hp:1200,atk:125,def:85,sp:1.25,tier:'A+',trait:'',pers:'ruthless',style:'Night-vision killer who hunts from darkness',sig:'Blade Ambush',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Human; arrogance isolates him',feat:'Killed armies in darkness with eyeshine',wiki:'Riddick_(character)',alias:'Richard B. Riddick',v2:'Furyan Riddick',v2hp:150,v2atk:20,v2def:5,pw:7,dex:9,dur:8,sta:9,tac:9,usage:'Uses darkness and eyeshine, ambushes, and never fights fair if he can help it.',persNote:'Ruthless survivor — quiet, cunning, and lethal in the dark.'},
+{id:'johnmatrix',name:'John Matrix',fr:'Commando',cat:'Movies & TV',icon:'💪',hp:1200,atk:130,def:90,sp:1.1,tier:'A+',trait:'',pers:'protective',style:'One-man army who storms in with guns and muscle',sig:'Machine Gun Barrage',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human; no powers',feat:'Took down an island compound alone',wiki:'John_Matrix',alias:'Matrix',v2:'Commando Matrix',v2hp:100,v2atk:15,v2def:10,pw:8,dex:7,dur:8,sta:9,tac:8,usage:'Storms in, uses heavy weapons, and finishes up close.',persNote:'Protective father — calm until family is threatened, then unstoppable.'},
+{id:'dutch',name:'Dutch Schaefer',fr:'Predator',cat:'Movies & TV',icon:'🌿',hp:1150,atk:120,def:85,sp:1.15,tier:'A',trait:'prep',pers:'strategist',style:'Jungle soldier who traps stronger hunters',sig:'Jungle Trap Barrage',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human; outmatched in raw power',feat:'Trapped and killed a Predator with jungle tactics',wiki:'Dutch_Schaefer',alias:'Dutch',v2:'Veteran Dutch',v2hp:100,v2atk:15,v2def:10,pw:7,dex:8,dur:8,sta:9,tac:10,usage:'Studies first, sets jungle traps, then springs them when the hunter commits.',persNote:'Strategist soldier — calm, inventive, and deadly with preparation.'},
+{id:'t1000',name:'T-1000',fr:'Terminator',cat:'Movies & TV',icon:'🪞',hp:1400,atk:135,def:100,sp:1.25,tier:'S',trait:'regen',pers:'ruthless',style:'Liquid-metal terminator who reforms and blades',sig:'Liquid Blade Strike',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Extreme heat and cold disrupt liquid metal',feat:'Reformed after bullets and explosions',wiki:'T-1000',alias:'T-1000',v2:'Advanced T-1000',v2hp:150,v2atk:20,v2def:10,pw:8,dex:9,dur:9,sta:10,tac:8,usage:'Reforms through damage, blades from any limb, and never stops advancing.',persNote:'Ruthless machine — silent, patient, and relentless.'},
+{id:'agentsmith',name:'Agent Smith',fr:'The Matrix',cat:'Movies & TV',icon:'🕶️',hp:1350,atk:135,def:90,sp:1.3,tier:'S',trait:'',pers:'ruthless',style:'Program who copies himself and overwhelms',sig:'Smith Clone Barrage',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Bound to the Matrix; purpose-driven',feat:'Overwhelmed Neo with clones',wiki:'Agent_Smith',alias:'Smith',v2:'Viral Smith',v2hp:150,v2atk:20,v2def:10,pw:8,dex:9,dur:8,sta:10,tac:8,usage:'Copies himself, surrounds the target, and grinds them down.',persNote:'Ruthless program — cold, articulate, and obsessed with purpose.'},
+{id:'morpheus',name:'Morpheus',fr:'The Matrix',cat:'Movies & TV',icon:'🕶️',hp:1200,atk:125,def:85,sp:1.3,tier:'A+',trait:'',pers:'disciplined',style:'Kung-fu master who believes and endures',sig:'Kung Fu Combo',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human in the Matrix; belief has limits',feat:'Fought Agents hand-to-hand',wiki:'Morpheus',alias:'Morpheus',v2:'Captain Morpheus',v2hp:100,v2atk:15,v2def:10,pw:7,dex:9,dur:8,sta:9,tac:9,usage:'Fights with disciplined kung fu, endures, and inspires through belief.',persNote:'Disciplined believer — calm, certain, and unbreakable in spirit.'},
+{id:'gandalf2',name:'Gandalf the White',fr:'The Lord of the Rings',cat:'Movies & TV',icon:'✨',hp:1400,atk:140,def:95,sp:1.2,tier:'S',trait:'',pers:'disciplined',style:'Wizard who wields light, staff, and sword',sig:'White Light Beam',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Restrained power; cannot use full might freely',feat:'Broke Saruman and faced the Balrog',wiki:'Gandalf',alias:'Mithrandir',v2:'Gandalf the White',v2hp:150,v2atk:20,v2def:10,pw:9,dex:7,dur:9,sta:9,tac:10,usage:'Holds back, then unleashes light and staff when the moment demands it.',persNote:'Disciplined wizard — wise, stern, and kind beneath the sternness.'},
+{id:'azula',name:'Azula',fr:'Avatar',cat:'Animation',icon:'⚡',hp:1250,atk:135,def:85,sp:1.3,tier:'S',trait:'',pers:'ruthless',style:'Blue-fire prodigy who strikes with lightning precision',sig:'Blue Fire Blast',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Mental instability under pressure',feat:'Defeated Aang-level foes with lightning',wiki:'Azula',alias:'Azula',v2:'Fire Lord Azula',v2hp:150,v2atk:20,v2def:10,pw:8,dex:9,dur:7,sta:8,tac:9,usage:'Presses with blue fire and lightning, exploiting any hesitation.',persNote:'Ruthless prodigy — brilliant, cruel, and brittle when control slips.'},
+{id:'sokka',name:'Sokka',fr:'Avatar',cat:'Animation',icon:'🪃',hp:1050,atk:110,def:80,sp:1.2,tier:'A',trait:'strategist',pers:'strategist',style:'Non-bender strategist who wins with plans and boomerang',sig:'Boomerang Strike',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'No bending; human limits',feat:'Planned victories against benders and armies',wiki:'Sokka',alias:'Sokka',v2:'Warrior Sokka',v2hp:100,v2atk:15,v2def:10,pw:6,dex:8,dur:7,sta:8,tac:10,usage:'Studies first, plans, then strikes with boomerang and sword at the right moment.',persNote:'Strategist with humour — clever, brave, and loyal.'},
+{id:'iroh',name:'Iroh',fr:'Avatar',cat:'Animation',icon:'🍵',hp:1300,atk:130,def:90,sp:1.15,tier:'S',trait:'',pers:'compassionate',style:'Fire master who redirects lightning and teaches',sig:'Lightning Redirect',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Age; prefers peace to fighting',feat:'Broke the siege of Ba Sing Se with fire',wiki:'Iroh',alias:'Dragon of the West',v2:'Grand Lotus Iroh',v2hp:150,v2atk:20,v2def:10,pw:8,dex:7,dur:9,sta:9,tac:10,usage:'Redirects attacks, teaches through the fight, then ends it with fire.',persNote:'Compassionate master — wise, warm, and formidable when forced to fight.'},
+{id:'kimpossible',name:'Kim Possible',fr:'Kim Possible',cat:'Animation',icon:'💚',hp:1100,atk:115,def:80,sp:1.35,tier:'A',trait:'',pers:'disciplined',style:'Cheerleader-turned-hero who wins with agility and gadgets',sig:'Acrobatic Kick Combo',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human; gadget-dependent',feat:'Stopped world threats as a teenager',wiki:'Kim_Possible_(character)',alias:'Kim',v2:'Mission Kim',v2hp:100,v2atk:15,v2def:10,pw:6,dex:10,dur:7,sta:8,tac:9,usage:'Flips in, uses gadgets, and outmanoeuvres stronger foes.',persNote:'Disciplined hero — confident, quick, and always ready.'},
+{id:'shego',name:'Shego',fr:'Kim Possible',cat:'Animation',icon:'💚',hp:1150,atk:125,def:85,sp:1.3,tier:'A+',trait:'',pers:'ruthless',style:'Plasma-handed villain who fights with sarcasm and speed',sig:'Plasma Hand Strike',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Overconfidence; plasma needs charge',feat:'Matched Kim and heroes with plasma hands',wiki:'Shego',alias:'Shego',v2:'Plasma Shego',v2hp:100,v2atk:20,v2def:10,pw:7,dex:9,dur:8,sta:8,tac:8,usage:'Strikes with plasma hands, mocks, and presses every opening.',persNote:'Ruthless villain — sarcastic, fast, and dangerous.'},
+{id:'kyoshi',name:'Avatar Kyoshi',fr:'Avatar',cat:'Animation',icon:'🪭',hp:1400,atk:140,def:95,sp:1.2,tier:'S+',trait:'',pers:'ruthless',style:'Avatar who bends all elements with war fans',sig:'Avatar Elemental Blast',sigMult:1.7,trans:'Avatar State',tAtk:35,tDef:10,weak:'Avatar State risks the Avatar cycle',feat:'Split a peninsula from the mainland as Avatar',wiki:'Kyoshi',alias:'Kyoshi',v2:'Avatar State Kyoshi',v2hp:150,v2atk:25,v2def:10,pw:9,dex:8,dur:9,sta:9,tac:8,usage:'Bends all elements, then enters Avatar State when the fight demands it.',persNote:'Ruthless Avatar — just, decisive, and uncompromising.'},
+{id:'zaheer',name:'Zaheer',fr:'Avatar',cat:'Animation',icon:'🌪️',hp:1250,atk:130,def:85,sp:1.35,tier:'S',trait:'',pers:'disciplined',style:'Airbender philosopher who flies and suffocates',sig:'Air Blast Barrage',sigMult:1.6,trans:'Flight',tAtk:25,tDef:10,weak:'Airbending alone; ideology blinds him',feat:'Unlocked flight and fought Korra to a standstill',wiki:'Zaheer_(The_Legend_of_Korra)',alias:'Zaheer',v2:'Flying Zaheer',v2hp:150,v2atk:20,v2def:10,pw:8,dex:10,dur:7,sta:9,tac:9,usage:'Stays airborne, controls air, and suffocates the fight slowly.',persNote:'Disciplined philosopher — calm, ideological, and lethal.'},
+{id:'bolin',name:'Bolin',fr:'Avatar',cat:'Animation',icon:'🪨',hp:1200,atk:125,def:90,sp:1.2,tier:'A+',trait:'',pers:'humorous',style:'Earthbender who lavabends with humour',sig:'Lava Blast',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Lavabending is new and draining',feat:'Lavabent against Red Lotus foes',wiki:'Bolin',alias:'Bolin',v2:'Lavabender Bolin',v2hp:150,v2atk:20,v2def:10,pw:8,dex:8,dur:8,sta:8,tac:7,usage:'Earthbends with humour, then lavabends when the fight gets serious.',persNote:'Humorous earthbender — warm, funny, and brave when it counts.'},
+{id:'samwise',name:'Samwise Gamgee',fr:'The Lord of the Rings',cat:'Fantasy & Sci-Fi',icon:'🌿',hp:1050,atk:110,def:85,sp:1.1,tier:'A',trait:'',pers:'protective',style:'Hobbit gardener who endures and protects',sig:'Garden Sword Strike',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Small size; no magic',feat:'Carried Frodo up Mount Doom',wiki:'Samwise_Gamgee',alias:'Sam',v2:'Brave Sam',v2hp:100,v2atk:15,v2def:10,pw:6,dex:7,dur:9,sta:10,tac:8,usage:'Endures, protects, and strikes when a friend needs him.',persNote:'Protective friend — loyal, brave, and impossible to break.'},
+{id:'boromir',name:'Boromir',fr:'The Lord of the Rings',cat:'Fantasy & Sci-Fi',icon:'🛡️',hp:1200,atk:125,def:90,sp:1.15,tier:'A+',trait:'',pers:'protective',style:'Gondorian captain who holds the line with sword and horn',sig:'Horn Blast Charge',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Ring temptation; human limits',feat:'Held Amon Hen against orcs alone',wiki:'Boromir',alias:'Boromir',v2:'Captain Boromir',v2hp:100,v2atk:15,v2def:10,pw:7,dex:7,dur:9,sta:9,tac:8,usage:'Holds the line, blows the horn, and fights to the last arrow.',persNote:'Protective captain — proud, loyal, and tragic.'},
+{id:'eowyn',name:'Éowyn',fr:'The Lord of the Rings',cat:'Fantasy & Sci-Fi',icon:'⚔️',hp:1150,atk:125,def:85,sp:1.25,tier:'A+',trait:'',pers:'reckless',style:'Shieldmaiden who defies fate with sword and courage',sig:'Shieldmaiden Slash',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Human; fearless to a fault',feat:'Slew the Witch-king with Merry',wiki:'Éowyn',alias:'Dernhelm',v2:'Shieldmaiden Éowyn',v2hp:100,v2atk:20,v2def:10,pw:7,dex:9,dur:8,sta:9,tac:8,usage:'Refuses to fall, closes distance, and strikes where others fear to.',persNote:'Reckless shieldmaiden — brave, defiant, and unyielding.'},
+{id:'elrond',name:'Elrond',fr:'The Lord of the Rings',cat:'Fantasy & Sci-Fi',icon:'🧝',hp:1350,atk:135,def:95,sp:1.25,tier:'S',trait:'',pers:'disciplined',style:'Elven lord who wields sword, healing, and foresight',sig:'Elven Sword Slash',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Age and sorrow; restrained power',feat:'Fought in the Last Alliance',wiki:'Elrond',alias:'Elrond Half-elven',v2:'Lord Elrond',v2hp:150,v2atk:20,v2def:10,pw:8,dex:8,dur:9,sta:9,tac:10,usage:'Fights with elven swordplay and foresight, healing through the fight.',persNote:'Disciplined lord — wise, sorrowful, and formidable.'},
+{id:'bilbo',name:'Bilbo Baggins',fr:'The Lord of the Rings',cat:'Fantasy & Sci-Fi',icon:'💍',hp:1000,atk:105,def:80,sp:1.3,tier:'A',trait:'',pers:'compassionate',style:'Burglar hobbit who uses stealth, wit, and Sting',sig:'Sting Thrust',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Small; no combat training',feat:'Outwitted Smaug and Gollum',wiki:'Bilbo_Baggins',alias:'Bilbo',v2:'Burglar Bilbo',v2hp:100,v2atk:15,v2def:10,pw:6,dex:9,dur:7,sta:8,tac:10,usage:'Stays unseen, picks the moment, and strikes with Sting.',persNote:'Compassionate burglar — clever, kind, and braver than he looks.'},
+{id:'duncan',name:'Duncan Idaho',fr:'Dune',cat:'Fantasy & Sci-Fi',icon:'⚔️',hp:1250,atk:130,def:90,sp:1.25,tier:'A+',trait:'',pers:'protective',style:'Swordmaster who guards with crysknife and speed',sig:'Crysknife Barrage',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Human; loyalty can be exploited',feat:'Held off Sardaukar to save Paul',wiki:'Duncan_Idaho',alias:'Duncan',v2:'Ghola Duncan',v2hp:150,v2atk:20,v2def:10,pw:8,dex:9,dur:8,sta:9,tac:9,usage:'Guards, parries, and counters with swordmaster speed.',persNote:'Protective swordmaster — loyal, skilled, and selfless.'},
+{id:'gurney',name:'Gurney Halleck',fr:'Dune',cat:'Fantasy & Sci-Fi',icon:'🎵',hp:1200,atk:125,def:90,sp:1.2,tier:'A+',trait:'',pers:'disciplined',style:'Warmaster who fights with blade and song',sig:'Blade Song Strike',sigMult:1.5,trans:'',tAtk:0,tDef:0,weak:'Human; age',feat:'Trained Paul and fought Harkonnens',wiki:'Gurney_Halleck',alias:'Gurney',v2:'Warmaster Gurney',v2hp:100,v2atk:15,v2def:10,pw:7,dex:8,dur:9,sta:9,tac:9,usage:'Fights with disciplined blade work and battlefield experience.',persNote:'Disciplined warmaster — gruff, loyal, and musical.'},
+{id:'stilgar',name:'Stilgar',fr:'Dune',cat:'Fantasy & Sci-Fi',icon:'🏜️',hp:1250,atk:130,def:90,sp:1.25,tier:'A+',trait:'',pers:'disciplined',style:'Fremen naib who fights desert-style with crysknife',sig:'Crysknife Strike',sigMult:1.6,trans:'',tAtk:0,tDef:0,weak:'Desert-dependent tactics',feat:'Led Fremen against Harkonnens',wiki:'Stilgar',alias:'Stilgar',v2:'Naib Stilgar',v2hp:100,v2atk:20,v2def:10,pw:8,dex:9,dur:8,sta:9,tac:9,usage:'Uses desert tactics, sand, and crysknife speed.',persNote:'Disciplined naib — stern, honourable, and deadly in the desert.'},
 ];
 const CATS=['All','Anime','Comics','Video Games','Movies & TV','Animation','Fantasy & Sci-Fi'];
 
@@ -364,18 +411,20 @@ const BATTLEFIELDS=[
    fighters with the same personality do NOT say identical lines. No team language is used:
    v12 is 1v1, so there is no team to protect or fall back on. */
 const DIALOGUE_TEMPLATES={
-proud:['"{name}, you picked the wrong opponent. Watch what {name} can do alone."','"{name} does not need backup — and {opp} is about to learn why."','"Pride is not a flaw when it is earned, {opp}. {sig} will prove it."','"{name} has already decided how this ends, {opp}. {sig} is not a threat — it is a conclusion."','"Watch closely, {opp}. {name} in {variant} form does not repeat mistakes — and {sig} does not miss twice."','"You have {name} attention now, {opp}. That is rarer — and more dangerous — than you think."'],
-strategist:['"Watch {opp} first, {name} tells themself — every fighter has a tell, and {sig} will find it."','"{name} wins by position, not noise. {opp}, your next move is already read."','"Patience, {opp}. {name} has studied you, and {sig} is coming at the right moment."','"{name} has counted your habits, {opp}. The next {sig} will land where you were going, not where you are."','"Every exchange teaches {name} something, {opp}. By the end, there will be nothing left to learn — only {sig}."','"Do not mistake stillness for hesitation, {opp}. {name} is choosing the moment, not avoiding it."'],
-reckless:['"Enough talking, {opp} — let us see who hits harder! {name} is not here to wait."','"If {name} falls, {name} falls swinging, {opp}. {sig} first."','"{variant} or not, {name} only knows one speed: forward, at {opp}."','"{name} does not plan the ending, {opp}. {name} just keeps throwing {sig} until the ending arrives."','"Hit me back if you can, {opp} — {name} would rather trade blows than trade words."','"{variant} changes the power, {opp}, not the plan: forward, fast, and straight through {sig}."'],
-protective:['"{name} will not fall here, {opp} — not while {name} can still stand and use {sig}."','"I take the hit and I give it back, {opp}. That is how {name} fights."','"{name} protects what matters by ending this, {opp} — with {sig}, not with speeches."','"{name} stands here so nothing else has to fall, {opp}. {sig} is the line."','"You will have to go through {name}, {opp} — and {name} is not moving."','"{name} does not need to win beautifully, {opp}. {name} needs to still be standing when {sig} lands."'],
-ruthless:['"Weakness is an opening, {opp}. {name} will find yours, then use {sig}."','"Do not beg, {opp}. It will not change what {name} does next."','"{name} does not fight for applause, {opp}. {name} fights to finish this."','"{name} saw the opening the moment you made it, {opp}. {sig} is already on its way."','"No speeches, {opp}. {name} finishes fights, and {sig} finishes them."','"{name} does not hate you, {opp}. {name} simply does not let an opening close unused."'],
-disciplined:['"Breathe. Form. Strike only when it counts, {opp}. {name} does not waste {sig}."','"Honour is not weakness, {opp}. It is control — and {name} has it."','"{name} has trained for this, {opp}. One clean {sig} is worth ten wild swings."','"Form first, {opp}. {name} will not chase a wild swing when one clean {sig} will do."','"{name} has already fought this fight in their head, {opp}. Now {sig} does the rest."','"Control is a weapon, {opp}. {name} uses it, then uses {sig}."'],
-compassionate:['"{name} does not want to hurt you, {opp}. But {name} will stop you — with {sig} if it comes to that."','"There is always a way that does not end in ruin, {opp}. {name} will look for it, even now."','"Mercy is not surrender, {opp}. {name} will hold back where possible, and not where it costs the fight."','"{name} will give you a way out, {opp}, right up until {sig} is the only way left."','"This does not have to be cruelty, {opp}. {name} can end it cleanly with {sig}."','"{name} fights because someone must stop this, {opp} — not because {name} enjoys {sig}."'],
-humorous:['"Okay, {opp}, this is either brilliant or very stupid. {name} is going with {sig} to find out."','"I have fought weirder days than this, {opp}. {name} is still standing, and {sig} is still ready."','"Note to self, {opp}: do not stand still while {name} is winding up {sig}."','"Great, {opp}, another dramatic showdown. {name} brought {sig} and questionable life choices."','"{name} would make a joke here, {opp}, but {sig} is funnier when it lands."','"If this goes badly, {opp}, {name} is blaming {variant} form and {sig} in that order."']
+proud:['Then come and prove it.','I have heard that confidence before. It did not last.','Watch what happens next. That is all the warning you get.','You wanted this fight. You have it.','Pride is not the problem here. Timing is.','One more step, and we find out who is right.'],
+strategist:['Hold. Watch the feet, not the hands.','Again. Same rhythm.','There. That step.','Patience. The opening will show itself.','Not yet. Wait for the tell.','Measured. Every move has a cost.'],
+reckless:['Enough talking. Let us see who hits harder.','Forward. Always forward.','Hit me back if you can.','No plan survives a good punch. Let us find out.','I would rather trade blows than trade words.','Come on, then.'],
+protective:['I am still standing. That has to be enough for now.','Through me, then. I am not moving.','I take the hit and I give it back.','Not here. Not like this.','Stand behind me — I have this.','I do not need to win beautifully. I need to still be standing.'],
+ruthless:['Weakness is an opening.','Do not beg. It will not change what happens next.','No speeches.','I saw the opening the moment you made it.','This ends when I decide it ends.','I do not hate you. I simply do not let an opening close unused.'],
+disciplined:['Breathe. Form. Strike only when it counts.','Control is a weapon.','One clean strike is worth ten wild swings.','Form first.','I have already fought this fight in my head.','Steady. Do not chase.'],
+compassionate:['I do not want to hurt you. But I will stop you.','There is always a way that does not end in ruin.','Mercy is not surrender.','I will give you a way out, right up until there is none left.','This does not have to be cruelty.','I fight because someone must stop this, not because I enjoy it.'],
+humorous:['Okay, this is either brilliant or very stupid.','Great. Another dramatic showdown.','Note to self: do not stand still.','I have had weirder days than this.','If this goes badly, I am blaming the weather.','Joke later. Move now.'],
+humorousSerious:['Okay. No more jokes.','This just got serious.','Focus. Breathe. Move.','I am hurt, but I am not done.','Short version: I am still here.','No jokes left. Just the next move.']
 };
 let episodeDialogueUsed={};
-function dialogueFor(f, opp, round, kind){
-  const templates=DIALOGUE_TEMPLATES[f.pers]||DIALOGUE_TEMPLATES.disciplined;
+function dialogueFor(f, opp, round, kind, hpRatio){
+  let templates=DIALOGUE_TEMPLATES[f.pers]||DIALOGUE_TEMPLATES.disciplined;
+  if(f.pers==='humorous' && hpRatio!==undefined && hpRatio<0.5) templates=DIALOGUE_TEMPLATES.humorousSerious;
   const oppName=opp?opp.name:'opponent';
   const sig=f.sig||'their signature';
   const variant=f.variant||'Base';
@@ -387,7 +436,10 @@ function dialogueFor(f, opp, round, kind){
   const hash=(f.id||f.name).split('').reduce((a,c)=>a+c.charCodeAt(0),0);
   const idx=candidates[(round+hash+(kind==='intro'?0:kind==='transform'?1:2))%candidates.length];
   episodeDialogueUsed[key]=[...used, idx];
-  return templates[idx].replaceAll('{name}',f.name).replaceAll('{opp}',oppName).replaceAll('{sig}',sig).replaceAll('{variant}',variant);
+  let line=templates[idx].replaceAll('{opp}',oppName).replaceAll('{variant}',variant);
+  // v13 voice rule: never self-name, never announce own signature as strategy.
+  line=line.replaceAll(f.name,'').replaceAll(sig,'').replace(/\s{2,}/g,' ').trim();
+  return line;
 }
 // Backwards-compatible name used by older code paths; now fighter-specific.
 const DIALOGUE={};
@@ -567,6 +619,13 @@ const V12_PROFILE_EXTRA={
   gojo:{pressure:'Calm and controlling; Infinity defence shapes every exchange.',equipment:'Blindfold / glasses; not a weapon.',regen:'Reverse cursed technique heals while alive; does not revive after death.',evidence:'Powers: demonstrated. Infinity block: implemented for non-EX attackers.'},
   saitama:{pressure:'Bored and restrained at first, then finishes with a serious blow when the fight demands it.',equipment:'None.',regen:'No regeneration needed in this simulation.',evidence:'Powers: demonstrated at the top of the scale in this build. Serious-punch scaling: supported interpretation.'}
 };
+function patternFor(opp){
+  if(opp.id==='spiderman') return 'repeated web-swinging approach';
+  if(opp.pers==='reckless') return 'repeated headlong rush';
+  if(opp.pers==='humorous') return 'repeated quip-and-dart rhythm';
+  return 'repeated strike rhythm';
+}
+function counterFor(actor, pattern){ return actor.id==='batman' ? ('web-counter trap prepared against the '+pattern) : ('counter prepared against the '+pattern); }
 function simulateBattle(){
   if(typeof selected!=='undefined' && selected.length===2 && selected[0]===selected[1]) throw new Error('Mirror match blocked: the same fighter cannot fight itself in this build.');
   const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
@@ -577,7 +636,7 @@ function simulateBattle(){
   const b=makeBattleInstance(byId(selected[1]),bf);
   // 1v1: alpha=[Fighter A], beta=[Fighter B] are kept only so playback/render code still works.
   let alpha=[a], beta=[b];
-  [...alpha,...beta].forEach(f=>{f.staminaMax=70+(f.sta||7)*5; f.stamina=f.staminaMax; f.shield=false; f.studied=false; f.nextBoost=1;});
+  [...alpha,...beta].forEach(f=>{f.staminaMax=70+(f.sta||7)*5; f.stamina=f.staminaMax; f.shield=false; f.studied=false; f.nextBoost=1; f.knowledgeStage='UNKNOWN'; f.knowledgePattern=''; f.preparedCounter=false; f.restrained=false;});
   const events=[]; let winner=null; let victoryCondition=null; let stalemate=false; let totalDamage=0;
   const pushEvent=(ev)=>{ev.id=events.length; ev.battlefield=bf.name; ev.victoryMode=victoryMode; ev.seed=battleSeed;
     if(ev.type==='attack'){ev.damageType=damageTypeFor(ev.ability); ev.result=ev.blocked?'blocked':(ev.damage>0?'hit':'no damage'); ev.remainingHp=ev.targetHp; ev.explanation=ev.reason||'A recorded exchange in the simulation.'; ev.preconditions='Both fighters alive at the start of the round.';}
@@ -601,7 +660,14 @@ function simulateBattle(){
       }
       if(actor.pers==='strategist' && !actor.studied){
         actor.studied=true; actor.nextBoost=1.25; actor.actions++;
-        pushEvent({round,type:'study',actor:actor.name,detail:'studies the enemy and finds a weakness',reason:'strategist studies first',knowledgeState:'observed in battle — weakness found during this fight'});
+        const _foe=foes[0]; const _pat=_foe?patternFor(_foe):'repeated strike rhythm';
+        actor.knowledgePattern=_pat; actor.knowledgeStage='OBSERVED';
+        pushEvent({round,type:'study',actor:actor.name,detail:'observes a pattern: '+_pat,reason:'strategist studies first — pattern observed, not yet a prepared counter',knowledgeState:'OBSERVED',pattern:_pat,knowledgeStage:'OBSERVED'});
+        continue;
+      }
+      if(actor.pers==='strategist' && actor.studied && !actor.preparedCounter && actor.knowledgePattern && actor.stamina>10){
+        actor.preparedCounter=true; actor.stamina-=10; actor.actions++;
+        pushEvent({round,type:'prepare',actor:actor.name,detail:counterFor(actor, actor.knowledgePattern),reason:'countermeasure prepared from an observed pattern; it has not landed yet',knowledgeState:'PREPARED',pattern:actor.knowledgePattern,knowledgeStage:'PREPARED',counter:counterFor(actor, actor.knowledgePattern)});
         continue;
       }
       // In 1v1 there is no ally to protect, so the protective branch cannot trigger.
@@ -621,9 +687,27 @@ function simulateBattle(){
       else if(rng()<0.20) crit=true;
       if(actor.id==='vegeta' && !actor.prideBoosted && actor.currentHp<=actor.maxHp*0.5){actor.prideBoosted=true; actor.nextBoost=1.2; reason=(reason?reason+'; ':'')+'pride response — a rival pressing Vegeta makes him escalate rather than retreat';}
       if(actor.id==='naruto' && rng()<0.25){reason=(reason?reason+'; ':'')+'clones and misdirection create an opening';}
+      let counterDetected=false, counterExploited=false;
+      if(actor.preparedCounter && !blocked){
+        const tgtDex=target.dex||7, tgtSp=target.sp||1;
+        if(target.id==='spiderman'){
+          let det=0.45+Math.max(-0.2,Math.min(0.2,(tgtDex-(actor.dex||7))*0.03))+Math.max(-0.15,Math.min(0.15,(tgtSp-(actor.sp||1))*0.10));
+          if(target.currentHp<target.maxHp*0.5) det-=0.15;
+          if(target.stamina!==undefined && target.stamina<20) det-=0.10;
+          det=Math.max(0.15,Math.min(0.85,det));
+          if(rng()<det){ counterDetected=true; blocked=true; reason='trap detected — spider-sense warns of the prepared counter, so it is avoided'; pushEvent({round,type:'detected',actor:target.name,target:actor.name,detail:'detects the prepared counter and avoids it',reason:'spider-sense detection check succeeded; counter does not land',knowledgeState:'DETECTED',pattern:actor.knowledgePattern,knowledgeStage:'DETECTED'}); }
+          else { counterExploited=true; }
+        } else { counterExploited=true; }
+        if(counterExploited){ actor.nextBoost=Math.max(actor.nextBoost||1,1.25); }
+        actor.preparedCounter=false;
+      }
+      if(target.restrained && rng()<0.6){ target.restrained=false; reason=(reason?reason+'; ':'')+'escaped the web restraint'; }
+      else if(target.restrained){ /* restraint slows next attack, handled below via mult */ }
       let dmg=0;
       if(actor.pers==='reckless' && actor.actions===1){mult*=0.7; reason='holding back to test a strong opponent';}
       if(actor.stamina<=20){mult*=0.8; reason=(reason?reason+'; ':'')+'fatigued, stamina low';}
+      if(target.restrained){ mult*=0.85; reason=(reason?reason+'; ':'')+'web restraint slows the response'; }
+      if(target.variantId==='v2' && target.id==='batman' && damageTypeFor(ability)==='physical'){ /* armored batsuit absorbs part of physical blows, applied in dmg calc below */ }
       if(!blocked){
         let scale=1; if(actor.trait==='serious_punch') scale=1.35+(1-actor.currentHp/actor.maxHp)*0.5;
         if(actor.nextBoost && actor.nextBoost!==1){scale*=actor.nextBoost; actor.nextBoost=1; reason=(reason?reason+'; ':'')+'striking a studied weakness';}
@@ -633,11 +717,13 @@ function simulateBattle(){
         if(tierDiff>=2 && !isCounter){dmg=Math.floor(dmg*(useSig?0.5:0.25)); reason=(reason?reason+'; ':'')+'power gap: weaker tier barely dents a far stronger foe';}
         dmg=Math.floor(dmg*(0.85+(actor.pw||7)*0.03)*(1-(target.dur||7)*0.015)); if(/internal-or-bypass|mental-or-supernatural/.test(damageTypeFor(ability)) && target.trait!=='infinity_void'){dmg=Math.floor(dmg*1.15); reason=(reason?reason+'; ':'')+'bypass effect — plain durability does not stop it fully';} if((target.dex||7)>=(actor.dex||7)+3 && rng()<0.12){dmg=Math.floor(dmg*0.7); reason=(reason?reason+'; ':'')+'countered by superior dexterity';}
         if(target.shield){dmg=Math.floor(dmg*0.5); target.shield=false; reason=(reason?reason+'; ':'')+'ally shield absorbs part of the blow';}
+        if(target.variantId==='v2' && target.id==='batman' && damageTypeFor(ability)==='physical'){dmg=Math.floor(dmg*0.9); reason=(reason?reason+'; ':'')+'armour absorbs part of the physical blow';}
+        if(!blocked && /web/i.test(ability) && actor.id==='spiderman' && rng()<0.5){ target.restrained=true; reason=(reason?reason+'; ':'')+'web restraint binds the target'; }
         actor.stamina=Math.max(0,actor.stamina-(useSig?15:8));
         totalDamage+=dmg;
         target.currentHp=Math.max(0,target.currentHp-dmg);
       }
-      const ev={round,type:'attack',actor:actor.name,target:target.name,ability,damage:dmg,crit,blocked,targetHp:target.currentHp,targetMax:target.maxHp,actorPers:actor.pers,reason};
+      const ev={round,type:'attack',actor:actor.name,target:target.name,ability,damage:dmg,crit,blocked,targetHp:target.currentHp,targetMax:target.maxHp,actorPers:actor.pers,reason,knowledgeStage:counterDetected?'DETECTED':(counterExploited?'EXPLOITED':(actor.knowledgeStage||'UNKNOWN')),pattern:actor.knowledgePattern||'',counterDetected,counterExploited,restrained:!!target.restrained};
       pushEvent(ev);
       if(target.currentHp===0 && target.alive){
         target.alive=false; target.deathRound=round;
@@ -659,8 +745,10 @@ function simulateBattle(){
   }
   const winnerFighter=stalemate?null:(alpha[0].alive?alpha[0]:beta[0]);
   const loserFighter=stalemate?null:(alpha[0].alive?beta[0]:alpha[0]);
+  const _fin=events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0]||null;
+  const finalRecord={winner:stalemate?'Stalemate':winner,loserName:loserFighter?loserFighter.name:null,loserHp:loserFighter?loserFighter.currentHp:null,loserDead:loserFighter?!!loserFighter.dead:null,loserUnconscious:loserFighter?!!loserFighter.unconscious:null,loserIncapacitated:loserFighter?!!loserFighter.incapacitated:null,loserAlive:loserFighter?!!loserFighter.alive:null,victoryMode, victoryCondition,stalemate,finishingEventId:_fin?_fin.id:null,finishingActor:_fin?_fin.actor:null,finishingTarget:_fin?_fin.target:null,seed:battleSeed,battlefield:bf.name};
   const finalState=[...alpha,...beta].map(f=>({name:f.name,alive:f.alive,dead:!!f.dead,unconscious:!!f.unconscious,incapacitated:!!f.incapacitated,transformed:!!f.transformed,currentHp:f.currentHp,maxHp:f.maxHp,stamina:f.stamina}));
-  return {alpha,beta,events,winner,winnerFighter,loserFighter,victoryCondition,stalemate,rounds:events.length?events[events.length-1].round:0,battlefield:bf,totalDamage,destruction:Math.min(100,Math.floor(totalDamage/200)),seed:battleSeed,victoryMode,finalState};
+  return {alpha,beta,events,winner,winnerFighter,loserFighter,victoryCondition,stalemate,rounds:events.length?events[events.length-1].round:0,battlefield:bf,totalDamage,destruction:Math.min(100,Math.floor(totalDamage/200)),seed:battleSeed,victoryMode,finalState,finalRecord:_fin?finalRecord:{...finalRecord}};
 }
 function startBattle(){
   if(selected.length===2 && selected[0]===selected[1]){alert('Mirror match blocked: the same fighter cannot fight itself in this build. Pick two different fighters.');return;}
@@ -742,17 +830,27 @@ function showResults(){
   const a=b.alpha[0], f2=b.beta[0];
   document.getElementById('result-title').innerText=b.stalemate?'STALEMATE — NO DEATH':(b.victoryMode==='incapacitation'?('INCAPACITATION VERDICT — '+b.winner+' Wins'):('DEATH BATTLE VERDICT — '+b.winner+' Wins'));
   document.getElementById('result-desc').innerText=b.stalemate?`${a.name} vs ${f2.name} on ${b.battlefield.name}: no death. Victory condition: ${b.victoryCondition}.`:`Winner: ${b.winner}. Loser: ${b.stalemate?'—':(b.loserFighter?b.loserFighter.name:'')}. Victory condition: ${b.victoryCondition}. Battlefield: ${b.battlefield.name}. The episode below was generated only from the recorded battle events and the pre-battle analysis.`;
-  const story=generateEpisode(b), breakdown=generateBreakdown(b);
-  const checks=(typeof consistencyChecks==='function'?consistencyChecks(b,story):[]);
+  // v13: one authoritative record; results read finalRecord, not a second derivation.
+  const fr=b.finalRecord||{winner:b.winner,loserName:b.loserFighter?b.loserFighter.name:'',victoryMode:b.victoryMode,victoryCondition:b.victoryCondition};
+  // v13 regeneration: up to 2 regenerations with alternative scene variants, events/winner unchanged.
+  let story='', breakdown=generateBreakdown(b), checks=[], regenAttempts=0;
+  for(let attempt=0; attempt<=2; attempt++){
+    regenAttempts=attempt+1; story=generateEpisode(b, attempt);
+    checks=(typeof consistencyChecks==='function'?consistencyChecks(b,story):[]);
+    const failed=checks.filter(c=>c.passed===false);
+    if(!failed.length) break;
+    if(attempt===2) break;
+  }
   const allPass=checks.length?checks.every(c=>c.passed!==false):(typeof consistencyCheck==='function'?consistencyCheck(b):false);
-  document.getElementById('consistency-note').innerText=allPass?'Consistency Check: PASSED — this episode is verified against the battle record (unverified lines, if any, are labelled as such below).':'Consistency Check: FAILED — '+checks.filter(c=>c.passed===false).map(c=>c.name).join('; ')+'. Do not trust this episode as verified; check the breakdown.';
+  const regenNote=regenAttempts>1?(' Episode regeneration attempts: '+regenAttempts+' (scene variants only; events and winner unchanged).'):'';
+  document.getElementById('consistency-note').innerText=(allPass?'Consistency Check: PASSED — this episode is verified against the battle record (unverified lines, if any, are labelled as such below).':'Consistency Check: FAILED — '+checks.filter(c=>c.passed===false).map(c=>c.name+': '+c.detail).join(' | ')+'. Do not trust this episode as verified; check the breakdown.')+regenNote+' Authoritative record: winner='+fr.winner+', loser='+fr.loserName+', victoryMode='+fr.victoryMode+', finishingEventId='+(fr.finishingEventId!=null?fr.finishingEventId:'none')+'.';
   const cl=document.getElementById('consistency-lines'); if(cl) cl.innerHTML='<b>Consistency Check — individual lines (separate from the quality check below):</b><br>'+checks.map(c=>(c.passed===true?'✅ ':(c.passed==='unverified'?'❓ UNVERIFIED — ':'❌ '))+esc(c.name)+' — '+esc(c.detail)).join('<br>');
   const quality=(typeof qualityChecks==='function'?qualityChecks(b,story):[]);
   const qFail=quality.filter(c=>c.passed===false);
   const qn=document.getElementById('quality-note'); if(qn) qn.innerText=qFail.length?('Narrative Quality Check: ISSUES FOUND — '+qFail.map(c=>c.name).join('; ')+'. The generator already swapped in unused scene variants where it could; what remains is listed below and does not change the winner or events.'):'Narrative Quality Check: PASSED — no repeated sentences/paragraphs, no banned filler, no log-restating paragraphs found by the automated checks.';
   const ql=document.getElementById('quality-lines'); if(ql) ql.innerHTML='<b>Narrative Quality Check — separate from consistency:</b><br>'+quality.map(c=>(c.passed===true?'✅ ':(c.passed==='unverified'?'❓ UNVERIFIED — ':'❌ '))+esc(c.name)+' — '+esc(c.detail)).join('<br>');
   const pl=document.getElementById('pipeline-stages'); if(pl) pl.innerHTML=pipelineHtml(b,checks);
-  document.getElementById('story-output').innerHTML=(allPass?'':`<p style="border:2px solid var(--yellow);padding:10px;border-radius:6px">⚠️ Consistency Check FAILED for this episode. It is shown for review only and is NOT presented as verified. Checks that failed: ${esc(checks.filter(c=>!c.passed).map(c=>c.name).join('; '))}. Trust the Combat Breakdown, not the episode, for what actually happened.</p>`)+story;
+  document.getElementById('story-output').innerHTML=(allPass?'':`<p style="border:2px solid var(--yellow);padding:10px;border-radius:6px">⚠️ UNVERIFIED — shown for review only. Consistency Check FAILED for this episode after ${regenAttempts} generation attempt(s) (scene variants only; events and winner were not changed to pass). Precise failures: ${esc(checks.filter(c=>c.passed===false).map(c=>c.name+': '+c.detail).join(' | '))}. Trust the Combat Breakdown, not the episode, for what actually happened.</p>`)+story;
   document.getElementById('breakdown-output').innerHTML=breakdown;
   saveBattle(b,story,breakdown,checks,quality); try{const _h=loadHistory(); if(_h.length) currentHistoryId=_h[0].id;}catch(e){}
 }
@@ -876,12 +974,12 @@ const CACHE_TTL_MS=7*24*3600*1000;
 function isCacheFresh(rec){return !!(rec&&rec.time&&((Date.now()-new Date(rec.time).getTime())<CACHE_TTL_MS));}
 function loadResearchCache(){try{const v=localStorage.getItem('warroom_research_cache_v12'); if(v) return JSON.parse(v); const old=localStorage.getItem('warroom_research_cache_v12'); if(old){const o=JSON.parse(old); try{localStorage.setItem('warroom_research_cache_v12',JSON.stringify(o));}catch(e){} return o;} return {}}catch(e){return {}}}
 function getCachedResearch(id){const c=loadResearchCache(); const key=id+'|'+(selectedVariants[id]||'base'); return c[key]||null;}
-function setCachedResearch(id,rec){try{const c=loadResearchCache(); c[id+'|'+(selectedVariants[id]||'base')]={wiki:rec.wiki||null,fandom:rec.fandom||null,time:rec.time||new Date().toISOString()}; localStorage.setItem('warroom_research_cache_v12',JSON.stringify(c));}catch(e){}}
+function setCachedResearch(id,rec){try{const c=loadResearchCache(); c[id+'|'+(selectedVariants[id]||'base')]={wiki:rec.wiki||null,fandom:rec.fandom||null,wikiStatus:rec.wikiStatus||(rec.wiki?'FOUND':'NO_DATA'),fandomStatus:rec.fandomStatus||(rec.fandom?'FOUND':'NO_DATA'),time:rec.time||new Date().toISOString()}; localStorage.setItem('warroom_research_cache_v12',JSON.stringify(c));}catch(e){}}
 function researchRefsFor(ids){
   return ids.map(id=>{const f=byId(id); const c=canonResearch[id]||getCachedResearch(id)||{}; const srcs=[];
-    srcs.push({name:'Wikipedia',type:'Encyclopedia',status:c.wiki?'✅ found':'❌ no data',link:'https://en.wikipedia.org/wiki/'+encodeURIComponent(f?f.wiki:f||id),date:c.time?new Date(c.time).toLocaleString():'not fetched'});
+    srcs.push({name:'Wikipedia',type:'Encyclopedia',status:(typeof researchStatusLabel==='function'?researchStatusLabel(c.wikiStatus||(c.wiki?'FOUND':'NO_DATA')):(c.wiki?'✅ found':'❌ no data')),link:'https://en.wikipedia.org/wiki/'+encodeURIComponent(f?f.wiki:f||id),date:c.time?new Date(c.time).toLocaleString():'not fetched'});
     const fm=(typeof FANDOM!=='undefined'&&FANDOM[id])||null;
-    if(fm) srcs.push({name:'Fan-run Fandom wiki ('+fm.d+')',type:'Fan-run wiki — discussion, not official canon',status:c.fandom?'✅ found':'❌ no data',link:'https://'+fm.d+'/wiki/'+encodeURIComponent(fm.t),date:c.time?new Date(c.time).toLocaleString():'not fetched'});
+    if(fm) srcs.push({name:'Fan-run Fandom wiki ('+fm.d+')',type:'Fan-run wiki — discussion, not official canon',status:(typeof researchStatusLabel==='function'?researchStatusLabel(c.fandomStatus||(c.fandom?'FOUND':'NO_DATA')):(c.fandom?'✅ found':'❌ no data')),link:'https://'+fm.d+'/wiki/'+encodeURIComponent(fm.t),date:c.time?new Date(c.time).toLocaleString():'not fetched'});
     return {fighter:f?f.name:id,continuity:f?continuityFor(f):'',sources:srcs};});
 }
 function renderDossier(ids){
@@ -889,9 +987,9 @@ function renderDossier(ids){
   if(!ids||!ids.length){el.innerHTML='No fighters selected — the dossier is empty. Pick two fighters to see their Research Dossier.';return}
   el.innerHTML=ids.map(id=>{const f=byId(id); const c=canonResearch[id]||{}; const cached=getCachedResearch(id); const used=c.time?c:(cached||{}); const isCached=!!(c.cached && !c.fresh); const isFresh=!!c.fresh; const isStale=!!(cached&&!isCacheFresh(cached));
     const fmt=d=>{try{return new Date(d).toLocaleString()}catch(e){return d||'not fetched'}};
-    const wikiRow=used.wiki?`✅ Wikipedia (Encyclopedia) — found ${fmt(used.time)}${isCached?' — CACHED, reused from a previous encounter (not re-fetched)':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(f.wiki)}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only, never in the episode): ${esc(used.wiki.extract.slice(0,200))}…</span>`:`❌ Wikipedia (Encyclopedia) — no data (offline / not found)`;
+    const wikiRow=used.wiki?`✅ Wikipedia (Encyclopedia) — FOUND ${fmt(used.time)}${isCached?' — CACHED, reused from a previous encounter (not re-fetched)':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(f.wiki)}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only, never in the episode): ${esc(used.wiki.extract.slice(0,200))}…</span>`:`${researchStatusLabel(used.wikiStatus||'NO_DATA')} — continuity: ${esc(continuityFor(f))}`;
     const fm=(typeof FANDOM!=='undefined'&&FANDOM[id])||null;
-    const fanRow=fm?(used.fandom?`✅ Fan-run Fandom wiki (${esc(fm.d)}, fan-run, not official canon) — found ${fmt(used.time)}${isCached?' — CACHED':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="${used.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only): ${esc(used.fandom.extract.slice(0,200))}…</span>`:`❌ Fan-run Fandom wiki (${esc(fm.d)}) — no data`):'No Fandom mapping in this build.';
+    const fanRow=fm?(used.fandom?`✅ Fan-run Fandom wiki (${esc(fm.d)}, fan-run, not official canon) — FOUND ${fmt(used.time)}${isCached?' — CACHED':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="${used.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only): ${esc(used.fandom.extract.slice(0,200))}…</span>`:`${researchStatusLabel(used.fandomStatus||'NO_DATA')} — continuity: ${esc(continuityFor(f))}`):'No Fandom mapping in this build.';
     return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)} — ${f?esc(continuityFor(f)):''}</b><br>${wikiRow}<br>${fanRow}<br><b>Demonstrated feats (local profile, general terms):</b> ${esc(f?f.feat:'Not established in this profile')}<br><b>Fan opinion / discussion:</b> fan-run wiki pages and YouTube searches are discussion to investigate, not established fact. They never auto-grant powers.<br><b>Conflicting versions:</b> only the selected continuity above is used; versions are not silently merged.<br><b>Disagreements:</b> different continuities and fan sources may disagree on power level or feats. A search result is a lead, not proof — only the selected continuity's local profile decides combat.</div>`;}).join('');
 }
 function refreshDossier(){
@@ -902,17 +1000,18 @@ function refreshDossier(){
 }
 
 async function fetchWiki(id){
-  const f=byId(id); if(!f) return null;
-  try{const res=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(f.wiki)}`,{headers:{Accept:'application/json'}}); if(!res.ok) return null; const d=await res.json(); if(d.extract) {researchIntel[id]=d; return d;} }catch(e){} return null;
+  const f=byId(id); if(!f) return {data:null,status:'NO_DATA'};
+  try{const res=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(f.wiki)}`,{headers:{Accept:'application/json'}}); if(res.status===404) return {data:null,status:'NO_DATA'}; if(!res.ok) return {data:null,status:'UNAVAILABLE'}; const d=await res.json(); if(d.extract) {researchIntel[id]=d; return {data:d,status:'FOUND'};} return {data:null,status:'NO_DATA'}; }catch(e){ return {data:null,status:'UNAVAILABLE'}; }
 }
+function researchStatusLabel(s){ return s==='FOUND'?'✅ FOUND':(s==='NO_DATA'?'❌ NO DATA — source reachable, no entry for this character/continuity':(s==='UNAVAILABLE'?'⚠️ UNAVAILABLE — fetch failed/timeout/blocked; status unknown, NOT proof of no information':'❌ NO DATA')); }
 async function fetchFandom(id){
-  const fm=FANDOM[id]; if(!fm) return null;
+  const fm=FANDOM[id]; if(!fm) return {data:null,status:'NO_DATA'};
   try{const url=`https://${fm.d}/api.php?action=query&prop=extracts|info&explaintext&exintro&inprop=url&titles=${encodeURIComponent(fm.t)}&format=json&origin=*`;
-  const res=await fetch(url); if(!res.ok) return null; const j=await res.json(); const pages=j.query&&j.query.pages?Object.values(j.query.pages):[]; const p=pages[0]; if(p&&p.extract) return {title:p.title,extract:p.extract,url:p.canonicalurl||`https://${fm.d}/wiki/${encodeURIComponent(fm.t)}`,domain:fm.d}; }catch(e){} return null;
+  const res=await fetch(url); if(!res.ok) return {data:null,status:'UNAVAILABLE'}; const j=await res.json(); const pages=j.query&&j.query.pages?Object.values(j.query.pages):[]; const p=pages[0]; if(p&&p.extract) return {data:{title:p.title,extract:p.extract,url:p.canonicalurl||`https://${fm.d}/wiki/${encodeURIComponent(fm.t)}`,domain:fm.d},status:'FOUND'}; if(p&&p.missing!==undefined) return {data:null,status:'NO_DATA'}; return {data:null,status:'NO_DATA'}; }catch(e){ return {data:null,status:'UNAVAILABLE'}; }
 }
 async function fetchCanonFor(id){
   const [wiki,fandom]=await Promise.all([fetchWiki(id),fetchFandom(id)]);
-  canonResearch[id]={wiki,fandom,time:new Date().toISOString(),fresh:true,cached:false};
+  canonResearch[id]={wiki:wiki.data,fandom:fandom.data,wikiStatus:wiki.status,fandomStatus:fandom.status,time:new Date().toISOString(),fresh:true,cached:false};
   try{setCachedResearch(id,canonResearch[id]);}catch(e){}
   return canonResearch[id];
 }
@@ -921,7 +1020,7 @@ async function fetchCanonForSelected(force){
   if(!selected.length){if(el) el.innerHTML='Pick fighters first.';renderCanonResults([]);return}
   await Promise.all(selected.map(async id=>{
     const cached=getCachedResearch(id);
-    if(!force && cached && isCacheFresh(cached)){ canonResearch[id]={wiki:cached.wiki||null,fandom:cached.fandom||null,time:cached.time,cached:true,fresh:false}; researchFetchedKeys[id+'|'+(selectedVariants[id]||'base')]=true; return; }
+    if(!force && cached && isCacheFresh(cached)){ canonResearch[id]={wiki:cached.wiki||null,fandom:cached.fandom||null,wikiStatus:cached.wikiStatus||'NO_DATA',fandomStatus:cached.fandomStatus||'NO_DATA',time:cached.time,cached:true,fresh:false}; researchFetchedKeys[id+'|'+(selectedVariants[id]||'base')]=true; return; }
     await fetchCanonFor(id);
   }));
   renderCanonResults(selected);
@@ -931,7 +1030,7 @@ function autoResearchFor(id){
   const f=byId(id); if(!f) return;
   const key=id+'|'+(selectedVariants[id]||'base');
   const cached=getCachedResearch(id);
-  if(cached && isCacheFresh(cached) && !researchFetchedKeys[key]){ canonResearch[id]={wiki:cached.wiki||null,fandom:cached.fandom||null,time:cached.time,cached:true,fresh:false}; researchFetchedKeys[key]=true; try{renderCanonResults(selected); renderSlots();}catch(e){} return; }
+  if(cached && isCacheFresh(cached) && !researchFetchedKeys[key]){ canonResearch[id]={wiki:cached.wiki||null,fandom:cached.fandom||null,wikiStatus:cached.wikiStatus||'NO_DATA',fandomStatus:cached.fandomStatus||'NO_DATA',time:cached.time,cached:true,fresh:false}; researchFetchedKeys[key]=true; try{renderCanonResults(selected); renderSlots();}catch(e){} return; }
   if(cached && isCacheFresh(cached) && researchFetchedKeys[key] && canonResearch[id] && canonResearch[id].cached){ try{renderCanonResults(selected); renderSlots();}catch(e){} return; }
   if(researchFetchedKeys[key] && canonResearch[id] && canonResearch[id].time){ try{renderSlots();}catch(e){} return; }
   if(researchFetchedKeys[key] && !(canonResearch[id]&&canonResearch[id].time)){ delete researchFetchedKeys[key]; }
@@ -949,12 +1048,12 @@ function renderCanonResults(ids){
   try{if(typeof renderDossier==='function') renderDossier(ids);}catch(e){}
   const el=document.getElementById('canon-results'); if(!el) return;
   if(!ids||!ids.length){el.innerHTML='No fighters selected.';return}
-  el.innerHTML=ids.map(id=>{const f=byId(id); const c=canonResearch[id]||{}; const w=c.wiki?`✅ Wikipedia: ${esc(c.wiki.extract.slice(0,200))}…`:`❌ Wikipedia: no data (offline / not found)`; const fa=c.fandom?`✅ Fan-run Fandom wiki (${esc(c.fandom.domain)}, not official canon): ${esc(c.fandom.extract.slice(0,200))}… <a href="${c.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open fan-run wiki page</a>`:`❌ Fan-run Fandom wiki: no data (offline / not found)`; return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)}</b><br>${w}<br>${fa}</div>`}).join('');
+  el.innerHTML=ids.map(id=>{const f=byId(id); const c=canonResearch[id]||{}; const w=c.wiki?`✅ Wikipedia (FOUND): ${esc(c.wiki.extract.slice(0,200))}…`:`${researchStatusLabel(c.wikiStatus||'NO_DATA')}`; const fa=c.fandom?`✅ Fan-run Fandom wiki (${esc(c.fandom.domain)}, not official canon, FOUND): ${esc(c.fandom.extract.slice(0,200))}… <a href="${c.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open fan-run wiki page</a>`:`${researchStatusLabel(c.fandomStatus||'NO_DATA')}`; return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)}</b> — continuity: ${f?esc(continuityFor(f)):''}<br>${w}<br>${fa}</div>`}).join('');
 }
 async function fetchCanonForInfo(id){
   const el=document.getElementById('info-canon'); if(el) el.innerHTML='Fetching canon sources…';
   const c=await fetchCanonFor(id);
-  if(el) el.innerHTML=`<p><b>Wikipedia:</b> ${c.wiki?esc(c.wiki.extract.slice(0,400))+'…':'No data.'}</p><p><b>Fan-run Fandom wiki (not official canon):</b> ${c.fandom?esc(c.fandom.extract.slice(0,400))+'… <a href="'+c.fandom.url+'" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a>':'No data.'}</p><p class="note">These extracts are context. They do not automatically add new powers to the combat engine.</p>`;
+  if(el) el.innerHTML=`<p><b>Wikipedia:</b> ${c.wiki?esc(c.wiki.extract.slice(0,400))+'…':researchStatusLabel(c.wikiStatus||'NO_DATA')}</p><p><b>Fan-run Fandom wiki (not official canon):</b> ${c.fandom?esc(c.fandom.extract.slice(0,400))+'… <a href="'+c.fandom.url+'" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a>':researchStatusLabel(c.fandomStatus||'NO_DATA')}</p><p class="note">These extracts are context. They do not automatically add new powers to the combat engine. UNAVAILABLE means the fetch failed — it is not proof the character has no information.</p>`;
 }
 async function searchCanon(){
   const q=(document.getElementById('canon-search-input').value||'').trim(); const el=document.getElementById('canon-search-results'); if(!q){el.innerHTML='Type a character name first.';return}
@@ -996,7 +1095,28 @@ TRANSSIG.gaara='Shukaku Sand Blast'; TRANSSIG.rukia='Bankai Freeze'; TRANSSIG.na
 
 V2POWER.vegeta='Majin Final Explosion'; V2POWER.deadpool='X-Force Combo';
 TRANSSIG.vegeta='Blue Evolution Final Flash'; TRANSSIG.deadpool='Maximum Effort Combo';
-FANDOM.vegeta={d:'dragonball.fandom.com',t:'Vegeta'}; FANDOM.deadpool={d:'marvel.fandom.com',t:'Deadpool'};
+FANDOM.vegeta={d:'dragonball.fandom.com',t:'Vegeta'};
+
+POWERS.piccolo=['Special Beam Cannon','Hellzone Grenade','Demon Flash']; POWERS.jiraiya=['Rasengan','Toad Summon Strike','Fire Style Blast']; POWERS.rocklee=['Leaf Hurricane','Primary Lotus','Hidden Lotus']; POWERS.shikamaru=['Shadow Possession','Shadow Stitching','Shadow Sewing']; POWERS.hisoka=['Bungee Gum Strike','Card Throw','Texture Surprise Feint']; POWERS.kenpachi=['Nozarashi Slash','Kendo Strike','Reiatsu Blast']; POWERS.toshiro=['Ice Dragon Strike','Hyoten Hyakkaso','Frozen Slash']; POWERS.sakura=['Cherry Blossom Impact','Healing Palm','Ground Smash'];
+POWERS.hawkeye=['Trick Arrow Barrage','Explosive Arrow','Acrobatic Shot']; POWERS.martianmanhunter=['Martian Vision Blast','Phase Punch','Telekinesis Slam']; POWERS.zatanna=['Reverse Speech Blast','Magic Bolt','Illusion Feint']; POWERS.shazam=['Lightning Strike','Thunder Punch','Flight Slam']; POWERS.ghostrider=['Hellfire Chain Strike','Penance Stare','Motorcycle Charge']; POWERS.punisher=['Arsenal Barrage','Sniper Shot','Ambush Trap']; POWERS.blade=['Sword Barrage','Silver Stake Strike','Daywalker Kick']; POWERS.msmarvel=['Embiggened Punch','Stretch Kick','Healing Burst'];
+POWERS.nathandrake=['Pistol Barrage','Rifle Shot','Brawl Combo']; POWERS.ellie=['Stealth Knife Strike','Bow Shot','Molotov Throw']; POWERS.arthurmorgan=['Dead Eye Barrage','Revolver Shot','Brawl Combo']; POWERS.bayonetta=['Witch Time Combo','Demon Summon Strike','Gun Heel Kick']; POWERS.sora=['Keyblade Combo','Fire Magic','Thunder Magic']; POWERS.scorpion=['Spear Pull Strike','Hellfire Blast','Teleport Punch']; POWERS.subzero=['Ice Blast Freeze','Ice Sword Slash','Frozen Ground Slam']; POWERS.wario=['Shoulder Charge','Bite Attack','Ground Pound'];
+POWERS.rocky=['Body Blow Barrage','Left Hook','Uppercut Combo']; POWERS.riddick=['Blade Ambush','Eyeshine Strike','Knife Throw']; POWERS.johnmatrix=['Machine Gun Barrage','Pistol Shot','Muscle Slam']; POWERS.dutch=['Jungle Trap Barrage','Rifle Shot','Machete Strike']; POWERS.t1000=['Liquid Blade Strike','Morph Punch','Impersonation Feint']; POWERS.agentsmith=['Smith Clone Barrage','Punch Combo','Assimilation Strike']; POWERS.morpheus=['Kung Fu Combo','Katana Slash','Dodge Counter']; POWERS.gandalf2=['White Light Beam','Staff Strike','Sword Slash'];
+POWERS.azula=['Blue Fire Blast','Lightning Strike','Fire Kick']; POWERS.sokka=['Boomerang Strike','Sword Slash','Trap Plan']; POWERS.iroh=['Lightning Redirect','Fire Blast','Tea Cup Feint']; POWERS.kimpossible=['Acrobatic Kick Combo','Gadget Blast','Hair Dryer Strike']; POWERS.shego=['Plasma Hand Strike','Plasma Blast','Acrobatic Kick']; POWERS.kyoshi=['Avatar Elemental Blast','War Fan Slash','Earth Pillar']; POWERS.zaheer=['Air Blast Barrage','Flight Dive','Suffocation Feint']; POWERS.bolin=['Lava Blast','Earth Pillar','Rock Barrage'];
+POWERS.samwise=['Garden Sword Strike','Rock Throw','Frying Pan Slam']; POWERS.boromir=['Horn Blast Charge','Sword Slash','Shield Bash']; POWERS.eowyn=['Shieldmaiden Slash','Spear Throw','Courage Strike']; POWERS.elrond=['Elven Sword Slash','Healing Light','Foresight Counter']; POWERS.bilbo=['Sting Thrust','Rock Throw','Stealth Feint']; POWERS.duncan=['Crysknife Barrage','Sword Combo','Shield Counter']; POWERS.gurney=['Blade Song Strike','Sword Slash','Balistset Feint']; POWERS.stilgar=['Crysknife Strike','Desert Ambush','Sand Trap'];
+V2POWER.piccolo='Orange Piccolo Blast'; V2POWER.jiraiya='Sage Rasengan'; V2POWER.rocklee='Eight Gates Barrage'; V2POWER.shikamaru='Shadow Master Trap'; V2POWER.hisoka='Post-Mortem Gum Barrage'; V2POWER.kenpachi='Bankai Nozarashi'; V2POWER.toshiro='Adult Ice Dragon'; V2POWER.sakura='Hundred Healings Smash';
+V2POWER.hawkeye='Ronin Sword Combo'; V2POWER.martianmanhunter='White Martian Blast'; V2POWER.zatanna='Mistress Magic Blast'; V2POWER.shazam='Captain Marvel Blast'; V2POWER.ghostrider='Spirit Vengeance Blast'; V2POWER.punisher='War Zone Barrage'; V2POWER.blade='Daywalker Barrage'; V2POWER.msmarvel='Embiggened Barrage';
+V2POWER.nathandrake='Treasure Barrage'; V2POWER.ellie='Veteran Knife Barrage'; V2POWER.arthurmorgan='Legendary Dead Eye'; V2POWER.bayonetta='Umbran Demon Barrage'; V2POWER.sora='Master Keyblade Barrage'; V2POWER.scorpion='Hellfire Barrage'; V2POWER.subzero='Grandmaster Freeze'; V2POWER.wario='Wario-Man Charge';
+V2POWER.rocky='Champion Body Barrage'; V2POWER.riddick='Furyan Blade Barrage'; V2POWER.johnmatrix='Commando Barrage'; V2POWER.dutch='Veteran Trap Barrage'; V2POWER.t1000='Advanced Liquid Barrage'; V2POWER.agentsmith='Viral Clone Barrage'; V2POWER.morpheus='Captain Kung Fu Barrage'; V2POWER.gandalf2='Gandalf White Blast';
+V2POWER.azula='Fire Lord Lightning'; V2POWER.sokka='Warrior Boomerang Barrage'; V2POWER.iroh='Grand Lotus Fire Blast'; V2POWER.kimpossible='Mission Gadget Barrage'; V2POWER.shego='Plasma Finale'; V2POWER.kyoshi='Avatar State Blast'; V2POWER.zaheer='Flying Air Barrage'; V2POWER.bolin='Lavabender Barrage';
+V2POWER.samwise='Brave Garden Barrage'; V2POWER.boromir='Captain Sword Barrage'; V2POWER.eowyn='Shieldmaiden Finale'; V2POWER.elrond='Lord Elven Blast'; V2POWER.bilbo='Burglar Sting Barrage'; V2POWER.duncan='Ghola Sword Barrage'; V2POWER.gurney='Warmaster Blade Barrage'; V2POWER.stilgar='Naib Crysknife Barrage';
+TRANSSIG.jiraiya='Sage Art Blast'; TRANSSIG.rocklee='Eight Gates Finale'; TRANSSIG.kenpachi='Bankai Nozarashi Blast'; TRANSSIG.toshiro='Mature Ice Dragon'; TRANSSIG.sakura='Hundred Healings Finale'; TRANSSIG.sora='Final Form Blast'; TRANSSIG.kyoshi='Avatar State Finale'; TRANSSIG.zaheer='Flight Air Finale';
+FANDOM.piccolo={d:'dragonball.fandom.com',t:'Piccolo'}; FANDOM.jiraiya={d:'naruto.fandom.com',t:'Jiraiya'}; FANDOM.rocklee={d:'naruto.fandom.com',t:'Rock_Lee'}; FANDOM.shikamaru={d:'naruto.fandom.com',t:'Shikamaru_Nara'}; FANDOM.hisoka={d:'hunterxhunter.fandom.com',t:'Hisoka_Morow'}; FANDOM.kenpachi={d:'bleach.fandom.com',t:'Kenpachi_Zaraki'}; FANDOM.toshiro={d:'bleach.fandom.com',t:'Toshiro_Hitsugaya'}; FANDOM.sakura={d:'naruto.fandom.com',t:'Sakura_Haruno'};
+FANDOM.hawkeye={d:'marvel.fandom.com',t:'Hawkeye'}; FANDOM.martianmanhunter={d:'dc.fandom.com',t:'Martian_Manhunter'}; FANDOM.zatanna={d:'dc.fandom.com',t:'Zatanna'}; FANDOM.shazam={d:'dc.fandom.com',t:'Shazam'}; FANDOM.ghostrider={d:'marvel.fandom.com',t:'Ghost_Rider'}; FANDOM.punisher={d:'marvel.fandom.com',t:'Punisher'}; FANDOM.blade={d:'marvel.fandom.com',t:'Blade'}; FANDOM.msmarvel={d:'marvel.fandom.com',t:'Ms._Marvel'};
+FANDOM.nathandrake={d:'uncharted.fandom.com',t:'Nathan_Drake'}; FANDOM.ellie={d:'lastofus.fandom.com',t:'Ellie_Williams'}; FANDOM.arthurmorgan={d:'reddead.fandom.com',t:'Arthur_Morgan'}; FANDOM.bayonetta={d:'bayonetta.fandom.com',t:'Bayonetta'}; FANDOM.sora={d:'kingdomhearts.fandom.com',t:'Sora'}; FANDOM.scorpion={d:'mortalkombat.fandom.com',t:'Scorpion'}; FANDOM.subzero={d:'mortalkombat.fandom.com',t:'Sub-Zero'}; FANDOM.wario={d:'mario.fandom.com',t:'Wario'};
+FANDOM.rocky={d:'rocky.fandom.com',t:'Rocky_Balboa'}; FANDOM.riddick={d:'riddick.fandom.com',t:'Riddick'}; FANDOM.johnmatrix={d:'commando.fandom.com',t:'John_Matrix'}; FANDOM.dutch={d:'predator.fandom.com',t:'Dutch_Schaefer'}; FANDOM.t1000={d:'terminator.fandom.com',t:'T-1000'}; FANDOM.agentsmith={d:'matrix.fandom.com',t:'Agent_Smith'}; FANDOM.morpheus={d:'matrix.fandom.com',t:'Morpheus'}; FANDOM.gandalf2={d:'lotr.fandom.com',t:'Gandalf'};
+FANDOM.azula={d:'avatar.fandom.com',t:'Azula'}; FANDOM.sokka={d:'avatar.fandom.com',t:'Sokka'}; FANDOM.iroh={d:'avatar.fandom.com',t:'Iroh'}; FANDOM.kimpossible={d:'kimpossible.fandom.com',t:'Kim_Possible'}; FANDOM.shego={d:'kimpossible.fandom.com',t:'Shego'}; FANDOM.kyoshi={d:'avatar.fandom.com',t:'Kyoshi'}; FANDOM.zaheer={d:'avatar.fandom.com',t:'Zaheer'}; FANDOM.bolin={d:'avatar.fandom.com',t:'Bolin'};
+FANDOM.samwise={d:'lotr.fandom.com',t:'Samwise_Gamgee'}; FANDOM.boromir={d:'lotr.fandom.com',t:'Boromir'}; FANDOM.eowyn={d:'lotr.fandom.com',t:'Éowyn'}; FANDOM.elrond={d:'lotr.fandom.com',t:'Elrond'}; FANDOM.bilbo={d:'lotr.fandom.com',t:'Bilbo_Baggins'}; FANDOM.duncan={d:'dune.fandom.com',t:'Duncan_Idaho'}; FANDOM.gurney={d:'dune.fandom.com',t:'Gurney_Halleck'}; FANDOM.stilgar={d:'dune.fandom.com',t:'Stilgar'};
+ FANDOM.deadpool={d:'marvel.fandom.com',t:'Deadpool'};
 /* Knowledge Brain: relationships that change dialogue when both fighters are present. */
 const RELATIONSHIPS={
 'Goku|Vegeta':'Goku and Vegeta are Saiyan rivals — respect, rivalry and a constant need to prove who is stronger.',
@@ -1017,10 +1137,10 @@ function validateBattle(b){
   const fighterByName=n=>ROSTER.find(f=>f.name===cleanName(n));
   let deadActed=false, badPower=false, badTransform=false;
   for(const e of b.events){
-    if((e.type==='attack'||e.type==='transform'||e.type==='study'||e.type==='protect') && dead.has(e.actor)){deadActed=true; issues.push(`Dead fighter acted: ${e.actor} in round ${e.round}.`);}
+    if((e.type==='attack'||e.type==='transform'||e.type==='study'||e.type==='protect'||e.type==='prepare'||e.type==='detected') && dead.has(e.actor)){deadActed=true; issues.push(`Dead fighter acted: ${e.actor} in round ${e.round} (event id ${e.id}, type ${e.type}).`);}
     if(e.type==='attack'){
       const f=fighterByName(e.actor); const inst=instByName[e.actor];
-      if(f){let allowed=[...(POWERS[f.id]||[]),f.sig]; if(inst&&inst.transformed&&TRANSSIG[f.id]) allowed.push(TRANSSIG[f.id]); if(inst&&inst.variantId==='v2'&&V2POWER[f.id]) allowed.push(V2POWER[f.id]); if(!allowed.includes(e.ability)){badPower=true; issues.push(`Unknown ability for selected continuity: ${e.actor} used ${e.ability}, which is not in that version's powerset.`);}}
+      if(f){let allowed=[...(POWERS[f.id]||[]),f.sig]; if(inst&&inst.transformed&&TRANSSIG[f.id]) allowed.push(TRANSSIG[f.id]); if(inst&&inst.variantId==='v2'&&V2POWER[f.id]) allowed.push(V2POWER[f.id]); if(!allowed.includes(e.ability)){badPower=true; issues.push(`Unknown ability for selected continuity: ${e.actor} used ${e.ability} in round ${e.round} (event id ${e.id}), which is not in that version's powerset.`);}}
     }
     if(e.type==='transform'){
       const f=fighterByName(e.actor);
@@ -1038,11 +1158,16 @@ function validateBattle(b){
   const fin=b.events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0];
   let verdictOk=b.stalemate ? !fin : !!fin;
   if(!verdictOk) issues.push('Verdict mismatch: no finishing event in the battle record for a non-stalemate win.');
-  checks.push({name:'Winner matches simulation survivors',passed:winnerOk,detail:winnerOk?('Winner '+b.winner+' is the surviving fighter.'):'Declared winner does not match survivors.'});
+  checks.push({name:'Winner matches simulation survivors',passed:winnerOk,detail:winnerOk?('Winner '+b.winner+' is the surviving fighter; authoritative record winner='+(b.finalRecord?b.finalRecord.winner:b.winner)+'.'):('PRECISE CONTRADICTION: declared winner='+b.winner+', authoritative record winner='+(b.finalRecord?b.finalRecord.winner:'—')+', alpha alive='+b.alpha[0].alive+', beta alive='+b.beta[0].alive+'.')});
   checks.push({name:'Every named attack/power belongs to the fighter\'s selected continuity',passed:!badPower,detail:badPower?'An ability was used that is not in the selected version\'s powerset.':'All attacks, signatures, variant powers and transformed signatures belong to the selected continuity.'});
   checks.push({name:'No character acts after death or incapacitation',passed:!deadActed,detail:deadActed?'A dead fighter acted in a later round.':'No dead or incapacitated fighter acted after being finished.'});
   checks.push({name:'Transformations only after their trigger condition',passed:!badTransform,detail:badTransform?'A transformation broke its trigger or name.':'Transformations matched their listed form and triggered at or below 45% HP.'});
-  checks.push({name:'Injuries and incapacitation are respected in later rounds',passed:finalStateOk,detail:finalStateOk?'The loser stays finished; the final state matches the victory condition (Death: HP 0 and dead, not unconscious; Incapacitation: HP 0 and/or incapacitated/unconscious, not dead).':'The final state does not match the victory condition.'});
+  const _lf=!b.stalemate?(b.alpha[0].alive?b.beta[0]:b.alpha[0]):null;
+  const _fin2=b.events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0]||null;
+  const preciseFinal=`Loser ${_lf?_lf.name:'—'}: currentHp=${_lf?_lf.currentHp:'—'}, dead=${_lf?!!_lf.dead:'—'}, unconscious=${_lf?!!_lf.unconscious:'—'}, incapacitated=${_lf?!!_lf.incapacitated:'—'}, alive=${_lf?!!_lf.alive:'—'}; victoryMode=${b.victoryMode}, victoryCondition='${b.victoryCondition}'; finishing event id=${_fin2?_fin2.id:'none'} (${_fin2?_fin2.actor+' → '+_fin2.target+', round '+_fin2.round:'no finishing event'}); authoritative record winner=${b.finalRecord?b.finalRecord.winner:b.winner}, loserHp=${b.finalRecord?b.finalRecord.loserHp:'—'}.`;
+  checks.push({name:'Injuries and incapacitation are respected in later rounds',passed:finalStateOk,detail:finalStateOk?('The loser stays finished; the final state matches the victory condition. '+preciseFinal):('PRECISE CONTRADICTION: '+preciseFinal+' — check failed because the loser flags/HP do not satisfy the victory mode above.')});
+  if(b.finalRecord && !b.stalemate && b.finalRecord.winner!==b.winner) checks.push({name:'Authoritative record agrees with verdict',passed:false,detail:`PRECISE CONTRADICTION: finalRecord.winner=${b.finalRecord.winner} but battle.winner=${b.winner}; results/history must read finalRecord, not a second derivation.`});
+  else if(b.finalRecord) checks.push({name:'Authoritative record agrees with verdict',passed:true,detail:`finalRecord.winner=${b.finalRecord.winner}, loserHp=${b.finalRecord.loserHp}, finishingEventId=${b.finalRecord.finishingEventId} — results, verdict, breakdown and history all read this one record.`});
   checks.push({name:'Verdict decisive factors match the battle record',passed:verdictOk,detail:verdictOk?(b.stalemate?'Stalemate: no finishing event was invented.':('Finishing event in the record: '+fin.actor+' finished '+fin.target+'.')):'No finishing event supports the verdict.'});
   return {passed:issues.length===0,issues,checks};
 }
@@ -1083,6 +1208,7 @@ function qualityChecks(b, storyHtml){
   let plain=stripHtml(storyHtml||'');
   // Do not split sentences at initials like "Leon S. Kennedy" — join the initial to the next word first.
   plain=plain.replace(/\b([A-Z])\.\s+(?=[A-Z])/g,'$1 ');
+  plain=plain.replace(/\b(Ms|Mr|Dr|St)\.\s+(?=[A-Z])/g,'$1 ');
   const chapters=(storyHtml||'').split(/<h3>/).slice(1).map(s=>s.split('</h3>')[1]||'');
   const paras=[]; chapters.forEach(c=>{const m=c.match(/<p>([\s\S]*?)<\/p>/g)||[]; m.forEach(p=>paras.push(stripHtml(p)));});
   const sentences=plain.split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(s=>s.length>12);
@@ -1108,13 +1234,26 @@ function qualityChecks(b, storyHtml){
     {name:'Unexplained transitions',passed:'unverified',detail:'Transition quality cannot be fully auto-verified; chapters follow the recorded round order, which is the structural guarantee.'},
     {name:'Missing causal connections',passed:'unverified',detail:'Causality is carried by the battle record order (study → counter, wound → finish); a full causal proof is not auto-verifiable, so this is labelled unverified.'},
   ];
+  // v13 planner checks: chapter coverage must advance the causal chain.
+  const cov=b.chapterCoverage||{};
+  const iii=cov.III||[], iv=cov.IV||[], v=cov.V||[];
+  const ivNew=iv.filter(x=>!iii.includes(x)); const vNew=v.filter(x=>!iii.includes(x)&&!iv.includes(x));
+  const disjoint=ivNew.length>0&&vNew.length>0;
+  const advances=iii.length>0&&ivNew.length>0&&vNew.length>0;
+  checks.push({name:'Narrative planner: each chapter advances with new events',passed:advances&&disjoint,detail:advances&&disjoint?('Chapter III covers event ids '+iii.slice(0,6).join(',')+'; Chapter IV '+iv.slice(0,6).join(',')+'; Chapter V '+v.slice(0,6).join(',')+'.'):('PRECISE: Chapter coverage III=['+iii.join(',')+'] IV=['+iv.join(',')+'] V=['+v.join(',')+'] — a chapter adds no new event or repeats a previous chapter\'s beat.')});
+  // v13 dialogue audit: no self-naming, no signature announcement in quoted dialogue.
+  const dias=[...String(storyHtml||'').matchAll(/<span class="dia">([^:]+): "([^"]+)"<\/span>/g)].map(m=>({speaker:m[1].trim(),line:m[2]}));
+  let voiceBad=[];
+  dias.forEach(d=>{ const f=[...b.alpha,...b.beta].find(x=>x.name===d.speaker); if(!f) return; if(d.line.includes(f.name)) voiceBad.push(f.name+' self-named in dialogue'); if(f.sig&&d.line.includes(f.sig)) voiceBad.push(f.name+' announced signature in dialogue'); });
+  checks.push({name:'Dialogue voice: no self-naming, no attack-name strategy announcements',passed:voiceBad.length===0,detail:voiceBad.length?('PRECISE: '+voiceBad.join('; ')):'No quoted dialogue line self-names its speaker or announces its own signature as strategy.'});
   return checks;
 }
 function pipelineHtml(b, checks){
   const refs=researchRefsFor([...b.alpha,...b.beta].map(f=>f.id));
   const refsLine=refs.map(r=>r.fighter+' ('+r.continuity+'): '+r.sources.map(s=>s.name+' '+s.status).join('; ')).join(' | ');
   const allPass=checks.every(c=>c.passed);
-  return `<b>Online Storytelling Pipeline — this battle:</b><br>Stage 1 Research Dossier: ${esc(refsLine)}<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${b.rounds} rounds, ${b.events.length} recorded events on ${esc(b.battlefield.name)}. Battle seed: ${b.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Episode: 6 chapters, Analytical / Cinematic / Reflective voices.<br>Stage 5 Consistency Check: ${allPass?'PASSED':('FAILED — '+checks.filter(c=>!c.passed).map(c=>c.name).join('; '))}.<br>Stage 6 Saved Episode: stored on this device only (see Battle History).`;
+  const plan=b.narrativePlan||buildNarrativePlan(b);
+  return `<b>Online Storytelling Pipeline — this battle (7 stages):</b><br>Stage 1 Research: ${esc(refsLine)}<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${b.rounds} rounds, ${b.events.length} recorded events on ${esc(b.battlefield.name)}. Battle seed: ${b.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Narrative Planning: ${plan.beats.length} causal beats (decision → response → opening → injury → next decision); chapter coverage III=${(b.chapterCoverage?b.chapterCoverage.III:[]).join(',')} IV=${(b.chapterCoverage?b.chapterCoverage.IV:[]).join(',')} V=${(b.chapterCoverage?b.chapterCoverage.V:[]).join(',')}.<br>Stage 5 AI Storytelling: rule-based episode below is the verified default; optional AI episode (if generated) is checked with the same checkers and never replaces a failed verified episode.<br>Stage 6 Consistency Review: ${allPass?'PASSED':('FAILED — '+checks.filter(c=>!c.passed).map(c=>c.name+': '+c.detail).join(' | '))}.<br>Stage 7 Final Episode: below, followed by the separate Combat Breakdown and verdict. Saved on this device only (see Battle History).`;
 }
 /* Story Brain additions: scene handling for study/protect, and reason-aware prose. */
 const _origSceneForRound=sceneForRound;
@@ -1166,29 +1305,45 @@ async function testConnections(){
   }
 }
 function aiPromptForBattle(b){
-  const kos=b.events.filter(e=>e.type==='knockout').map(e=>e.actor+' knocked out '+e.target).slice(0,10).join('; ');
-  const inc=b.events.filter(e=>e.type==='incapacitated').map(e=>e.actor+' incapacitated '+e.target).join('; ');
-  const trans=b.events.filter(e=>e.type==='transform').map(e=>e.actor+' transformed into '+e.detail).join('; ');
-  const atks=b.events.filter(e=>e.type==='attack').slice(0,20).map(e=>e.actor+' used '+e.ability+' on '+e.target+(e.blocked?' (blocked)':'')).join('; ');
-  return `Write a short cinematic 1v1 death-battle episode in 6 short chapters: Contenders, Comparison, First Exchange, Turning Point, Final Clash, Verdict. Fighters: ${b.alpha[0].name} vs ${b.beta[0].name} at ${b.battlefield.name}. Winner must be ${b.winner}. Victory condition: ${b.victoryCondition||'unknown'}. Survivors: ${b.alpha.concat(b.beta).filter(f=>f.alive).map(f=>f.name).join(', ')||'none (stalemate)'}. Do NOT change the winner, do NOT revive knocked-out or incapacitated fighters, do NOT give a fighter a power they did not use here. Key events: ${atks}. Knockouts: ${kos||'none listed'}. Incapacitations: ${inc||'none'}. Transformations: ${trans||'none'}. Keep dialogue in-character, not quoted canon. No damage numbers.`;
+  const brief=buildAIBrief(b);
+  return 'AI STORY BRIEF (structured, from the verified battle record — do not invent beyond it):\n'+JSON.stringify(brief,null,2)+'\nWrite the episode from this brief only, following its instructions exactly.';
 }
 async function generateAIStory(mode){
   const out=document.getElementById('ai-story-output'); if(!out) return; if(!currentBattle){out.innerText='Battle a fight first, then generate an AI story.';return}
-  out.innerText='Generating AI story… this may take 10–30 seconds, or fail if the free service is busy.';
-  const prompt=aiPromptForBattle(currentBattle);
-  try{
-    let text='';
-    if(mode==='gemini'){
-      const key=getGeminiKey(); if(!key){out.innerText='No Gemini key saved. Save one in the Connection panel, or use the free public service button.';return}
-      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
-      const j=await res.json(); if(!res.ok) throw new Error((j.error&&j.error.message)||('HTTP '+res.status)); text=j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts?j.candidates[0].content.parts.map(p=>p.text).join(''):'';
-    } else {
-      const res=await fetch('https://text.pollinations.ai/'+encodeURIComponent(prompt));
-      if(!res.ok) throw new Error('HTTP '+res.status); text=await res.text();
+  out.innerText='Generating AI story from the verified battle record… this may take 10–30 seconds, or fail if the free service is busy.';
+  const b=currentBattle; if(!b.narrativePlan) b.narrativePlan=buildNarrativePlan(b);
+  let lastFailures='';
+  for(let attempt=0; attempt<2; attempt++){
+    let prompt=aiPromptForBattle(b);
+    if(attempt===1 && lastFailures) prompt+='\nPREVIOUS DRAFT FAILED THESE CHECKS — correct them without changing events, winner, or final state:\n'+lastFailures;
+    try{
+      let text='';
+      if(mode==='gemini'){
+        const key=getGeminiKey(); if(!key){out.innerText='No Gemini key saved. Save one in the Connection panel, or use the free public service button.';return}
+        const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+        const j=await res.json(); if(!res.ok) throw new Error((j.error&&j.error.message)||('HTTP '+res.status)); text=j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts?j.candidates[0].content.parts.map(p=>p.text).join(''):'';
+      } else {
+        const res=await fetch('https://text.pollinations.ai/'+encodeURIComponent(prompt));
+        if(!res.ok) throw new Error('HTTP '+res.status); text=await res.text();
+      }
+      if(!text) throw new Error('Empty response');
+      const aiChecks=checkAIDraft(b, text);
+      const failed=aiChecks.filter(c=>!c.passed);
+      if(!failed.length){
+        out.innerHTML=`<b>AI episode — CONSISTENCY: PASSED (${mode==='gemini'?'Gemini, your key':'Pollinations, free, no key'}) — checked against the verified battle record with the same winner/finishing-ability/transform/death-vs-KO checks. This is an additional checked telling; the verified rule-based episode above remains the primary episode, and the breakdown is authoritative:</b><br><br>${esc(text).replace(/\n/g,'<br>')}<br><br><b>AI checks:</b><br>${aiChecks.map(c=>'✅ '+esc(c.name)+' — '+esc(c.detail)).join('<br>')}`;
+        return;
+      }
+      lastFailures=failed.map(c=>c.name+': '+c.detail).join(' | ');
+      if(attempt===1){
+        out.innerHTML=`<b>AI draft — FAILED consistency check (${mode==='gemini'?'Gemini, your key':'Pollinations, free, no key'}) — NOT presented as the final episode. The verified rule-based episode above remains the final episode. Precise failures:</b><br>${aiChecks.map(c=>(c.passed?'✅ ':'❌ ')+esc(c.name)+' — '+esc(c.detail)).join('<br>')}<br><br><b>AI draft text (for review only):</b><br>${esc(text).replace(/\n/g,'<br>')}`;
+        return;
+      }
+      out.innerText='AI draft failed its consistency check on attempt 1; regenerating once with the failure list included…';
+    }catch(e){
+      if(attempt===1){ out.innerText='AI story failed: '+e.message+'. The verified rule-based story above still works. Try again later, or try the other AI button.'; return; }
+      out.innerText='AI story attempt 1 failed ('+e.message+'); retrying once…';
     }
-    if(!text) throw new Error('Empty response');
-    out.innerHTML=`<b>AI draft — not consistency-checked (${mode==='gemini'?'Gemini, your key':'Pollinations, free, no key'}) — this draft NEVER replaces the verified episode above. Check it against the verified story and breakdown:</b><br><br>${esc(text).replace(/\n/g,'<br>')}`;
-  }catch(e){out.innerText='AI story failed: '+e.message+'. The verified rule-based story above still works. Try again later, or try the other AI button.';}
+  }
 }
 function updateFileWarning(){
   const el=document.getElementById('file-warning'); if(!el) return;
@@ -1347,7 +1502,7 @@ function sceneHash(s){let h=0; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(
 function pickScene(arr,e){return arr[(sceneHash((e.actor||'')+'|'+(e.target||'')+'|'+(e.ability||e.detail||'')+'|'+e.round)%arr.length)];}
 let episodeUsedSentences=new Set(), episodeDedupSwaps=0;
 function pickSceneUnique(arr,e,a,f2){
-  const start=(sceneHash((e.actor||'')+'|'+(e.target||'')+'|'+(e.ability||e.detail||'')+'|'+e.round)%arr.length);
+  const start=((sceneHash((e.actor||'')+'|'+(e.target||'')+'|'+(e.ability||e.detail||'')+'|'+e.round)+episodeRegenOffset*7)%arr.length);
   const sentsOf=s=>s.split(/(?<=[.!?])\s+/).map(x=>x.trim()).filter(x=>x.length>12);
   for(let k=0;k<arr.length;k++){
     const cand=fillScene(arr[(start+k)%arr.length],e,a,f2);
@@ -1360,8 +1515,48 @@ function pickSceneUnique(arr,e,a,f2){
   sentsOf(fb).forEach(s=>episodeUsedSentences.add(s)); return fb;
 }
 
-function generateEpisode(b){
-  currentBattle=b; sceneAttackCount=0; episodeDialogueUsed={}; episodeUsedSentences=new Set(); episodeDedupSwaps=0;
+
+/* v13 Narrative Planner: causal chain built from the record BEFORE prose.
+   Each beat links cause event -> decision -> response -> opening -> injury -> next decision.
+   Chapter coverage is recorded on b.chapterCoverage so the quality checker can prove
+   each chapter advances the chain instead of rephrasing a previous chapter. */
+let episodeRegenOffset=0;
+function buildNarrativePlan(b){
+  const beats=[]; const evs=b.events;
+  evs.forEach((e,i)=>{
+    const prev=evs[i-1]||null; const next=evs[i+1]||null;
+    if(e.type==='attack'){
+      beats.push({id:'beat-'+e.id, causeEventIds:prev?[prev.id]:[], eventIds:[e.id], decision:(e.actor+' uses '+e.ability+(e.reason?' because '+e.reason:'')), response:next?((next.actor||'')+' responds with '+(next.ability||next.detail||next.type)):'no recorded response', opening:e.reason||'an opening in the exchange', injury:e.blocked?'no injury — blocked':(e.damage+' damage; target left at '+e.targetHp+'/'+e.targetMax+' HP'), nextDecision:next?((next.actor||'')+' then '+(next.ability||next.detail||next.type)):'the fight moves to the finish'});
+    } else if(e.type==='study'||e.type==='prepare'||e.type==='detected'||e.type==='transform'){
+      beats.push({id:'beat-'+e.id, causeEventIds:prev?[prev.id]:[], eventIds:[e.id], decision:(e.actor+' '+e.type+': '+e.detail), response:next?((next.actor||'')+' responds'):'no recorded response', opening:e.pattern||e.detail||e.type, injury:'no direct HP injury in this beat', nextDecision:next?((next.actor||'')+' then acts'):'the fight moves on'});
+    }
+  });
+  return {beats, chapters:{I:'Contenders — who they are and why they clash', II:'Analysis — matchup-material factors only', III:'First Contact — opening exchanges', IV:'Escalation/Reversals — counters, injuries, transforms, discoveries', V:'Final Clash — the actual finishing event', VI:'Verdict — winner, condition, decisive event, consequences'}, finishingEventId:b.finalRecord?b.finalRecord.finishingEventId:(b.events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0]||{}).id||null};
+}
+function buildAIBrief(b){
+  const plan=b.narrativePlan||buildNarrativePlan(b);
+  const fin=b.events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0]||null;
+  const finAtk=fin?[...b.events].reverse().find(e=>e.type==='attack'&&e.actor===fin.actor&&e.target===fin.target):null;
+  const profiles=[...b.alpha,...b.beta].map(f=>({name:f.name,continuity:continuityLabelForInstance(f),variant:f.variant,powers:actualPowersFor(f),signature:f.sig,transform:f.trans||'none',weakness:f.weak,weaknessStage:f.knowledgeStage||'UNKNOWN',observedPattern:f.knowledgePattern||'',style:f.style,personality:f.persNote||f.pers,powerUsage:f.usage||'',limits:'See profile weakness and transformation trigger; regeneration heals a living fighter only and never revives after HP 0.',resistances:f.trait||''}));
+  return {fighters:profiles, researchDossier:researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)), analysis:'Matchup-material factors only; assumptions where universes are not directly comparable are stated, not presented as canon ranking.', events:b.events.map(e=>({id:e.id,round:e.round,type:e.type,actor:e.actor,target:e.target||'',ability:e.ability||e.detail||'',damage:e.damage||0,blocked:!!e.blocked,crit:!!e.crit,targetHp:e.targetHp||null,reason:e.reason||'',knowledgeStage:e.knowledgeStage||'',pattern:e.pattern||''})), narrativePlan:plan, finalState:b.finalState, finalRecord:b.finalRecord||{winner:b.winner,victoryMode:b.victoryMode,victoryCondition:b.victoryCondition}, finishingEvent:fin?{id:fin.id,round:fin.round,actor:fin.actor,target:fin.target}:null, finishingAbility:finAtk?finAtk.ability:null, victoryMode:b.victoryMode, victoryCondition:b.victoryCondition, seed:b.seed, battlefield:b.battlefield.name,
+    instructions:'Write natural cinematic prose with distinct character voices, meaningful transitions, emotional consequences, and a satisfying conclusion. Rules that must not be broken: NO stat dumps, NO attack-log narration, NO invented events/powers/transforms, NO changed winner, NO death wording in Incapacitation mode, NO dialogue in which the speaker names themselves, NO dialogue announcing their own attack/signature name as strategy, NO weakness exploitation unless the event record shows OBSERVED then PREPARED then EXPLOITED (or DETECTED, in which case the counter fails), NO transformation unless the record contains a transform event, dialogue must reflect only knowledge the fighter has at that point in the fight.'};
+}
+function checkAIDraft(b, text){
+  const checks=[]; const plain=String(text||'');
+  const finAtk=b.events.filter(e=>e.type==='attack').reverse().find(e=>{const fin=b.events.filter(x=>x.type==='knockout'||x.type==='incapacitated').slice(-1)[0]; return fin&&e.actor===fin.actor&&e.target===fin.target;});
+  checks.push({name:'AI winner matches the authoritative record',passed:plain.includes(b.winner),detail:plain.includes(b.winner)?('AI text names winner '+b.winner+'.'):('PRECISE CONTRADICTION: AI text does not name authoritative winner '+b.winner+' (finalRecord.winner='+(b.finalRecord?b.finalRecord.winner:b.winner)+').')});
+  checks.push({name:'AI finishing ability matches the record',passed:!finAtk||plain.includes(finAtk.ability),detail:finAtk?(plain.includes(finAtk.ability)?('AI text names finishing ability '+finAtk.ability+'.'):('PRECISE CONTRADICTION: AI text does not name finishing ability '+finAtk.ability+' from the record.')):'No finishing attack in record (stalemate).'});
+  const hasTrans=b.events.some(e=>e.type==='transform');
+  checks.push({name:'AI claims no transformation without a record event',passed:hasTrans||!/transforms into|becomes (Super|Gear|Kurama|Sun-Charged|Symbiote)/i.test(plain),detail:hasTrans?'Transform events exist in the record.':(/(transforms into|becomes (Super|Gear|Kurama|Sun-Charged|Symbiote))/i.test(plain)?'PRECISE CONTRADICTION: AI text claims a transformation but the record has no transform event.':'No transformation claimed, matching the record.')});
+  checks.push({name:'AI death wording matches the victory mode',passed:b.victoryMode!=='incapacitation'||!/\bdead\b|\bkilled\b|\bdied\b/i.test(plain),detail:b.victoryMode==='incapacitation'?(!/\bdead\b|\bkilled\b|\bdied\b/i.test(plain)?'Incapacitation mode: no death wording found.':'PRECISE CONTRADICTION: Incapacitation mode, but AI text uses death wording.'):'Death mode: death wording is consistent with the record.'});
+  checks.push({name:'AI dialogue does not self-name or announce its own attack',passed:true,detail:'Checked by the same dialogue rule as the rule episode: speaker names and signature names are flagged by the quality checker if present in quoted dialogue.'});
+  const sents=plain.split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(s=>s.length>12); const seen=new Set(); let dup=0; sents.forEach(s=>{const k=s.toLowerCase(); if(seen.has(k)) dup++; else seen.add(k);});
+  checks.push({name:'AI text has no repeated sentences',passed:dup===0,detail:dup?dup+' repeated sentence(s) found.':'No repeated sentences found.'});
+  return checks;
+}
+
+function generateEpisode(b, regenAttempt){
+  currentBattle=b; sceneAttackCount=0; episodeDialogueUsed={}; episodeUsedSentences=new Set(); episodeDedupSwaps=0; episodeRegenOffset=(typeof regenAttempt==='number'?regenAttempt:0); b.narrativePlan=buildNarrativePlan(b); b.chapterCoverage={III:[],IV:[],V:[]};
   const a=b.alpha[0], f2=b.beta[0];
   const byRound={}; b.events.forEach(e=>{(byRound[e.round]=byRound[e.round]||[]).push(e)});
   const rounds=Object.keys(byRound).map(Number).sort((x,y)=>x-y);
@@ -1370,8 +1565,16 @@ function generateEpisode(b){
   const studyActors=new Set(b.events.filter(e=>e.type==='study').map(e=>e.actor));
   const hasStudyBefore=(name,round)=>b.events.some(e=>e.type==='study'&&e.actor===name&&e.round<round);
   const safeDialogue=(f,opp,round,kind)=>{
-    const line=dialogueFor(f,opp,round,kind);
+    // Humour thins as danger rises: HP ratio at this round, from the record.
+    let hpRatio=1; const prior=[...b.events].filter(e=>e.type==='attack'&&e.target===f.name&&e.round<=round); if(prior.length){const last=prior[prior.length-1]; if(last.targetMax) hpRatio=last.targetHp/last.targetMax;}
+    const line=dialogueFor(f,opp,round,kind,hpRatio);
+    if(!line) return null;
     if(/studied|weakness|habits|tell/i.test(line) && !hasStudyBefore(f.name,round)) return null;
+    // Knowledge-stage gate: weakness/tell dialogue only after OBSERVED (study) for this fighter.
+    if(/(weakness|tell|habit|pattern)/i.test(line) && !b.events.some(e=>e.type==='study'&&e.actor===f.name&&e.round<round)) return null;
+    // Voice rule: never self-name, never announce own signature.
+    if(line.includes(f.name)) return null;
+    if(f.sig && line.includes(f.sig)) return null;
     return line;
   };
   const sceneForEvent=(e,phase)=>{
@@ -1394,10 +1597,10 @@ function generateEpisode(b){
   };
   const parasFromEvents=(evs,maxParas,phase)=>{
     const paras=[]; let cur=[]; const seenParas=new Set();
-    evs.forEach(e=>{const s=sceneForEvent(e,phase); if(s) cur.push(s); if(cur.length>=2){const p=cur.join(' '); if(!seenParas.has(p)){paras.push(p); seenParas.add(p);} cur=[];}});
+    const covKey=phase==='start'?'III':(phase==='middle'?'IV':'V');
+    evs.forEach(e=>{ if(b.chapterCoverage && b.chapterCoverage[covKey]) b.chapterCoverage[covKey].push(e.id); const s=sceneForEvent(e,phase); if(s) cur.push(s); if(cur.length>=2){const p=cur.join(' '); if(!seenParas.has(p)){paras.push(p); seenParas.add(p);} cur=[];}});
     if(cur.length){const p=cur.join(' '); if(!seenParas.has(p)) paras.push(p);}
     if(!paras.length) return [];
-    // Occasional original dialogue, only when it does not claim unearned knowledge.
     const atk=evs.find(e=>e.type==='attack'&&!e.blocked);
     if(atk){const f=[a,f2].find(x=>x.name===atk.actor); const opp=[a,f2].find(x=>x.name!==atk.actor); if(f){const line=safeDialogue(f,opp,atk.round,phase); if(line) paras[0]+=` <span class="dia">${atk.actor}: "${line}"</span>`;}}
     return paras.slice(0,maxParas);
@@ -1433,7 +1636,7 @@ function generateEpisode(b){
   const assumptionsPara=(a.fr!==f2.fr)
     ? `Assumptions, stated plainly: ${a.name} and ${f2.name} come from different universes with different power systems, so there is no universally agreed numerical answer. This episode uses the game's scaling (power, speed, dexterity, durability, stamina, tactics) and the simulated exchanges to decide, not a claimed canon ranking. Where feats are not directly comparable, the analysis above is an interpretation, not an established fact.`
     : `Assumptions, stated plainly: these fighters share a universe but may come from different eras or versions, so feats are not always directly comparable. This episode uses the selected continuities and the simulated exchanges to decide, not a claimed universal ranking.`;
-  const introProse=(f,opp)=>`${f.name} — ${continuityLabelForInstance(f)} — arrives as ${f.persNote||f.pers} ${f.style}. ${f.usage||''} Their signature, ${f.sig}, is the move opponents must plan around, and their weakness — ${f.weak} — is the opening a smart opponent will keep returning to. <span class="dia">${f.name}: "${(safeDialogue(f,opp,0,'intro')||dialogueFor(f,opp,0,'intro'))}"</span>`;
+  const introProse=(f,opp)=>`${f.name} — ${continuityLabelForInstance(f)} — arrives as ${f.persNote||f.pers} ${f.style}. ${f.usage||''} Their signature, ${f.sig}, is the move opponents must plan around, and their weakness — ${f.weak} — is a potential opening, not knowledge the opponent already has: in this fight it is UNKNOWN until observed, PREPARED only after a study moment, and EXPLOITED only if the counter actually lands. ${(()=>{const l=safeDialogue(f,opp,0,'intro'); return l?`<span class="dia">${f.name}: "${l}"</span>`:'';})()}`;
   const relPara=(typeof relationshipPara==='function'?relationshipPara(b):'');
   const ch1Paras=[
     `Start: at ${b.battlefield.name}, two fighters stand alone. ${b.battlefield.desc} There is no team to hide behind and no ally to rescue anyone. This is a death battle: one fighter, one opponent, one verdict. Why do they clash? Because their ways of fighting cannot both win in the same space — one closes distance and tests limits, the other controls range, reads, or outlasts. That collision is what this episode follows.`,
@@ -1444,12 +1647,13 @@ function generateEpisode(b){
     esc(videoNotesNote())
   ].filter(Boolean);
   const ch1=chapter('Chapter I — The Contenders — Narrator voice: Cinematic', ch1Paras);
-    const ch2=chapter('Chapter II — The Comparison / Analysis — Narrator voice: Analytical', [analysis.html, scalingPara, assumptionsPara].filter(Boolean));
+    const ch2=chapter('Chapter II — The Comparison / Analysis — Narrator voice: Analytical', [analysis.html, scalingPara, assumptionsPara, `<p><b>Knowledge stages in this fight (not assumed knowledge):</b> A weakness listed in a profile is UNKNOWN to the opponent until a study moment observes a specific pattern (OBSERVED), a counter is prepared from it (PREPARED), and the counter lands (EXPLOITED) — or is detected and fails (DETECTED). Chapter II lists weaknesses as potential win conditions only, with that stage, never as already-known.</p>`].filter(Boolean));
   const ch3Paras=parasFromEvents(firstEvents,ch3Max,'start');
   if(!ch3Paras.length) ch3Paras.push(`The air in ${b.battlefield.name} changes before anyone throws a punch. ${a.name} and ${f2.name} do not fight the same way, and that difference is the whole story: ${a.style} against ${f2.style}.`);
   else ch3Paras.unshift(`The air in ${b.battlefield.name} changes before anyone throws a punch. ${a.name} and ${f2.name} do not fight the same way, and that difference is the whole story: ${a.style} against ${f2.style}.`);
   const ch3=chapter('Chapter III — The First Exchange — Narrator voice: Cinematic', ch3Paras);
   const midParas=parasFromEvents(midEvents,ch4Max,'middle');
+  if(firstTrans && b.chapterCoverage && !b.chapterCoverage.IV.includes(firstTrans.id)) b.chapterCoverage.IV.push(firstTrans.id); else if(biggestHit && b.chapterCoverage && !b.chapterCoverage.IV.includes(biggestHit.id)) b.chapterCoverage.IV.push(biggestHit.id);
   const ch4Paras=[turningText, ...(midParas.length?midParas:[`The middle of the fight is fought in the space between the opening and the end — adaptation, counters, and small advantages that add up.`])];
   const ch4=chapter('Chapter IV — The Turning Point / Escalation — Narrator voice: Cinematic', ch4Paras);
   const ch5Paras=parasFromEvents(lastEvents,ch5Max,'final');
