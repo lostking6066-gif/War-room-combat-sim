@@ -8,7 +8,7 @@ breakdown.
 ## Play it
 
 Open `index.html` in a browser — no install, no build step. This is now
-WAR-ROOM v16.3, the 1v1 Death Battle game, and the main game on GitHub Pages.
+WAR-ROOM v16.4, the 1v1 Death Battle game, and the main game on GitHub Pages.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -73,17 +73,17 @@ killing blow.
 
 ## Roster
 
-v16.3 ships 194 playable fighters: Anime 17, Comics 17, Video Games 16,
+v16.4 ships 194 playable fighters: Anime 17, Comics 17, Video Games 16,
 Movies & TV 16, Animation 16, Fantasy & Sci-Fi 16. The long-term target
 is 100 per category; that target is NOT a claim that 600 are implemented.
 New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v16.3 (1v1 Death Battles, online AI storytelling primary + automatic, name-both-fighters prompt, 402 wait-retry for all stages, abort retry, 132-test harness)
-- `war-room-v16.3.html` — same as `index.html`
-- `war-room-v16.3-tests.js` — Node regression harness (132 tests)
-- `war-room-v16.2.html` — previous 1v1 version, kept as an archive
+- `index.html` — latest, WAR-ROOM v16.4 (1v1 Death Battles, online AI storytelling primary + automatic, verbatim climax ability rule, draft climax diagnostics, saved-view note clearing, 150-test harness)
+- `war-room-v16.4.html` — same as `index.html`
+- `war-room-v16.4-tests.js` — Node regression harness (150 tests)
+- `war-room-v16.3.html` — previous 1v1 version, kept as an archive
 - `war-room-v14.html` — previous 1v1 version, kept as an archive
 - `war-room-v13.1.html` — previous 1v1 version, kept as an archive
 - `war-room-v13.html` — previous 1v1 version, kept as an archive
