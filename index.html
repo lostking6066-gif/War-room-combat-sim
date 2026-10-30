@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v12 — 1v1 Death Battles</title>
+<title>WAR-ROOM v12.1 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -59,17 +59,17 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v12</h1><span>1V1 DEATH BATTLES • STORY • SCALING • PROPERLY CONNECTED</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v12.1</h1><span>1V1 DEATH BATTLES • STORY • SCALING • PROPERLY CONNECTED</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
 <input id="search-input" placeholder="Search by name, franchise, or alias — try Goku, Batman, Link...">
 <div class="chips" id="cat-chips"></div>
-<p class="note">This build ships 98 playable fighters across 6 categories (Anime 17, Comics 17, Video Games 16, Movies & TV 16, Animation 16, Fantasy & Sci-Fi 16). The next-batch target is 100 per category — that is a target, not a claim. The roster is NOT 600 fighters; do not treat the target as implemented. Each card uses an emoji fallback portrait so no image ever breaks. Real artwork is not included.</p>
+<p class="note">This build ships 146 playable fighters across 6 categories (Anime 25, Comics 25, Video Games 24, Movies & TV 24, Animation 24, Fantasy & Sci-Fi 24). The next-batch target is 100 per category — that is a target, not a claim. The roster is NOT 600 fighters; do not treat the target as implemented. Each card uses an emoji fallback portrait so no image ever breaks. Real artwork is not included.</p>
 </div>
 <div class="prep">
 <div class="panel"><h2>Combat Roster <span id="roster-count" style="font-size:.8rem;color:var(--dim)"></span></h2><div class="grid" id="fighter-pool"></div></div>
-<div class="panel"><h2>2 — Death Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. There is no AI team in v12: both fighters are chosen by you.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
+<div class="panel"><h2>2 — Death Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. There is no AI team in v12.1: both fighters are chosen by you.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
 <label style="font-size:.85rem">Battlefield</label><select id="battlefield-select"></select><p class="note" id="battlefield-desc"></p>
 <label style="font-size:.85rem">Victory condition</label><select id="victory-select"><option value="death" selected>Death (default) — a fighter must reach HP 0 to lose by death</option><option value="incapacitation">Incapacitation / Knockout — a knockout is unconsciousness, NOT death</option></select><p class="note">Mirror matches are blocked in this build: the same fighter cannot fight itself. In Death mode a knockout is never labelled death. In Incapacitation mode a knockout is labelled unconscious, not dead. Surrender and escape are not simulated outcomes in this build — the verdict will not claim them.</p>
 <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn yel" onclick="triggerOnlineResearch()" style="flex:1">Retest live research (optional)</button><button class="btn" id="review-btn" disabled style="flex:1">Review Matchup →</button></div>
@@ -155,7 +155,7 @@ input,select{width:100%;background:#141b2c;border:1px solid var(--border);color:
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" onclick="generateAIStory('pollinations')">Generate AI story — free public service, no key</button><button class="btn small" onclick="generateAIStory('gemini')">Generate AI story — with my saved Gemini key</button></div>
 <div id="ai-story-output" class="note" style="margin-top:10px;line-height:1.7">No AI story generated yet.</div></div>
 <div class="panel"><h2>Combat Breakdown (numbers live here, not in the story)</h2><ul class="break" id="breakdown-output"></ul></div>
-<button class="btn" onclick="downloadStory()">Download story as HTML</button>
+<button class="btn" onclick="downloadStory()">Download story as HTML</button> <button class="btn" onclick="exportCurrentSavedEpisode()">Export saved episode (JSON + story)</button><p id="export-note" class="note"></p>
 <button class="btn" onclick="resetSimulator()">New Battle</button>
 </section>
 </main>
@@ -641,7 +641,7 @@ function simulateBattle(){
       pushEvent(ev);
       if(target.currentHp===0 && target.alive){
         target.alive=false; target.deathRound=round;
-        if(victoryMode==='incapacitation'){ target.unconscious=true; target.dead=false; pushEvent({round,type:'incapacitated',actor:actor.name,target:target.name,detail:'knocked out — unconscious, not dead'}); winner=actor.name; victoryCondition='Incapacitation — knockout (unconscious, not dead)'; }
+        if(victoryMode==='incapacitation'){ target.unconscious=true; target.incapacitated=true; target.dead=false; pushEvent({round,type:'incapacitated',actor:actor.name,target:target.name,detail:'knocked out — unconscious, not dead'}); winner=actor.name; victoryCondition='Incapacitation — knockout (unconscious, not dead)'; }
         else { target.dead=true; target.unconscious=false; pushEvent({round,type:'knockout',actor:actor.name,target:target.name}); winner=actor.name; victoryCondition='Death (HP 0)'; }
       } else if(victoryMode==='incapacitation' && target.currentHp>0 && target.currentHp<=target.maxHp*0.10 && target.stamina===0 && target.alive){
         // Incapacitation: exhausted and barely standing, cannot continue the fight.
@@ -722,7 +722,7 @@ function consistencyCheck(b){
 function generateBreakdown(b){
   const totals={}; b.events.forEach(e=>{if(e.type==='attack'&&!e.blocked) totals[e.actor]=(totals[e.actor]||0)+e.damage;});
   const statLines=[...b.alpha,...b.beta].map(f=>`<li><b>${esc(f.name)} (${esc(f.variant)}) final battle stats (start of fight):</b> HP ${f.startHp||f.maxHp}, ATK ${f.startAtk||f.atk}, DEF ${f.startDef||f.def}, speed ${f.sp}, tier ${f.tier} — Stat build: ${statBuildString(f, b.battlefield)}${f.transformed?` (later transformed to ${esc(f.trans)}: +${f.tAtk} ATK, +${f.tDef} DEF, applied only on transformation)`:''} — these are the same final stats shown in the selection panel and in Chapter I.</li>`).join('');
-  const summary=`<li><b>Winner:</b> ${b.winner} &nbsp; <b>Battlefield:</b> ${esc(b.battlefield.name)} &nbsp; <b>Rounds in record:</b> ${b.rounds} &nbsp; <b>Events:</b> ${b.events.length} &nbsp; <b>Battlefield destruction:</b> ${b.destruction||0}% (calculated from total damage ${b.totalDamage} — 200 damage per 1%, capped at 100%; this is the same figure used in Chapter VI)</li>`+statLines+Object.entries(totals).map(([n,d])=>`<li><b>${esc(n)}</b> dealt ${d} damage in total.</li>`).join('')+(ytNote?`<li><b>Research note used as story context only (did not add powers):</b> ${esc(ytNote)}</li>`:`<li><b>Research sources:</b> Wikipedia summaries where fetched, plus YouTube battle-analysis searches linked from the draft screen. No YouTube video was automatically watched or transcribed by the game.</li>`);
+  const summary=`<li><b>Winner:</b> ${b.winner} &nbsp; <b>Battlefield:</b> ${esc(b.battlefield.name)} &nbsp; <b>Rounds in record:</b> ${b.rounds} &nbsp; <b>Events:</b> ${b.events.length} &nbsp; <b>Battle seed:</b> ${b.seed} — same seed + fighters + variants + battlefield reproduces the same battle &nbsp; <b>Battlefield destruction:</b> ${b.destruction||0}% (calculated from total damage ${b.totalDamage} — 200 damage per 1%, capped at 100%; this is the same figure used in Chapter VI)</li>`+statLines+Object.entries(totals).map(([n,d])=>`<li><b>${esc(n)}</b> dealt ${d} damage in total.</li>`).join('')+(ytNote?`<li><b>Research note used as story context only (did not add powers):</b> ${esc(ytNote)}</li>`:`<li><b>Research sources:</b> Wikipedia summaries where fetched, plus YouTube battle-analysis searches linked from the draft screen. No YouTube video was automatically watched or transcribed by the game.</li>`);
   const list=b.events.map(e=>{
     if(e.type==='attack') return `<li>Round ${e.round}: ${esc(e.actor)} — ${esc(e.ability)} → ${esc(e.target)} — ${e.blocked?'BLOCKED, 0 damage':e.damage+' damage'+(e.crit?' (CRIT)':'')}, target left at ${e.targetHp}/${e.targetMax} HP.</li>`;
     if(e.type==='transform') return `<li>Round ${e.round}: ${esc(e.actor)} transforms into ${esc(e.detail)}.</li>`;
@@ -740,7 +740,7 @@ function showResults(){
   document.getElementById('battle-screen').classList.remove('active');
   document.getElementById('results-screen').classList.add('active');
   const a=b.alpha[0], f2=b.beta[0];
-  document.getElementById('result-title').innerText=b.stalemate?'STALEMATE — NO DEATH':('DEATH BATTLE VERDICT — '+b.winner+' Wins');
+  document.getElementById('result-title').innerText=b.stalemate?'STALEMATE — NO DEATH':(b.victoryMode==='incapacitation'?('INCAPACITATION VERDICT — '+b.winner+' Wins'):('DEATH BATTLE VERDICT — '+b.winner+' Wins'));
   document.getElementById('result-desc').innerText=b.stalemate?`${a.name} vs ${f2.name} on ${b.battlefield.name}: no death. Victory condition: ${b.victoryCondition}.`:`Winner: ${b.winner}. Loser: ${b.stalemate?'—':(b.loserFighter?b.loserFighter.name:'')}. Victory condition: ${b.victoryCondition}. Battlefield: ${b.battlefield.name}. The episode below was generated only from the recorded battle events and the pre-battle analysis.`;
   const story=generateEpisode(b), breakdown=generateBreakdown(b);
   const checks=(typeof consistencyChecks==='function'?consistencyChecks(b,story):[]);
@@ -754,7 +754,7 @@ function showResults(){
   const pl=document.getElementById('pipeline-stages'); if(pl) pl.innerHTML=pipelineHtml(b,checks);
   document.getElementById('story-output').innerHTML=(allPass?'':`<p style="border:2px solid var(--yellow);padding:10px;border-radius:6px">⚠️ Consistency Check FAILED for this episode. It is shown for review only and is NOT presented as verified. Checks that failed: ${esc(checks.filter(c=>!c.passed).map(c=>c.name).join('; '))}. Trust the Combat Breakdown, not the episode, for what actually happened.</p>`)+story;
   document.getElementById('breakdown-output').innerHTML=breakdown;
-  saveBattle(b,story,breakdown,checks,quality);
+  saveBattle(b,story,breakdown,checks,quality); try{const _h=loadHistory(); if(_h.length) currentHistoryId=_h[0].id;}catch(e){}
 }
 function loadHistory(){try{return JSON.parse(localStorage.getItem('warroom_battles_v3')||'[]')}catch(e){return []}}
 function saveBattle(b,story,breakdown,checks,quality){
@@ -766,18 +766,21 @@ function renderHistory(){
   if(!h.length){el.innerText='No saved battles yet.';return}
   el.innerHTML=h.map(x=>`<div style="margin-bottom:10px"><b>${esc(x.date)} — ${esc(x.winner)}</b> on ${esc(x.battlefield)}<br><small>${esc(x.alpha.join(', '))} vs ${esc(x.beta.join(', '))}</small>${x.continuities?`<br><small>Continuities: ${esc(x.continuities.join(' vs '))}</small>`:''}${x.victoryType?`<br><small>Victory: ${esc(x.victoryType)}</small>`:''}${x.victoryMode?`<br><small>Mode: ${esc(x.victoryMode)}</small>`:''}<br><button class="btn small" onclick="viewHistory(${x.id})">View saved episode</button> <button class="btn small" onclick="exportSavedEpisode(${x.id})">Export / Backup (JSON + story)</button></div>`).join('')+'<p class="note">Saved episodes are stored on this device only (localStorage) and can be lost if browser storage is cleared. They are not saved online. Reopening a saved episode does not rerun the battle.</p>';
 }
+let currentHistoryId=null;
 function viewHistory(id){
-  const x=loadHistory().find(h=>h.id===id); if(!x) return;
+  const x=loadHistory().find(h=>h.id===id); if(!x) return; currentHistoryId=x.id; const _en=document.getElementById('export-note'); if(_en) _en.innerText='';
   document.getElementById('draft-screen').classList.remove('active'); document.getElementById('battle-screen').classList.remove('active'); document.getElementById('results-screen').classList.add('active');
-  document.getElementById('result-title').innerText='Saved Battle — '+x.winner; document.getElementById('result-desc').innerText=x.date+' • '+x.battlefield+(x.continuities?' • Continuities: '+x.continuities.join(' vs '):'')+(x.victoryType?' • Victory: '+x.victoryType:'')+(x.researchRefs?' • Research: '+x.researchRefs.map(r=>r.fighter+': '+r.sources.map(s=>s.name+' '+s.status).join(', ')).join(' | '):'');
+  document.getElementById('result-title').innerText='Saved Battle — '+x.winner; document.getElementById('result-desc').innerText=x.date+' • '+x.battlefield+(x.continuities?' • Continuities: '+x.continuities.join(' vs '):'')+(x.victoryType?' • Victory: '+x.victoryType:'')+(x.seed!=null?' • Battle seed: '+x.seed+' — same seed + fighters + variants + battlefield reproduces the same battle':'')+(x.researchRefs?' • Research: '+x.researchRefs.map(r=>r.fighter+': '+r.sources.map(s=>s.name+' '+s.status).join(', ')).join(' | '):'');
   const cl2=document.getElementById('consistency-lines'); if(cl2) cl2.innerHTML=x.checks?('<b>Saved Consistency Check:</b><br>'+x.checks.map(c=>(c.passed===true?'✅ ':(c.passed==='unverified'?'❓ UNVERIFIED — ':'❌ '))+esc(c.name)).join('<br>')):'Saved on this device only.';
   const ql2=document.getElementById('quality-lines'); if(ql2) ql2.innerHTML=x.quality?('<b>Saved Narrative Quality Check:</b><br>'+x.quality.map(c=>(c.passed===true?'✅ ':(c.passed==='unverified'?'❓ UNVERIFIED — ':'❌ '))+esc(c.name)+' — '+esc(c.detail||'')).join('<br>')):'No saved quality check for this entry.';
   const qn2=document.getElementById('quality-note'); if(qn2) qn2.innerText='Loaded from history saved on this device only. Reopening does not rerun the battle.';
   document.getElementById('consistency-note').innerText='Loaded from history saved on this device only. It is not synced to other devices.';
   document.getElementById('story-output').innerHTML=x.story; document.getElementById('breakdown-output').innerHTML=x.breakdown;
 }
+function exportCurrentSavedEpisode(){ if(currentHistoryId!=null) exportSavedEpisode(currentHistoryId); else {const _en=document.getElementById('export-note'); if(_en) _en.innerText='No saved episode is open yet — run a battle or open one from Battle History first.'; else alert('No saved episode is open yet.');} }
 function exportSavedEpisode(id){
   const x=loadHistory().find(h=>h.id===id); if(!x){alert('Saved episode not found.');return}
+  const _en=document.getElementById('export-note'); if(_en) _en.innerText='Export requested for '+x.winner+' on '+x.battlefield+' — if your browser blocks downloads, check its download settings. Files requested: war-room-episode-'+x.id+'.json and war-room-episode-'+x.id+'.txt. Download success cannot be confirmed from this page alone.';
   const blob=new Blob([JSON.stringify(x,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='war-room-episode-'+x.id+'.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   const txt=stripHtml(x.story||'')+'\n\n--- Combat Breakdown ---\n'+stripHtml(x.breakdown||'');
@@ -884,11 +887,11 @@ function researchRefsFor(ids){
 function renderDossier(ids){
   const el=document.getElementById('dossier-output'); if(!el) return;
   if(!ids||!ids.length){el.innerHTML='No fighters selected — the dossier is empty. Pick two fighters to see their Research Dossier.';return}
-  el.innerHTML=ids.map(id=>{const f=byId(id); const c=canonResearch[id]||{}; const cached=getCachedResearch(id); const used=c.time?c:(cached||{}); const isCached=!!(c.cached||(cached&&c.time&&cached.time===c.time)); const isStale=!!(cached&&!isCacheFresh(cached));
+  el.innerHTML=ids.map(id=>{const f=byId(id); const c=canonResearch[id]||{}; const cached=getCachedResearch(id); const used=c.time?c:(cached||{}); const isCached=!!(c.cached && !c.fresh); const isFresh=!!c.fresh; const isStale=!!(cached&&!isCacheFresh(cached));
     const fmt=d=>{try{return new Date(d).toLocaleString()}catch(e){return d||'not fetched'}};
-    const wikiRow=used.wiki?`✅ Wikipedia (Encyclopedia) — found ${fmt(used.time)}${isCached?' — CACHED, reused from a previous encounter (not re-fetched)':''} — <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(f.wiki)}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only, never in the episode): ${esc(used.wiki.extract.slice(0,200))}…</span>`:`❌ Wikipedia (Encyclopedia) — no data (offline / not found)`;
+    const wikiRow=used.wiki?`✅ Wikipedia (Encyclopedia) — found ${fmt(used.time)}${isCached?' — CACHED, reused from a previous encounter (not re-fetched)':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(f.wiki)}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only, never in the episode): ${esc(used.wiki.extract.slice(0,200))}…</span>`:`❌ Wikipedia (Encyclopedia) — no data (offline / not found)`;
     const fm=(typeof FANDOM!=='undefined'&&FANDOM[id])||null;
-    const fanRow=fm?(used.fandom?`✅ Fan-run Fandom wiki (${esc(fm.d)}, fan-run, not official canon) — found ${fmt(used.time)}${isCached?' — CACHED':''} — <a href="${used.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only): ${esc(used.fandom.extract.slice(0,200))}…</span>`:`❌ Fan-run Fandom wiki (${esc(fm.d)}) — no data`):'No Fandom mapping in this build.';
+    const fanRow=fm?(used.fandom?`✅ Fan-run Fandom wiki (${esc(fm.d)}, fan-run, not official canon) — found ${fmt(used.time)}${isCached?' — CACHED':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="${used.fandom.url}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only): ${esc(used.fandom.extract.slice(0,200))}…</span>`:`❌ Fan-run Fandom wiki (${esc(fm.d)}) — no data`):'No Fandom mapping in this build.';
     return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)} — ${f?esc(continuityFor(f)):''}</b><br>${wikiRow}<br>${fanRow}<br><b>Demonstrated feats (local profile, general terms):</b> ${esc(f?f.feat:'Not established in this profile')}<br><b>Fan opinion / discussion:</b> fan-run wiki pages and YouTube searches are discussion to investigate, not established fact. They never auto-grant powers.<br><b>Conflicting versions:</b> only the selected continuity above is used; versions are not silently merged.<br><b>Disagreements:</b> different continuities and fan sources may disagree on power level or feats. A search result is a lead, not proof — only the selected continuity's local profile decides combat.</div>`;}).join('');
 }
 function refreshDossier(){
@@ -909,7 +912,7 @@ async function fetchFandom(id){
 }
 async function fetchCanonFor(id){
   const [wiki,fandom]=await Promise.all([fetchWiki(id),fetchFandom(id)]);
-  canonResearch[id]={wiki,fandom,time:new Date().toISOString()};
+  canonResearch[id]={wiki,fandom,time:new Date().toISOString(),fresh:true,cached:false};
   try{setCachedResearch(id,canonResearch[id]);}catch(e){}
   return canonResearch[id];
 }
@@ -918,7 +921,7 @@ async function fetchCanonForSelected(force){
   if(!selected.length){if(el) el.innerHTML='Pick fighters first.';renderCanonResults([]);return}
   await Promise.all(selected.map(async id=>{
     const cached=getCachedResearch(id);
-    if(!force && cached && isCacheFresh(cached)){ canonResearch[id]={wiki:cached.wiki||null,fandom:cached.fandom||null,time:cached.time,cached:true}; researchFetchedKeys[id+'|'+(selectedVariants[id]||'base')]=true; return; }
+    if(!force && cached && isCacheFresh(cached)){ canonResearch[id]={wiki:cached.wiki||null,fandom:cached.fandom||null,time:cached.time,cached:true,fresh:false}; researchFetchedKeys[id+'|'+(selectedVariants[id]||'base')]=true; return; }
     await fetchCanonFor(id);
   }));
   renderCanonResults(selected);
@@ -928,7 +931,7 @@ function autoResearchFor(id){
   const f=byId(id); if(!f) return;
   const key=id+'|'+(selectedVariants[id]||'base');
   const cached=getCachedResearch(id);
-  if(cached && isCacheFresh(cached) && !researchFetchedKeys[key]){ canonResearch[id]={wiki:cached.wiki||null,fandom:cached.fandom||null,time:cached.time,cached:true}; researchFetchedKeys[key]=true; try{renderCanonResults(selected); renderSlots();}catch(e){} return; }
+  if(cached && isCacheFresh(cached) && !researchFetchedKeys[key]){ canonResearch[id]={wiki:cached.wiki||null,fandom:cached.fandom||null,time:cached.time,cached:true,fresh:false}; researchFetchedKeys[key]=true; try{renderCanonResults(selected); renderSlots();}catch(e){} return; }
   if(cached && isCacheFresh(cached) && researchFetchedKeys[key] && canonResearch[id] && canonResearch[id].cached){ try{renderCanonResults(selected); renderSlots();}catch(e){} return; }
   if(researchFetchedKeys[key] && canonResearch[id] && canonResearch[id].time){ try{renderSlots();}catch(e){} return; }
   if(researchFetchedKeys[key] && !(canonResearch[id]&&canonResearch[id].time)){ delete researchFetchedKeys[key]; }
@@ -1031,7 +1034,7 @@ function validateBattle(b){
   else { const winF=b.alpha[0].alive?b.alpha[0]:b.beta[0]; const loseF=b.alpha[0].alive?b.beta[0]:b.alpha[0]; winnerOk=!!(winF && winF.name===b.winner && loseF && !loseF.alive); if(!winnerOk) issues.push('Winner mismatch: declared winner is not the surviving fighter, or the loser is still alive.'); }
   let finalStateOk=false;
   if(b.stalemate) finalStateOk=b.alpha[0].alive && b.beta[0].alive;
-  else { const loseF=b.alpha[0].alive?b.beta[0]:b.alpha[0]; finalStateOk=!!loseF && ((b.victoryCondition||'').includes('Incapacitation') ? !!loseF.incapacitated : loseF.currentHp===0); if(!finalStateOk) issues.push('Final state mismatch: loser is not dead or incapacitated as the victory condition claims.'); }
+  else { const loseF=b.alpha[0].alive?b.beta[0]:b.alpha[0]; const _incOk=!!loseF && (loseF.currentHp===0 || !!loseF.incapacitated || !!loseF.unconscious) && (!!loseF.incapacitated || !!loseF.unconscious) && !loseF.dead; const _deathOk=!!loseF && loseF.currentHp===0 && !!loseF.dead && !loseF.unconscious; finalStateOk=(b.victoryMode==='incapacitation' || (b.victoryCondition||'').includes('Incapacitation')) ? _incOk : _deathOk; if(!finalStateOk) issues.push('Final state mismatch: loser is not dead or incapacitated as the victory condition claims.'); }
   const fin=b.events.filter(e=>e.type==='knockout'||e.type==='incapacitated').slice(-1)[0];
   let verdictOk=b.stalemate ? !fin : !!fin;
   if(!verdictOk) issues.push('Verdict mismatch: no finishing event in the battle record for a non-stalemate win.');
@@ -1039,7 +1042,7 @@ function validateBattle(b){
   checks.push({name:'Every named attack/power belongs to the fighter\'s selected continuity',passed:!badPower,detail:badPower?'An ability was used that is not in the selected version\'s powerset.':'All attacks, signatures, variant powers and transformed signatures belong to the selected continuity.'});
   checks.push({name:'No character acts after death or incapacitation',passed:!deadActed,detail:deadActed?'A dead fighter acted in a later round.':'No dead or incapacitated fighter acted after being finished.'});
   checks.push({name:'Transformations only after their trigger condition',passed:!badTransform,detail:badTransform?'A transformation broke its trigger or name.':'Transformations matched their listed form and triggered at or below 45% HP.'});
-  checks.push({name:'Injuries and incapacitation are respected in later rounds',passed:finalStateOk,detail:finalStateOk?'The loser stays finished; the final state matches the victory condition.':'The final state does not match the victory condition.'});
+  checks.push({name:'Injuries and incapacitation are respected in later rounds',passed:finalStateOk,detail:finalStateOk?'The loser stays finished; the final state matches the victory condition (Death: HP 0 and dead, not unconscious; Incapacitation: HP 0 and/or incapacitated/unconscious, not dead).':'The final state does not match the victory condition.'});
   checks.push({name:'Verdict decisive factors match the battle record',passed:verdictOk,detail:verdictOk?(b.stalemate?'Stalemate: no finishing event was invented.':('Finishing event in the record: '+fin.actor+' finished '+fin.target+'.')):'No finishing event supports the verdict.'});
   return {passed:issues.length===0,issues,checks};
 }
@@ -1111,7 +1114,7 @@ function pipelineHtml(b, checks){
   const refs=researchRefsFor([...b.alpha,...b.beta].map(f=>f.id));
   const refsLine=refs.map(r=>r.fighter+' ('+r.continuity+'): '+r.sources.map(s=>s.name+' '+s.status).join('; ')).join(' | ');
   const allPass=checks.every(c=>c.passed);
-  return `<b>Online Storytelling Pipeline — this battle:</b><br>Stage 1 Research Dossier: ${esc(refsLine)}<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${b.rounds} rounds, ${b.events.length} recorded events on ${esc(b.battlefield.name)}.<br>Stage 4 Episode: 6 chapters, Analytical / Cinematic / Reflective voices.<br>Stage 5 Consistency Check: ${allPass?'PASSED':('FAILED — '+checks.filter(c=>!c.passed).map(c=>c.name).join('; '))}.<br>Stage 6 Saved Episode: stored on this device only (see Battle History).`;
+  return `<b>Online Storytelling Pipeline — this battle:</b><br>Stage 1 Research Dossier: ${esc(refsLine)}<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${b.rounds} rounds, ${b.events.length} recorded events on ${esc(b.battlefield.name)}. Battle seed: ${b.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Episode: 6 chapters, Analytical / Cinematic / Reflective voices.<br>Stage 5 Consistency Check: ${allPass?'PASSED':('FAILED — '+checks.filter(c=>!c.passed).map(c=>c.name).join('; '))}.<br>Stage 6 Saved Episode: stored on this device only (see Battle History).`;
 }
 /* Story Brain additions: scene handling for study/protect, and reason-aware prose. */
 const _origSceneForRound=sceneForRound;
