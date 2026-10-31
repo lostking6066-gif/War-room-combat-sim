@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.9 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.10 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.9</h1><span>1V1 DEATH BATTLES • ENGINE v16.9 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v16.10</h1><span>1V1 DEATH BATTLES • ENGINE v16.10 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -162,7 +162,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 
 <section id="results-screen" class="screen">
 <div class="panel"><h2 id="result-title">RESULT</h2><p id="result-desc" class="note" style="font-size:.9rem"></p></div>
-<div class="panel story"><h2 id="episode-heading">Death Battle Episode — 6 Chapters (Narrator Style C)</h2><p id="main-story-label" class="note"></p><p id="main-story-status" class="note"></p><p class="note">The main story below is the online AI story when it is available and passes validation. If online generation is unavailable, the offline rule-based episode is shown instead and labelled honestly as offline — it is never presented as online AI.</p><div id="story-output"></div></div>
+<div class="panel story"><h2 id="episode-heading">Death Battle Episode — 6 Chapters (Narrator Style C)</h2><p id="main-story-label" class="note"></p><p id="main-story-status" class="note"></p><p class="note">The main story below is the online AI story when it is available and passes validation. While online generation runs, the labelled offline episode is shown first and replaced by the online AI story when it passes validation. If online generation is unavailable, the offline rule-based episode stays and is labelled honestly as offline — it is never presented as online AI.</p><div id="story-output"></div></div>
 <button class="btn" onclick="resetSimulator()">New Battle</button>
 <details class="adv"><summary>Combat Details — breakdown and numbers (numbers live here, not in the story)</summary><ul class="break" id="breakdown-output"></ul></details>
 <details class="adv"><summary>Character Research — dossier for this battle</summary><div id="result-dossier-output" class="note">Research dossier for this battle appears here after the battle.</div></details>
@@ -2428,8 +2428,8 @@ function showResults(){
   const cl=document.getElementById('consistency-lines'); if(cl) cl.innerHTML='<b>Legacy combined check is not used in v15.</b> See Systems A, B, and C below, each with its own result.';
   const il=document.getElementById('integrity-lines'); if(il) il.innerHTML='<b>System A — Battle Integrity:</b> '+validationSummaryV14(integrity)+'<br>'+validationLinesHtmlV14(integrity);
   const in2=document.getElementById('integrity-note'); if(in2) in2.innerText='System A — Battle Integrity: '+validationSummaryV14(integrity)+'. Authoritative record: winner='+fr.winner+', loser='+fr.loserName+', victoryMode='+fr.victoryMode+', finishingEventId='+(fr.finishingEventId!=null?fr.finishingEventId:'none')+', finishingAbility='+(fr.finishingAbility||'none')+'.';
-  const al=document.getElementById('accuracy-lines'); if(al) al.innerHTML='<b>System B — Narrative Factual Accuracy:</b> '+validationSummaryV14(accuracy)+'<br>'+validationLinesHtmlV14(accuracy);
-  const an=document.getElementById('accuracy-note'); if(an) an.innerText='System B — Narrative Factual Accuracy: '+validationSummaryV14(accuracy)+'. An episode can be factually consistent but poor quality, or well written but factually wrong — that distinction is shown here, not hidden in a combined score.';
+  const al=document.getElementById('accuracy-lines'); if(al) al.innerHTML='<b>System B — Narrative Factual Accuracy (rule-based fallback episode — not the AI main story; the AI story\'s own validation is in Technical Details):</b> '+validationSummaryV14(accuracy)+'<br>'+validationLinesHtmlV14(accuracy);
+  const an=document.getElementById('accuracy-note'); if(an) an.innerText='System B — Narrative Factual Accuracy (rule-based fallback episode — not the AI main story; the AI story\'s own validation is in Technical Details): '+validationSummaryV14(accuracy)+'. An episode can be factually consistent but poor quality, or well written but factually wrong — that distinction is shown here, not hidden in a combined score.';
   const qn=document.getElementById('quality-note'); if(qn) qn.innerText=qFail?('System C — Story Quality: ISSUES FOUND ('+qFail+' failed). Quality issues alone do not unverify a factually consistent episode.'):('System C — Story Quality: '+validationSummaryV14(quality)+'.');
   const ql=document.getElementById('quality-lines'); if(ql) ql.innerHTML='<b>System C — Story Quality (separate from factual accuracy; rule-based fallback episode — not the AI main story; the AI story\'s own validation is in Technical Details):</b> '+validationSummaryV14(quality)+'<br>'+validationLinesHtmlV14(quality);
   const pl=document.getElementById('pipeline-stages'); if(pl) pl.innerHTML=pipelineHtml(b,integrity);
@@ -2459,7 +2459,7 @@ function saveBattle(b,story,breakdown,integrity,accuracy,quality){
     const h=loadHistory();
     const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]);
     const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant));
-    h.unshift({id:Date.now(),formatVersion:'v16.9',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.9 online AI main story, or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
+    h.unshift({id:Date.now(),formatVersion:'v16.10',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.10 online AI main story, or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
     localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));
   }catch(e){}
   renderHistory();
@@ -2481,15 +2481,15 @@ function renderHistory(){
 function savedStoryMetaV162(x) {
   const m = x.mainStoryMeta;
   if (!m) return { label: 'Saved before story-kind tracking — chapters shown as saved; story kind not recorded.', diagnostics: 'Story kind not recorded for this saved entry (saved before story-kind tracking). Chapters shown exactly as saved.' };
-  if (m.kind === 'ai') return { label: 'Saved online AI story — ' + (m.provider || 'online AI') + ' — checked: ' + (m.passed || 0) + ' passed, ' + (m.unverified || 0) + ' unverified (unverified is not counted as passed). Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || '—') + '<br>Provider attempts: ' + (m.attempts || 0) + ' generation + ' + (m.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + '<br>Prompt size: ' + (m.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')' + (m.aiDraftLength != null && m.aiDraftLength !== '' ? '<br>AI story length: ' + m.aiDraftLength + ' characters.' : '') + (m.aiFinishReason !== undefined ? '<br>Provider finish signal: ' + (m.aiFinishReason ? m.aiFinishReason : 'not reported by provider') + '.' : '') + (m.stageDiagnostics && m.stageDiagnostics.length ? '<br>' + stageDiagnosticsHtmlV167(m.stageDiagnostics) : '') };
-  return { label: V16_OFFLINE_LABEL + ' Reason: ' + (m.reason || 'Online AI generation was unavailable.') + ' This saved entry used the offline fallback — it is not an online AI story. Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || 'Offline fallback (rule-based episode)') + '<br>Provider attempts: ' + (m.attempts || 0) + ' generation + ' + (m.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + '<br>Prompt size: ' + (m.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')<br>Fallback reason: ' + (m.reason || 'Online AI generation was unavailable.') + (m.failedStage ? '<br>Failed stage: ' + m.failedStage : '') + (m.stageDiagnostics && m.stageDiagnostics.length ? '<br>' + stageDiagnosticsHtmlV167(m.stageDiagnostics) : '') + (m.rejectedDraftExcerpt ? '<br>' + rejectedDraftDetailsHtmlV164(m) : '') };
+  if (m.kind === 'ai') return { label: 'Saved online AI story — ' + (m.provider || 'online AI') + ' — checked: ' + (m.passed || 0) + ' passed, ' + (m.unverified || 0) + ' unverified (unverified is not counted as passed). Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || '—') + '<br>Provider attempts: ' + (m.attempts || 0) + ' generation + ' + (m.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + promptSizesLineV1610(m) + (m.aiDraftLength != null && m.aiDraftLength !== '' ? '<br>AI story length: ' + m.aiDraftLength + ' characters.' : '') + (m.aiFinishReason !== undefined ? '<br>Provider finish signal: ' + (m.aiFinishReason ? m.aiFinishReason : 'not reported by provider') + '.' : '') + (m.stageDiagnostics && m.stageDiagnostics.length ? '<br>' + stageDiagnosticsHtmlV167(m.stageDiagnostics) : '') + (m.fidelityChecks && m.fidelityChecks.length ? '<br>Event-fidelity checks:<br>' + m.fidelityChecks.map(function (c) { return (c.state === 'PASSED' ? '✅ ' : (c.state === 'UNVERIFIED' ? '❓ UNVERIFIED — ' : '❌ ')) + esc(c.name) + ' — ' + esc(c.detail); }).join('<br>') : '') };
+  return { label: V16_OFFLINE_LABEL + ' Reason: ' + (m.reason || 'Online AI generation was unavailable.') + ' This saved entry used the offline fallback — it is not an online AI story. Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || 'Offline fallback (rule-based episode)') + '<br>Provider attempts: ' + (m.attempts || 0) + ' generation + ' + (m.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + promptSizesLineV1610(m) + '<br>Fallback reason: ' + (m.reason || 'Online AI generation was unavailable.') + (m.failedStage ? '<br>Failed stage: ' + m.failedStage : '') + (m.stageDiagnostics && m.stageDiagnostics.length ? '<br>' + stageDiagnosticsHtmlV167(m.stageDiagnostics) : '') + (m.rejectedDraftExcerpt ? '<br>' + rejectedDraftDetailsHtmlV164(m) : '') + (m.fidelityChecks && m.fidelityChecks.length ? '<br>Event-fidelity checks:<br>' + m.fidelityChecks.map(function (c) { return (c.state === 'PASSED' ? '✅ ' : (c.state === 'UNVERIFIED' ? '❓ UNVERIFIED — ' : '❌ ')) + esc(c.name) + ' — ' + esc(c.detail); }).join('<br>') : '') };
 }
 function viewHistory(id){
   const x=loadHistory().find(h=>h.id===id); if(!x) return;
   // v15.1: episode/match headings on a saved view come ONLY from this saved entry's own
   // victoryMode — never from the current victory-select or the last battle's mode.
   const _sm=(x.victoryMode||(x.finalRecord&&x.finalRecord.victoryMode)||((x.victoryType||'').toLowerCase().indexOf('incapacitation')!==-1?'incapacitation':'death'));
-  const _eh=document.getElementById('episode-heading'); if(_eh) _eh.innerText=(_sm==='incapacitation'?'Incapacitation Episode — 6 Chapters (Narrator Style C)':'Death Battle Episode — 6 Chapters (Narrator Style C)');
+  const _eh=document.getElementById('episode-heading'); if(_eh) { const _aiH = (x.mainStoryMeta && x.mainStoryMeta.kind === 'ai'); const _baseH = (_sm === 'incapacitation' ? 'Incapacitation Episode' : 'Death Battle Episode'); _eh.innerText = _aiH ? (_baseH + ' — Online AI Story' + (x.mainStoryMeta.stageCount ? ' (' + x.mainStoryMeta.stageCount + ' stages)' : '')) : (_baseH + ' — 6 Chapters (Narrator Style C)'); }
   const _mh=document.getElementById('match-heading'); if(_mh) _mh.innerText=(_sm==='incapacitation'?'2 — Incapacitation Match: Pick Fighter A and Fighter B':'2 — Death Match: Pick Fighter A and Fighter B');
   currentHistoryId=x.id; const _en=document.getElementById('export-note'); if(_en) _en.innerText='';
   document.getElementById('draft-screen').classList.remove('active'); document.getElementById('battle-screen').classList.remove('active'); document.getElementById('results-screen').classList.add('active');
@@ -2519,7 +2519,7 @@ function viewHistory(id){
   document.getElementById('result-desc').innerText=x.date+' • '+x.battlefield+(x.continuities?' • Continuities: '+x.continuities.join(' vs '):'')+(x.victoryType?' • Victory: '+x.victoryType:'')+(x.seed!=null?' • Battle seed: '+x.seed+' — same seed + fighters + variants + battlefield reproduces the same battle':'')+(x.researchRefs?' • Research: '+x.researchRefs.map(r=>r.fighter+': '+r.sources.map(s=>s.name+' '+s.status).join(', ')).join(' | '):'')+(v.legacy?' • ⚠️ Saved in an older format — read-only, format differs.':(' • Format: '+(x.formatVersion||'v15.1')+'.'));
   const cl2=document.getElementById('consistency-lines'); if(cl2) cl2.innerHTML='See Systems A, B, and C below for this saved entry. Reopening does not rerun the battle and does not change the saved result.';
   const il2=document.getElementById('integrity-lines'); if(il2) il2.innerHTML=x.validation&&x.validation.integrity?('<b>Saved System A — Battle Integrity:</b><br>'+validationLinesHtmlV14(x.validation.integrity)):'<b>Saved System A — Battle Integrity:</b> Not stored for this legacy entry (UNVERIFIED on reopen — not recomputed from a different battle).';
-  const al2=document.getElementById('accuracy-lines'); if(al2) al2.innerHTML=x.validation&&x.validation.accuracy?('<b>Saved System B — Narrative Factual Accuracy:</b><br>'+validationLinesHtmlV14(x.validation.accuracy)):'<b>Saved System B — Narrative Factual Accuracy:</b> Not stored for this legacy entry (UNVERIFIED on reopen — not recomputed from a different battle).';
+  const al2=document.getElementById('accuracy-lines'); if(al2) al2.innerHTML=x.validation&&x.validation.accuracy?('<b>Saved System B — Narrative Factual Accuracy (fallback-episode check, or the AI main-story validation when this saved entry is an AI story):</b><br>'+validationLinesHtmlV14(x.validation.accuracy)):'<b>Saved System B — Narrative Factual Accuracy:</b> Not stored for this legacy entry (UNVERIFIED on reopen — not recomputed from a different battle).';
   const ql2=document.getElementById('quality-lines'); if(ql2) ql2.innerHTML=x.validation&&x.validation.quality?('<b>Saved System C — Story Quality (rule-based fallback episode — not the AI main story):</b><br>'+validationLinesHtmlV14(x.validation.quality)):(x.quality?('<b>Saved Narrative Quality Check (legacy):</b><br>'+x.quality.map(c=>(c.passed===true?'✅ ':(c.passed==='unverified'?'❓ UNVERIFIED — ':'❌ '))+esc(c.name)+' — '+esc(c.detail||'')).join('<br>')):'No saved quality check for this entry.');
   const qn2=document.getElementById('quality-note'); if(qn2) qn2.innerText='Loaded from history saved on this device only. Reopening does not rerun the battle and never mutates the original result.';
   // v16.4: clear/replace EVERY live-only note in a saved view. Previously
@@ -2529,7 +2529,7 @@ function viewHistory(id){
   const _inS = document.getElementById('integrity-note');
   if (_inS) _inS.innerText = (x.validation && x.validation.integrity) ? ('Saved System A — Battle Integrity for THIS saved entry. Authoritative record for this saved entry: winner=' + x.winner + ', loser=' + (x.loser || '') + ', victoryMode=' + (x.victoryMode || '') + ', finishingEventId=' + (x.finalRecord && x.finalRecord.finishingEventId != null ? x.finalRecord.finishingEventId : 'none') + ', finishingAbility=' + (x.finalRecord && x.finalRecord.finishingAbility ? x.finalRecord.finishingAbility : 'none') + '.') : 'Saved System A — Battle Integrity: not recorded for this saved episode (no live battle record is shown here).';
   const _anS = document.getElementById('accuracy-note');
-  if (_anS) _anS.innerText = (x.validation && x.validation.accuracy) ? 'Saved System B — Narrative Factual Accuracy for THIS saved entry (see Saved System B lines above).' : 'Saved System B — Narrative Factual Accuracy: not recorded for this saved episode (no live battle record is shown here).';
+  if (_anS) _anS.innerText = (x.validation && x.validation.accuracy) ? 'Saved System B — Narrative Factual Accuracy for THIS saved entry (see Saved System B lines above; fallback-episode check, or the AI main-story validation when this saved entry is an AI story).' : 'Saved System B — Narrative Factual Accuracy: not recorded for this saved episode (no live battle record is shown here).';
   const _rdS = document.getElementById('result-dossier-output');
   if (_rdS) _rdS.innerHTML = x.researchRefs ? ('<b>Saved dossier references for this saved entry:</b> ' + x.researchRefs.map(function (r) { return esc(r.fighter) + ': ' + r.sources.map(function (s) { return esc(s.name) + ' ' + esc(s.status); }).join('; '); }).join('<br>')) : 'Saved dossier references: not recorded for this saved episode (no live battle record is shown here).';
   const _aioS = document.getElementById('ai-story-output');
@@ -2645,8 +2645,8 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9'].includes(x.formatVersion);
-  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9 record.'};
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10'].includes(x.formatVersion);
+  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
 
@@ -3355,15 +3355,18 @@ function renderMainStoryDiagnosticsV16(meta, expectedSession) {
   const lines = [];
   lines.push('Session: ' + (meta.sessionId || '—'));
   lines.push('Provider: ' + (meta.provider || '—'));
-  lines.push('Provider attempts: ' + (meta.attempts || 0) + ' generation + ' + (meta.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap) (multi-stage: outline + opening + combat scenes + climax + aftermath + at most 2 stage corrections; each provider attempt has its own 10-POST budget — Pollinations /openai, Pollinations Classic, saved key, Gemini — and a stage failing on one provider tries the next provider for that stage; 402 wait-retries excluded from the cap, abort retries counted)' + (meta.attemptsBreakdown ? '; breakdown: ' + meta.attemptsBreakdown : '') + (meta.providersUsed && meta.providersUsed.length ? '; providers used: ' + meta.providersUsed.join(', ') : '') + (meta.geminiTried ? ' + Gemini attempt(s)' : ''));
+  lines.push('Provider attempts: ' + (meta.attempts || 0) + ' generation + ' + (meta.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap) (multi-stage: opening + combat scenes + climax + aftermath — 3 stages for ≤4-round battles, 5 otherwise; outline beats derived locally, no AI outline POST; up to 1 repair per stage; each provider attempt has its own 10-POST budget — Pollinations /openai, Pollinations Classic, saved key, Gemini — and a stage failing on one provider tries the next provider for that stage; 402 wait-retries excluded from the cap, abort retries counted)' + (meta.attemptsBreakdown ? '; breakdown: ' + meta.attemptsBreakdown : '') + (meta.providersUsed && meta.providersUsed.length ? '; providers used: ' + meta.providersUsed.join(', ') : '') + (meta.geminiTried ? ' + Gemini attempt(s)' : ''));
           if (meta.failedStage) lines.push('Failed stage: ' + meta.failedStage);
           if (meta.stageDiagnostics && meta.stageDiagnostics.length) lines.push(stageDiagnosticsHtmlV167(meta.stageDiagnostics));
-  lines.push('Prompt size: ' + (meta.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')');
+  if (meta.stagePromptSizes && meta.stagePromptSizes.length) lines.push('Prompt sizes (per stage; per-stage guard 2000 chars, target under 800): ' + meta.stagePromptSizes.map(function (p) { return stageLabelV167(p.stage) + ' ' + p.promptChars + ' chars'; }).join(', ') + '; total of stage prompts: ' + (meta.promptSize || 0) + ' chars (multi-stage total — not compared against the old single-shot 4500 cap).');
+  else if (meta.stageDiagnostics && meta.stageDiagnostics.length) lines.push('Prompt sizes (per stage; per-stage guard 2000 chars, target under 800): ' + meta.stageDiagnostics.map(function (d) { return stageLabelV167(d.stage) + ' ' + (d.promptChars || 0) + ' chars'; }).join(', ') + '; total of stage prompts: ' + (meta.promptSize || 0) + ' chars (multi-stage total — not compared against the old single-shot 4500 cap).');
+  else lines.push('Prompt size: ' + (meta.promptSize || 0) + ' characters (multi-stage total — not compared against the old single-shot 4500 cap).');
   if (meta.kind === 'ai') {
     if (meta.aiDraftLength != null) lines.push('AI story length: ' + meta.aiDraftLength + ' characters.');
     lines.push('Provider finish signal: ' + (meta.aiFinishReason ? meta.aiFinishReason : 'not reported by provider') + '.');
   }
   if (meta.checks) lines.push('Validation:<br>' + storyChecksHtmlV16(meta.checks));
+  if (meta.fidelityChecks && meta.fidelityChecks.length) lines.push('Event-fidelity checks:<br>' + meta.fidelityChecks.map(function (c) { return (c.state === 'PASSED' ? '✅ ' : (c.state === 'UNVERIFIED' ? '❓ UNVERIFIED — ' : '❌ ')) + esc(c.name) + ' — ' + esc(c.detail); }).join('<br>'));
   if (meta.reason) lines.push('Fallback reason: ' + meta.reason);
   if (meta.rejectedDraftExcerpt) lines.push(rejectedDraftDetailsHtmlV164(meta));
   el.innerHTML = lines.join('<br>');
@@ -3385,16 +3388,16 @@ function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, qual
       try {
         const h = loadHistory();
         if (h.length) {
-          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.9) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.9) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
-          h[0].formatVersion = 'v16.9';
-          h[0].mainStoryMeta = meta ? { kind: meta.kind, provider: meta.provider, passed: meta.passed, unverified: meta.unverified, attempts: meta.attempts, attempts402Excluded: meta.attempts402Excluded != null ? meta.attempts402Excluded : '', attemptsBreakdown: meta.attemptsBreakdown || '', promptSize: meta.promptSize, sessionId: meta.sessionId, reason: meta.reason || '', rejectedDraftExcerpt: meta.rejectedDraftExcerpt || '', rejectedDraftClimax: meta.rejectedDraftClimax || '', rejectedChecks: meta.rejectedChecks || [], rejectedDraftLength: meta.rejectedDraftLength != null ? meta.rejectedDraftLength : '', rejectedDraftStage: meta.rejectedDraftStage || '', rejectedDraftFinishReason: meta.rejectedDraftFinishReason || '', rejectedDraftPromptSize: meta.rejectedDraftPromptSize != null ? meta.rejectedDraftPromptSize : '', rejectedDraftProbe: meta.rejectedDraftProbe || [], aiDraftLength: meta.aiDraftLength != null ? meta.aiDraftLength : '', aiFinishReason: meta.aiFinishReason || '', stageDiagnostics: meta.stageDiagnostics || [], failedStage: meta.failedStage || '', providersUsed: meta.providersUsed || [] } : null;
+          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.10) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.10) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
+          h[0].formatVersion = 'v16.10';
+          h[0].mainStoryMeta = meta ? { kind: meta.kind, provider: meta.provider, passed: meta.passed, unverified: meta.unverified, attempts: meta.attempts, attempts402Excluded: meta.attempts402Excluded != null ? meta.attempts402Excluded : '', attemptsBreakdown: meta.attemptsBreakdown || '', promptSize: meta.promptSize, sessionId: meta.sessionId, reason: meta.reason || '', rejectedDraftExcerpt: meta.rejectedDraftExcerpt || '', rejectedDraftClimax: meta.rejectedDraftClimax || '', rejectedChecks: meta.rejectedChecks || [], rejectedDraftLength: meta.rejectedDraftLength != null ? meta.rejectedDraftLength : '', rejectedDraftStage: meta.rejectedDraftStage || '', rejectedDraftFinishReason: meta.rejectedDraftFinishReason || '', rejectedDraftPromptSize: meta.rejectedDraftPromptSize != null ? meta.rejectedDraftPromptSize : '', rejectedDraftProbe: meta.rejectedDraftProbe || [], aiDraftLength: meta.aiDraftLength != null ? meta.aiDraftLength : '', aiFinishReason: meta.aiFinishReason || '', stageDiagnostics: meta.stageDiagnostics || [], failedStage: meta.failedStage || '', providersUsed: meta.providersUsed || [], stageCount: meta.stageCount || '', stagePromptSizes: meta.stagePromptSizes || [], fidelityChecks: meta.fidelityChecks || [] } : null;
           // Saved validation note, stated plainly: System A is battle integrity
           // (story-independent). When the main story is AI, System B below is
           // the AI main-story validation, not the fallback-episode check.
           if (meta && meta.kind === 'ai' && Array.isArray(meta.checks)) {
             h[0].validation = h[0].validation || {};
             h[0].validation.accuracy = meta.checks.map(function (c) { return { name: c.name, passed: (c.state === 'PASSED' ? true : (c.state === 'UNVERIFIED' ? 'unverified' : false)), detail: c.detail }; });
-            h[0].validationNote = 'Saved validation: System A is battle integrity; System B is the v16.9 AI main-story validation; System C is the fallback-episode quality check.';
+            h[0].validationNote = 'Saved validation: System A is battle integrity; System B is the v16.10 AI main-story validation; System C is the fallback-episode quality check.';
           }
           localStorage.setItem('warroom_battles_v3', JSON.stringify(h.slice(0, 20)));
         }
@@ -3486,6 +3489,23 @@ function delayV162(ms) { return new Promise(function (r) { setTimeout(r, ms); })
    Continuation is APP-SIDE ONLY (a new prompt carrying the truncated
    text); the provider offers no continuation feature on this path, and
    it must never be described as one. */
+/* v16.10 FIDELITY PHASE (supersedes the v16.7/v16.8 notes above where
+   they conflict): outline is NO LONGER an AI stage — outline beats are
+   derived locally (deriveOutlineBeatsV1610) and fed to stages without an
+   AI outline POST. Adaptive stages: <=4 rounds -> opening/climax/
+   aftermath (3); otherwise opening/combat1/combat2/climax/aftermath
+   (5). Correction policy is now PER-STAGE: initial + 1 targeted repair
+   per stage (the old battle-global max-2 cap is replaced; see
+   runMultiStageV167). POST accounting per run: generation POSTs +
+   repair POSTs counted (max 10 per provider budget); 402 wait-retries
+   still excluded; abort retries still counted. Worst case per provider:
+   5 stages + 5 repairs = 10 counted POSTs, exactly at the cap — a
+   further repair then falls to the next provider in the chain, which
+   has its own fresh budget. App-side continuation is REMOVED: a
+   truncated stage now gets the same single targeted fresh repair as any
+   other failed stage, so a stage never costs more than 2 attempts. The
+   v16.6 checker (checkMainStoryV16) is UNCHANGED in v16.10;
+   event-fidelity is a separate checker. */
 var V167_STAGE_PROMPT_MAX = 2000;
 var V167_STAGE_ORDER = ['outline', 'opening', 'combat1', 'combat2', 'climax', 'aftermath'];
 function stageLabelV167(s) {
@@ -3516,7 +3536,7 @@ function buildContinuityV167(b) {
   if (!b.stalemate) loserState = (b.victoryMode === 'death' ? 'dead' : 'unconscious, not dead');
   const abilities = [];
   (b.events || []).forEach(function (e) { if (e.ability && abilities.indexOf(e.ability) === -1) abilities.push(e.ability); });
-  return { fighters: fighters, battlefield: s.battlefield || 'Open Arena', victoryMode: s.victoryMode, winner: s.winner, loser: s.loser || '', loserState: loserState, finishingAbility: s.finishingAbility || null, finishingRound: finRound, roundNums: roundNums, roundLines: roundLines, abilities: abilities, outlineBeats: [], coveredThrough: 0, lastSentence: '' };
+  return { fighters: fighters, battlefield: s.battlefield || 'Open Arena', victoryMode: s.victoryMode, winner: s.winner, loser: s.loser || '', loserState: loserState, finishingAbility: s.finishingAbility || null, finishingRound: finRound, roundNums: roundNums, roundLines: roundLines, abilities: abilities, outlineBeats: [], coveredThrough: 0, lastSentence: '', events: (b.events || []).slice(), turningPoints: (s.turningPoints || []).slice() };
 }
 function continuityTextV167(rec, keepAllRounds) {
   const fs = rec.fighters.map(function (f) { return f.name + ' (' + f.variant + ', ' + f.continuity + ') — style: ' + f.style + '; powers: ' + (f.powers.join(', ') || '[NOT KNOWN]') + '; signature: ' + (f.signature || 'none') + '; limits: ' + f.limits; }).join(' | ');
@@ -3588,37 +3608,14 @@ function combatContinuityV168(rec, stage) {
   const lines = (rec.roundLines || []).filter(function (ln) { return assigned.some(function (r) { return ln.indexOf('Round ' + r + ':') === 0; }); }).map(function (ln) { return truncV162(ln, 55); });
   return 'BATTLE: ' + rec.fighters.map(function (f) { return f.name; }).join(' vs ') + ', ' + rec.battlefield + ', ' + rec.victoryMode + '. Winner: ' + rec.winner + ' (do not change). Finisher: ' + (rec.finishingAbility || 'none — stalemate') + ' (not in this scene). Fighters: ' + fs + '. Assigned rounds: ' + (lines.length ? lines.join(' | ') : 'none — positioning only') + '.';
 }
-function buildCombatPromptV168(rec, stage, opts) {
-  opts = opts || {};
-  if (opts.continuation) return buildStagePromptV167(rec, stage, opts);
-  const rs = stageRoundsV167(rec, stage);
-  const brief = rs.length ? ('Write ONLY the combat scene for round' + (rs.length > 1 ? 's ' : ' ') + rs.join(', ') + ', about 200–250 words, in order. No climax, no aftermath. End with a complete sentence.') : stageBriefV167(rec, stage);
-  const cont = combatContinuityV168(rec, stage);
-  const rules = 'RULES: Assigned rounds only, in order. Winner, finisher, and final states do not change. No climax, no aftermath. No invented events, abilities, deaths, or recoveries. No post-defeat actions. No damage/HP numbers. Cinematic narrator, past tense, one voice.';
-  if (opts.correction) return 'STAGE: ' + stage + ' — REVISION (correction attempt 2: write fresh). The previous attempt at this scene failed these stage checks: ' + (opts.failedChecks || []).join(' | ') + '. Write ONLY this scene fresh (do not copy the previous attempt). ' + brief + ' ' + rules + ' CONTINUITY: ' + cont;
-  return 'STAGE: ' + stage + '. ' + brief + ' ' + rules + ' CONTINUITY: ' + cont;
-}
-function buildStagePromptV167(rec, stage, opts) {
-  opts = opts || {};
-  let prompt;
-  if (opts.continuation) {
-    prompt = 'STAGE: ' + stage + ' — CONTINUATION. The previous scene text stopped mid-sentence: "' + opts.truncatedText + '". Continue from exactly this point: begin with the next sentence; do not repeat any text already written; do not change anything already written. Write only the continuation, about 150–250 words, ending with a complete sentence. Cinematic narrator, past tense. Do not contradict the continuity record. Do not change the winner, the finishing ability, or the final states. Do not invent events, abilities, equipment, deaths, or recoveries. No damage numbers, no HP numbers, no stats in prose.';
-  } else if (opts.correction) {
-    if (stage === 'combat1' || stage === 'combat2') return buildCombatPromptV168(rec, stage, opts);
-    prompt = 'STAGE: ' + stage + ' — REVISION (correction attempt 2: write fresh). The previous attempt at this scene failed these stage checks: ' + (opts.failedChecks || []).join(' | ') + '. Write ONLY this scene fresh (do not copy the previous attempt). ' + stageBriefV167(rec, stage) + (rec.lastSentence ? ' Previous scene ended: "' + rec.lastSentence.slice(0, 120) + '". Continue the narrative flow without repeating it.' : '') + ' RULES: Do not contradict the continuity record. Do not change the winner, the finishing ability, or the final states. Do not invent events, abilities, equipment, deaths, or recoveries. No damage numbers, no HP numbers, no stats in prose. Cinematic narrator, past tense. CONDENSED CONTINUITY BRIEF: ' + continuityTextV167(rec, false);
-  } else {
-    if (stage === 'combat1' || stage === 'combat2') return buildCombatPromptV168(rec, stage, opts);
-    prompt = 'STAGE: ' + stage + '. ' + stageBriefV167(rec, stage) + (rec.lastSentence && stage !== 'outline' ? ' Previous scene ended: "' + rec.lastSentence.slice(0, 120) + '". Continue the narrative flow without repeating it.' : '') + ' RULES: Do not contradict the continuity record. Do not change the winner, the finishing ability, or the final states. Do not invent events, abilities, equipment, deaths, or recoveries. No damage numbers, no HP numbers, no stats in prose. Cinematic narrator, past tense, one voice throughout. CONTINUITY RECORD: ' + continuityTextV167(rec, false);
-  }
-  if (prompt.length > V167_STAGE_PROMPT_MAX) {
-    if (stage === 'combat1' || stage === 'combat2') return prompt.slice(0, V167_STAGE_PROMPT_MAX);
-    const rec2 = JSON.parse(JSON.stringify(rec));
-    rec2.roundLines = rec2.roundLines.filter(function (ln) { return rec.finishingRound == null || ln.indexOf('Round ' + rec.finishingRound + ':') === 0; });
-    if (!opts.correction && !opts.continuation) prompt = 'STAGE: ' + stage + '. ' + stageBriefV167(rec, stage) + ' RULES: Do not contradict the continuity record. Do not change the winner, the finishing ability, or the final states. Do not invent events, abilities, equipment, deaths, or recoveries. No damage numbers, no HP numbers, no stats in prose. Cinematic narrator, past tense, one voice throughout. CONTINUITY RECORD: ' + continuityTextV167(rec2, false);
-    if (prompt.length > V167_STAGE_PROMPT_MAX) prompt = prompt.slice(0, V167_STAGE_PROMPT_MAX);
-  }
-  return prompt;
-}
+function buildCombatPromptV168(rec, stage, opts) { return buildStagePromptV1610(rec, stage, opts); }
+/* v16.10: the old buildStagePromptV167 body is replaced by the v16.10
+   builder (same name kept, so existing callers and tests keep working).
+   The v16.7 full-continuity prompt and the v16.8 compressed combat
+   prompt are superseded: every stage prompt now uses assigned rounds
+   only, a short fighter line, the outcome line, and (for non-combat
+   stages) locally derived outline beats, under the 800-char target. */
+function buildStagePromptV167(rec, stage, opts) { return buildStagePromptV1610(rec, stage, opts); }
 function firstSentenceV167(t) { const s = sentencesV166(t); return s.length ? s[0] : String(t || '').trim(); }
 function lastCompleteSentenceV167(t) {
   const s = sentencesV166(t);
@@ -3709,6 +3706,603 @@ function assembleStagesV167(scenes) {
   });
   return { text: parts.join('\n\n'), joinTrims: joinTrims };
 }
+/* ============ WAR-ROOM v16.10 — FIDELITY PHASE ============
+   What changed from v16.9, and ONLY this (later phases own gameplay,
+   research-into-prompts, history export, mobile, innerHTML, legacy):
+   (1) EVENT-FIDELITY CHECKER (separate from the v16.6 checker, which is
+   UNCHANGED): fidelityChecksForStageV1610 runs per stage on receipt and
+   fidelityChecksForAssemblyV1610 runs on the assembled whole. Fidelity
+   checks are labelled 'Event-fidelity: ...' with their own PASSED /
+   FAILED / UNVERIFIED states; they NEVER flip an existing checker's
+   UNVERIFIED item to PASSED. A stage failing fidelity gets a targeted
+   repair (see 2), never a pass-through.
+   (2) REPAIR LOOP + PER-STAGE CORRECTION POLICY (replaces the old
+   battle-global max-2-corrections cap): each stage gets at most 2
+   attempts (initial + 1 targeted repair). The repair prompt quotes the
+   specific failed check(s) in plain words plus the correct recorded
+   state (winner, finisher + round, loser state, assigned rounds); it is
+   always a fresh rewrite, never an identical retry. App-side
+   CONTINUATION is REMOVED: a truncated stage now gets the same single
+   targeted fresh repair as any other failed stage, so no stage ever
+   costs more than 2 attempts. If the repair still fails, the run falls
+   back with the failed stage named — never a partial assembly, never a
+   silently repaired-through story.
+   POST accounting per run (unchanged budget shape, new policy math):
+   generation POSTs + repair POSTs are counted, max 10 per provider
+   budget; 402 wait-retries are still excluded; abort retries are still
+   counted. Worst case per provider is 5 stages + 5 repairs = 10 counted
+   POSTs, exactly at the cap; a further repair then falls to the next
+   provider in the chain, which has its own fresh budget.
+   (3) TIGHTER COMBAT PROMPTS: assigned rounds only, spelled out as one
+   compact line per round with unmistakable outcome wording (HIT vs
+   BLOCKED / cannot harm / detected, no damage numbers in the prose
+   instruction itself). A detected or prepared event is its own clause
+   with the correct actor, marked '(its own sentence)' so the model
+   writes it as a separate sentence, never buried in a hit sentence.
+   The climax prompt keeps the finisher verbatim in its final climax
+   sentence and states the loser state exactly as recorded.
+   (4) PROMPT SHRINKING + ADAPTIVE STAGES: outline is NO LONGER an AI
+   stage. Outline beats are derived locally from the battle record
+   (deriveOutlineBeatsV1610: turning points, finishing round, winner,
+   loser state) and fed to opening/climax/aftermath stages; combat
+   stages get their assigned-round events instead of a duplicate beats
+   line (the events already contain those turning points). Adaptive
+   stage count: battles with <=4 rounds use 3 stages (opening, climax,
+   aftermath); normal battles use 5 (opening, combat1, combat2, climax,
+   aftermath). Word targets: opening 150, combat 150 each, climax 120,
+   aftermath 100 (assembled ~620-670 words for a normal battle).
+   Stage prompts target under 800 chars (V1610_STAGE_PROMPT_TARGET);
+   the shrink ladder drops beats, then style 40->15->0, then the
+   separate-sentence instruction, then the fighters line for
+   event-carrying stages; the 2000-char guard (V167_STAGE_PROMPT_MAX)
+   remains as the absolute per-stage guard. The system prompt on the
+   /openai path carries the full rules once; Classic has no system
+   prompt, so its user prompts carry the compact RULES line (Classic
+   keeps its existing behaviour: no undocumented parameters).
+   Per-stage max_tokens on /openai: opening 400, combat 400, climax
+   350, aftermath 250. Classic keeps its existing behaviour.
+   (5) STAGE CACHE / RESUME: each successful stage is saved
+   immediately to localStorage under 'warroom_stage_cache_v1610',
+   keyed by battle session id + stage name + prompt hash. A later run
+   with the SAME session id (the retry path for a failed run) reuses
+   cached successful stages without a POST and retries only from the
+   failed stage. Cache reads are session-gated (entry sid must equal
+   the run sid) and cached text is re-validated before reuse; entries
+   for other sessions are pruned on save. The cache is never read by
+   the saved-view renderer, so it can never leak into another battle's
+   saved view.
+   (6) OFFLINE-FIRST: the results page shows the labelled rule-based
+   offline episode IMMEDIATELY while AI generation runs (label exactly
+   'Offline episode' during generation, never 'Online AI Story'), then
+   swaps the whole text on completion. Stage-by-stage upgrade is
+   deliberately NOT done: a partial AI assembly must never be presented
+   as a story, and mixing offline chapters with AI stages would
+   mislabel the text. On completion the label changes to
+   'Online AI Story'; on failure the label stays offline, honestly.
+   saveMainStoryOnce is called only from onReady, i.e. only once the
+   final meta is known, so a temporary episode is never saved as final.
+   (7) HEADING FIX: the AI story heading no longer claims '6 Chapters'
+   — it reads 'Online AI Story (N stages)'. The rule-based fallback
+   episode keeps its 6-chapter wording because it IS a 6-chapter
+   episode. Systems A/B/C wording: System A is battle integrity
+   (story-independent, unchanged). System B and System C lines now say
+   they describe the rule-based fallback episode, not the AI main
+   story; the AI story's own validation lives in Technical Details
+   (and, for saved AI entries, in the saved mainStoryMeta, where
+   saveMainStoryOnce replaces the fallback accuracy lines with the AI
+   validation). That is where each validation lives and why: the live
+   Systems B/C are computed from the fallback episode text at
+   showResults time, before the AI story resolves, so they cannot
+   describe the AI story; the AI validation is computed from the AI
+   text when it resolves and is reported where the AI text is.
+   (8) LIVE-TEST GAPS: (a) every corrected stage's diag entry carries
+   its correction/repair reason (correctionReason), rendered in
+   Technical Details; (b) prompt-size display shows per-stage prompt
+   sizes plus the total of stage prompts WITHOUT comparing a
+   multi-stage total against the old single-shot 4500 cap. The 4500
+   cap still applies ONLY to the legacy single-shot prompt builders
+   (buildPromptV16 / buildCondensedPromptV162) and is never applied to
+   multi-stage totals.
+   BANNED-LIST NOTE (fidelity prose checks): v16.9 has no separate
+   banned-phrase array; the existing banned list is the prompt
+   BANNED/RULES tail (no invented winners, transforms, abilities,
+   equipment, deaths, or recoveries; no unacquired knowledge; no
+   post-defeat actions; no damage/HP numbers). The fidelity prose
+   checks cover the mechanically testable members of that list
+   (damage/HP numbers, combat-log restatement, post-defeat actions via
+   the premature checks). No new vague phrase list was invented.
+   HP-FIGURE NOTE (repair prompts): the task's example repair wording
+   quotes a recorded HP figure ('48 HP'); v16.10 repair prompts
+   deliberately use the qualitative recorded state instead ('hurt but
+   still standing after Round 5 and acting again in Round 6'), because
+   putting an HP figure in the prompt risks leaking numbers into prose,
+   which the rules forbid. Round numbers + qualitative state carry the
+   same correction. */
+var V1610_STAGE_PROMPT_TARGET = 800;
+var V1610_MAX_TOKENS = { opening: 400, combat1: 400, combat2: 400, climax: 350, aftermath: 250 };
+var V1610_WORD_TARGETS = { opening: 150, combat1: 150, combat2: 150, climax: 120, aftermath: 100 };
+var V1610_STAGE_ORDER = ['opening', 'combat1', 'combat2', 'climax', 'aftermath'];
+var V1610_STAGE_CACHE_KEY = 'warroom_stage_cache_v1610';
+var V1610_DEFEAT_WORDS = /\b(incapacitat\w*|unconscious|knocked[\s-]out|dead|died|killed|lifeless|was finished|had finished|finished off)\b/i;
+var V1610_ENDING_WORDS = /\b(the fight (ended|was over|had ended|concluded)|the battle (ended|was over|had ended|concluded|was decided)|battle concluded|fight concluded|the outcome was decided|the victor was decided)\b/i;
+var V1610_HIT_WORDS = /\b(hit|landed|struck|connected|slammed|found its mark|hit home|tore into|blasted|drove home)\b/i;
+var V1610_MISS_WORDS = /\b(missed|dodged|sidestepped|evaded|avoided|never reached|failed to connect|whiffed|went wide|blocked)\b/i;
+function loserNameV1610(rec) {
+  if (rec.loser) return rec.loser;
+  if (rec.loserState === 'stalemate') return '';
+  const fs = (rec.fighters || []);
+  const other = fs.filter(function (f) { return f.name !== rec.winner; });
+  return other.length ? other[0].name : '';
+}
+function stageOrderV1610(rec) {
+  const n = (rec && rec.roundNums) ? rec.roundNums.length : 0;
+  return n <= 4 ? ['opening', 'climax', 'aftermath'] : V1610_STAGE_ORDER.slice();
+}
+function escRegExpV1610(s) { return String(s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function fidelityNormWordsV1610(s) { return normTextV162(s).split(' ').filter(function (w) { return !!w; }); }
+function deriveOutlineBeatsV1610(rec) {
+  const beats = [];
+  const turnTypes = { transform: 'transformed', study: 'studied', prepare: 'prepared a counter', detected: 'detected a counter', choice: 'held the finish', refused: 'refused an action' };
+  const turnBeats = [];
+  (rec.events || []).forEach(function (e) {
+    if (e.type === 'attack' && e.counterExploited) turnBeats.push('R' + e.round + ': prepared counter lands');
+    else if (turnTypes[e.type]) turnBeats.push('R' + e.round + ': ' + turnTypes[e.type]);
+  });
+  turnBeats.slice(0, 2).forEach(function (b) { beats.push(b); });
+  if (rec.finishingAbility) beats.push('Finish R' + rec.finishingRound + ': ' + rec.finishingAbility + '.');
+  else beats.push('Ending: stalemate, no winner.');
+  if (rec.loserState === 'stalemate') beats.push('Outcome: stalemate, no winner.');
+  else beats.push('Outcome: ' + rec.winner + ' wins; loser ' + loserNameV1610(rec) + ' (' + rec.loserState + ').');
+  return beats.slice(0, 5);
+}
+function stageAssignedEventsV1610(rec, stage) {
+  const rs = stageRoundsV167(rec, stage);
+  const evs = (rec.events || []).filter(function (e) { return rs.indexOf(e.round) !== -1; });
+  evs.sort(function (a, b) { return (a.round - b.round) || ((a.id || 0) - (b.id || 0)); });
+  return evs;
+}
+function stageEventClauseV1610(e) {
+  if (e.type === 'attack') {
+    const out = e.blocked ? 'blocked' : (e.cannotHarm ? 'no harm' : (e.counterDetected ? 'counter detected, avoided' : (e.counterExploited ? 'counter lands' : 'HIT')));
+    return (e.actor || '') + ' ' + (e.ability || '') + ' ' + out;
+  }
+  if (e.type === 'transform') return (e.actor || '') + ' transforms into ' + (e.detail || '');
+  if (e.type === 'study') return (e.actor || '') + ' studied';
+  if (e.type === 'prepare') return (e.actor || '') + ' prepared a counter (own sentence)';
+  if (e.type === 'detected') return (e.actor || '') + ' detected ' + (e.target ? e.target + '’s ' : '') + 'prepared counter and avoided it (own sentence)';
+  if (e.type === 'choice') return (e.actor || '') + ' held the finish (mercy)';
+  if (e.type === 'refused') return (e.actor || '') + ' refused an action';
+  if (e.type === 'knockout') return (e.target || '') + ' knocked out by ' + (e.actor || '');
+  if (e.type === 'incapacitated') return (e.target || '') + ' incapacitated (unconscious, not dead) by ' + (e.actor || '');
+  if (e.type === 'heal') return (e.actor || '') + ' recovered some strength';
+  if (e.type === 'battlefield') return 'Battlefield: ' + (e.detail || '');
+  return (e.actor || '') + ' ' + e.type;
+}
+function stageRoundLinesV1610(rec, stage) {
+  const evs = stageAssignedEventsV1610(rec, stage);
+  const byRound = {};
+  const order = [];
+  evs.forEach(function (e) { if (!byRound[e.round]) { byRound[e.round] = []; order.push(e.round); } byRound[e.round].push(stageEventClauseV1610(e)); });
+  return order.map(function (r) { return 'R' + r + ': ' + byRound[r].join('; '); }).join(' ');
+}
+function stageBriefV1610(rec, stage) {
+  const fin = rec.finishingAbility;
+  if (stage === 'opening') return 'Write ONLY the opening scene, about 150 words. Setting, atmosphere, both fighters by their full names, positions. Do not write later rounds, the climax, or the aftermath.';
+  if (stage === 'combat1' || stage === 'combat2') {
+    const rs = stageRoundsV167(rec, stage);
+    if (!rs.length) return 'Write ONLY a short bridging passage, about 150 words, of positioning, atmosphere, and reactions already in the record. Do not invent events, the climax, or the aftermath.';
+    return 'Write ONLY the combat scene for rounds ' + rs.join(', ') + ', about 150 words, in order, using ONLY the events listed below.';
+  }
+  if (stage === 'climax') {
+    if (!fin) return 'Write ONLY the final exchange scene, about 120 words. There is no finishing ability and no winner — do not invent a finish.';
+    return 'Write ONLY the climax scene, about 120 words. End with the finishing ability name verbatim, exactly as recorded, in the final climax sentence: ' + fin + '. The loser ends exactly as recorded: ' + loserNameV1610(rec) + ' (' + rec.loserState + '). Do not write the aftermath yet. End with a complete sentence.';
+  }
+  if (rec.loserState === 'stalemate') return 'Write ONLY the aftermath, about 100 words, as the final paragraph(s). State plainly that the battle ended in a stalemate with no winner, the battlefield, and the outcome. Nothing after it.';
+  return 'Write ONLY the aftermath, about 100 words, as the final paragraph(s). State the winner by full name (' + rec.winner + ') and the loser state (' + loserNameV1610(rec) + ' ' + rec.loserState + '), the battlefield, and the outcome. Nothing after it.';
+}
+function buildStagePromptV1610(rec, stage, opts) {
+  opts = opts || {};
+  const brief = stageBriefV1610(rec, stage);
+  const beats = deriveOutlineBeatsV1610(rec);
+  const roundLines = stageRoundLinesV1610(rec, stage);
+  const hasEvents = !!roundLines;
+  const isCombat = (stage === 'combat1' || stage === 'combat2');
+  function fightersLine(styleLen) {
+    return rec.fighters.map(function (f) {
+      const vn = (f.variant && f.variant !== 'Base') ? ' (' + f.variant + ')' : '';
+      return f.name + vn + (styleLen > 0 ? ' — ' + truncV162(f.style || '', styleLen) : '');
+    }).join(' | ');
+  }
+  function outcomeLine() {
+    const finPart = rec.finishingAbility ? (rec.finishingAbility + (isCombat || stage === 'opening' ? ' (not in this scene)' : '')) : 'none — stalemate';
+    return 'Winner: ' + rec.winner + ' (do not change). Finisher: ' + finPart + '. Loser: ' + (loserNameV1610(rec) || 'none') + ' (' + rec.loserState + ').';
+  }
+  function rulesLine() { return 'RULES: Assigned rounds only. Winner, finisher, and final states do not change. No invented events, deaths, or recoveries. No post-defeat actions. No damage/HP numbers. Cinematic narrator, past tense.'; }
+  function outcomeLineCompact() {
+    const finPart = rec.finishingAbility ? (rec.finishingAbility + (isCombat || stage === 'opening' ? ' (not in this scene)' : '')) : 'none — stalemate';
+    return 'Winner: ' + rec.winner + '. Finisher: ' + finPart + '. Loser: ' + (loserNameV1610(rec) || 'none') + ' (' + rec.loserState + ').';
+  }
+  function repairRulesLine() { return 'RULES: Assigned rounds only. Do not change winner, finisher, or final states. No invented events, deaths, or recoveries. No post-defeat actions. No damage/HP numbers.'; }
+  function repairBrief() {
+    let b = brief.replace('Write ONLY', 'Rewrite');
+    if (isCombat) b = b.replace('in order, using ONLY the events listed below.', 'using ONLY these events.');
+    return b;
+  }
+  function build(styleLen, withBeats, withFighters, checksMax) {
+    let p;
+    if (opts.correction) {
+      /* Repair header quotes the FIRST failed check in short form (full
+         failed-check detail stays in diagnostics as the correction
+         reason); further failures are counted, not pasted, so the repair
+         prompt stays under the 800-char target on fixture battles. */
+      const checks = (opts.failedChecks || []);
+      let checksText = checks.length ? String(checks[0]) : 'stage checks';
+      const cm = (checksMax == null ? 90 : checksMax);
+      if (checksText.length > cm) checksText = checksText.slice(0, cm) + '…';
+      if (checks.length > 1) checksText += ' (+' + (checks.length - 1) + ' more)';
+      const header = 'STAGE: ' + stage + ' — REVISION. The previous attempt failed these stage checks: ' + checksText + '. Rewrite fresh. ';
+      if (hasEvents) {
+        const guard = rec.finishingAbility ? (stage === 'climax' ? ' Finisher: ' + rec.finishingAbility + '. Loser: ' + loserNameV1610(rec) + ' (' + rec.loserState + ').' : ' Finisher: ' + rec.finishingAbility + ' (not in this scene).') : '';
+        p = header + repairBrief() + ' ' + repairRulesLine() + guard + ' EVENTS: ' + roundLines;
+      } else {
+        p = header + repairBrief() + ' ' + repairRulesLine() + ' CONDENSED CONTINUITY BRIEF: ' + (withBeats ? beats.join(' ') + ' ' : '') + (withFighters ? 'FIGHTERS: ' + fightersLine(styleLen) + '. ' : '') + outcomeLineCompact();
+      }
+    } else {
+      p = 'STAGE: ' + stage + '. ' + brief + (withFighters ? ' FIGHTERS: ' + fightersLine(styleLen) + '.' : '') + ' ' + outcomeLine();
+      if (withBeats) p += ' BEATS (derived locally from the record, not AI-generated): ' + beats.join(' ');
+      p += ' ' + rulesLine();
+      if (hasEvents) p += ' EVENTS (only these, in order): ' + roundLines;
+    }
+    return p;
+  }
+  /* Shrink ladder: beats first (combat stages never carry a beats line —
+     their events already contain those turning points), then style
+     40 -> 15 -> 0, then the fighters line for event-carrying stages
+     (their events + outcome line already name both fighters). The final
+     slice to the 2000-char per-stage guard is a safety net only; it is
+     not reached by any fixture battle. */
+  let prompt = build(40, !isCombat, true, 90);
+  if (prompt.length > V1610_STAGE_PROMPT_TARGET) prompt = build(15, !isCombat, true, 90);
+  if (prompt.length > V1610_STAGE_PROMPT_TARGET) prompt = build(15, false, true, 90);
+  if (prompt.length > V1610_STAGE_PROMPT_TARGET) prompt = build(0, false, true, 50);
+  if (prompt.length > V1610_STAGE_PROMPT_TARGET) prompt = build(0, false, false, 50);
+  if (prompt.length > V167_STAGE_PROMPT_MAX) prompt = prompt.slice(0, V167_STAGE_PROMPT_MAX);
+  return prompt;
+}
+function hashPromptV1610(s) {
+  let h = 5381;
+  const x = String(s || '');
+  for (let i = 0; i < x.length; i++) { h = ((h << 5) + h + x.charCodeAt(i)) >>> 0; }
+  return h.toString(16);
+}
+function loadStageCacheV1610() {
+  try {
+    const raw = localStorage.getItem(V1610_STAGE_CACHE_KEY);
+    if (!raw) return { entries: {} };
+    const j = JSON.parse(raw);
+    return (j && j.entries) ? j : { entries: {} };
+  } catch (e) { return { entries: {} }; }
+}
+function readStageCacheV1610(sid, stage, prompt) {
+  if (!sid) return null;
+  try {
+    const cache = loadStageCacheV1610();
+    const key = sid + '|' + stage + '|' + hashPromptV1610(prompt);
+    const ent = cache.entries[key];
+    if (!ent || ent.sid !== sid || ent.stage !== stage) return null;
+    return ent;
+  } catch (e) { return null; }
+}
+function saveStageCacheV1610(sid, stage, prompt, att) {
+  if (!sid) return;
+  try {
+    const cache = loadStageCacheV1610();
+    const entries = {};
+    Object.keys(cache.entries || {}).forEach(function (k) { if (cache.entries[k] && cache.entries[k].sid === sid) entries[k] = cache.entries[k]; });
+    const keys = Object.keys(entries);
+    while (keys.length >= 20) { const old = keys.shift(); delete entries[old]; }
+    entries[sid + '|' + stage + '|' + hashPromptV1610(prompt)] = { sid: sid, stage: stage, promptHash: hashPromptV1610(prompt), text: att.text || '', provider: att.provider || '', finishReason: att.finishReason || '', model: att.model || '', usage: att.usage || null, savedAt: Date.now() };
+    localStorage.setItem(V1610_STAGE_CACHE_KEY, JSON.stringify({ entries: entries }));
+  } catch (e) {}
+}
+function updateEpisodeHeadingV1610(kind, stageCount, mode) {
+  try {
+    const eh = document.getElementById('episode-heading');
+    if (!eh) return;
+    const base = (mode === 'incapacitation' ? 'Incapacitation Episode' : 'Death Battle Episode');
+    if (kind === 'ai') eh.innerText = base + ' — Online AI Story' + (stageCount ? ' (' + stageCount + ' stages)' : '');
+    else eh.innerText = base + ' — 6 Chapters (Narrator Style C)';
+  } catch (e) {}
+}
+function promptSizesLineV1610(m) {
+  const parts = [];
+  if (m.stageDiagnostics && m.stageDiagnostics.length) {
+    m.stageDiagnostics.forEach(function (d) { parts.push(stageLabelV167(d.stage) + ' ' + (d.promptChars || 0) + ' chars'); });
+  }
+  const total = (m.promptSize || 0);
+  if (parts.length) return '<br>Prompt sizes (per stage; per-stage guard 2000 chars, target under 800): ' + parts.join(', ') + '; total of stage prompts: ' + total + ' chars (multi-stage total — not compared against the old single-shot 4500 cap).';
+  return '<br>Prompt size: ' + total + ' characters (multi-stage total — not compared against the old single-shot 4500 cap).';
+}
+function fidelityAbilityRoundsV1610(rec) {
+  const map = {};
+  (rec.events || []).forEach(function (e) {
+    if (e.type !== 'attack' || !e.ability) return;
+    const k = normTextV162(e.ability);
+    if (!map[k]) map[k] = { ability: e.ability, rounds: [], owners: [], landed: false, nonLanded: false };
+    const m = map[k];
+    if (m.rounds.indexOf(e.round) === -1) m.rounds.push(e.round);
+    if (e.actor && m.owners.indexOf(e.actor) === -1) m.owners.push(e.actor);
+    if (e.blocked || e.cannotHarm || e.counterDetected) m.nonLanded = true; else m.landed = true;
+  });
+  return map;
+}
+function fidelityFighterInfoV1610(rec) {
+  const info = {};
+  (rec.fighters || []).forEach(function (f) { info[f.name] = { name: f.name, signature: f.signature || '', lastActing: 0, defeatRound: null }; });
+  (rec.events || []).forEach(function (e) {
+    if (e.actor && info[e.actor] && e.round > info[e.actor].lastActing) info[e.actor].lastActing = e.round;
+    if ((e.type === 'knockout' || e.type === 'incapacitated') && e.target && info[e.target]) info[e.target].defeatRound = e.round;
+  });
+  return info;
+}
+function fidelitySelfTalkV1610(text, rec) {
+  const fighters = rec.fighters || [];
+  function checkSpeaker(speaker, line) {
+    const f = fighters.find(function (x) { return x.name === speaker; });
+    if (!f) return null;
+    if (storyHasPhraseV162(line, f.name)) return f.name + ' self-named in dialogue';
+    if (f.signature && storyHasPhraseV162(line, f.signature)) return f.name + ' announced their signature in dialogue';
+    return null;
+  }
+  const quoted = [...String(text || '').matchAll(/([A-Z][A-Za-z' -]{1,40}):\s*"([^"]+)"/g)];
+  for (let i = 0; i < quoted.length; i++) {
+    const bad = checkSpeaker(quoted[i][1].trim(), quoted[i][2]);
+    if (bad) return bad;
+  }
+  const saidAfter = [...String(text || '').matchAll(/"([^"]+)"\s*,?\s*(said|whispered|shouted|muttered|growled|cried)\s+([A-Za-z' -]+)/g)];
+  for (let i = 0; i < saidAfter.length; i++) {
+    const rest = saidAfter[i][3] || '';
+    const f = fighters.find(function (x) { return normTextV162(rest).indexOf(normTextV162(x.name)) === 0; });
+    if (!f) continue;
+    const bad = checkSpeaker(f.name, saidAfter[i][1]);
+    if (bad) return bad;
+  }
+  const saidBefore = [...String(text || '').matchAll(/([A-Z][A-Za-z' -]+?)\s+(said|whispered|shouted|muttered|growled|cried)\s*,?\s*"([^"]+)"/g)];
+  for (let i = 0; i < saidBefore.length; i++) {
+    const bad = checkSpeaker(saidBefore[i][1].trim(), saidBefore[i][3]);
+    if (bad) return bad;
+  }
+  return null;
+}
+function fidelityHitMissV1610(text, prevText, abilityMap) {
+  const keys = Object.keys(abilityMap);
+  const unverified = [];
+  const failed = [];
+  /* Classify per CLAUSE, not per sentence: one sentence can carry two
+     abilities with opposite outcomes ("Web Shot hit Batman, and Grapple
+     Kick missed"), and sentence-level markers would falsely flag both.
+     Clauses split on commas, semicolons, and conjunctions; a clause
+     counts for an ability only when it names that ability. */
+  function classify(txt) {
+    const out = {};
+    sentencesV166(txt).forEach(function (s) {
+      const clauses = s.split(/[,;]|\s+but\s+|\s+and\s+|\s+while\s+|\s+as\s+/i);
+      clauses.forEach(function (cl) {
+        keys.forEach(function (k) {
+          const a = abilityMap[k];
+          if (!storyHasPhraseV162(cl, a.ability)) return;
+          if (!out[k]) out[k] = { hit: false, miss: false };
+          if (V1610_HIT_WORDS.test(cl)) out[k].hit = true;
+          if (V1610_MISS_WORDS.test(cl)) out[k].miss = true;
+        });
+      });
+    });
+    return out;
+  }
+  const cur = classify(text);
+  const prv = prevText ? classify(prevText) : {};
+  keys.forEach(function (k) {
+    const a = abilityMap[k];
+    if (a.landed && a.nonLanded) { unverified.push(a.ability + ' is recorded both landed and not landed, so prose describing both is not counted as a contradiction'); return; }
+    const ch = cur[k] || { hit: false, miss: false };
+    const ph = prv[k] || { hit: false, miss: false };
+    if ((ch.hit && ch.miss) || (ch.hit && ph.miss) || (ch.miss && ph.hit)) failed.push(a.ability + ' is described both as landing and as missing');
+  });
+  return { failed: failed.length ? failed.join('; ') + '.' : '', unverified: unverified.length ? unverified.join('; ') + '.' : '' };
+}
+function fidelityMisattributionV1610(text, rec, abilityMap) {
+  const fighters = rec.fighters || [];
+  const sents = sentencesV166(text);
+  const owners = {};
+  Object.keys(abilityMap).forEach(function (k) { owners[k] = abilityMap[k].owners.slice(); });
+  fighters.forEach(function (f) {
+    if (f.signature) {
+      const k = normTextV162(f.signature);
+      if (!owners[k]) owners[k] = [];
+      if (owners[k].indexOf(f.name) === -1) owners[k].push(f.name);
+    }
+  });
+  const verbPat = '(used|fired|unleashed|launched|struck with|hit with|attacked with|summoned|wielded|called on)';
+  const abilityKeys = Object.keys(owners);
+  for (let i = 0; i < sents.length; i++) {
+    const s = sents[i];
+    for (let a = 0; a < abilityKeys.length; a++) {
+      const k = abilityKeys[a];
+      const ow = owners[k];
+      if (ow.length !== 1) continue;
+      const owner = ow[0];
+      const ability = abilityMap[k] ? abilityMap[k].ability : null;
+      const sigFighter = fighters.find(function (f) { return normTextV162(f.signature) === k; });
+      const abilityName = ability || (sigFighter ? sigFighter.signature : null);
+      if (!abilityName) continue;
+      if (!storyHasPhraseV162(s, abilityName)) continue;
+      for (let f = 0; f < fighters.length; f++) {
+        const wrong = fighters[f];
+        if (wrong.name === owner) continue;
+        if (!storyHasPhraseV162(s, wrong.name)) continue;
+        const possRe = new RegExp(escRegExpV1610(wrong.name) + "['’]s\\b", 'i');
+        const possIdx = s.search(possRe);
+        if (possIdx !== -1) {
+          const window = s.slice(possIdx, possIdx + 100);
+          if (storyHasPhraseV162(window, abilityName)) return wrong.name + ' is given ' + owner + '’s ' + abilityName;
+        }
+        if (!storyHasPhraseV162(s, owner)) {
+          const verbRe = new RegExp(escRegExpV1610(wrong.name) + '\\s+' + verbPat + '\\b', 'i');
+          if (verbRe.test(s)) return wrong.name + ' is described as using ' + abilityName + ', which belongs to ' + owner;
+        }
+      }
+    }
+  }
+  const spiderOwner = fighters.find(function (f) { return /spider/i.test(f.name); });
+  if (spiderOwner) {
+    for (let i = 0; i < sents.length; i++) {
+      const s = sents[i];
+      if (!/spider[\s-]sense/i.test(s)) continue;
+      for (let f = 0; f < fighters.length; f++) {
+        const other = fighters[f];
+        if (other.name === spiderOwner.name) continue;
+        if (storyHasPhraseV162(s, other.name) && !storyHasPhraseV162(s, spiderOwner.name)) return other.name + ' is given the spider-sense, which belongs to ' + spiderOwner.name;
+      }
+    }
+  }
+  return null;
+}
+function fidelityChecksForStageV1610(stage, text, rec, assigned, prevTexts) {
+  const checks = [];
+  function push(name, state, detail) { checks.push({ name: 'Event-fidelity: ' + name, state: state, detail: detail }); }
+  const t = String(text || '');
+  const sents = sentencesV166(t);
+  const abilityMap = fidelityAbilityRoundsV1610(rec);
+  const fighterInfo = fidelityFighterInfoV1610(rec);
+  const fighterNames = Object.keys(fighterInfo);
+  const assignedRounds = assigned || [];
+  const stageMax = (stage === 'aftermath') ? Infinity : (assignedRounds.length ? Math.max.apply(null, assignedRounds) : 0);
+  const lastRound = (rec.roundNums && rec.roundNums.length) ? Math.max.apply(null, rec.roundNums) : 0;
+  const prev = prevTexts || [];
+  const prevLastText = prev.length ? prev[prev.length - 1] : '';
+  if (stage !== 'aftermath') {
+    const bad = [];
+    sents.forEach(function (s) {
+      if (!V1610_DEFEAT_WORDS.test(s)) return;
+      fighterNames.forEach(function (fn) {
+        /* Proximity rule: the defeat wording must FOLLOW the fighter's
+           name within the sentence (subject-first prose: "Batman lay
+           incapacitated"). A fighter merely named later in the same
+           sentence ("...while Spider-Man stood over him") is a
+           bystander, not the defeated one, and is not flagged. (Defeat
+           wording placed BEFORE the name is missed; accepted limit.) */
+        const rx = new RegExp(escRegExpV1610(fn) + '[\\s\\S]{0,60}?' + V1610_DEFEAT_WORDS.source, 'i');
+        if (!rx.test(s)) return;
+        const fi = fighterInfo[fn];
+        if ((fi.defeatRound != null && fi.defeatRound > stageMax) || fi.lastActing > stageMax) {
+          const d = fn + ' is described as defeated in this stage, but the record has ' + fn + ' acting again in round ' + fi.lastActing + (fi.defeatRound != null ? ' and only defeated in round ' + fi.defeatRound : ' (never defeated in the record)') + '; keep ' + fn + ' hurt but still standing in this stage';
+          if (bad.indexOf(d) === -1) bad.push(d);
+        }
+      });
+    });
+    if (bad.length) push('no premature incapacitation or death', 'FAILED', bad.join(' '));
+    else push('no premature incapacitation or death', 'PASSED', 'No fighter is described as defeated before their recorded defeat.');
+  }
+  if (stage === 'opening' || stage === 'combat1' || stage === 'combat2') {
+    const ended = sents.some(function (s) { return V1610_ENDING_WORDS.test(s); });
+    if (ended && lastRound > stageMax) push('no premature ending', 'FAILED', 'This stage says the fight ended, but the record has rounds after this stage (up to round ' + lastRound + '); do not end the fight here.');
+    else push('no premature ending', 'PASSED', 'This stage does not end the fight early.');
+  }
+  if (stage !== 'aftermath') {
+    const bad = [];
+    Object.keys(abilityMap).forEach(function (k) {
+      const a = abilityMap[k];
+      if (!storyHasPhraseV162(t, a.ability)) return;
+      const covered = a.rounds.some(function (r) { return assignedRounds.indexOf(r) !== -1; });
+      if (!covered) bad.push(a.ability + ' is recorded in round(s) ' + a.rounds.join(', ') + ' but this stage covers round(s) ' + (assignedRounds.length ? assignedRounds.join(', ') : 'none (opening)') + ' only');
+    });
+    if (bad.length) push('no ability before its round', 'FAILED', bad.join('; ') + '.');
+    else push('no ability before its round', 'PASSED', 'Every named ability belongs to this stage’s rounds.');
+  }
+  const hitMiss = fidelityHitMissV1610(t, prevLastText, abilityMap);
+  if (hitMiss.failed) push('no hit-and-miss contradiction for one ability', 'FAILED', hitMiss.failed);
+  else if (hitMiss.unverified) push('no hit-and-miss contradiction for one ability', 'UNVERIFIED', hitMiss.unverified);
+  else push('no hit-and-miss contradiction for one ability', 'PASSED', 'No ability is described both as landing and as missing.');
+  const mis = fidelityMisattributionV1610(t, rec, abilityMap);
+  if (mis) push('no trait or ability misattribution', 'FAILED', mis + '.');
+  else push('no trait or ability misattribution', 'PASSED', 'Abilities and traits are attributed to their recorded owners.');
+  const seam = [];
+  const trimmed = t.trim();
+  if (trimmed && !/[.!?…]["')\]}»]?$/.test(trimmed)) seam.push('stage text ends without terminal punctuation (truncated at the stage join)');
+  if (/\b[A-Za-z]\.\s*$/.test(trimmed)) seam.push('stage text ends mid-word (a single-letter fragment before the final stop)');
+  if (/[-–—]\s*$/.test(trimmed)) seam.push('stage text ends with a dangling hyphen or dash');
+  const prevSents = {};
+  prev.forEach(function (pt) { sentencesV166(pt).forEach(function (s) { const k = normTextV162(s); if (k.length >= 20) prevSents[k] = s; }); });
+  sents.forEach(function (s) { const k = normTextV162(s); if (k.length >= 20 && prevSents[k]) seam.push('sentence repeated from an earlier stage: "' + s.slice(0, 80) + '"'); });
+  if (seam.length) push('no seam defects at the stage join', 'FAILED', seam.join('; ') + '.');
+  else push('no seam defects at the stage join', 'PASSED', 'Stage text ends completely and does not repeat an earlier stage.');
+  if (prevLastText) {
+    const prevSentsArr = sentencesV166(prevLastText);
+    if (prevSentsArr.length && sents.length) {
+      /* Join-opening compares the first 8 words, not 5: two valid
+         consecutive combat scenes may both open "X and Y traded ..."
+         and differ only at word 6 ("blows" vs "harder blows"). A true
+         repeated opening shares 8+ words or the whole sentence (the
+         latter is also caught by the repeated-sentence check). The
+         assembled-whole join check below uses the same 8-word rule. */
+      const curFirst = fidelityNormWordsV1610(sents[0]).slice(0, 8).join(' ');
+      const prevLast = fidelityNormWordsV1610(prevSentsArr[prevSentsArr.length - 1]).slice(0, 8).join(' ');
+      const prevFirst = fidelityNormWordsV1610(prevSentsArr[0]).slice(0, 8).join(' ');
+      if (curFirst && (curFirst === prevLast || curFirst === prevFirst)) push('no repeated sentence opening across a stage join', 'FAILED', 'This stage opens with the previous stage’s wording ("' + sents[0].slice(0, 80) + '").');
+      else push('no repeated sentence opening across a stage join', 'PASSED', 'This stage opens with new wording.');
+    }
+  }
+  if (/\b\d+\s*(HP|hit points|damage)\b/i.test(t)) push('no damage / HP numbers in prose', 'FAILED', 'This stage contains damage or HP numbers.');
+  else push('no damage / HP numbers in prose', 'PASSED', 'No damage/HP numbers found in this stage.');
+  if (/Round \d+:/i.test(t) || /dealt \d+ damage/i.test(t)) push('prose does not restate the combat log', 'FAILED', 'This stage restates the combat log (Round N: / dealt N damage) instead of narrating it.');
+  else push('prose does not restate the combat log', 'PASSED', 'No combat-log restatement found in this stage.');
+  if (/wikipedia/i.test(t) || /\bis a fictional (character|hero|villain)\b/i.test(t) || /\bfirst appeared in\b/i.test(t)) push('no Wikipedia-description text', 'FAILED', 'This stage contains encyclopedia-style description text.');
+  else push('no Wikipedia-description text', 'PASSED', 'No Wikipedia-description text found in this stage.');
+  const selfTalk = fidelitySelfTalkV1610(t, rec);
+  if (selfTalk) push('no third-person self-talk in dialogue', 'FAILED', selfTalk + '.');
+  else push('no third-person self-talk in dialogue', 'PASSED', 'No self-naming or signature announcement found in attributable dialogue.');
+  return checks;
+}
+function fidelityChecksForAssemblyV1610(rec, scenes, order) {
+  const checks = [];
+  function push(name, state, detail) { checks.push({ name: 'Event-fidelity: ' + name, state: state, detail: detail }); }
+  const texts = (order || []).map(function (s) { return scenes[s] || ''; }).filter(function (tx) { return !!tx; });
+  const whole = texts.join('\n\n');
+  const seen = {};
+  const dups = [];
+  texts.forEach(function (tx) {
+    sentencesV166(tx).forEach(function (s) {
+      const k = normTextV162(s);
+      if (k.length < 20) return;
+      if (seen[k]) { if (dups.indexOf(s) === -1) dups.push(s); } else seen[k] = true;
+    });
+  });
+  if (dups.length) push('no repeated sentence across stages', 'FAILED', dups.length + ' repeated sentence(s) across stages, e.g. "' + dups[0].slice(0, 80) + '"');
+  else push('no repeated sentence across stages', 'PASSED', 'No sentence repeats across stages.');
+  const joinBad = [];
+  for (let i = 1; i < texts.length; i++) {
+    const prevSents = sentencesV166(texts[i - 1]);
+    const curSents = sentencesV166(texts[i]);
+    if (!prevSents.length || !curSents.length) continue;
+    const prevLast = fidelityNormWordsV1610(prevSents[prevSents.length - 1]).slice(0, 8).join(' ');
+    const prevFirst = fidelityNormWordsV1610(prevSents[0]).slice(0, 8).join(' ');
+    const curFirst = fidelityNormWordsV1610(curSents[0]).slice(0, 8).join(' ');
+    if (curFirst && (curFirst === prevLast || curFirst === prevFirst)) joinBad.push('stage ' + (i + 1) + ' opens with the previous stage’s wording');
+  }
+  if (joinBad.length) push('no repeated sentence opening across a stage join', 'FAILED', joinBad.join('; ') + '.');
+  else push('no repeated sentence opening across a stage join', 'PASSED', 'No stage join repeats the previous stage’s opening.');
+  if (/\b\d+\s*(HP|hit points|damage)\b/i.test(whole)) push('no damage / HP numbers in prose', 'FAILED', 'The assembled story contains damage or HP numbers.');
+  else push('no damage / HP numbers in prose', 'PASSED', 'No damage/HP numbers found in prose.');
+  if (/Round \d+:/i.test(whole) || /dealt \d+ damage/i.test(whole)) push('prose does not restate the combat log', 'FAILED', 'The assembled story restates the combat log (Round N: / dealt N damage).');
+  else push('prose does not restate the combat log', 'PASSED', 'No combat-log restatement found.');
+  if (/wikipedia/i.test(whole) || /\bis a fictional (character|hero|villain)\b/i.test(whole) || /\bfirst appeared in\b/i.test(whole)) push('no Wikipedia-description text', 'FAILED', 'The assembled story contains encyclopedia-style description text.');
+  else push('no Wikipedia-description text', 'PASSED', 'No Wikipedia-description text found.');
+  const selfTalk = fidelitySelfTalkV1610(whole, rec);
+  if (selfTalk) push('no third-person self-talk in dialogue', 'FAILED', selfTalk + '.');
+  else push('no third-person self-talk in dialogue', 'PASSED', 'No self-naming or signature announcement found in attributable dialogue.');
+  return checks;
+}
+
 /* v16.8 per-stage fetch wrapper: at most ONE 402 wait-retry and ONE
    abort retry PER STAGE (flags persist across correction attempts for
    the same stage within one generation run), session-gated, stage-named
@@ -3777,34 +4371,37 @@ async function fetchStageV167(stageKey, fn, isCurrent, setStatus, counters) {
 function stageDiagnosticsHtmlV167(diags) {
   if (!diags || !diags.length) return '';
   return '<p>Stage diagnostics (multi-stage generation, Technical Details only):</p><p>' + diags.map(function (d) {
-    return esc(d.stage) + ' stage — prompt ' + d.promptChars + ' chars, response ' + d.responseChars + ' chars, elapsed ' + d.elapsedMs + 'ms, status ' + d.status + ', finish signal: ' + (d.finishReason ? d.finishReason : 'not reported by provider') + (d.provider ? ', provider: ' + esc(d.provider) : '') + (d.model ? ', model: ' + esc(d.model) : '') + (d.usage ? ', usage: ' + esc(usageStringV169(d.usage)) : '') + (d.errorCode ? ', error: ' + esc(String(d.errorCode)) : '') + (d.retryAfter ? ', Retry-After: ' + esc(String(d.retryAfter)) : '') + (d.cachedFlag ? ' — ' + d.cachedFlag : '') + (d.joinTrim ? ' — join trim: duplicated sentence removed' : '');
+    return esc(d.stage) + ' stage — prompt ' + d.promptChars + ' chars, response ' + d.responseChars + ' chars, elapsed ' + d.elapsedMs + 'ms, status ' + d.status + ', finish signal: ' + (d.finishReason ? d.finishReason : 'not reported by provider') + (d.provider ? ', provider: ' + esc(d.provider) : '') + (d.model ? ', model: ' + esc(d.model) : '') + (d.usage ? ', usage: ' + esc(usageStringV169(d.usage)) : '') + (d.errorCode ? ', error: ' + esc(String(d.errorCode)) : '') + (d.retryAfter ? ', Retry-After: ' + esc(String(d.retryAfter)) : '') + (d.maxTokens ? ', max_tokens: ' + esc(String(d.maxTokens)) : '') + (d.correctionReason ? ', correction reason: ' + esc(d.correctionReason) : '') + (d.cachedFlag ? ' — ' + d.cachedFlag : '') + (d.cacheHit ? ' — stage cache reuse (no POST)' : '') + (d.joinTrim ? ' — join trim: duplicated sentence removed' : '');
   }).join('<br>') + '</p>';
 }
-/* Multi-stage runner. fetchRaw(prompt) must return {text, provider,
-   finishReason, rawKind} and charge the POST budget itself (Pollinations
-   primitives do; Gemini does not, so its posts are counted separately
-   by the caller). Returns an object describing success or the failed
-   stage; it NEVER returns a partial assembly as an AI story. */
-async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters) {
-  /* v16.9 PHASE 1: fetchRaw may be a single function (legacy direct
-     callers, behaviour unchanged) or an array of provider descriptors
-     {key, label, budget, fetch} tried in order FOR EACH stage attempt.
-     A stage failing on one provider tries the next provider for THAT
-     stage before the run falls back; each provider has its OWN battle
-     budget, so a rescue provider never inherits a depleted budget. */
+/* Multi-stage runner (v16.10). fetchRaw(prompt, stage) must return
+   {text, provider, finishReason, rawKind} and charge the POST budget
+   itself (Pollinations primitives do; Gemini does not, so its posts are
+   counted separately by the caller). Returns an object describing
+   success or the failed stage; it NEVER returns a partial assembly as
+   an AI story. v16.10 changes vs v16.9: adaptive stage order
+   (stageOrderV1610), outline beats derived locally (no AI outline
+   POST), per-stage fidelity checks on receipt, ONE targeted repair per
+   failed stage (per-stage 2-attempt policy; continuation removed), the
+   stage cache (cacheSid, session-gated), and an assembled-whole
+   fidelity gate alongside the unchanged v16.6 checker. */
+async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters, cacheSid) {
   const chainModeV169 = Array.isArray(fetchRaw);
   const providersV169 = chainModeV169 ? fetchRaw : [{ key: 'single', label: '', budget: null, fetch: fetchRaw }];
   const rec = buildContinuityV167(b);
+  const orderV1610 = stageOrderV1610(rec);
+  counters.stageOrder = orderV1610;
+  if (counters.promptCharsTotal == null) counters.promptCharsTotal = 0;
   const scenes = {};
   const diags = [];
   const seenTexts = [];
+  const prevTexts = [];
   let failedStage = null;
   let failedReason = '';
   let lastStageText = '';
   let lastStagePromptSize = 0;
   let lastStageFinish = '';
-  if (counters.correctionsUsed == null) counters.correctionsUsed = 0;
-  let correctionsUsed = counters.correctionsUsed;
+  let lastFidelityChecks = null;
   function cacheFlagFor(text, elapsedMs) {
     if (elapsedMs < 5000 && seenTexts.indexOf(text) !== -1) return 'possible cached response (response in ' + elapsedMs + 'ms identical to an earlier stage response; not confirmed as caching)';
     return '';
@@ -3817,9 +4414,10 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters) {
     if (prov && prov.budget) counters.budgetObj = prov.budget;
     if (chainModeV169 && prov) counters.retryFlags[stage] = {};
     const fetchFn = (prov && prov.fetch) ? prov.fetch : fetchRaw;
-    const res = await fetchStageV167(stage, function () { return fetchFn(prompt); }, isCurrent, setStatus, counters);
+    counters.promptCharsTotal += prompt.length;
+    const res = await fetchStageV167(stage, function () { return fetchFn(prompt, stage); }, isCurrent, setStatus, counters);
     const elapsed = Date.now() - t0;
-    return { text: res.text, finishReason: res.finishReason || '', provider: res.provider || (prov && prov.label) || '', model: res.model || '', usage: res.usage || null, errorCode: res.errorCode || '', retryAfter: res.retryAfter || '', elapsedMs: elapsed, promptChars: prompt.length };
+    return { text: res.text, finishReason: res.finishReason || '', provider: res.provider || (prov && prov.label) || '', model: res.model || '', usage: res.usage || null, errorCode: res.errorCode || '', retryAfter: res.retryAfter || '', elapsedMs: elapsed, promptChars: prompt.length, maxTokens: (prov && prov.key === 'openai') ? (V1610_MAX_TOKENS[stage] || 400) : '' };
   }
   async function attemptWithChainV169(stage, prompt) {
     let lastErr = null;
@@ -3838,71 +4436,78 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters) {
   async function runStage(stage) {
     const assigned = stageRoundsV167(rec, stage);
     setStatus('Preparing battle story… (' + stageLabelV167(stage) + ' stage — multi-stage generation can take several minutes with rate-limit waits)');
-    let prompt = buildStagePromptV167(rec, stage, {});
+    const prompt = buildStagePromptV1610(rec, stage, {});
+    if (cacheSid) {
+      const cached = readStageCacheV1610(cacheSid, stage, prompt);
+      if (cached) {
+        const v0 = validateStageV167(stage, cached.text, rec, assigned);
+        const f0 = fidelityChecksForStageV1610(stage, cached.text, rec, assigned, prevTexts);
+        if (!v0.failed.length && !f0.some(function (c) { return c.state === 'FAILED'; })) {
+          counters.promptCharsTotal += prompt.length;
+          counters.stageCacheHits = counters.stageCacheHits || {};
+          counters.stageCacheHits[stage] = (counters.stageCacheHits[stage] || 0) + 1;
+          diags.push({ stage: stage, promptChars: prompt.length, responseChars: cached.text.length, elapsedMs: 0, status: 'cached (reused, no POST)', finishReason: cached.finishReason || '', cachedFlag: 'stage cache reuse (no POST)', joinTrim: false, provider: cached.provider || '', model: cached.model || '', usage: cached.usage || null, errorCode: '', retryAfter: '', cacheHit: true });
+          if (seenTexts.indexOf(cached.text) === -1) seenTexts.push(cached.text);
+          return { text: cached.text, provider: cached.provider || '' };
+        }
+      }
+    }
     let att;
     try { att = await attemptWithChainV169(stage, prompt); } catch (e) { pushFailedDiagV169(stage, prompt.length, e); return { transportError: e.message || 'Provider request failed' }; }
     lastStageText = att.text; lastStagePromptSize = att.promptChars; lastStageFinish = att.finishReason;
-    let val = validateStageV167(stage, att.text, rec, assigned);
+    const val = validateStageV167(stage, att.text, rec, assigned);
+    const fid = fidelityChecksForStageV1610(stage, att.text, rec, assigned, prevTexts);
+    const fidFailed = fid.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; });
+    const failed = val.failed.concat(fidFailed);
     let cachedFlag = cacheFlagFor(att.text, att.elapsedMs);
     if (seenTexts.indexOf(att.text) === -1) seenTexts.push(att.text);
-    if (!val.failed.length) {
-      diags.push({ stage: stage, promptChars: att.promptChars, responseChars: att.text.length, elapsedMs: att.elapsedMs, status: 'ok', finishReason: att.finishReason, cachedFlag: cachedFlag, joinTrim: false, provider: att.provider, model: att.model, usage: att.usage, errorCode: att.errorCode, retryAfter: att.retryAfter });
+    if (!failed.length) {
+      diags.push({ stage: stage, promptChars: att.promptChars, responseChars: att.text.length, elapsedMs: att.elapsedMs, status: 'ok', finishReason: att.finishReason, cachedFlag: cachedFlag, joinTrim: false, provider: att.provider, model: att.model, usage: att.usage, errorCode: att.errorCode, retryAfter: att.retryAfter, maxTokens: att.maxTokens });
+      if (cacheSid) saveStageCacheV1610(cacheSid, stage, prompt, att);
       return { text: att.text, provider: att.provider };
     }
-    if (correctionsUsed >= 2) return { failed: val.failed, text: att.text, finishReason: att.finishReason };
-    correctionsUsed++;
-    counters.correctionsUsed = correctionsUsed;
+    /* v16.10: exactly ONE targeted repair for this stage (per-stage
+       2-attempt policy). The repair prompt quotes the specific failed
+       checks plus the correct recorded state; it is a fresh rewrite,
+       never an identical retry and never a continuation. */
     counters.stageCorrections[stage] = (counters.stageCorrections[stage] || 0) + 1;
-    const truncated = val.failed.some(function (f) { return f.indexOf('truncated') !== -1; });
-    if (truncated) {
-      const prefix = att.text;
-      const contPrompt = buildStagePromptV167(rec, stage, { continuation: true, truncatedText: String(prefix).slice(-500) });
-      let cont;
-      try { cont = await attemptWithChainV169(stage, contPrompt); } catch (e) { pushFailedDiagV169(stage, contPrompt.length, e); return { transportError: e.message || 'Provider request failed', text: prefix, finishReason: att.finishReason }; }
-      lastStageText = prefix; lastStagePromptSize = cont.promptChars; lastStageFinish = cont.finishReason;
-      const joined = prefix.replace(/\s+$/, '') + ' ' + String(cont.text || '').trim();
-      const contFirst = normTextV162(firstSentenceV167(cont.text));
-      const contFirstTrim = contFirst.replace(/[.!?\u2026]+$/, '');
-      const prefixNorm = normTextV162(prefix);
-      const overlap = contFirst !== '' && (contFirst === normTextV162(lastCompleteSentenceV167(prefix)) || (contFirstTrim.length >= 20 && prefixNorm.indexOf(contFirstTrim) !== -1));
-      if (!overlap) {
-        const val2 = validateStageV167(stage, joined, rec, assigned);
-        if (!val2.failed.length) {
-          diags.push({ stage: stage, promptChars: cont.promptChars, responseChars: joined.length, elapsedMs: cont.elapsedMs, status: 'corrected (continuation)', finishReason: cont.finishReason, cachedFlag: cacheFlagFor(joined, cont.elapsedMs), joinTrim: false, provider: cont.provider, model: cont.model, usage: cont.usage, errorCode: cont.errorCode, retryAfter: cont.retryAfter });
-          return { text: joined, provider: cont.provider };
-        }
+    /* Repair prompts quote the failed check in plain words (the detail
+       carrying the correct recorded state), not the check label: the
+       label prefix would push the state itself past the prompt's
+       90-char first-check truncation. Full "name: detail" strings stay
+       in diagnostics as the correction reason. */
+    const promptChecks = failed.map(function (f) {
+      if (f.indexOf('Event-fidelity: ') === 0) {
+        const rest = f.slice('Event-fidelity: '.length);
+        const ci = rest.indexOf(': ');
+        return ci !== -1 ? rest.slice(ci + 2) : rest;
       }
-      const corrPrompt = buildStagePromptV167(rec, stage, { correction: true, failedChecks: val.failed });
-      let fresh;
-      try { fresh = await attemptWithChainV169(stage, corrPrompt); } catch (e) { pushFailedDiagV169(stage, corrPrompt.length, e); return { transportError: e.message || 'Provider request failed', text: prefix, finishReason: att.finishReason }; }
-      lastStageText = fresh.text; lastStagePromptSize = fresh.promptChars; lastStageFinish = fresh.finishReason;
-      const val3 = validateStageV167(stage, fresh.text, rec, assigned);
-      if (!val3.failed.length) {
-        diags.push({ stage: stage, promptChars: fresh.promptChars, responseChars: fresh.text.length, elapsedMs: fresh.elapsedMs, status: 'corrected (fresh after discarded continuation)', finishReason: fresh.finishReason, cachedFlag: cacheFlagFor(fresh.text, fresh.elapsedMs), joinTrim: false, provider: fresh.provider, model: fresh.model, usage: fresh.usage, errorCode: fresh.errorCode, retryAfter: fresh.retryAfter });
-        return { text: fresh.text, provider: fresh.provider };
-      }
-      return { failed: val3.failed, text: fresh.text, finishReason: fresh.finishReason };
-    }
-    const corrPrompt = buildStagePromptV167(rec, stage, { correction: true, failedChecks: val.failed });
+      return f;
+    });
+    const corrPrompt = buildStagePromptV1610(rec, stage, { correction: true, failedChecks: promptChecks });
     let corr;
     try { corr = await attemptWithChainV169(stage, corrPrompt); } catch (e) { pushFailedDiagV169(stage, corrPrompt.length, e); return { transportError: e.message || 'Provider request failed', text: att.text, finishReason: att.finishReason }; }
     lastStageText = corr.text; lastStagePromptSize = corr.promptChars; lastStageFinish = corr.finishReason;
     const val2 = validateStageV167(stage, corr.text, rec, assigned);
-    if (!val2.failed.length) {
-      diags.push({ stage: stage, promptChars: corr.promptChars, responseChars: corr.text.length, elapsedMs: corr.elapsedMs, status: 'corrected', finishReason: corr.finishReason, cachedFlag: cacheFlagFor(corr.text, corr.elapsedMs), joinTrim: false, provider: corr.provider, model: corr.model, usage: corr.usage, errorCode: corr.errorCode, retryAfter: corr.retryAfter });
+    const fid2 = fidelityChecksForStageV1610(stage, corr.text, rec, assigned, prevTexts);
+    const fidFailed2 = fid2.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; });
+    const failed2 = val2.failed.concat(fidFailed2);
+    if (!failed2.length) {
+      diags.push({ stage: stage, promptChars: corr.promptChars, responseChars: corr.text.length, elapsedMs: corr.elapsedMs, status: 'corrected', finishReason: corr.finishReason, cachedFlag: cacheFlagFor(corr.text, corr.elapsedMs), joinTrim: false, provider: corr.provider, model: corr.model, usage: corr.usage, errorCode: corr.errorCode, retryAfter: corr.retryAfter, maxTokens: corr.maxTokens, correctionReason: failed.join(' | ') });
+      if (cacheSid) saveStageCacheV1610(cacheSid, stage, corrPrompt, corr);
       return { text: corr.text, provider: corr.provider };
     }
-    return { failed: val2.failed, text: corr.text, finishReason: corr.finishReason };
+    return { failed: failed2, fidelityChecks: fid2, text: corr.text, finishReason: corr.finishReason };
   }
   let provider = '';
-  for (let i = 0; i < V167_STAGE_ORDER.length; i++) {
-    const stage = V167_STAGE_ORDER[i];
+  for (let i = 0; i < orderV1610.length; i++) {
+    const stage = orderV1610[i];
     const r = await runStage(stage);
     if (r.transportError) {
       failedStage = stage;
       failedReason = 'AI generation incomplete — ' + stageLabelV167(stage) + ' stage failed to generate — ' + r.transportError;
       if (r.text) lastStageText = r.text;
-      return { ok: false, failedStage: failedStage, reason: failedReason, stages: diags, lastText: lastStageText, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, provider: provider, failedChecks: (r.failed || []) };
+      return { ok: false, failedStage: failedStage, reason: failedReason, stages: diags, lastText: lastStageText, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, provider: provider, failedChecks: (r.failed || []), stageCount: orderV1610.length, stageOrder: orderV1610 };
     }
     if (r.failed) {
       failedStage = stage;
@@ -3910,31 +4515,35 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters) {
       failedReason = 'AI generation incomplete — ' + stageLabelV167(stage) + ' stage failed after correction — ' + (outLimit ? 'Draft stopped before finishing (provider output limit) — draft did not pass validation' : 'Draft incomplete/truncated — no complete AI story — Draft did not pass validation');
       lastStageText = r.text || lastStageText;
       lastStageFinish = r.finishReason || lastStageFinish;
-      return { ok: false, failedStage: failedStage, reason: failedReason, stages: diags, lastText: lastStageText, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, provider: provider, failedChecks: (r.failed || []) };
+      lastFidelityChecks = r.fidelityChecks || null;
+      return { ok: false, failedStage: failedStage, reason: failedReason, stages: diags, lastText: lastStageText, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, provider: provider, failedChecks: (r.failed || []), fidelityChecks: lastFidelityChecks, stageCount: orderV1610.length, stageOrder: orderV1610 };
     }
     provider = r.provider || provider;
-    if (stage === 'outline') {
-      rec.outlineBeats = parseOutlineBeatsV167(r.text);
-    } else {
-      scenes[stage] = r.text;
-      rec.lastSentence = lastCompleteSentenceV167(r.text) || String(r.text).trim().slice(-200);
-      const assigned = stageRoundsV167(rec, stage);
-      if (assigned.length) rec.coveredThrough = Math.max.apply(null, assigned);
-    }
+    scenes[stage] = r.text;
+    prevTexts.push(r.text);
+    rec.lastSentence = lastCompleteSentenceV167(r.text) || String(r.text).trim().slice(-200);
+    const assigned = stageRoundsV167(rec, stage);
+    if (assigned.length) rec.coveredThrough = Math.max.apply(null, assigned);
   }
   const assembled = assembleStagesV167(scenes);
   diags.forEach(function (d) { if (assembled.joinTrims.indexOf(d.stage) !== -1) d.joinTrim = true; });
   const checks = checkMainStoryV16(b, assembled.text);
   const counts = countStoryChecksV16(checks);
-  if (counts.failed === 0) {
-    return { ok: true, text: assembled.text, checks: checks, stages: diags, provider: provider, joinTrims: assembled.joinTrims };
+  const asmFid = fidelityChecksForAssemblyV1610(rec, scenes, orderV1610);
+  const asmFidFailed = asmFid.filter(function (c) { return c.state === 'FAILED'; });
+  if (counts.failed === 0 && !asmFidFailed.length) {
+    return { ok: true, text: assembled.text, checks: checks, fidelityChecks: asmFid, stages: diags, provider: provider, joinTrims: assembled.joinTrims, stageCount: orderV1610.length, stageOrder: orderV1610 };
   }
   const asmOutLimit = /length|MAX_TOKENS|output_token_limit/i.test(lastStageFinish || '');
-  return { ok: false, failedStage: 'assembly', reason: 'AI generation incomplete — assembly stage failed validation — ' + (asmOutLimit ? 'Draft stopped before finishing (provider output limit) — draft did not pass validation' : 'Draft incomplete/truncated — no complete AI story — Draft did not pass validation'), stages: diags, lastText: assembled.text, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, checks: checks, provider: provider };
+  const asmReason = asmFidFailed.length
+    ? 'AI generation incomplete — assembly stage failed event-fidelity — ' + asmFidFailed.map(function (c) { return c.name + ': ' + c.detail; }).join(' | ')
+    : 'AI generation incomplete — assembly stage failed validation — ' + (asmOutLimit ? 'Draft stopped before finishing (provider output limit) — draft did not pass validation' : 'Draft incomplete/truncated — no complete AI story — Draft did not pass validation');
+  return { ok: false, failedStage: 'assembly', reason: asmReason, stages: diags, lastText: assembled.text, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, checks: checks, fidelityChecks: asmFid, provider: provider, stageCount: orderV1610.length, stageOrder: orderV1610 };
 }
+
 function multiStageBreakdownV167(counters) {
   const parts = [];
-  V167_STAGE_ORDER.forEach(function (stage) {
+  (counters.stageOrder || V167_STAGE_ORDER).forEach(function (stage) {
     const posts = counters.stagePosts[stage] || 0;
     if (!posts) return;
     const corr = counters.stageCorrections[stage] || 0;
@@ -3966,18 +4575,30 @@ async function generateMainStoryV16(b, sessionId, opts) {
   function setStory(html) { try { if (storyEl) storyEl.innerHTML = html; } catch (e) {} }
   if (retryBtn) { try { retryBtn.disabled = true; } catch (e) {} }
   resetMainStoryUIV161(sid);
-  setStatus('Preparing battle story…');
-  setStory('<p>Preparing battle story… Online AI generation runs automatically for this battle.</p>');
-  /* v16.9 PHASE 1 — provider-agnostic chain, per stage. Each provider
-     has its OWN battle budget (budgetsV169): a stage failing on one
-     provider tries the next provider for THAT stage, and a rescue
-     provider never inherits a depleted budget from the previous
-     provider. Correction policy is UNCHANGED (one correction per failed
-     stage, max 2 per battle, enforced inside runMultiStageV167), as are
-     the 6 stages, pacing, timeout, and 402 handling. The old whole-run
-     secondaries (keyless run, then keyed run, then Gemini run) are
-     replaced by this single chained run — a stage no longer waits for
-     an entire failed run before trying the next provider. */
+  /* v16.10 OFFLINE-FIRST: the labelled rule-based offline episode is
+     shown IMMEDIATELY while AI generation runs (label exactly
+     'Offline episode', never 'Online AI Story'). It is swapped for the
+     complete validated AI story only on success, and stays offline on
+     failure. Stage-by-stage upgrade is deliberately NOT done: a partial
+     AI assembly must never be presented as a story, and mixing offline
+     chapters with AI stages would mislabel the text. Nothing is saved
+     until the final meta is known (save happens only in onReady). */
+  setStatus('Generating online AI story… showing the offline episode meanwhile.');
+  if (isCurrent()) { try { const _lb = document.getElementById('main-story-label'); if (_lb) _lb.innerText = 'Offline episode'; } catch (e) {} }
+  setStory(fallbackStoryHtmlV16(b, ''));
+  updateEpisodeHeadingV1610('offline', 0, b.victoryMode);
+  /* v16.10 FIDELITY PHASE — provider-agnostic chain, per stage. Each
+   provider has its OWN battle budget (budgetsV169): a stage failing on
+   one provider tries the next provider for THAT stage, and a rescue
+   provider never inherits a depleted budget from the previous provider.
+   Correction policy is v16.10 PER-STAGE (initial + 1 targeted repair
+   per stage, enforced inside runMultiStageV167; the old battle-global
+   max-2 cap is replaced). Stages are adaptive (3 for <=4-round
+   battles, 5 otherwise; outline beats derived locally, no AI outline
+   POST). Pacing, timeout, and 402 handling are unchanged. The old
+   whole-run secondaries (keyless run, then keyed run, then Gemini run)
+   are replaced by this single chained run — a stage no longer waits
+   for an entire failed run before trying the next provider. */
   const budgetsV169 = { openai: { count: 0, budget: V163_MAX_POSTS_PER_BATTLE }, classic: { count: 0, budget: V163_MAX_POSTS_PER_BATTLE }, keyed: { count: 0, budget: V163_MAX_POSTS_PER_BATTLE }, gemini: { count: 0, budget: V163_MAX_POSTS_PER_BATTLE } };
   v163PostCount = 0;
   v163PostBudget = V163_MAX_POSTS_PER_BATTLE;
@@ -4011,6 +4632,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
     if (isCurrent()) {
       setStatus('Online AI story ready.');
       setStory(esc(meta._storyText).replace(/\n/g, '<br>'));
+      updateEpisodeHeadingV1610('ai', meta.stageCount || 5, b.victoryMode);
       renderMainStoryLabelV16(meta, sid);
       renderMainStoryDiagnosticsV16(meta, sid);
       if (opts.onReady) { try { opts.onReady(meta, esc(meta._storyText).replace(/\n/g, '<br>')); } catch (e) {} }
@@ -4019,8 +4641,8 @@ async function generateMainStoryV16(b, sessionId, opts) {
   }
   try {
     const chainV169 = [];
-    chainV169.push({ key: 'openai', label: 'Pollinations /openai (POST, keyless)', budget: budgetsV169.openai, fetch: async function (prompt) {
-      const r = await fetchOpenAICompatibleV169({ baseUrl: 'https://text.pollinations.ai/openai', model: 'openai-fast', messages: [{ role: 'system', content: 'You are a battle-story writer. Follow the brief exactly and never change the winner, the finishing event, or the final states.' }, { role: 'user', content: prompt }], reasoningEffort: 'low', temperature: 0.3, maxTokens: 800, stream: false, timeoutMs: V16_AI_TIMEOUT_MS, budgetObj: budgetsV169.openai });
+    chainV169.push({ key: 'openai', label: 'Pollinations /openai (POST, keyless)', budget: budgetsV169.openai, fetch: async function (prompt, stage) {
+      const r = await fetchOpenAICompatibleV169({ baseUrl: 'https://text.pollinations.ai/openai', model: 'openai-fast', messages: [{ role: 'system', content: 'You are a battle-story writer. Follow the brief exactly. Never change the winner, the finishing event, or the final states. Never invent events, abilities, equipment, deaths, or recoveries. Never describe a fighter as defeated before the finishing round, and never end the fight before the finishing round. No damage numbers, no HP numbers, no stats in prose. No repeated sentences. Cinematic narrator, past tense, one voice throughout.' }, { role: 'user', content: prompt }], reasoningEffort: 'low', temperature: 0.3, maxTokens: (V1610_MAX_TOKENS[stage] || 400), stream: false, timeoutMs: V16_AI_TIMEOUT_MS, budgetObj: budgetsV169.openai });
       r.provider = 'Pollinations /openai (POST, keyless)';
       return r;
     }});
@@ -4032,14 +4654,14 @@ async function generateMainStoryV16(b, sessionId, opts) {
     if (hasPKey) chainV169.push({ key: 'keyed', label: 'Pollinations (POST, your saved key)', budget: budgetsV169.keyed, fetch: async function (prompt) { return await fetchPollinationsStoryWithKeyV161(prompt, V16_AI_TIMEOUT_MS, null, budgetsV169.keyed); }});
     const hasGKey = (typeof getGeminiKey === 'function' ? !!getGeminiKey() : false);
     if (hasGKey) chainV169.push({ key: 'gemini', label: 'Gemini (your saved key)', budget: budgetsV169.gemini, fetch: async function (prompt) { chargePostV163(budgetsV169.gemini); const r = await fetchGeminiStoryV16(prompt); r.model = 'gemini-2.0-flash'; r.usage = null; r.retryAfter = ''; return r; }});
-    const run = await runMultiStageV167(b, chainV169, isCurrent, setStatus, counters);
+    const run = await runMultiStageV167(b, chainV169, isCurrent, setStatus, counters, sid);
     allStageDiags = run.stages || [];
-    run.stages.forEach(function (d) { totalPromptChars += d.promptChars || 0; });
+    totalPromptChars = counters.promptCharsTotal || 0; if (!totalPromptChars) run.stages.forEach(function (d) { totalPromptChars += d.promptChars || 0; });
     if (run.ok) {
       const counts = countStoryChecksV16(run.checks);
       const providersUsed = [];
       run.stages.forEach(function (d) { if (d.provider && providersUsed.indexOf(d.provider) === -1) providersUsed.push(d.provider); });
-      const meta = { kind: 'ai', provider: run.provider || 'Pollinations /openai (POST, keyless)', providersUsed: providersUsed, passed: counts.passed, unverified: counts.unverified, attempts: attemptsTotal(), attempts402Excluded: attempts402ExcludedTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: run.checks, aiDraftLength: run.text.length, aiFinishReason: (run.stages.length ? (run.stages[run.stages.length - 1].finishReason || '') : ''), stageDiagnostics: run.stages, _storyText: run.text };
+      const meta = { kind: 'ai', provider: run.provider || 'Pollinations /openai (POST, keyless)', providersUsed: providersUsed, passed: counts.passed, unverified: counts.unverified, attempts: attemptsTotal(), attempts402Excluded: attempts402ExcludedTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: run.checks, aiDraftLength: run.text.length, aiFinishReason: (run.stages.length ? (run.stages[run.stages.length - 1].finishReason || '') : ''), stageDiagnostics: run.stages, stageCount: run.stageCount || run.stages.length, stagePromptSizes: (run.stages || []).map(function (d) { return { stage: d.stage, promptChars: d.promptChars || 0 }; }), fidelityChecks: run.fidelityChecks || [], _storyText: run.text };
       lastProvider = meta.provider;
       return renderAi(meta);
     }
@@ -4056,7 +4678,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
     let lastStageFailedChecks = lastRunFailedChecks;
     if (lastStageFailedChecks && lastStageFailedChecks.length) lastFailedChecks = lastStageFailedChecks;
     else if (lastChecks) { const _fc = countStoryChecksV16(lastChecks); if (_fc.failed > 0) lastFailedChecks = lastChecks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }); }
-    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attemptsTotal(), attempts402Excluded: attempts402ExcludedTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: lastChecks, reason: lastReason, rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: lastFailedChecks || [], rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks || (lastDraftText ? checkMainStoryV16(b, lastDraftText) : null)), stageDiagnostics: allStageDiags, failedStage: lastFailedStage };
+    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attemptsTotal(), attempts402Excluded: attempts402ExcludedTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: lastChecks, reason: lastReason, rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: lastFailedChecks || [], rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks || (lastDraftText ? checkMainStoryV16(b, lastDraftText) : null)), stageDiagnostics: allStageDiags, fidelityChecks: run.fidelityChecks || [], failedStage: lastFailedStage };
     lastMainStoryMeta = meta;
     if (isCurrent()) {
       setStatus('Online AI generation was unavailable — showing the offline episode instead.');
@@ -4067,7 +4689,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
     }
     return meta;
   } catch (e) {
-    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attemptsTotal(), attempts402Excluded: attempts402ExcludedTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: lastChecks, reason: (e && e.message) || 'Provider request failed', rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: (lastFailedChecks && lastFailedChecks.length ? lastFailedChecks : (lastChecks ? lastChecks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }) : [])), rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks || (lastDraftText ? checkMainStoryV16(b, lastDraftText) : null)), stageDiagnostics: allStageDiags, failedStage: lastFailedStage };
+    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attemptsTotal(), attempts402Excluded: attempts402ExcludedTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: lastChecks, reason: (e && e.message) || 'Provider request failed', rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: (lastFailedChecks && lastFailedChecks.length ? lastFailedChecks : (lastChecks ? lastChecks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }) : [])), rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks || (lastDraftText ? checkMainStoryV16(b, lastDraftText) : null)), stageDiagnostics: allStageDiags, fidelityChecks: [], failedStage: lastFailedStage };
     lastMainStoryMeta = meta;
     if (isCurrent()) {
       setStatus('Online AI generation was unavailable — showing the offline episode instead.');
@@ -4089,7 +4711,11 @@ function retryMainStoryV16() {
   if (!b) return;
   const btn = document.getElementById('retry-online-story-btn');
   if (btn && btn.disabled) return;
-  const sid = makeSessionIdV16(b);
+  /* v16.10 RESUME: retrying a FAILED run reuses its session id so the
+     stage cache (keyed by session id + stage + prompt hash) can resume
+     from the failed stage instead of restarting. A retry after a
+     successful run, or with no previous session, gets a fresh id. */
+  const sid = (currentStorySessionId && lastMainStoryMeta && lastMainStoryMeta.kind === 'offline') ? currentStorySessionId : makeSessionIdV16(b);
   currentStorySavedSessionId = null;
   generateMainStoryV16(b, sid, { onReady: function (meta, storyHtml) { try { const br = generateBreakdown(b); const ig = victoryStateChecksV14(b); const ac = narrativeAccuracyChecksV14(b, storyHtml || fallbackStoryHtmlV16(b, '')); const q = storyQualityChecksV14(b, storyHtml || ''); saveMainStoryOnceV16(b, storyHtml || fallbackStoryHtmlV16(b, ''), br, ig, ac, q, meta); } catch (e) {} } });
 }
