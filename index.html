@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.11 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.12 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.11</h1><span>1V1 DEATH BATTLES • ENGINE v16.11 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v16.12</h1><span>1V1 DEATH BATTLES • ENGINE v16.12 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -552,6 +552,7 @@ function openInfo(id){
   ${(V12_PROFILE_EXTRA[f.id]?`<p><b>Behaviour under pressure:</b> ${esc(V12_PROFILE_EXTRA[f.id].pressure)}</p><p><b>Equipment:</b> ${esc(V12_PROFILE_EXTRA[f.id].equipment)}</p><p><b>Regeneration / healing:</b> ${esc(V12_PROFILE_EXTRA[f.id].regen)}</p><p><b>Evidence status:</b> ${esc(V12_PROFILE_EXTRA[f.id].evidence)}</p>`:'<p><b>Behaviour under pressure / equipment / regeneration:</b> [NOT KNOWN] — anything not listed here is unknown in this profile, not invented. See the fighter\'s personality, style, and weakness notes above.</p>')}
   <p><b>Weakness:</b> ${fieldOrNotKnownV151(f.weak,'no weakness established in this profile.')}</p>
   <p><b>Notable feat (context, not a stat):</b> ${fieldOrNotKnownV151(f.feat,'no notable feat established in this profile.')}</p>${structuredProfileHtml(f)}
+  ${dossierPanelHtmlV1612(f)}
   <p><b>Base stats:</b> HP ${f.hp} • ATK ${f.atk} • DEF ${f.def} • Speed ${f.sp}</p>
   <p class="note">Implemented vs canon: only the power set above, signature, transformation (if listed), and the engine traits for Infinity, prep-first-hit, and serious-punch scaling are implemented. Other canon powers for this character are not invented here. Research summaries, when fetched, are context — they do not automatically add new powers.</p>
   <button class="btn small" onclick="fetchCanonForInfo('${f.id}')">Retest canon sources (optional — canon auto-fetches on pick)</button>
@@ -2459,7 +2460,7 @@ function saveBattle(b,story,breakdown,integrity,accuracy,quality){
     const h=loadHistory();
     const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]);
     const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant));
-    h.unshift({id:Date.now(),formatVersion:'v16.11',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.11 online AI main story (fictionalised retelling of the recorded outcome), or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
+    h.unshift({id:Date.now(),formatVersion:'v16.12',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.12 online AI main story (fictionalised retelling of the recorded outcome), or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
     localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));
   }catch(e){}
   renderHistory();
@@ -2550,7 +2551,7 @@ function viewHistory(id){
    mutual destruction, never an arbitrary winner. Round cap = stalemate. */
 function makeGenericCombatant(spec, side, index){
   const base={id:spec.id||('fighter-'+index),name:spec.name||('Fighter '+(index+1)),variant:spec.variant||'Base',variantId:spec.variantId||'base',hp:spec.hp||1000,atk:spec.atk||100,def:spec.def||50,sp:spec.sp||1,dex:spec.dex||7,dur:spec.dur||7,pw:spec.pw||7,sta:spec.sta||7,tac:spec.tac||7,tier:spec.tier||'A',trait:spec.trait||'',pers:spec.pers||'disciplined',sig:spec.sig||'Strike',sigMult:spec.sigMult||1.5,trans:spec.trans||'',tAtk:spec.tAtk||0,tDef:spec.tDef||0,weak:spec.weak||'',style:spec.style||'',usage:spec.usage||'',immunities:spec.immunities||null,powers:spec.powers||null};
-  const inst=Object.assign({},base,{side:side,instanceId:side+'|'+base.id+'|'+base.variantId+'|'+index,currentHp:base.hp,maxHp:base.hp,alive:true,dead:false,unconscious:false,incapacitated:false,transformed:false,stamina:70+(base.sta||7)*5,regenTotal:0,studied:false,preparedCounter:false,knowledgeStage:'UNKNOWN',knowledgePattern:'',prideRefusalDone:false,kryptoniteExploit:false,fieldPool:(typeof fieldPoolForV14==='function'?fieldPoolForV14(base):0),fieldBroken:false,lastSigRound:undefined,actions:0});
+  const inst=Object.assign({},base,{side:side,instanceId:side+'|'+base.id+'|'+base.variantId+'|'+index,currentHp:base.hp,maxHp:base.hp,alive:true,dead:false,unconscious:false,incapacitated:false,transformed:false,stamina:70+(base.sta||7)*5,regenTotal:0,studied:false,preparedCounter:false,knowledgeStage:'UNKNOWN',knowledgePattern:'',prideRefusalDone:false,kryptoniteExploit:false,dossierStanceDone:false,peeveSigNext:false,peeveFired:{},relDone:false,fieldPool:(typeof fieldPoolForV14==='function'?fieldPoolForV14(base):0),fieldBroken:false,lastSigRound:undefined,actions:0});
   return inst;
 }
 function genericSideAlive(side){return side.some(f=>f.alive);}
@@ -2577,17 +2578,21 @@ function runGenericBattle(sides, opts){
       const foes=[]; foeTeams.forEach(t=>t.forEach(f=>{if(f.alive) foes.push(f);}));
       if(!foes.length) break;
       if(actor.trait==='regen'&&actor.currentHp<actor.maxHp&&actor.alive){const cap=Math.floor(actor.maxHp*0.5); const rem=Math.max(0,cap-(actor.regenTotal||0)); const h=Math.min(40,actor.maxHp-actor.currentHp,rem); if(h>0){actor.currentHp+=h; actor.regenTotal+=h; push({round:round,type:'heal',actor:actor.name,actorId:actor.instanceId,detail:'regenerates',heal:h});}}
-      if(actor.trans&&!actor.transformed&&actor.currentHp<=actor.maxHp*0.45&&actor.variant!==actor.trans){actor.transformed=true; actor.atk+=actor.tAtk; actor.def+=actor.tDef; push({round:round,type:'transform',actor:actor.name,actorId:actor.instanceId,detail:actor.trans,transformHp:actor.currentHp,transformMax:actor.maxHp,trigger:'HP at or below 45% of maximum',legalTransition:true,fromForm:actor.variant,toForm:actor.trans,effectTable:(typeof transformEffectForV14==='function'?transformEffectForV14(actor):null)});}
+      if(actor.trans&&!actor.transformed&&actor.currentHp<=actor.maxHp*0.45&&actor.variant!==actor.trans){actor.transformed=true; actor.atk+=actor.tAtk; actor.def+=actor.tDef; var _tcost=dossierTransformCostV1612(actor); if(_tcost){actor.stamina=Math.max(0,actor.stamina-_tcost);} var _tev=push({round:round,type:'transform',actor:actor.name,actorId:actor.instanceId,detail:actor.trans,transformHp:actor.currentHp,transformMax:actor.maxHp,trigger:'HP at or below 45% of maximum',legalTransition:true,fromForm:actor.variant,toForm:actor.trans,effectTable:(typeof transformEffectForV14==='function'?transformEffectForV14(actor):null)}); if(_tcost){_tev.staminaCost=_tcost; _tev.detail+=' (stamina cost '+_tcost+')';}}
+      if(!actor.dossierStanceDone){actor.dossierStanceDone=true; var _stance=dossierStanceV1612(actor); if(_stance) push({round:round,type:'tactic',actor:actor.name,actorId:actor.instanceId,detail:_stance,reason:'dossier stance recorded once at first action; damage and dodge rules are unchanged by the stance event itself'});}
+      if(!actor.relDone){actor.relDone=true; foes.forEach(function(fo){var _rel=dossierRelationshipV1612(actor,fo); if(_rel) push({round:round,type:'tactic',actor:actor.name,actorId:actor.instanceId,target:fo.name,targetId:fo.instanceId,detail:'relationship trigger: '+_rel.relation+' with '+fo.name+' — '+_rel.behaviour,reason:'dossier relationship applies ONLY because the opponent matches it; unmatched relationships stay background and are never a buff'});});}
+      var _fear=dossierFearTriggerV1612(actor); if(_fear){actor.peeveFired['fear:'+_fear.triggerKind]=true; push({round:round,type:'tactic',actor:actor.name,actorId:actor.instanceId,detail:'fear/psych trigger: '+_fear.trigger+' — '+_fear.effect,reason:'dossier fear trigger with a recorded effect; no damage change'});}
+      var _peeve=dossierPeeveV1612(actor,foes,events); if(_peeve&&!actor.peeveSigNext){actor.peeveFired[_peeve.triggerKind]=true; actor.peeveSigNext=true; push({round:round,type:'tactic',actor:actor.name,actorId:actor.instanceId,detail:'peeve triggered: '+_peeve.trigger+' — '+_peeve.effect,reason:'dossier peeve trigger with a recorded effect'});}
       if(actor.pers==='strategist'&&!actor.studied){actor.studied=true; actor.knowledgeStage='OBSERVED'; actor.knowledgePattern='repeated '+targetNameForGeneric(foes[0])+' approach'; actor.actions++; push({round:round,type:'study',actor:actor.name,actorId:actor.instanceId,detail:'observes a pattern: '+actor.knowledgePattern,reason:'strategist studies first — pattern observed, not yet a prepared counter',knowledgeState:'OBSERVED',pattern:actor.knowledgePattern,knowledgeStage:'OBSERVED'}); continue;}
       if(actor.pers==='strategist'&&actor.studied&&!actor.preparedCounter&&actor.stamina>10){actor.preparedCounter=true; actor.stamina-=10; actor.actions++; push({round:round,type:'prepare',actor:actor.name,actorId:actor.instanceId,detail:'counter prepared against the '+actor.knowledgePattern,reason:'countermeasure prepared from an observed pattern; it has not landed yet',knowledgeState:'PREPARED',pattern:actor.knowledgePattern,knowledgeStage:'PREPARED'}); continue;}
       if(actor.pers==='proud'&&!actor.prideRefusalDone&&actor.currentHp<=actor.maxHp*0.25&&foes[0].currentHp>actor.currentHp){actor.prideRefusalDone=true; push({round:round,type:'refused',actor:actor.name,actorId:actor.instanceId,target:foes[0].name,targetId:foes[0].instanceId,detail:'refuses to exploit a prepared counter against a weakened foe — pride forbids a dishonourable opening',reason:'proud fighter refuses to exploit a dishonourable opening when that contradicts their beliefs'});}
       const target=foes[0]; if(!target) continue;
       actor.actions++;
-      let useSig=false; if(actor.stamina>=15&&(actor.lastSigRound===undefined||round-actor.lastSigRound>=2)&&(target.currentHp<=target.maxHp*0.35||rng()<0.25)){useSig=true; actor.lastSigRound=round;}
+      let useSig=false; if(actor.stamina>=15&&((actor.lastSigRound===undefined||round-actor.lastSigRound>=2)&&(target.currentHp<=target.maxHp*0.35||rng()<0.25)||actor.peeveSigNext)){useSig=true; actor.lastSigRound=round; actor.peeveSigNext=false;}
       const powers=(actor.powers&&actor.powers.length)?actor.powers.slice():[];
       let ability, mult; if(useSig){ability=actor.sig; mult=actor.sigMult;} else if(powers.length){ability=powers[(actor.actions-1)%powers.length]; mult=1.25;} else {ability=actor.sig; mult=1.2;}
       let blocked=false; if(target.trait==='infinity_void'&&actor.tier!=='EX'&&rng()<0.65) blocked=true;
-      if(!blocked){let dc=Math.max(0,Math.min(0.30,((target.dex||7)-(actor.dex||7))*0.02+((target.sp||1)-(actor.sp||1))*0.08)); if(rng()<dc) blocked=true;}
+      if(!blocked){let dc=Math.max(0,Math.min(0.35,((target.dex||7)-(actor.dex||7))*0.02+((target.sp||1)-(actor.sp||1))*0.08))*dossierDodgeMultV1612(target); dc=Math.max(0,Math.min(0.35,dc)); if(rng()<dc) blocked=true;}
       const crit=!blocked&&rng()<0.20;
       let counterDetected=false, counterExploited=false;
       if(actor.preparedCounter&&!blocked){
@@ -2645,8 +2650,8 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11'].includes(x.formatVersion);
-  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11 record.'};
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12'].includes(x.formatVersion);
+  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
 
@@ -3389,8 +3394,8 @@ function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, qual
       try {
         const h = loadHistory();
         if (h.length) {
-          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.11) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.11) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
-          h[0].formatVersion = 'v16.11';
+          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.12) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.12) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
+          h[0].formatVersion = 'v16.12';
           h[0].mainStoryMeta = meta ? { kind: meta.kind, provider: meta.provider, passed: meta.passed, unverified: meta.unverified, attempts: meta.attempts, attempts402Excluded: meta.attempts402Excluded != null ? meta.attempts402Excluded : '', attemptsBreakdown: meta.attemptsBreakdown || '', promptSize: meta.promptSize, sessionId: meta.sessionId, reason: meta.reason || '', rejectedDraftExcerpt: meta.rejectedDraftExcerpt || '', rejectedDraftClimax: meta.rejectedDraftClimax || '', rejectedChecks: meta.rejectedChecks || [], rejectedDraftLength: meta.rejectedDraftLength != null ? meta.rejectedDraftLength : '', rejectedDraftStage: meta.rejectedDraftStage || '', rejectedDraftFinishReason: meta.rejectedDraftFinishReason || '', rejectedDraftPromptSize: meta.rejectedDraftPromptSize != null ? meta.rejectedDraftPromptSize : '', rejectedDraftProbe: meta.rejectedDraftProbe || [], aiDraftLength: meta.aiDraftLength != null ? meta.aiDraftLength : '', aiFinishReason: meta.aiFinishReason || '', stageDiagnostics: meta.stageDiagnostics || [], failedStage: meta.failedStage || '', providersUsed: meta.providersUsed || [], stageCount: meta.stageCount || '', stagePromptSizes: meta.stagePromptSizes || [], hardConstraintChecks: meta.hardConstraintChecks || meta.fidelityChecks || [], fidelityChecks: meta.fidelityChecks || [] } : null;
           // Saved validation note, stated plainly: System A is battle integrity
           // (story-independent). When the main story is AI, System B below is
@@ -3560,7 +3565,7 @@ function buildContinuityV167(b) {
   const transformsV1611 = (b.events || []).filter(function (e) { return e.type === 'transform'; }).map(function (e) { const o = origByNameV1611[e.actor] || {}; return { actor: e.actor || '', detail: e.detail || o.trans || '', tAtk: o.tAtk || 0, tDef: o.tDef || 0 }; });
   const decisionsV1611 = (b.events || []).filter(function (e) { return e.type === 'choice' || e.type === 'refused'; }).map(function (e) { return { type: e.type, actor: e.actor || '', detail: e.detail || '', reason: e.reason || '' }; });
   const cannotHarmV1611 = (b.events || []).filter(function (e) { return e.type === 'attack' && e.cannotHarm; }).map(function (e) { return { actor: e.actor || '', ability: e.ability || '', target: e.target || '' }; });
-  return { fighters: fighters, battlefield: s.battlefield || 'Open Arena', battlefieldDesc: battlefieldDescV1611, victoryMode: s.victoryMode, winner: s.winner, loser: s.loser || '', loserState: loserState, finishingAbility: s.finishingAbility || null, finishingRound: finRound, roundNums: roundNums, roundLines: roundLines, abilities: abilities, outlineBeats: [], coveredThrough: 0, lastSentence: '', events: (b.events || []).slice(), turningPoints: (s.turningPoints || []).slice(), canHurt: canHurtV1611Obj, transforms: transformsV1611, decisions: decisionsV1611, cannotHarm: cannotHarmV1611 };
+  return { fighters: fighters, battlefield: s.battlefield || 'Open Arena', battlefieldDesc: battlefieldDescV1611, victoryMode: s.victoryMode, winner: s.winner, loser: s.loser || '', loserState: loserState, finishingAbility: s.finishingAbility || null, finishingRound: finRound, roundNums: roundNums, roundLines: roundLines, abilities: abilities, outlineBeats: [], coveredThrough: 0, lastSentence: '', events: (b.events || []).slice(), turningPoints: (s.turningPoints || []).slice(), canHurt: canHurtV1611Obj, transforms: transformsV1611, decisions: decisionsV1611, cannotHarm: cannotHarmV1611, dossierV1612: true };
 }
 function continuityTextV167(rec, keepAllRounds) {
   const fs = rec.fighters.map(function (f) { return f.name + ' (' + f.variant + ', ' + f.continuity + ') — style: ' + f.style + '; powers: ' + (f.powers.join(', ') || '[NOT KNOWN]') + '; signature: ' + (f.signature || 'none') + '; limits: ' + f.limits; }).join(' | ');
@@ -3786,7 +3791,7 @@ function assembleStagesV167(scenes) {
    Per-stage max_tokens on /openai: opening 400, combat 400, climax
    350, aftermath 250. Classic keeps its existing behaviour.
    (5) STAGE CACHE / RESUME: each successful stage is saved
-   immediately to localStorage under 'warroom_stage_cache_v1610',
+   immediately to localStorage under 'warroom_stage_cache_v1612',
    keyed by battle session id + stage name + prompt hash. A later run
    with the SAME session id (the retry path for a failed run) reuses
    cached successful stages without a POST and retries only from the
@@ -3846,7 +3851,7 @@ var V1610_STAGE_PROMPT_TARGET = 800;
 var V1610_MAX_TOKENS = { opening: 400, combat1: 400, combat2: 400, climax: 350, aftermath: 250 };
 var V1610_WORD_TARGETS = { opening: 150, combat1: 150, combat2: 150, climax: 120, aftermath: 100 };
 var V1610_STAGE_ORDER = ['opening', 'combat1', 'combat2', 'climax', 'aftermath'];
-var V1610_STAGE_CACHE_KEY = 'warroom_stage_cache_v1611';
+var V1610_STAGE_CACHE_KEY = 'warroom_stage_cache_v1612';
 /* v16.11: cache key bumped from v1610 because every stage prompt changed (brief, not transcript); v16.10 cached stages must not reuse. */
 var V1610_DEFEAT_WORDS = /\b(incapacitat\w*|unconscious|knocked[\s-]out|dead|died|killed|lifeless|was finished|had finished|finished off)\b/i;
 var V1610_ENDING_WORDS = /\b(the fight (ended|was over|had ended|concluded)|the battle (ended|was over|had ended|concluded|was decided)|battle concluded|fight concluded|the outcome was decided|the victor was decided)\b/i;
@@ -4193,7 +4198,7 @@ var V1611_STAGE_PROMPT_TARGET = 800;
 var V1611_MAX_TOKENS = { opening: 400, combat1: 400, combat2: 400, climax: 350, aftermath: 250 };
 var V1611_WORD_TARGETS = { opening: 150, combat1: 150, combat2: 150, climax: 120, aftermath: 100 };
 var V1611_STAGE_ORDER = ['opening', 'combat1', 'combat2', 'climax', 'aftermath'];
-var V1611_STAGE_CACHE_KEY = 'warroom_stage_cache_v1611';
+var V1611_STAGE_CACHE_KEY = 'warroom_stage_cache_v1612';
 var V1611_CHAPTER = { opening: 'arrival and testing', combat1: 'escalation', combat2: 'turning point', climax: 'decisive clash', aftermath: 'aftermath' };
 function stageOrderV1611(rec) { return stageOrderV1610(rec); }
 function battlefieldDescV1611(rec) {
@@ -4246,6 +4251,7 @@ function turningBeatsV1611(rec) {
     else if (e.type === 'study') beats.push((e.actor || '') + ' studied the opponent');
     else if (e.type === 'detected') beats.push((e.actor || '') + ' detected a prepared counter and avoided it');
     else if (e.type === 'attack' && e.counterExploited) beats.push((e.actor || '') + ' landed a prepared counter');
+    else if (e.type === 'tactic' && /peeve triggered/i.test(e.detail || '')) beats.push((e.actor || '') + ' peeve triggered: ' + (e.detail || ''));
   });
   return beats;
 }
@@ -4267,6 +4273,491 @@ function lockedLineV1611(rec, stage) {
   var fin = rec.finishingAbility ? rec.finishingAbility + (stage === 'climax' ? ' (verbatim, full sentence)' : (stage === 'aftermath' ? ' (decided)' : ' (not this chapter)')) : 'none — stalemate';
   return 'Winner: ' + (rec.winner || 'none') + ' (locked). Finisher: ' + fin + '. Loser: ' + (loserNameV1610(rec) || 'none') + ' (' + rec.loserState + '). Mode: ' + rec.victoryMode + '.';
 }
+/* ================= v16.12 — CANON DOSSIER, PHASE 1 =================
+   One shared dossier per fighter per exact version/era/form, read by the
+   engine, the AI story brief, and the info panel from the SAME object.
+   Deep dossiers exist only for the phase-1 edge cases (Deadpool,
+   Wolverine, Superman, Batman, Goku, Saitama, Frodo Baggins). Every other
+   fighter gets a DERIVED dossier built from its existing profile fields:
+   derived fields are labelled derived, and anything not in the profile
+   is 'unknown', never invented. A deep dossier is never merged across
+   versions: the entry is keyed by fighter id and the selected variant
+   travels with it (variant label is read from the fighter, not stored
+   as a second character). Statuses use the spec vocabulary:
+   demonstrated / interpretation / uncertain / conditional / unavailable
+   / lead / derived. Research never changes stats or powers, and no
+   dossier field is presented as verified when its source is missing,
+   failed, or conflicting. v16.11 behaviour is preserved: the
+   hard-constraint checker, provider chain, pacing, 402 handling, stage
+   cache (key bumped to v1612 because briefs changed), adaptive stages,
+   and offline fallback are unchanged except for the gated dossier-law
+   checks appended below (only when rec.dossierV1612 is true, so every
+   v16.11 fixture without that flag keeps its exact check counts). */
+var DOSSIER_V1612 = {
+  deadpool: {
+    durability: { type: 'regenerative', effect: 'Trades blows and taunts through injuries; dodge priority halved (dodgeMult 0.5). Regeneration heals while alive only, capped at 50% of max HP per battle by the engine, never revives.', howLose: 'In Death mode the recorded loss is HP reaching 0 after the regeneration cap is exhausted; head separation or total destruction is the story-level equivalent, duration interpretation, not an engine revive.', status: 'demonstrated' },
+    scaling: { feats: ['Survived injuries that would kill most fighters (profile feat, general terms)'], bypass: [], note: 'Regeneration is not invulnerability: damage still lands and accumulates.', status: 'interpretation' },
+    style: { tags: ['brutal-reckless', 'regenerative'], description: 'Unpredictable mercenary with katanas, guns and rapid regeneration; jokes mid-fight, breaks rhythm, never stays down for long.', aggression: 'high', risk: 'high', painResponse: 'ignores pain, taunts through it', taunt: true, dodgeMult: 0.5, status: 'demonstrated' },
+    personality: { willKill: true, holdsFinish: false, refusesRetreat: false, voice: 'Humorous and chaotic — jokes mid-fight.', moral: 'Mercenary: fights for the contract and for fun; no no-kill code is stated, none is assumed.', status: 'interpretation' },
+    signatures: [{ name: 'Katana + Gun Combo', condition: 'signature window (stamina, spacing, or prepared counter)', limit: 'Guns need ammunition; katanas need reach. Neither is unlimited in the record.', status: 'derived' }],
+    transforms: [{ name: 'Maximum Effort', trigger: 'HP at or below 45% of maximum (engine rule)', cost: 'Exertion; no stamina cost is stated in the profile, so none is applied and the gap is flagged here, not invented.', staminaCost: 0, duration: 'Until battle end in the engine.', reversible: 'No — a one-way escalation in this battle.', effect: '+30 ATK, +5 DEF (engine transform values).', status: 'derived' }],
+    weaknesses: [{ text: 'Recklessness; humour distracts him', exploitableBy: 'any opponent who punishes an opening', status: 'derived' }],
+    laws: [{ rule: 'Mercenary code: honours a fight once taken, fights for the contract.', breaksWhen: 'Not stated — unknown.', engineEffect: 'None: no no-kill or retreat law constrains this fighter.', status: 'interpretation' }],
+    peeves: [{ trigger: 'Target heals or refuses to stay down', triggerKind: 'targetHealed', effect: 'Escalates: next attack uses the signature if stamina allows (recorded as a tactic event).', engineTriggerable: true, status: 'interpretation' }],
+    systems: [{ name: 'Healing factor', access: 'Innate, always on while alive.', duration: 'Continuous while alive.', control: 'Automatic.', cost: 'None stated; capped by the engine at 50% of max HP per battle.', limit: 'Engine regen cap; never revives after defeat.', stopsBy: 'Defeat (HP 0) ends regeneration in the record.', status: 'demonstrated' }, { name: 'Katanas and guns', access: 'Carried equipment.', duration: 'Whole battle unless disarmed — disarm is not simulated, so this is not claimed as a mechanic.', control: 'Fighter.', cost: 'Ammunition for guns (not tracked numerically in the engine).', limit: 'Reach for katanas; ammunition for guns.', stopsBy: 'Not simulated — flagged, not assumed.', status: 'derived' }],
+    sources: [{ type: 'CHARACTER RECORD', note: 'Existing game profile fields (stats, style, usage, personality note).', status: 'derived' }, { type: 'General canon (Marvel comics/film)', note: 'Broadly established traits as summarised in the profile; no specific issue or episode citation is claimed.', status: 'interpretation' }],
+    unknown: ['Exact head-survival duration in this version (interpretation only, not an engine revive).', 'Whether any specific contract binds this fight (not stated).']
+  },
+  wolverine: {
+    durability: { type: 'regenerative', effect: 'Heals through punishment and closes with claws; dodge priority halved (dodgeMult 0.5). Regeneration heals while alive only, capped at 50% of max HP per battle, never revives.', howLose: 'In Death mode the recorded loss is HP reaching 0 after the regeneration cap is exhausted; adamantium skeleton alone does not prevent a recorded loss.', status: 'demonstrated' },
+    scaling: { feats: ['Survived wars and superhuman foes (profile feat, general terms)'], bypass: ['Adamantium claws can cut most materials — a bypass only where the record shows it landing, never assumed against every defence.'], note: 'Healing factor vs adamantium weight is a flagged conflict: the skeleton aids durability and hinders speed; neither effect is given a number beyond the profile.', status: 'interpretation' },
+    style: { tags: ['feral', 'regenerative'], description: 'Ruthless loner — stubborn, feral, impossible to keep down; heals through punishment, closes with claws, then unleashes berserker rage.', aggression: 'high', risk: 'high', painResponse: 'fights through pain', taunt: false, dodgeMult: 0.5, status: 'demonstrated' },
+    personality: { willKill: true, holdsFinish: false, refusesRetreat: true, voice: 'Terse, feral, stubborn.', moral: 'No no-kill code is stated, none is assumed; refuses to back down.', status: 'interpretation' },
+    signatures: [{ name: 'Adamantium Claw Slash', condition: 'signature window', limit: 'Needs reach; claws are not a ranged attack.', status: 'derived' }],
+    transforms: [{ name: 'Berserker Rage', trigger: 'HP at or below 45% of maximum (engine rule)', cost: 'Loss of control while raging; no stamina cost is stated in the profile, so none is applied and the gap is flagged here, not invented.', staminaCost: 0, duration: 'Until battle end in the engine.', reversible: 'No — a one-way escalation in this battle.', effect: '+30 ATK, +5 DEF (engine transform values).', status: 'derived' }],
+    weaknesses: [{ text: 'Adamantium weight; rage', exploitableBy: 'any opponent who exploits loss of control while raging', status: 'derived' }],
+    laws: [{ rule: 'Loner code: refuses to back down; protects at a cost.', breaksWhen: 'Not stated — unknown.', engineEffect: 'Refusal behaviour is recorded when it occurs; no no-kill law constrains this fighter.', status: 'interpretation' }],
+    peeves: [{ trigger: 'Own HP at or below 50% — being worn down and manipulated', triggerKind: 'hpBelow50', effect: 'Escalates into rage: next attack uses the signature if stamina allows (recorded as a tactic event).', engineTriggerable: true, status: 'interpretation' }],
+    systems: [{ name: 'Healing factor', access: 'Innate (mutant), always on while alive.', duration: 'Continuous while alive.', control: 'Automatic.', cost: 'None stated; capped by the engine at 50% of max HP per battle.', limit: 'Engine regen cap; never revives after defeat.', stopsBy: 'Defeat (HP 0) ends regeneration in the record.', status: 'demonstrated' }, { name: 'Adamantium skeleton and claws', access: 'Permanent body modification.', duration: 'Permanent.', control: 'Fighter.', cost: 'Weight (profile weakness).', limit: 'Claws need reach; skeleton does not grant invulnerability to every attack type.', stopsBy: 'Not stated — unknown.', status: 'derived' }],
+    sources: [{ type: 'CHARACTER RECORD', note: 'Existing game profile fields.', status: 'derived' }, { type: 'General canon (Marvel comics/film)', note: 'Broadly established traits as summarised in the profile; no specific issue or episode citation is claimed.', status: 'interpretation' }],
+    unknown: ['What, if anything, stops the healing factor in this version (conflicting accounts flagged, not merged).']
+  },
+  superman: {
+    durability: { type: 'invulnerable', effect: 'Stands through punishment and trades blows rather than dodging (dodgeMult 0.25). Damage that does land is still recorded; invulnerability is not immunity to every attack type.', howLose: 'In Death mode the recorded loss is HP reaching 0, normally via a bypass (kryptonite, magic) or an overwhelming gap; a fighter who cannot harm him under current rules cannot be shown hurting him.', status: 'demonstrated' },
+    scaling: { feats: ['Held back collapsing structures (profile feat, general terms)'], bypass: ['Kryptonite', 'Magic bypasses much of his durability'], note: 'Solar-powered: strength scales with sunlight in canon, but no sunlight mechanic is simulated — flagged, not invented as a stat change.', status: 'interpretation' },
+    style: { tags: ['holder-back', 'invulnerable'], description: 'Flying powerhouse who protects first; holds back to avoid harm, then commits fully when outmatched.', aggression: 'low at first, then high', risk: 'low', painResponse: 'shrugs off most blows', taunt: false, dodgeMult: 0.25, status: 'demonstrated' },
+    personality: { willKill: false, holdsFinish: true, refusesRetreat: false, voice: 'Compassionate and restrained.', moral: 'No-kill code (Base version): will not kill; holds a lethal finish once as a recorded mercy decision. CONFLICT FLAGGED: some versions and storylines show killing under extreme conditions — the selected Base version follows the no-kill code and the conflict is not merged.', status: 'interpretation' },
+    signatures: [{ name: 'Heat Vision', condition: 'signature window', limit: 'Line of sight; does not bypass a recorded immunity on its own.', status: 'derived' }],
+    transforms: [{ name: 'Sun-Charged', trigger: 'HP at or below 45% of maximum (engine rule)', cost: 'Requires sunlight exposure in canon; no sunlight mechanic is simulated, so no cost is applied and the gap is flagged here, not invented.', staminaCost: 0, duration: 'Until battle end in the engine.', reversible: 'No — a one-way escalation in this battle.', effect: '+30 ATK, +15 DEF (engine transform values).', status: 'derived' }],
+    weaknesses: [{ text: 'Kryptonite; magic bypasses much of his durability', exploitableBy: 'an opponent with a recorded kryptonite or magic counter (engine exploit rules only — a weakness field alone grants nothing)', status: 'demonstrated' }],
+    laws: [{ rule: 'No-kill code (Base version).', breaksWhen: 'Extreme conditions in other versions — flagged conflict, not this version.', engineEffect: 'Story rule (v16.12 gated check): a story must not describe this fighter deliberately killing the loser (killed/murdered/slew/executed attributed to him). The engine outcome stands; prose must describe the finish as a decisive incapacitating blow, never a deliberate killing.', status: 'interpretation' }, { rule: 'Protect innocents first, even at a cost.', breaksWhen: 'Not stated — unknown.', engineEffect: 'Brief only: no innocents exist in a 1v1 arena, so this law has no engine trigger in this build and is flagged as such, not simulated.', status: 'interpretation' }],
+    peeves: [{ trigger: 'Innocents harmed', triggerKind: 'none', effect: 'Escalates and commits fully.', engineTriggerable: false, status: 'interpretation' }],
+    systems: [{ name: 'Solar power', access: 'Sunlight.', duration: 'Stored while sunlit.', control: 'Passive.', cost: 'None stated.', limit: 'No sunlight mechanic is simulated — flagged, not invented as a stat change.', stopsBy: 'Red sunlight / kryptonite in canon; not simulated as a mechanic.', status: 'interpretation' }, { name: 'Flight, heat vision, freeze breath', access: 'Innate powers.', duration: 'While powered.', control: 'Fighter.', cost: 'None stated.', limit: 'Heat vision needs line of sight; freeze breath is a recorded power only where listed.', stopsBy: 'Kryptonite / magic bypass (engine exploit rules).', status: 'derived' }],
+    sources: [{ type: 'CHARACTER RECORD', note: 'Existing game profile fields.', status: 'derived' }, { type: 'General canon (DC comics/film)', note: 'Broadly established traits as summarised in the profile; no specific issue or episode citation is claimed. No-kill code is version-dependent — conflict flagged above.', status: 'interpretation' }],
+    unknown: ['Exact solar-charge rate (not simulated).', 'Whether this version has ever broken the no-kill code (conflicting accounts flagged, not merged).']
+  },
+  batman: {
+    durability: { type: 'normal', effect: 'Human durability: no innate powers, no regeneration, no invulnerability. Survival comes from preparation, study, and traps, not from absorbing hits.', howLose: 'Any recorded loss: HP reaching 0. Human fragility is the point — a single decisive blow can end him.', status: 'demonstrated' },
+    scaling: { feats: ['Outplanned far stronger foes (profile feat, general terms)'], bypass: [], note: 'Wins by planning, not by matching raw power. A weakness counts only with a recorded counter and in-fight knowledge (engine rules).', status: 'demonstrated' },
+    style: { tags: ['strategist'], description: 'Tactical fighter who studies foes before striking; wins by planning, not by matching raw power.', aggression: 'low until prepared', risk: 'low', painResponse: 'avoids damage; cannot absorb it', taunt: false, dodgeMult: 1, status: 'demonstrated' },
+    personality: { willKill: false, holdsFinish: false, refusesRetreat: false, voice: 'Strategist and obsessive planner — watches, measures, hits where it hurts most.', moral: 'No-kill code (Base version): will not kill. CONFLICT FLAGGED: some versions kill — the selected Base version follows the no-kill code and the conflict is not merged.', status: 'interpretation' },
+    signatures: [{ name: 'Gadget Barrage', condition: 'signature window; stronger when a counter was prepared from an observed pattern', limit: 'Gadgets are finite and preparation-dependent; a prepared counter lands only under engine exploit rules.', status: 'derived' }],
+    transforms: [],
+    weaknesses: [{ text: 'Human; no innate powers', exploitableBy: 'any opponent who lands a decisive blow — fragility itself, not a specific counter', status: 'demonstrated' }],
+    laws: [{ rule: 'No-kill code (Base version).', breaksWhen: 'Other versions — flagged conflict, not this version.', engineEffect: 'Story rule (v16.12 gated check): a story must not describe this fighter deliberately killing the loser.', status: 'interpretation' }, { rule: 'Prepare before committing a limited resource: study, then prepare a counter, then commit.', breaksWhen: 'Never — this is the engine strategist sequence (study → prepare → exploit).', engineEffect: 'Engine: strategist study/prepare events already exist; the dossier does not add a second prep system.', status: 'demonstrated' }],
+    peeves: [{ trigger: 'An opponent who refuses to be outplanned / brute force that ignores planning', triggerKind: 'none', effect: 'Escalates preparation rather than trading blows.', engineTriggerable: false, status: 'interpretation' }],
+    systems: [{ name: 'Utility belt gadgets', access: 'Carried equipment, prepared before the fight.', duration: 'Until expended — expenditure is not tracked numerically in the engine, so this is flagged, not assumed infinite.', control: 'Fighter.', cost: 'Preparation time (engine: study then prepare turns).', limit: 'Finite gadgets; a gadget counter lands only under engine exploit rules.', stopsBy: 'Disarm / gadget failure — not simulated, flagged, not assumed.', status: 'derived' }, { name: 'Vehicles and Batcomputer', access: 'Not available in a 1v1 arena fight.', duration: 'N/A.', control: 'N/A.', cost: 'N/A.', limit: 'Unavailable in this battle context.', stopsBy: 'N/A.', status: 'unavailable' }],
+    sources: [{ type: 'CHARACTER RECORD', note: 'Existing game profile fields.', status: 'derived' }, { type: 'General canon (DC comics/film)', note: 'Broadly established traits as summarised in the profile; no specific issue or episode citation is claimed. No-kill code is version-dependent — conflict flagged above.', status: 'interpretation' }],
+    unknown: ['Exact gadget inventory for this fight (finite, but not itemised in the profile — flagged, not invented).']
+  },
+  goku: {
+    durability: { type: 'normal', effect: 'Saiyan durability with ki: tough, not invulnerable. Fights to test limits, holds back at first, then goes all out.', howLose: 'Any recorded loss: HP reaching 0.', status: 'derived' },
+    scaling: { feats: ['Survived planet-shaking clashes (profile feat, general terms)'], bypass: [], note: 'Power rises with transformation; the transform itself has a cost (see below).', status: 'derived' },
+    style: { tags: ['holder-back', 'direct'], description: 'Saiyan brawler who closes distance fast; tests the opponent with probing blows, then escalates.', aggression: 'low at first, then high', risk: 'high once committed', painResponse: 'welcomes a hard fight', taunt: false, dodgeMult: 1, status: 'demonstrated' },
+    personality: { willKill: true, holdsFinish: false, refusesRetreat: false, voice: 'Reckless, joyful, honourable — fights to test limits.', moral: 'Honourable: wants the opponent at full power; will not claim a win he did not earn.', status: 'interpretation' },
+    signatures: [{ name: 'Kamehameha', condition: 'signature window', limit: 'Needs charge time and range; not a point-blank instant attack in the record.', status: 'derived' }],
+    transforms: [{ name: 'Super Saiyan Blue', trigger: 'HP at or below 45% of maximum (engine rule)', cost: 'Stamina drain in canon; applied in the engine as a 20 stamina cost on transforming (recorded on the transform event).', staminaCost: 20, duration: 'Until battle end in the engine; canonically cannot be sustained indefinitely — the engine does not time it out, and that gap is flagged here, not hidden.', reversible: 'No — a one-way escalation in this battle.', effect: '+35 ATK, +10 DEF (engine transform values).', status: 'derived' }],
+    weaknesses: [{ text: 'Overconfidence; stamina drains in very long fights', exploitableBy: 'an opponent who outlasts the transformed state', status: 'derived' }],
+    laws: [{ rule: 'Honourable combat: wants the opponent at full power.', breaksWhen: 'Not stated — unknown.', engineEffect: 'Brief only: no engine trigger in this build; flagged, not simulated as a refusal.', status: 'interpretation' }],
+    peeves: [{ trigger: 'An opponent who will not fight at full power', triggerKind: 'none', effect: 'Pushes harder and escalates to transformation sooner (narrative only in this build).', engineTriggerable: false, status: 'interpretation' }],
+    systems: [{ name: 'Ki energy', access: 'Innate, trained.', duration: 'While stamina lasts.', control: 'Fighter.', cost: 'Stamina (engine stamina pool).', limit: 'Stamina drains in very long fights (profile weakness).', stopsBy: 'Exhaustion — engine stamina floor, not a hard cutoff.', status: 'derived' }],
+    sources: [{ type: 'CHARACTER RECORD', note: 'Existing game profile fields.', status: 'derived' }, { type: 'General canon (Dragon Ball anime/manga)', note: 'Broadly established traits as summarised in the profile; no specific episode citation is claimed.', status: 'interpretation' }],
+    unknown: ['Exact ki-drain rate for Super Saiyan Blue in this version (engine applies a flat 20 stamina cost; the canon rate is not stated numerically).']
+  },
+  saitama: {
+    durability: { type: 'invulnerable', effect: 'Shrugs off blows others would dodge (dodgeMult 0.25). Status is INTERPRETATION: no demonstrated injury from conventional attacks is recorded, but no stated invulnerability power exists — the dossier does not upgrade an interpretation into a demonstrated power.', howLose: 'In Death mode the recorded loss is HP reaching 0; no legitimate cannot-harm bypass is assumed for him, and a weaker fighter wins only via a recorded exploit or victory condition, never by invented damage.', status: 'interpretation' },
+    scaling: { feats: ['Defeated foes no one else could touch (profile feat, general terms)'], bypass: [], note: 'Power gap vs most fighters is extreme; the engine cannot-harm rules still apply in both directions.', status: 'interpretation' },
+    style: { tags: ['holder-back', 'invulnerable'], description: 'Unassuming hero whose ordinary punches carry impossible power; fights casually at first, shrugs off blows, then lands a serious punch when the fight finally matters.', aggression: 'low at first, then decisive', risk: 'low', painResponse: 'bored indifference', taunt: false, dodgeMult: 0.25, status: 'interpretation' },
+    personality: { willKill: true, holdsFinish: false, refusesRetreat: false, voice: 'Calm and bored — underestimates opponents because almost nothing challenges him.', moral: 'Heroic restraint by boredom, not by a no-kill code: no no-kill law is claimed for him.', status: 'interpretation' },
+    signatures: [{ name: 'Serious Punch', condition: 'signature window; used when the fight finally matters', limit: 'Used rarely by character, not by engine cooldown alone — the engine signature window still governs when it fires.', status: 'derived' }],
+    transforms: [{ name: 'Serious Series', trigger: 'HP at or below 45% of maximum (engine rule)', cost: 'No stamina cost is stated in the profile, so none is applied and the gap is flagged here, not invented.', staminaCost: 0, duration: 'Until battle end in the engine.', reversible: 'No — a one-way escalation in this battle.', effect: '+30 ATK, +10 DEF (engine transform values).', status: 'derived' }],
+    weaknesses: [{ text: 'Boredom; rarely takes a fight seriously at first', exploitableBy: 'an opponent who acts decisively while he is still casual — an opening, not a damage bypass', status: 'derived' }],
+    laws: [{ rule: 'Hero for fun: fights when it matters, casually otherwise.', breaksWhen: 'Not stated — unknown.', engineEffect: 'Brief only: holder-back stance is the engine-visible form (first-turn tactic event).', status: 'interpretation' }],
+    peeves: [{ trigger: 'Being bored by a fight that never challenges him', triggerKind: 'none', effect: 'Stays casual; escalates only when challenged or losing.', engineTriggerable: false, status: 'interpretation' }],
+    systems: [],
+    sources: [{ type: 'CHARACTER RECORD', note: 'Existing game profile fields.', status: 'derived' }, { type: 'General canon (One Punch Man anime/manga)', note: 'Broadly established traits as summarised in the profile; no specific episode citation is claimed.', status: 'interpretation' }],
+    unknown: ['Whether Saitama has a stated invulnerability power (none is claimed — interpretation only).', 'Any upper limit to his power (not stated — unknown, never invented).']
+  },
+  frodo: {
+    durability: { type: 'normal', effect: 'Hobbit fragility: small, fragile, no innate powers. Survival comes from endurance, stealth, and avoiding direct trades.', howLose: 'Any recorded loss: HP reaching 0. A single decisive blow from a vastly stronger fighter ends him; no hidden durability is assumed.', status: 'demonstrated' },
+    scaling: { feats: ['Carried the Ring to Mount Doom (profile feat, general terms)'], bypass: [], note: 'Power-gap pair with Saitama: Frodo wins only via a recorded exploit or victory condition, never by invented damage against an invulnerable-class fighter.', status: 'derived' },
+    style: { tags: ['evasive'], description: 'Endurance, stealth and Sting — outlasts rather than overpowers.', aggression: 'low', risk: 'low', painResponse: 'avoids damage; cannot absorb it', taunt: false, dodgeMult: 1.2, status: 'derived' },
+    personality: { willKill: false, holdsFinish: true, refusesRetreat: false, voice: 'Protective and brave — a small hero carrying an impossible burden.', moral: 'Protective: will not kill where incapacitation or endurance serves; no formal no-kill code is claimed, so the gated no-kill story check does NOT apply to him (willKill is false for restraint, law is not stated as a code).', status: 'interpretation' },
+    signatures: [{ name: 'Sting Thrust', condition: 'signature window', limit: 'Short blade, needs reach; glows near orcs — irrelevant against a non-orc opponent and never claimed as a damage bonus.', status: 'derived' }],
+    transforms: [],
+    weaknesses: [{ text: 'Ring corruption; small and fragile', exploitableBy: 'any opponent who lands a decisive blow; corruption is a cost, not a combat bonus', status: 'derived' }],
+    laws: [{ rule: 'Carry the burden; do not claim power that is not yours.', breaksWhen: 'Not stated — unknown.', engineEffect: 'Brief only: the Ring is not used as a combat system in this build (see systems).', status: 'interpretation' }],
+    peeves: [{ trigger: 'Being dismissed as too small to matter', triggerKind: 'none', effect: 'Endures rather than escalates.', engineTriggerable: false, status: 'interpretation' }],
+    systems: [{ name: 'The One Ring', access: 'Carried, but NOT used as a combat system in this build.', duration: 'N/A in battle.', control: 'Corrupts the bearer over time.', cost: 'Corruption — a cost that grows with use, which is why it is not a free power.', limit: 'FLAGGED AS A BALANCE PROBLEM: if the Ring were used without limit it would be an unbounded system, so it is not used in engine or story as a combat ability in this build.', stopsBy: 'Refusal to use it; destruction of the Ring (not simulated).', status: 'conditional' }, { name: 'Sting', access: 'Carried blade.', duration: 'Whole battle.', control: 'Fighter.', cost: 'None stated.', limit: 'Short reach; glow is a warning, not damage.', stopsBy: 'Disarm — not simulated, flagged, not assumed.', status: 'derived' }],
+    sources: [{ type: 'CHARACTER RECORD', note: 'Existing game profile fields.', status: 'derived' }, { type: 'General canon (Lord of the Rings books/films)', note: 'Broadly established traits as summarised in the profile; no specific chapter citation is claimed.', status: 'interpretation' }],
+    unknown: ['Whether the Ring could ever be used in combat without corruption (not stated — flagged, not assumed).']
+  }
+};
+var DOSSIER_NAME_CACHE_V1612 = {};
+function dossierResolveIdV1612(f) {
+  if (!f) return null;
+  if (f.id && DOSSIER_V1612[f.id]) return f.id;
+  if (f.name && typeof ROSTER !== 'undefined') { if (DOSSIER_NAME_CACHE_V1612.hasOwnProperty(f.name)) return DOSSIER_NAME_CACHE_V1612[f.name]; var r = ROSTER.find(function (x) { return x.name === f.name; }); var rid = (r && DOSSIER_V1612[r.id]) ? r.id : null; DOSSIER_NAME_CACHE_V1612[f.name] = rid; return rid; }
+  if (f._orig && f._orig.id && DOSSIER_V1612[f._orig.id]) return f._orig.id;
+  return null;
+}
+function dossierDerivedV1612(f) {
+  var o = (f && f._orig) || f || {};
+  var trait = o.trait || f.trait || '';
+  var durType = 'normal', dodgeMult = 1;
+  if (trait === 'invulnerable') { durType = 'invulnerable'; dodgeMult = 0.25; }
+  else if (trait === 'regen') { durType = 'regenerative'; dodgeMult = 0.5; }
+  else if (trait === 'infinity_void') { durType = 'force-field'; dodgeMult = 1; }
+  var tags = [];
+  if (o.pers === 'strategist' || f.pers === 'strategist') tags.push('strategist');
+  if (o.pers === 'proud' || f.pers === 'proud') tags.push('prideful');
+  if (o.pers === 'reckless' || f.pers === 'reckless') tags.push('brutal-reckless');
+  if (trait === 'shadow_clones') tags.push('summoner');
+  var systems = [];
+  if (trait === 'shadow_clones') systems.push({ name: 'Shadow clones (trait)', access: 'Technique.', duration: 'Unknown in this profile.', control: 'Fighter.', cost: 'Chakra (profile weakness).', limit: 'Unknown — FLAGGED: a system with no stated limit must not be used as infinite.', stopsBy: 'Unknown — flagged.', status: 'lead' });
+  return {
+    deep: false, identity: { id: o.id || f.id || '', name: o.name || f.name || '', variant: o.variant || f.variant || 'Base', franchise: o.fr || f.fr || '', status: 'derived' }, durability: { type: durType, effect: durType === 'invulnerable' ? 'Trades blows rather than dodging (dodgeMult 0.25).' : (durType === 'regenerative' ? 'Absorbs punishment; dodge priority halved (dodgeMult 0.5); regen heals while alive only, never revives.' : 'No special durability effect is recorded for this fighter.'), howLose: 'Any recorded loss: HP reaching 0.', status: 'derived' },
+    scaling: { feats: o.feat ? [o.feat] : [], bypass: [], note: 'Derived from the existing profile only.', status: 'derived' },
+    style: { tags: tags, description: o.style || f.style || 'unknown', aggression: 'unknown', risk: 'unknown', painResponse: 'unknown', taunt: false, dodgeMult: dodgeMult, status: 'derived' },
+    personality: { willKill: null, holdsFinish: (o.pers === 'compassionate' || o.pers === 'protective'), refusesRetreat: (o.pers === 'proud'), voice: o.persNote || o.pers || f.persNote || 'unknown', moral: 'No moral law is stated beyond the profile personality; none is assumed.', status: 'derived' },
+    signatures: [{ name: o.sig || f.sig || 'unknown', condition: 'signature window', limit: 'As recorded in the profile; nothing beyond it is assumed.', status: 'derived' }],
+    transforms: (o.trans || f.trans) ? [{ name: o.trans || f.trans, trigger: 'HP at or below 45% of maximum (engine rule)', cost: 'No cost is stated in the profile — flagged, not invented.', staminaCost: 0, duration: 'Until battle end in the engine.', reversible: 'No — a one-way escalation in this battle.', effect: '+' + (o.tAtk || f.tAtk || 0) + ' ATK, +' + (o.tDef || f.tDef || 0) + ' DEF (engine transform values).', status: 'derived' }] : [],
+    weaknesses: [{ text: o.weak || f.weak || 'unknown', exploitableBy: 'an opponent with a recorded counter under engine exploit rules only — a weakness field alone grants nothing', status: 'derived' }],
+    laws: (o.pers === 'compassionate' || o.pers === 'protective') ? [{ rule: 'Holds a lethal finish once as a recorded mercy decision (engine choice event).', breaksWhen: 'Not stated — unknown.', engineEffect: 'Engine choice event already exists; no additional law is simulated.', status: 'derived' }] : ((o.pers === 'proud') ? [{ rule: 'Refuses retreat and dishonourable openings.', breaksWhen: 'Not stated — unknown.', engineEffect: 'Engine refused-action event already exists.', status: 'derived' }] : []),
+    peeves: [], systems: systems,
+    sources: [{ type: 'CHARACTER RECORD', note: 'Existing game profile fields only; no deep dossier has been written for this fighter yet.', status: 'derived' }],
+    unknown: ['All fields beyond the existing profile are unknown for this fighter until its deep dossier batch is written.', 'Fields 14-26 beyond the existing profile are unknown until its deep dossier batch is written.'],
+    relationships: [], communication: { style: 'unknown', underPressure: 'unknown', status: 'derived' }, fears: [], reputation: { text: 'unknown', effect: 'No reputation effect is assumed.', status: 'derived' }, victoryBehaviour: { win: 'unknown', lose: 'unknown', status: 'derived' }, affinity: { terrain: 'unknown', match: [], helps: 'unknown', hurts: 'unknown', status: 'derived' }, prep: { carried: 'unknown', versionOnly: 'unknown', losable: 'unknown', prepTime: 'unknown', limit: 'unknown — flagged, never assumed infinite', status: 'derived' }, powerInteractions: [], versionEvolution: { thisVersion: (o.variant || f.variant || 'Base'), differsFrom: 'unknown — another version\'s feats are never merged into this version', gained: 'unknown', lost: 'unknown', status: 'derived' }, definingFeats: [], psychWeaknesses: [], knowledge: [], physiology: { species: 'unknown', anatomy: 'unknown', senses: 'unknown', painResponse: 'unknown', howLoseLink: 'Links to durability; no separate stat is claimed.', status: 'derived' }
+  };
+}
+function dossierForV1612(f) {
+  var id = dossierResolveIdV1612(f);
+  var base = dossierDerivedV1612(f);
+  if (!id) return base;
+  var deep = DOSSIER_V1612[id];
+  var out = {};
+  Object.keys(base).forEach(function (k) { out[k] = base[k]; });
+  Object.keys(deep).forEach(function (k) { out[k] = deep[k]; });
+  out.deep = true; out.dossierId = id;
+  if (typeof DOSSIER_EXT_V1612 !== 'undefined' && DOSSIER_EXT_V1612[id]) { Object.keys(DOSSIER_EXT_V1612[id]).forEach(function (k) { out[k] = DOSSIER_EXT_V1612[id][k]; }); }
+  out.identity = { id: id, name: (f && f.name) || '', variant: (f && f.variant) || 'Base', franchise: (f && (f.fr || f.franchise)) || '', status: 'derived' };
+  return out;
+}
+function dossierStanceV1612(actor) {
+  var d = dossierForV1612(actor);
+  var tags = (d.style && d.style.tags) || [];
+  if (tags.indexOf('strategist') !== -1) return null;
+  if (tags.indexOf('holder-back') !== -1) return actor.name + ' tests first at reduced commitment and escalates only when challenged or losing (holder-back stance, dossier).';
+  if (tags.indexOf('evasive') !== -1) return actor.name + ' keeps distance, avoids direct trades, and uses mobility and endurance (evasive stance, dossier).';
+  if (tags.indexOf('brutal-reckless') !== -1 || tags.indexOf('feral') !== -1) return actor.name + ' trades blows recklessly and fights through injuries rather than dodging (brutal stance, dossier).';
+  if (d.durability && d.durability.type === 'regenerative') return actor.name + ' absorbs punishment, taunts, and keeps pressing through injuries (regenerative stance, dossier).';
+  if (d.durability && d.durability.type === 'invulnerable') return actor.name + ' stands through punishment and trades blows rather than dodging (invulnerable stance, dossier).';
+  if (tags.indexOf('prideful') !== -1) return actor.name + ' fights directly and refuses to retreat (prideful stance, dossier).';
+  return null;
+}
+function dossierDodgeMultV1612(f) {
+  try { var d = dossierForV1612(f); if (d.style && typeof d.style.dodgeMult === 'number') return d.style.dodgeMult; } catch (e) {}
+  return 1;
+}
+function dossierPeeveV1612(actor, foes, events) {
+  var d = dossierForV1612(actor);
+  var fired = actor.peeveFired || {};
+  for (var i = 0; i < (d.peeves || []).length; i++) {
+    var p = d.peeves[i];
+    if (!p.engineTriggerable || fired[p.triggerKind]) continue;
+    if (p.triggerKind === 'hpBelow50' && actor.currentHp <= actor.maxHp * 0.5) return p;
+    if (p.triggerKind === 'targetHealed' && (events || []).some(function (e) { return e.type === 'heal' && foes.some(function (fo) { return fo.name === e.actor; }); })) return p;
+  }
+  return null;
+}
+function dossierTransformCostV1612(actor) {
+  var d = dossierForV1612(actor);
+  for (var i = 0; i < (d.transforms || []).length; i++) { if (d.transforms[i].name === actor.trans) return d.transforms[i].staminaCost || 0; }
+  return 0;
+}
+function dossierFlaggedSystemsV1612(f) {
+  var d = dossierForV1612(f);
+  return (d.systems || []).filter(function (s) { return !s.limit || /unknown|FLAGGED/i.test(s.limit); });
+}
+function dossierLineV1612(f, orig) {
+  var d = dossierForV1612(f);
+  if (!d.deep) return dossierLineV1611(f, orig);
+  var tail = ' Dossier: durability ' + d.durability.type + ' — ' + truncV162(d.durability.effect, 45) + '; law: ' + truncV162((d.laws[0] && d.laws[0].rule) || 'none stated', 40) + '; systems: ' + ((d.systems || []).map(function (s) { return s.name + ' (' + truncV162(s.limit || 'limit unknown — flagged', 25) + ')'; }).join(', ') || 'none listed') + '.';
+  if (d.communication && d.communication.style && d.communication.style !== 'unknown') tail += ' Speaks: ' + truncV162(d.communication.style, 30);
+  if (d.powerInteractions && d.powerInteractions.length) tail += ' Counters: ' + truncV162(d.powerInteractions[0].interaction + ' — ' + d.powerInteractions[0].result, 45);
+  return dossierLineV1611(f, orig) + tail;
+}
+function dossierLineFullV1612(f) {
+  var d = dossierForV1612(f);
+  var laws = (d.laws || []).map(function (l) { return l.rule + ' [' + l.status + ']'; }).join('; ') || 'none stated';
+  var peeves = (d.peeves || []).map(function (p) { return p.trigger + ' → ' + p.effect + ' [' + p.status + (p.engineTriggerable ? ', engine-triggerable' : ', brief/info only') + ']'; }).join('; ') || 'none stated';
+  var systems = (d.systems || []).map(function (s) { return s.name + ': access ' + s.access + '; duration ' + s.duration + '; control ' + s.control + '; cost ' + s.cost + '; limit ' + s.limit + '; stops by ' + s.stopsBy + ' [' + s.status + ']'; }).join(' | ') || 'none listed';
+  return (f.name || '') + ' (' + (f.variant || 'Base') + '): durability ' + d.durability.type + ' [' + d.durability.status + '] — ' + d.durability.effect + ' How they can lose: ' + d.durability.howLose + '. Style: ' + d.style.description + ' [' + d.style.status + ']. Personality: ' + d.personality.voice + ' Moral: ' + d.personality.moral + ' [' + d.personality.status + ']. Laws: ' + laws + '. Peeves/triggers: ' + peeves + '. Systems: ' + systems + '. Unknown: ' + (d.unknown || []).join('; ') + '.';
+}
+function dossierPanelHtmlV1612(f) {
+  var d = dossierForV1612(f);
+  function st(s) { return ' <span style="color:var(--dim)">[' + esc(String(s)) + ']</span>'; }
+  var rows = '';
+  rows += '<p><b>Canon dossier (v16.12, ' + (d.deep ? 'deep dossier' : 'derived from existing profile — deep batch not yet written') + '):</b></p>';
+  rows += '<p><b>Durability:</b> ' + esc(d.durability.type) + st(d.durability.status) + ' — ' + esc(d.durability.effect) + ' <b>How they can lose:</b> ' + esc(d.durability.howLose) + '</p>';
+  rows += '<p><b>Fighting style:</b> ' + esc(d.style.description) + st(d.style.status) + ' Tags: ' + esc((d.style.tags || []).join(', ') || 'none') + '.</p>';
+  rows += '<p><b>Personality / moral:</b> ' + esc(d.personality.voice) + ' ' + esc(d.personality.moral) + st(d.personality.status) + '</p>';
+  rows += '<p><b>Laws / rules:</b> ' + ((d.laws || []).length ? (d.laws || []).map(function (l) { return esc(l.rule) + st(l.status) + ' Breaks when: ' + esc(l.breaksWhen) + '. Engine effect: ' + esc(l.engineEffect); }).join('<br>') : '[NOT KNOWN] — no law is stated, none is assumed.') + '</p>';
+  rows += '<p><b>Peeves / triggers (with effect):</b> ' + ((d.peeves || []).length ? (d.peeves || []).map(function (p) { return esc(p.trigger) + ' → ' + esc(p.effect) + st(p.status) + (p.engineTriggerable ? ' Engine-triggerable.' : ' Brief/info only — no engine trigger in a 1v1 arena, flagged as such.'); }).join('<br>') : '[NOT KNOWN] — no trigger is stated, none is assumed.') + '</p>';
+  rows += '<p><b>Systems:</b> ' + ((d.systems || []).length ? (d.systems || []).map(function (s) { return esc(s.name) + ': access ' + esc(s.access) + '; duration ' + esc(s.duration) + '; control ' + esc(s.control) + '; cost ' + esc(s.cost) + '; limit ' + esc(s.limit) + '; stops by ' + esc(s.stopsBy) + st(s.status) + ((/unknown|FLAGGED/i.test(s.limit)) ? ' <b>FLAGGED: limit not fully stated — never used as infinite.</b>' : ''); }).join('<br>') : 'None listed.') + '</p>';
+  rows += '<p><b>Signatures (conditions / limits):</b> ' + ((d.signatures || []).map(function (s) { return esc(s.name) + ' — ' + esc(s.condition) + '; limit: ' + esc(s.limit) + st(s.status); }).join('<br>') || 'unknown') + '</p>';
+  rows += '<p><b>Transformations:</b> ' + ((d.transforms || []).length ? (d.transforms || []).map(function (t) { return esc(t.name) + ' — trigger: ' + esc(t.trigger) + '; cost: ' + esc(t.cost) + '; duration: ' + esc(t.duration) + '; reversible: ' + esc(t.reversible) + '; effect: ' + esc(t.effect) + st(t.status); }).join('<br>') : 'None in this build.') + '</p>';
+  rows += '<p><b>Weaknesses (count only with a recorded exploit):</b> ' + ((d.weaknesses || []).map(function (w) { return esc(w.text) + ' — exploitable by: ' + esc(w.exploitableBy || 'a recorded counter under engine rules only') + st(w.status); }).join('<br>') || 'unknown') + '</p>';
+  rows += '<p><b>Unknown / not established:</b> ' + esc((d.unknown || []).join('; ') || 'none listed') + '</p>';
+  rows += '<p><b>Relationships (apply only if the opponent matches):</b> ' + ((d.relationships || []).length ? (d.relationships || []).map(function (r) { return esc(r.opponentName) + ' — ' + esc(r.relation) + ': ' + esc(r.behaviour) + st(r.status); }).join('<br>') : '[NOT KNOWN] — no relationship is stated; unmatched relationships never buff a fight.') + '</p>';
+  rows += '<p><b>Communication style (paraphrased, never quoted dialogue):</b> ' + esc((d.communication && d.communication.style) || 'unknown') + ' Under pressure: ' + esc((d.communication && d.communication.underPressure) || 'unknown') + st((d.communication && d.communication.status) || 'derived') + '</p>';
+  rows += '<p><b>Fears / traumas / emotional triggers:</b> ' + ((d.fears || []).length ? (d.fears || []).map(function (f) { return esc(f.trigger) + ' → ' + esc(f.effect) + st(f.status) + (f.engineTriggerable ? ' Engine-triggerable.' : ' Brief/info only.'); }).join('<br>') : '[NOT KNOWN]') + '</p>';
+  rows += '<p><b>Reputation:</b> ' + esc((d.reputation && d.reputation.text) || 'unknown') + ' Effect: ' + esc((d.reputation && d.reputation.effect) || '') + st((d.reputation && d.reputation.status) || 'derived') + '</p>';
+  rows += '<p><b>Victory / defeat behaviour (behaviour, not a stat bonus):</b> Win: ' + esc((d.victoryBehaviour && d.victoryBehaviour.win) || 'unknown') + '. Lose: ' + esc((d.victoryBehaviour && d.victoryBehaviour.lose) || 'unknown') + st((d.victoryBehaviour && d.victoryBehaviour.status) || 'derived') + '</p>';
+  rows += '<p><b>Battlefield affinity:</b> ' + esc((d.affinity && d.affinity.terrain) || 'unknown') + ' — helps: ' + esc((d.affinity && d.affinity.helps) || 'unknown') + '; hurts: ' + esc((d.affinity && d.affinity.hurts) || 'unknown') + st((d.affinity && d.affinity.status) || 'derived') + '</p>';
+  rows += '<p><b>Resources / prep (limits, never infinite):</b> Carried: ' + esc((d.prep && d.prep.carried) || 'unknown') + '. Version-only: ' + esc((d.prep && d.prep.versionOnly) || 'unknown') + '. Losable: ' + esc((d.prep && d.prep.losable) || 'unknown') + '. Prep time: ' + esc((d.prep && d.prep.prepTime) || 'unknown') + '. Limit: ' + esc((d.prep && d.prep.limit) || 'unknown') + st((d.prep && d.prep.status) || 'derived') + '</p>';
+  rows += '<p><b>Power interactions:</b> ' + ((d.powerInteractions || []).length ? (d.powerInteractions || []).map(function (x) { return esc(x.interaction) + ' — ' + esc(x.result) + st(x.status); }).join('<br>') : 'None stated.') + '</p>';
+  rows += '<p><b>Version evolution (never merge another version):</b> This version: ' + esc((d.versionEvolution && d.versionEvolution.thisVersion) || 'unknown') + '. Differs from: ' + esc((d.versionEvolution && d.versionEvolution.differsFrom) || 'unknown') + st((d.versionEvolution && d.versionEvolution.status) || 'derived') + '</p>';
+  rows += '<p><b>Defining feats (narrative anchors, never new powers):</b> ' + ((d.definingFeats || []).length ? (d.definingFeats || []).map(function (x) { return esc(x.moment) + ' Source: ' + esc(x.source) + st(x.status); }).join('<br>') : 'None stated.') + '</p>';
+  rows += '<p><b>Psychological weaknesses (exact exploitable condition):</b> ' + ((d.psychWeaknesses || []).length ? (d.psychWeaknesses || []).map(function (x) { return esc(x.trait) + ' — exploitable when: ' + esc(x.exploitableCondition) + st(x.status); }).join('<br>') : 'None stated.') + '</p>';
+  rows += '<p><b>Knowledge domains (with limits):</b> ' + ((d.knowledge || []).length ? (d.knowledge || []).map(function (x) { return esc(x.domain) + ' — limit: ' + esc(x.limit) + st(x.status); }).join('<br>') : 'None stated.') + '</p>';
+  rows += '<p><b>Physiology (linked to durability, not a stat dump):</b> Species: ' + esc((d.physiology && d.physiology.species) || 'unknown') + '. Anatomy: ' + esc((d.physiology && d.physiology.anatomy) || 'unknown') + '. Senses: ' + esc((d.physiology && d.physiology.senses) || 'unknown') + '. Pain response: ' + esc((d.physiology && d.physiology.painResponse) || 'unknown') + '. How-lose link: ' + esc((d.physiology && d.physiology.howLoseLink) || '') + st((d.physiology && d.physiology.status) || 'derived') + '</p>';
+  rows += '<p><b>Sources:</b> ' + ((d.sources || []).map(function (s) { return esc(s.type) + ': ' + esc(s.note) + st(s.status); }).join('<br>') || 'none') + (f.wiki ? '<br>General reference link (not a claim citation): https://en.wikipedia.org/wiki/' + esc(f.wiki) : '') + '</p>';
+  return rows;
+}
+/* v16.12 gated dossier-law checks: appended to the hard-constraint lists
+   ONLY when rec.dossierV1612 is true (the v16.12 generation path sets it).
+   A no-kill code is a law, not a personality guess: it applies only to
+   deep dossiers whose laws state willKill === false AND name a no-kill
+   code (Superman Base, Batman Base). Frodo's restraint is NOT a code,
+   so it is deliberately not gated here. A sentence fails only when it
+   attributes a deliberate killing verb to the no-kill fighter without a
+   negation. */
+function dossierLawChecksV1612(checks, text, rec) {
+  if (!rec || !rec.dossierV1612) return;
+  (rec.fighters || []).forEach(function (f) {
+    var d = dossierForV1612(f);
+    if (!d.deep || !d.personality || d.personality.willKill !== false) return;
+    var isCode = (d.laws || []).some(function (l) { return /no-kill/i.test(l.rule); });
+    if (!isCode) return;
+    var bad = null;
+    sentencesV166(text).forEach(function (s) {
+      if (bad) return;
+      if (!storyHasPhraseV162(s, f.name)) return;
+      if (/\b(not|never|did not|refused to)\b[^.]{0,40}\b(killed|murdered|slew|executed)\b/i.test(s)) return;
+      var m = s.match(/\b(killed|murdered|slew|executed)\b/i);
+      if (m) bad = f.name + ' is described as deliberately killing (' + m[1] + '), but the dossier no-kill code forbids a deliberate killing finish; describe the finish as a decisive incapacitating blow.';
+    });
+    if (bad) hardPushV1611(checks, 'dossier law: no-kill code', 'FAILED', bad);
+    else hardPushV1611(checks, 'dossier law: no-kill code', 'PASSED', 'No deliberate killing is attributed to ' + f.name + '.');
+  });
+}
+
+/* ================= v16.12b — CANON DOSSIER FIELDS 14-26 =================
+   Extension of the v16.12 dossier block, same build, same version.
+   Fields 14-26 are frozen in the schema for EVERY fighter (deep entries
+   below, derived defaults for everyone else). Nothing here copies
+   scripts, dialogue, or long copyrighted text: communication style and
+   behaviour are paraphrased in the dossier's own words, with a source
+   reference only. Source hierarchy, enforced by dossierFactStatusV1612
+   and by the data itself: primary canon for the selected version first,
+   then secondary canon, then fan wiki as a LEAD only. A fact from a
+   different version, a different medium, or a fan wiki alone is never
+   promoted to canon for the selected version, and no deep dossier below
+   claims a 'verified' citation it does not have (all source statuses
+   are derived/interpretation/lead/uncertain). No backend is built: the
+   dossiers are baked into this single file, research stays background
+   context, and live research alone never drives engine tactics. */
+var DOSSIER_FIELDS_V1612 = ['identity','durability','scaling','style','personality','signatures','transforms','weaknesses','laws','peeves','systems','sources','unknown','relationships','communication','fears','reputation','victoryBehaviour','affinity','prep','powerInteractions','versionEvolution','definingFeats','psychWeaknesses','knowledge','physiology'];
+var DOSSIER_EXT_V1612 = {
+  deadpool: {
+    relationships: [{ opponentId: 'wolverine', opponentName: 'Wolverine', relation: 'frenemy / rival', behaviour: 'Mocks and escalates; treats the fight as a joke that still hurts.', effect: 'escalate', status: 'interpretation' }],
+    communication: { style: 'Constant joking, quips, and self-aware asides, even while injured; humour is a weapon and a shield.', underPressure: 'Jokes harder when hurt; never goes quiet.', status: 'interpretation' },
+    fears: [{ trigger: 'Being forgotten or left alone with no audience', triggerKind: 'none', effect: 'Seeks attention and escalates theatrically.', engineTriggerable: false, status: 'interpretation' }],
+    reputation: { text: 'Feared as unpredictable, mocked as unserious — opponents underestimate him, which he exploits.', effect: 'Opening moves are underestimated; no stat effect.', status: 'interpretation' },
+    victoryBehaviour: { win: 'Jokes over the fallen foe and moves on; no solemn tribute.', lose: 'Keeps joking through defeat; refuses to treat it as final while alive.', status: 'interpretation' },
+    affinity: { terrain: 'Urban chaos and close quarters', match: ['Ruined City'], helps: 'Cover and clutter to improvise with.', hurts: 'Wide open ground with no props to play off.', status: 'interpretation' },
+    prep: { carried: 'Katanas, guns, costume.', versionOnly: 'None stated.', losable: 'Guns can run dry; katanas can be dropped (not simulated as disarm).', prepTime: 'None — improvises.', limit: 'Finite ammunition; no infinite prep is claimed.', status: 'derived' },
+    powerInteractions: [{ interaction: 'Healing factor vs lethal damage', result: 'Damage lands and accumulates; healing is capped by the engine and never revives.', status: 'demonstrated' }],
+    versionEvolution: { thisVersion: 'Base Deadpool (current comics/film composite as summarised in the profile).', differsFrom: 'Earlier versions differ in tone and in how far regeneration is shown to go; those showings are NOT merged into this version.', gained: 'Nothing is claimed as gained over another version.', lost: 'Nothing is claimed as lost.', status: 'interpretation' },
+    definingFeats: [{ moment: 'Survived injuries that would kill most fighters (profile feat, general terms).', source: 'CHARACTER RECORD, general terms — no specific issue cited.', status: 'interpretation' }],
+    psychWeaknesses: [{ trait: 'Recklessness and need for attention', exploitableCondition: 'When he overextends for a joke or a taunt, an opponent who punishes the opening can land a recorded blow.', status: 'interpretation' }],
+    knowledge: [{ domain: 'Combat improvisation and weapons', limit: 'Knows fighting, not everything: no claim of universal knowledge.', status: 'derived' }],
+    physiology: { species: 'Human mutant (healing factor).', anatomy: 'Human anatomy that regenerates; head survival is interpretation, not an engine revive.', senses: 'Human senses.', painResponse: 'Ignores pain and jokes through it.', howLoseLink: 'Links to regenerative durability: loss is HP 0 after the regen cap, never a revive.', status: 'interpretation' }
+  },
+  wolverine: {
+    relationships: [{ opponentId: 'deadpool', opponentName: 'Deadpool', relation: 'frenemy / rival', behaviour: 'Gruff tolerance that turns to feral escalation when mocked.', effect: 'escalate', status: 'interpretation' }],
+    communication: { style: 'Terse, gruff, few words; growls more than he speeches.', underPressure: 'Goes quieter and more feral as damage mounts.', status: 'interpretation' },
+    fears: [{ trigger: 'Loss of control to rage, and being used as a weapon', triggerKind: 'none', effect: 'Fights harder but less carefully when control slips.', engineTriggerable: false, status: 'interpretation' }],
+    reputation: { text: 'Feared as the best at what he does; respected by allies, dreaded by enemies.', effect: 'Opponents open cautiously; no stat effect.', status: 'interpretation' },
+    victoryBehaviour: { win: 'Gruff, brief acknowledgement; walks away.', lose: 'Refuses to stay down while alive; no surrender is recorded.', status: 'interpretation' },
+    affinity: { terrain: 'Wilderness and forest', match: ['Forest Clearing'], helps: 'Tracking, ambush, and close-quarters ferocity.', hurts: 'Open ground with no cover to stalk from.', status: 'interpretation' },
+    prep: { carried: 'Adamantium claws (body), costume.', versionOnly: 'None stated.', losable: 'Claws cannot be dropped; they are part of him.', prepTime: 'None — hunts and closes.', limit: 'No prep system is claimed beyond tracking and closing.', status: 'derived' },
+    powerInteractions: [{ interaction: 'Adamantium claws vs armour', result: 'Claws cut most materials where the record shows a hit landing; they do not bypass a recorded immunity on their own.', status: 'interpretation' }],
+    versionEvolution: { thisVersion: 'Base Wolverine (current comics composite as summarised in the profile).', differsFrom: 'Old Man Logan is a separate version with its own history; its feats are NOT merged into Base.', gained: 'Nothing claimed.', lost: 'Nothing claimed.', status: 'interpretation' },
+    definingFeats: [{ moment: 'Survived wars and superhuman foes (profile feat, general terms).', source: 'CHARACTER RECORD, general terms — no specific issue cited.', status: 'interpretation' }],
+    psychWeaknesses: [{ trait: 'Rage and stubborn pride', exploitableCondition: 'When HP falls to 50% or below, rage escalates him into a signature attack (engine peeve trigger) — an opening for a prepared counter, not a damage bonus.', status: 'interpretation' }],
+    knowledge: [{ domain: 'Tracking, combat, and survival', limit: 'Knows hunting and war, not science or magic.', status: 'derived' }],
+    physiology: { species: 'Human mutant with adamantium skeleton.', anatomy: 'Adamantium-laced skeleton; healing factor; weight is a profile weakness.', senses: 'Heightened animal senses.', painResponse: 'Fights through pain.', howLoseLink: 'Links to regenerative durability: loss is HP 0 after the regen cap.', status: 'interpretation' }
+  },
+  superman: {
+    relationships: [{ opponentId: 'batman', opponentName: 'Batman', relation: 'uneasy ally', behaviour: 'Trusts Batman but knows exactly how dangerous preparation makes him; holds back lethal force and protects first.', effect: 'spare', status: 'interpretation' }],
+    communication: { style: 'Earnest, plain, and reassuring; speaks to protect, not to intimidate.', underPressure: 'Stays calm and direct; pleads before he escalates.', status: 'interpretation' },
+    fears: [{ trigger: 'Innocents harmed because he held back or arrived late', triggerKind: 'none', effect: 'Commits fully and stops holding back.', engineTriggerable: false, status: 'interpretation' }],
+    reputation: { text: 'Universally recognised symbol of hope; feared by villains, trusted by civilians.', effect: 'Opponents may open defensively; civilians are not present in a 1v1 arena, so no negotiation effect is simulated.', status: 'interpretation' },
+    victoryBehaviour: { win: 'Checks the fallen foe, offers help where the mode allows, and leaves without gloating.', lose: 'Accepts defeat without cruelty; protects others even while losing.', status: 'interpretation' },
+    affinity: { terrain: 'Open sky and open ground', match: ['Open Arena'], helps: 'Flight and range with nothing to hide behind.', hurts: 'Enclosed spaces that remove flight and range.', status: 'interpretation' },
+    prep: { carried: 'Costume only; powers are innate.', versionOnly: 'None stated.', losable: 'Nothing carried that can be broken in this build.', prepTime: 'None — powers are always available while sunlit.', limit: 'No prep system is claimed; sunlight is not simulated as a stat change.', status: 'derived' },
+    powerInteractions: [{ interaction: 'Magic vs invulnerability', result: 'Magic bypasses much of his durability under engine exploit rules — a weakness field alone grants nothing.', status: 'demonstrated' }, { interaction: 'Kryptonite vs invulnerability', result: 'Kryptonite bypasses durability only with a recorded exploit (engine rules).', status: 'demonstrated' }],
+    versionEvolution: { thisVersion: 'Base Superman (current comics composite as summarised in the profile).', differsFrom: 'Kingdom Come Superman is a separate, older version; its feats and power showings are NOT merged into Base, and Base showings are not attributed to Kingdom Come.', gained: 'Nothing claimed.', lost: 'Nothing claimed.', status: 'interpretation' },
+    definingFeats: [{ moment: 'Held back collapsing structures (profile feat, general terms).', source: 'CHARACTER RECORD, general terms — no specific issue cited.', status: 'interpretation' }],
+    psychWeaknesses: [{ trait: 'Compassion and restraint', exploitableCondition: 'While he is holding back (first-turn holder-back stance), an opponent who acts decisively can land a recorded blow — an opening, not a damage bypass.', status: 'interpretation' }],
+    knowledge: [{ domain: 'Journalism, Kryptonian science (general), tactics', limit: 'Knows his own world and powers; does not know every enemy, weakness, or universe.', status: 'interpretation' }],
+    physiology: { species: 'Kryptonian under a yellow sun.', anatomy: 'Solar-powered cellular structure; invulnerable to most physical force, vulnerable to kryptonite and magic.', senses: 'Superhuman sight and hearing (not a separate mechanic in this build).', painResponse: 'Shrugs off most blows; reacts to bypass damage.', howLoseLink: 'Links to invulnerable durability: loss is HP 0, normally via a bypass or overwhelming gap.', status: 'interpretation' }
+  },
+  batman: {
+    relationships: [{ opponentId: 'superman', opponentName: 'Superman', relation: 'uneasy ally', behaviour: 'Has planned for Superman specifically; will not kill him, but will exploit a prepared counter.', effect: 'prepare', status: 'interpretation' }],
+    communication: { style: 'Terse, interrogative, and intimidating; few words, each one a question or a warning.', underPressure: 'Goes quieter and more precise; never panics aloud.', status: 'interpretation' },
+    fears: [{ trigger: 'HP at or below 25% while outmatched — failing to protect, losing control of the plan', triggerKind: 'hpBelow25', effect: 'Doubles down on preparation rather than trading blows (recorded as a fear tactic event; no damage change).', engineTriggerable: true, status: 'interpretation' }],
+    reputation: { text: 'Feared as a myth by criminals; respected as a planner by allies.', effect: 'Intimidation opens the fight; against a prepared superhuman it buys study time, not damage.', status: 'interpretation' },
+    victoryBehaviour: { win: 'Leaves without gloating; secures the scene and disappears.', lose: 'Refuses to beg; analyses the loss even while down.', status: 'interpretation' },
+    affinity: { terrain: 'Urban night — rooftops, alleys, cover', match: ['Ruined City'], helps: 'Cover, gadgets, and ambush in a ruined city.', hurts: 'Open ground with no cover and no shadows.', status: 'interpretation' },
+    prep: { carried: 'Utility belt gadgets (finite, not itemised in the profile).', versionOnly: 'Armored Batsuit is the second variant, not Base equipment.', losable: 'Gadgets can be expended or broken — expenditure is not tracked numerically, so finiteness is flagged, not assumed infinite.', prepTime: 'Study then prepare turns in the engine (strategist sequence).', limit: 'FINITE: a gadget counter lands only under engine exploit rules; prep is never infinite.', status: 'derived' },
+    powerInteractions: [{ interaction: 'Preparation vs raw power', result: 'Preparation does not add stats; it unlocks a recorded counter under engine rules only.', status: 'demonstrated' }],
+    versionEvolution: { thisVersion: 'Base Batman (current comics composite as summarised in the profile).', differsFrom: 'Armored Batsuit is a separate variant with its own stat mods; its showings are NOT merged into Base.', gained: 'Nothing claimed.', lost: 'Nothing claimed.', status: 'interpretation' },
+    definingFeats: [{ moment: 'Outplanned far stronger foes (profile feat, general terms).', source: 'CHARACTER RECORD, general terms — no specific issue cited.', status: 'interpretation' }],
+    psychWeaknesses: [{ trait: 'Obsession and need for control', exploitableCondition: 'When a plan fails (a prepared counter is detected and avoided), he must re-study before preparing again — a tempo loss, not a stat penalty.', status: 'interpretation' }],
+    knowledge: [{ domain: 'Detective work, tactics, criminology, gadgetry', limit: 'Knows planning and his own world; does NOT know magic, and does not know an enemy he has not studied in the fight.', status: 'interpretation' }],
+    physiology: { species: 'Human, peak-trained.', anatomy: 'Human anatomy with no innate powers, regeneration, or invulnerability.', senses: 'Human senses, trained to peak.', painResponse: 'Avoids damage; cannot absorb it.', howLoseLink: 'Links to normal durability: any recorded loss is HP 0.', status: 'demonstrated' }
+  },
+  goku: {
+    relationships: [{ opponentId: 'vegeta', opponentName: 'Vegeta', relation: 'rival', behaviour: 'Escalates joyfully; refuses to hold back against a rival at full power.', effect: 'escalate', status: 'interpretation' }],
+    communication: { style: 'Cheerful, direct, and simple; challenges the opponent to fight at full power.', underPressure: 'Grins wider and pushes harder; never trash-talks cruelly.', status: 'interpretation' },
+    fears: [{ trigger: 'A rival who will not fight at full power', triggerKind: 'none', effect: 'Pushes harder and escalates to transformation sooner (narrative only in this build).', engineTriggerable: false, status: 'interpretation' }],
+    reputation: { text: 'Respected as a warrior who seeks the strongest fight; underestimated for his simplicity.', effect: 'Rivals open at full power; no stat effect.', status: 'interpretation' },
+    victoryBehaviour: { win: 'Celebrates the fight itself, respects the foe, and looks for the next challenge.', lose: 'Accepts defeat with respect and trains to rematch.', status: 'interpretation' },
+    affinity: { terrain: 'Open ground and open sky', match: ['Open Arena'], helps: 'Flight, ki range, and room to manoeuvre.', hurts: 'Cramped enclosed spaces.', status: 'interpretation' },
+    prep: { carried: 'Gi and weighted training gear (not a combat bonus).', versionOnly: 'None stated.', losable: 'Nothing carried that changes combat if lost.', prepTime: 'None — fights as he arrives.', limit: 'No prep system is claimed.', status: 'derived' },
+    powerInteractions: [{ interaction: 'Ki vs physical defence', result: 'Ki blasts are energy attacks; they do not bypass a recorded immunity on their own.', status: 'derived' }],
+    versionEvolution: { thisVersion: 'Base Goku (current anime/manga composite as summarised in the profile).', differsFrom: 'Super Saiyan God is a separate variant and Super Saiyan Blue is the in-combat transformation; variant showings are NOT merged into Base.', gained: 'Nothing claimed.', lost: 'Nothing claimed.', status: 'interpretation' },
+    definingFeats: [{ moment: 'Survived planet-shaking clashes (profile feat, general terms).', source: 'CHARACTER RECORD, general terms — no specific episode cited.', status: 'interpretation' }],
+    psychWeaknesses: [{ trait: 'Overconfidence and love of a fair fight', exploitableCondition: 'While holding back at first (holder-back stance), a decisive opponent can land a recorded blow before he commits fully.', status: 'interpretation' }],
+    knowledge: [{ domain: 'Martial arts, ki control, combat instinct', limit: 'Knows fighting, not science, magic theory, or strategy beyond combat.', status: 'interpretation' }],
+    physiology: { species: 'Saiyan.', anatomy: 'Saiyan biology: grows stronger from near-death in canon, but no such bonus is simulated — flagged, not invented as a stat change.', senses: 'Ki sensing (not a separate mechanic in this build).', painResponse: 'Welcomes a hard fight.', howLoseLink: 'Links to normal durability: any recorded loss is HP 0.', status: 'interpretation' }
+  },
+  saitama: {
+    relationships: [],
+    communication: { style: 'Flat, bored, and deadpan; short sentences, little enthusiasm until the fight matters.', underPressure: 'Stays flat; boredom, not panic, is the tell.', status: 'interpretation' },
+    fears: [{ trigger: 'A life with no challenge left', triggerKind: 'none', effect: 'Stays casual and disengaged until challenged.', engineTriggerable: false, status: 'interpretation' }],
+    reputation: { text: 'Unknown to most of his own world despite his power; underestimated by every new opponent.', effect: 'Opponents open overconfidently; no stat effect.', status: 'interpretation' },
+    victoryBehaviour: { win: 'Shrugs, looks for groceries or the next chore; no gloating.', lose: 'No recorded loss behaviour is claimed — a loss would be unprecedented in the profile, so nothing is invented for it.', status: 'uncertain' },
+    affinity: { terrain: 'Anywhere ordinary — streets, open ground', match: ['Open Arena'], helps: 'Nothing specific; ordinariness is the point.', hurts: 'Nothing specific is stated — unknown.', status: 'interpretation' },
+    prep: { carried: 'Costume and gloves only.', versionOnly: 'None stated.', losable: 'Nothing carried that changes combat if lost.', prepTime: 'None.', limit: 'No prep system is claimed.', status: 'derived' },
+    powerInteractions: [{ interaction: 'Overwhelming physical power vs any defence', result: 'No bypass is assumed: a recorded immunity or cannot-harm rule still applies in both directions until the record shows otherwise.', status: 'interpretation' }],
+    versionEvolution: { thisVersion: 'Base Saitama (current anime/manga composite as summarised in the profile).', differsFrom: 'Serious Saitama is a separate variant and Serious Series is the in-combat transformation; variant showings are NOT merged into Base.', gained: 'Nothing claimed.', lost: 'Nothing claimed.', status: 'interpretation' },
+    definingFeats: [{ moment: 'Defeated foes no one else could touch (profile feat, general terms).', source: 'CHARACTER RECORD, general terms — no specific episode cited.', status: 'interpretation' }],
+    psychWeaknesses: [{ trait: 'Boredom', exploitableCondition: 'While casual at first (holder-back stance), a decisive opponent can land a recorded blow before he commits fully.', status: 'interpretation' }],
+    knowledge: [{ domain: 'Ordinary life, basic hero work', limit: 'Knows very little beyond fighting and daily life; no science, magic, or strategy claim is made.', status: 'interpretation' }],
+    physiology: { species: 'Human (power source unexplained in the profile).', anatomy: 'Human appearance with no demonstrated injury from conventional attacks — interpretation, not a stated invulnerability power.', senses: 'Human senses.', painResponse: 'Bored indifference.', howLoseLink: 'Links to invulnerable (interpretation) durability: loss is HP 0; no bypass is assumed.', status: 'interpretation' }
+  },
+  frodo: {
+    relationships: [],
+    communication: { style: 'Quiet, earnest, and reluctant; speaks little in combat and never boasts.', underPressure: 'Goes quieter and endures; fear shows as resolve, not panic.', status: 'interpretation' },
+    fears: [{ trigger: 'The Ring and the burden of carrying it', triggerKind: 'none', effect: 'Endures rather than escalates; corruption is a cost, never a combat bonus.', engineTriggerable: false, status: 'interpretation' }],
+    reputation: { text: 'Unknown outside his own story; underestimated by size alone.', effect: 'Opponents open overconfidently; no stat effect.', status: 'interpretation' },
+    victoryBehaviour: { win: 'Shows mercy and humility; does not gloat.', lose: 'Endures to the end; no surrender of the burden is recorded.', status: 'interpretation' },
+    affinity: { terrain: 'Forest paths and hidden ways', match: ['Forest Clearing'], helps: 'Stealth and endurance on forest paths.', hurts: 'Open ground with nowhere to hide.', status: 'interpretation' },
+    prep: { carried: 'Sting, cloak, provisions.', versionOnly: 'Ring-bearer variant items are the second variant, not Base equipment.', losable: 'Provisions and cloak can be lost; Sting can be dropped (not simulated as disarm).', prepTime: 'None — endures as he arrives.', limit: 'No prep system is claimed; the Ring is not used as a combat system (see systems).', status: 'derived' },
+    powerInteractions: [{ interaction: 'Sting glow vs non-orc opponents', result: 'Glow is a warning, not damage, and is irrelevant against a non-orc — never claimed as a bonus.', status: 'derived' }],
+    versionEvolution: { thisVersion: 'Base Frodo (books/films composite as summarised in the profile).', differsFrom: 'Ring-bearer variant is a separate variant; its showings are NOT merged into Base.', gained: 'Nothing claimed.', lost: 'Nothing claimed.', status: 'interpretation' },
+    definingFeats: [{ moment: 'Carried the Ring to Mount Doom (profile feat, general terms).', source: 'CHARACTER RECORD, general terms — no specific chapter cited.', status: 'interpretation' }],
+    psychWeaknesses: [{ trait: 'Fear and the weight of the burden', exploitableCondition: 'When exhausted or cornered, he endures rather than counterattacks — an opening for a decisive blow, not a damage bonus.', status: 'interpretation' }],
+    knowledge: [{ domain: 'Endurance, stealth, the Shire, the Ring (as a burden, not a weapon)', limit: 'Knows his own journey; does not know warfare, magic theory, or other worlds.', status: 'interpretation' }],
+    physiology: { species: 'Hobbit.', anatomy: 'Small, fragile humanoid anatomy; no innate powers.', senses: 'Keen hobbit senses, especially stealth and hearing (not a separate mechanic).', painResponse: 'Endures quietly; cannot absorb heavy blows.', howLoseLink: 'Links to normal durability: any recorded loss is HP 0.', status: 'demonstrated' }
+  },
+  rick: {
+    relationships: [],
+    communication: { style: 'Rapid, sardonic, and contemptuous of authority; explains his own cleverness mid-fight and mocks opponents.', underPressure: 'Gets more reckless and improvisational; never goes quiet.', status: 'interpretation' },
+    fears: [{ trigger: 'Losing family, or being outsmarted on his own terms', triggerKind: 'none', effect: 'Escalates, cheats, or retreats through a portal (narrative only in this build; portal retreat is NOT simulated as battlefield removal).', engineTriggerable: false, status: 'interpretation' }],
+    reputation: { text: 'Feared across dimensions as the smartest being alive; mocked as a drunk and a menace by those who know him.', effect: 'Opponents may open defensively against his reputation; no stat effect.', status: 'interpretation' },
+    victoryBehaviour: { win: 'Gloats, mocks, and leaves; rarely shows respect.', lose: 'Cheats, portals away in story terms, or prepares a gadget — but a recorded loss in the engine stands and is never rewritten as an escape.', status: 'interpretation' },
+    affinity: { terrain: 'Laboratories, garages, and improvised workshops', match: [], helps: 'Access to tools and gadgets — none of which are simulated as free equipment in this build.', hurts: 'A bare arena with no tools, which is why his systems are flagged rather than assumed available.', status: 'interpretation' },
+    prep: { carried: 'Portal gun (version-dependent), gadgets, flask.', versionOnly: 'Portal gun availability depends on the selected version and battlefield — unknown for Base in this build, so it is NOT assumed available in the engine.', losable: 'Portal gun and gadgets can be lost, broken, or confiscated (not simulated; flagged).', prepTime: 'Gadget preparation needs time the arena does not grant — prep is never infinite.', limit: 'Portal gun, clones, and Meeseeks are NOT used in the engine in this build because their limits are unknown; using them would invent counts and powers.', status: 'uncertain' },
+    powerInteractions: [{ interaction: 'Portal vs physical defence', result: 'Not simulated: portal use in combat is unknown for this version, so no bypass is claimed.', status: 'uncertain' }, { interaction: 'Gadgets vs magic/tech', result: 'Unknown for this version — flagged, not assumed.', status: 'uncertain' }],
+    versionEvolution: { thisVersion: 'Base Rick Sanchez (series composite as summarised in the profile).', differsFrom: 'Other Ricks across the multiverse are separate versions; their inventions, clones, and Meeseeks counts are NOT merged into Base.', gained: 'Nothing claimed.', lost: 'Nothing claimed.', status: 'interpretation' },
+    definingFeats: [{ moment: 'Out-invented dimension-spanning threats (general terms only).', source: 'Series summary — no specific episode cited, and no feat is converted into a new power.', status: 'interpretation' }],
+    psychWeaknesses: [{ trait: 'Arrogance and contempt for authority', exploitableCondition: 'When an opponent refuses to be impressed or outsmarts his gadget, he escalates recklessly — an opening for a recorded counter, not a damage bonus.', status: 'interpretation' }],
+    knowledge: [{ domain: 'Science, inventions, dimensions, gadgets', limit: 'Knows what THIS version has invented or learned; never "knows everything" — version-specific knowledge only, and anything unlearned in this version is unknown.', status: 'interpretation' }],
+    physiology: { species: 'Human with cybernetics in some versions (version-dependent, not assumed for Base).', anatomy: 'Human body; built-in weapons and backup bodies are version-dependent and NOT assumed for Base.', senses: 'Human senses.', painResponse: 'Shrugs off pain with contempt; alcohol use is a profile weakness, not a mechanic.', howLoseLink: 'Links to normal durability: any recorded loss is HP 0; portal escape is NOT simulated as a loss-avoidance mechanic.', status: 'uncertain' }
+  }
+};
+/* Rick 1-13 (added in the 14-26 extension so the spec's special case is a
+   real dossier, not a name): statuses stay honest — clone counts, Meeseek
+   powers, and portal limits are UNKNOWN and flagged, never invented. */
+DOSSIER_V1612.rick = {
+  durability: { type: 'normal', effect: 'Human durability; no innate invulnerability or regeneration is assumed for Base.', howLose: 'Any recorded loss: HP reaching 0. Portal escape is NOT simulated as battlefield removal, so it never avoids a recorded loss.', status: 'derived' },
+  scaling: { feats: ['Genius scientist with portal gun and gadgets (profile style, general terms)'], bypass: [], note: 'Intellect is not a damage bypass in the engine.', status: 'interpretation' },
+  style: { tags: ['strategist'], description: 'Genius scientist with portal gun and gadgets; improvises under pressure.', aggression: 'high when provoked', risk: 'high', painResponse: 'contemptuous indifference', taunt: true, dodgeMult: 1, status: 'derived' },
+  personality: { willKill: true, holdsFinish: false, refusesRetreat: false, voice: 'Sardonic genius — explains his own cleverness and mocks authority.', moral: 'No no-kill code is claimed; protectiveness toward family is version-specific and flagged as such.', status: 'interpretation' },
+  signatures: [{ name: 'Portal Gun Blast', condition: 'signature window', limit: 'Portal gun availability is version-dependent and unknown for Base — the signature name is the recorded profile signature, but portal mechanics (range, destinations, charge) are NOT simulated and never claimed.', status: 'uncertain' }],
+  transforms: [{ name: 'Genius Surge', trigger: 'HP at or below 45% of maximum (engine rule)', cost: 'No cost is stated in the profile, so none is applied and the gap is flagged here, not invented.', staminaCost: 0, duration: 'Until battle end in the engine.', reversible: 'No — a one-way escalation in this battle.', effect: '+25 ATK, +10 DEF (engine transform values).', status: 'derived' }],
+  weaknesses: [{ text: 'Alcohol; recklessness (profile weakness, truncated in the roster entry — the full text is not assumed)', exploitableBy: 'an opponent who exploits impaired judgement with a recorded counter', status: 'derived' }],
+  laws: [{ rule: 'Contempt for authority; answers to no council, code, or law he did not choose.', breaksWhen: 'Family protectiveness in specific versions — version-specific, flagged, not this version by default.', engineEffect: 'Brief only: no engine law is simulated from this.', status: 'interpretation' }],
+  peeves: [{ trigger: 'Being outsmarted or dismissed as just a drunk', triggerKind: 'none', effect: 'Escalates recklessly and improvises.', engineTriggerable: false, status: 'interpretation' }],
+  systems: [{ name: 'Portal gun', access: 'Carried device, version-dependent.', duration: 'Unknown for Base.', control: 'Fighter.', cost: 'Unknown charge/access limits — flagged.', limit: 'Unknown — FLAGGED: not used in the engine in this build, never assumed available or unlimited.', stopsBy: 'Loss, breakage, or confiscation (not simulated).', status: 'uncertain' }, { name: 'Clones', access: 'Unknown for Base: are clones available, how many, how controlled — all unknown.', duration: 'Unknown.', control: 'Unknown.', cost: 'Unknown.', limit: 'Unknown — FLAGGED: clones are NOT simulated as separate targets or extra fighters in this build.', stopsBy: 'Unknown.', status: 'uncertain' }, { name: 'Meeseeks Box', access: 'Summoning device, version-dependent.', duration: 'Meeseeks exist to complete a task and want to be gone; duration when a task cannot be completed is unknown for Base.', control: 'Task-bound, not fighter-controlled like a minion.', cost: 'Unknown.', limit: 'Unknown — FLAGGED: Meeseeks are NOT used as fighters in this build; whether they can fight in this version is unknown.', stopsBy: 'Task completion (or unknown behaviour when the task cannot be completed).', status: 'uncertain' }],
+  sources: [{ type: 'CHARACTER RECORD', note: 'Existing game profile fields.', status: 'derived' }, { type: 'General canon (Rick and Morty series)', note: 'Broadly established traits as summarised in the spec; no specific episode cited, and no clone count, Meeseek power, or portal limit is claimed.', status: 'interpretation' }],
+  unknown: ['Portal gun charge, destinations, and limits for Base.', 'Clone availability, count, control, and death rules for Base.', 'Meeseek combat ability and uncompletable-task behaviour for Base.', 'Cybernetics, built-in weapons, and backup bodies for Base.']
+};
+function dossierFactStatusV1612(sourceType, versionMatches) {
+  if (!versionMatches) return 'not canon for this version';
+  if (/fan wiki/i.test(sourceType || '')) return 'lead';
+  if (/primary/i.test(sourceType || '')) return 'primary';
+  if (/secondary/i.test(sourceType || '')) return 'secondary';
+  return 'lead';
+}
+function dossierRelationshipV1612(actor, foe) {
+  var d = dossierForV1612(actor);
+  var rels = d.relationships || [];
+  for (var i = 0; i < rels.length; i++) {
+    var r = rels[i];
+    if (foe && ((r.opponentId && foe.id === r.opponentId) || (r.opponentName && foe.name === r.opponentName))) return r;
+  }
+  return null;
+}
+function dossierFearTriggerV1612(actor) {
+  var d = dossierForV1612(actor);
+  var fired = actor.peeveFired || {};
+  var all = [];
+  (d.fears || []).forEach(function (f) { if (f.engineTriggerable) all.push(f); });
+  for (var i = 0; i < all.length; i++) {
+    var f = all[i];
+    if (fired['fear:' + f.triggerKind]) continue;
+    if (f.triggerKind === 'hpBelow25' && actor.currentHp <= actor.maxHp * 0.25) return f;
+    if (f.triggerKind === 'hpBelow50' && actor.currentHp <= actor.maxHp * 0.5) return f;
+  }
+  return null;
+}
+function dossierBriefSegmentsV1612(rec, stage, compact) {
+  if (compact !== 0) return '';
+  var fs = rec.fighters || [];
+  var out = '';
+  if (fs.length === 2) {
+    var d0 = dossierForV1612(fs[0]), d1 = dossierForV1612(fs[1]);
+    var r0 = dossierRelationshipV1612(fs[0], fs[1]), r1 = dossierRelationshipV1612(fs[1], fs[0]);
+    if (r0) out += ' RELATIONSHIP: ' + fs[0].name + ' vs ' + fs[1].name + ' — ' + truncV162(r0.relation + ': ' + r0.behaviour, 90);
+    if (r1 && r1 !== r0) out += ' RELATIONSHIP: ' + fs[1].name + ' vs ' + fs[0].name + ' — ' + truncV162(r1.relation + ': ' + r1.behaviour, 90);
+    if (d0.affinity && d0.affinity.match && d0.affinity.match.indexOf(rec.battlefield) !== -1) out += ' AFFINITY: ' + fs[0].name + ' — ' + truncV162(d0.affinity.terrain + ': ' + d0.affinity.helps, 60);
+    if (d1.affinity && d1.affinity.match && d1.affinity.match.indexOf(rec.battlefield) !== -1) out += ' AFFINITY: ' + fs[1].name + ' — ' + truncV162(d1.affinity.terrain + ': ' + d1.affinity.helps, 60);
+  }
+  if (stage === 'aftermath') {
+    fs.forEach(function (f) {
+      var d = dossierForV1612(f);
+      if (d.victoryBehaviour && d.victoryBehaviour.win && d.victoryBehaviour.win !== 'unknown') out += ' VICTORY BEHAVIOUR: ' + f.name + ' when winning — ' + truncV162(d.victoryBehaviour.win, 60);
+    });
+  }
+  return out;
+}
+
 function buildStoryBriefV1611(rec, stage, compact) {
   compact = compact || 0;
   var fs = rec.fighters || [];
@@ -4274,7 +4765,7 @@ function buildStoryBriefV1611(rec, stage, compact) {
     if (compact === 3 || compact === 4) return (f.name || '') + ' (' + (f.variant || 'Base') + ', tier ' + (f.tier || 'UNKNOWN') + ')';
     if (compact === 2) return dossierLineMinimalV1611(f);
     if (compact === 1) return dossierLineCompactV1611(f);
-    return dossierLineV1611(f, f._orig || null);
+    return dossierLineV1612(f, f._orig || null);
   });
   var gap = 'Power gap: unknown.';
   try {
@@ -4307,7 +4798,7 @@ function buildStoryBriefV1611(rec, stage, compact) {
     regenLine = ' Regeneration limits: ' + (anyRegen ? 'regeneration heals while alive only, never revives after defeat.' : 'none listed.');
   }
   var weakNote = compact === 0 ? ' A weakness counts only with a recorded exploit in this fight; a weakness field alone is not a counter.' : '';
-  return 'STORY BRIEF (fictionalised retelling; Combat Details authoritative). FIGHTERS: ' + fighterLines.join(' | ') + ' ' + gap + ' ' + hurt + weakNote + regenLine + ' BATTLEFIELD: ' + rec.battlefield + ' — ' + battlefieldDescV1611(rec) + ' LOCKED OUTCOME: ' + lockedLineV1611(rec, stage) + ' CHAPTER BEATS (' + V1611_CHAPTER[stage] + ' only): ' + beatsText;
+  return 'STORY BRIEF (fictionalised retelling; Combat Details authoritative). FIGHTERS: ' + fighterLines.join(' | ') + ' ' + gap + ' ' + hurt + weakNote + regenLine + ' BATTLEFIELD: ' + rec.battlefield + ' — ' + battlefieldDescV1611(rec) + ' LOCKED OUTCOME: ' + lockedLineV1611(rec, stage) + ' CHAPTER BEATS (' + V1611_CHAPTER[stage] + ' only): ' + beatsText + dossierBriefSegmentsV1612(rec, stage, compact);
 }
 function chapterBriefV1611(rec, stage) {
   var fin = rec.finishingAbility;
@@ -4579,6 +5070,7 @@ function hardConstraintChecksForStageV1611(stage, text, rec, assigned, prevTexts
   }
   if (seam.length) hardPushV1611(checks, 'no repeated sentence across chapters', 'FAILED', seam.join('; ') + '.');
   else hardPushV1611(checks, 'no repeated sentence across chapters', 'PASSED', 'This chapter does not repeat an earlier chapter.');
+  dossierLawChecksV1612(checks, t, rec);
   return checks;
 }
 function hardConstraintChecksForAssemblyV1611(rec, scenes, order) {
@@ -4666,6 +5158,7 @@ function hardConstraintChecksForAssemblyV1611(rec, scenes, order) {
   else if (hasChoice && hardMercyMentionedV1611(whole)) hardPushV1611(checks, 'personality decisions not contradicted', 'PASSED', 'Mercy hold in the record is reflected in the story.');
   else if (hasChoice) hardPushV1611(checks, 'personality decisions not contradicted', 'UNVERIFIED', 'Mercy hold in the record, but no mercy wording was found in the story — not counted as passed (omission is not failed; only an explicit contradiction fails).');
   else hardPushV1611(checks, 'personality decisions not contradicted', 'PASSED', 'No mercy/personality decision in the record to reflect or contradict.');
+  dossierLawChecksV1612(checks, whole, rec);
   if (/wikipedia/i.test(whole) || /\bis a fictional (character|hero|villain)\b/i.test(whole) || /\bfirst appeared in\b/i.test(whole)) hardPushV1611(checks, 'no Wikipedia-description text', 'FAILED', 'The assembled story contains encyclopedia-style description text.');
   else hardPushV1611(checks, 'no Wikipedia-description text', 'PASSED', 'No Wikipedia-description text found.');
   return checks;
