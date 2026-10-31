@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.6 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.7 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.6</h1><span>1V1 DEATH BATTLES • ENGINE v16.6 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v16.7</h1><span>1V1 DEATH BATTLES • ENGINE v16.7 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -2459,7 +2459,7 @@ function saveBattle(b,story,breakdown,integrity,accuracy,quality){
     const h=loadHistory();
     const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]);
     const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant));
-    h.unshift({id:Date.now(),formatVersion:'v16.6',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.6 online AI main story, or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
+    h.unshift({id:Date.now(),formatVersion:'v16.7',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.7 online AI main story, or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
     localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));
   }catch(e){}
   renderHistory();
@@ -2481,8 +2481,8 @@ function renderHistory(){
 function savedStoryMetaV162(x) {
   const m = x.mainStoryMeta;
   if (!m) return { label: 'Saved before story-kind tracking — chapters shown as saved; story kind not recorded.', diagnostics: 'Story kind not recorded for this saved entry (saved before story-kind tracking). Chapters shown exactly as saved.' };
-  if (m.kind === 'ai') return { label: 'Saved online AI story — ' + (m.provider || 'online AI') + ' — checked: ' + (m.passed || 0) + ' passed, ' + (m.unverified || 0) + ' unverified (unverified is not counted as passed). Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || '—') + '<br>Provider attempts: ' + (m.attempts || 0) + ' (initial + at most one revision + automatic retries within a stage)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + '<br>Prompt size: ' + (m.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')' + (m.aiDraftLength != null && m.aiDraftLength !== '' ? '<br>AI story length: ' + m.aiDraftLength + ' characters.' : '') + (m.aiFinishReason !== undefined ? '<br>Provider finish signal: ' + (m.aiFinishReason ? m.aiFinishReason : 'not reported by provider') + '.' : '') };
-  return { label: V16_OFFLINE_LABEL + ' Reason: ' + (m.reason || 'Online AI generation was unavailable.') + ' This saved entry used the offline fallback — it is not an online AI story. Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || 'Offline fallback (rule-based episode)') + '<br>Provider attempts: ' + (m.attempts || 0) + ' (initial + at most one revision + automatic retries within a stage)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + '<br>Prompt size: ' + (m.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')<br>Fallback reason: ' + (m.reason || 'Online AI generation was unavailable.') + (m.rejectedDraftExcerpt ? '<br>' + rejectedDraftDetailsHtmlV164(m) : '') };
+  if (m.kind === 'ai') return { label: 'Saved online AI story — ' + (m.provider || 'online AI') + ' — checked: ' + (m.passed || 0) + ' passed, ' + (m.unverified || 0) + ' unverified (unverified is not counted as passed). Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || '—') + '<br>Provider attempts: ' + (m.attempts || 0) + ' (initial + at most one revision + automatic retries within a stage)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + '<br>Prompt size: ' + (m.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')' + (m.aiDraftLength != null && m.aiDraftLength !== '' ? '<br>AI story length: ' + m.aiDraftLength + ' characters.' : '') + (m.aiFinishReason !== undefined ? '<br>Provider finish signal: ' + (m.aiFinishReason ? m.aiFinishReason : 'not reported by provider') + '.' : '') + (m.stageDiagnostics && m.stageDiagnostics.length ? '<br>' + stageDiagnosticsHtmlV167(m.stageDiagnostics) : '') };
+  return { label: V16_OFFLINE_LABEL + ' Reason: ' + (m.reason || 'Online AI generation was unavailable.') + ' This saved entry used the offline fallback — it is not an online AI story. Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || 'Offline fallback (rule-based episode)') + '<br>Provider attempts: ' + (m.attempts || 0) + ' (initial + at most one revision + automatic retries within a stage)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + '<br>Prompt size: ' + (m.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')<br>Fallback reason: ' + (m.reason || 'Online AI generation was unavailable.') + (m.failedStage ? '<br>Failed stage: ' + m.failedStage : '') + (m.stageDiagnostics && m.stageDiagnostics.length ? '<br>' + stageDiagnosticsHtmlV167(m.stageDiagnostics) : '') + (m.rejectedDraftExcerpt ? '<br>' + rejectedDraftDetailsHtmlV164(m) : '') };
 }
 function viewHistory(id){
   const x=loadHistory().find(h=>h.id===id); if(!x) return;
@@ -2645,8 +2645,8 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6'].includes(x.formatVersion);
-  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6 record.'};
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7'].includes(x.formatVersion);
+  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
 
@@ -3136,8 +3136,8 @@ function extractPollinationsTextV16(res, raw) { return extractPollinationsResult
    still works and is kept ONLY for the connection test, not for stories).
    On a 400 output-token-limit error, this retries ONCE with the condensed
    prompt (shorter story request) — never the same long prompt again. */
-async function pollinationsPostOnceV162(prompt, timeoutMs) {
-  chargePostV163();
+async function pollinationsPostOnceV162(prompt, timeoutMs, budgetObj) {
+  chargePostV163(budgetObj);
   const body = JSON.stringify({ messages: [{ role: 'system', content: 'You are a battle-story writer. Follow the brief exactly and never change the winner, the finishing event, or the final states.' }, { role: 'user', content: prompt }] });
   const res = await fetchWithTimeoutV16('https://text.pollinations.ai/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body }, timeoutMs || V16_AI_TIMEOUT_MS);
   if (!res.ok) {
@@ -3150,14 +3150,14 @@ async function pollinationsPostOnceV162(prompt, timeoutMs) {
   if (!_r.text) throw new Error('Pollinations POST returned an empty response');
   return { text: _r.text, provider: 'Pollinations (POST, keyless)', via: 'post', finishReason: _r.finishReason, rawKind: _r.rawKind };
 }
-async function fetchPollinationsStoryV16(prompt, timeoutMs, condensedPrompt) {
+async function fetchPollinationsStoryV16(prompt, timeoutMs, condensedPrompt, budgetObj) {
   try {
-    return await pollinationsPostOnceV162(prompt, timeoutMs);
+    return await pollinationsPostOnceV162(prompt, timeoutMs, budgetObj);
   } catch (e) {
     const msg = e.message || 'Provider request failed';
     if (isTokenLimitErrorV162(msg) && condensedPrompt && condensedPrompt !== prompt) {
       try {
-        const retry = await pollinationsPostOnceV162(condensedPrompt, timeoutMs);
+        const retry = await pollinationsPostOnceV162(condensedPrompt, timeoutMs, budgetObj);
         retry.provider = 'Pollinations (POST, keyless, condensed retry)';
         retry.via = 'post-condensed';
         return retry;
@@ -3168,7 +3168,7 @@ async function fetchPollinationsStoryV16(prompt, timeoutMs, condensedPrompt) {
     throw new Error('Pollinations request failed: ' + explainPollinationsErrorV161(msg));
   }
 }
-async function fetchPollinationsStoryWithKeyV161(prompt, timeoutMs, condensedPrompt) {
+async function fetchPollinationsStoryWithKeyV161(prompt, timeoutMs, condensedPrompt, budgetObj) {
   // v16.1 secondary attempt ONLY: a saved Pollinations key (device
   // localStorage only, sent only to Pollinations). Never
   // called when no key is saved; never requested in the main flow.
@@ -3177,7 +3177,7 @@ async function fetchPollinationsStoryWithKeyV161(prompt, timeoutMs, condensedPro
   const key = (typeof getPollinationsKey === 'function' ? getPollinationsKey() : '');
   if (!key) throw new Error('No Pollinations key saved');
   async function postOnce(p) {
-    chargePostV163();
+    chargePostV163(budgetObj);
     const body = JSON.stringify({ messages: [{ role: 'system', content: 'You are a battle-story writer. Follow the brief exactly and never change the winner, the finishing event, or the final states.' }, { role: 'user', content: p }] });
     const res = await fetchWithTimeoutV16('https://text.pollinations.ai/', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key }, body: body }, timeoutMs || V16_AI_TIMEOUT_MS);
     if (!res.ok) {
@@ -3246,7 +3246,9 @@ function renderMainStoryLabelV16(meta, expectedSession) {
   else label.innerText = '';
 }
 function rejectedDraftDetailsHtmlV164(meta) {
-  if (!meta || !meta.rejectedDraftExcerpt) return '';
+  if (!meta) return '';
+  const failedStageLine = meta.failedStage ? 'Failed stage: ' + esc(meta.failedStage) + '<br>' : '';
+  if (!meta.rejectedDraftExcerpt) return failedStageLine;
   const opening = meta.rejectedDraftExcerpt;
   const climax = meta.rejectedDraftClimax || '';
   const overlap = !climax || climax === opening;
@@ -3259,7 +3261,7 @@ function rejectedDraftDetailsHtmlV164(meta) {
   if (meta.rejectedDraftPromptSize != null) html += '<p>Prompt size for this draft: ' + esc(String(meta.rejectedDraftPromptSize)) + ' characters.</p>';
   if (meta.rejectedDraftProbe && meta.rejectedDraftProbe.length) html += '<p>Per-check probe (which candidate forms matched — diagnostic only):</p><p>' + meta.rejectedDraftProbe.map(function (pr) { return esc(pr.check) + ' — ' + esc(pr.candidate) + ': spaced form ' + (pr.spaced ? 'matched' : 'no match') + ', separator-stripped form ' + (pr.stripped ? 'matched' : 'no match'); }).join('<br>') + '</p>';
   if (meta.rejectedChecks && meta.rejectedChecks.length) html += '<p>Failed checks: ' + esc(meta.rejectedChecks.join(' | ')) + '</p>';
-  return html + '</details>';
+  return failedStageLine + html + '</details>';
 }
 function renderMainStoryDiagnosticsV16(meta, expectedSession) {
   if (expectedSession && !isCurrentStorySessionV161(expectedSession)) return;
@@ -3269,7 +3271,9 @@ function renderMainStoryDiagnosticsV16(meta, expectedSession) {
   const lines = [];
   lines.push('Session: ' + (meta.sessionId || '—'));
   lines.push('Provider: ' + (meta.provider || '—'));
-  lines.push('Provider attempts: ' + (meta.attempts || 0) + ' (initial + at most one revision + automatic retries within a stage)' + (meta.attemptsBreakdown ? '; breakdown: ' + meta.attemptsBreakdown : '') + (meta.geminiTried ? ' + one Gemini attempt' : ''));
+  lines.push('Provider attempts: ' + (meta.attempts || 0) + ' (multi-stage: outline + opening + combat scenes + climax + aftermath + at most 2 stage corrections + retries within the 10-POST cap)' + (meta.attemptsBreakdown ? '; breakdown: ' + meta.attemptsBreakdown : '') + (meta.geminiTried ? ' + Gemini attempt(s)' : ''));
+          if (meta.failedStage) lines.push('Failed stage: ' + meta.failedStage);
+          if (meta.stageDiagnostics && meta.stageDiagnostics.length) lines.push(stageDiagnosticsHtmlV167(meta.stageDiagnostics));
   lines.push('Prompt size: ' + (meta.promptSize || 0) + ' characters (cap ' + V16_PROMPT_CAP + ')');
   if (meta.kind === 'ai') {
     if (meta.aiDraftLength != null) lines.push('AI story length: ' + meta.aiDraftLength + ' characters.');
@@ -3297,16 +3301,16 @@ function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, qual
       try {
         const h = loadHistory();
         if (h.length) {
-          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.6) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.6) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
-          h[0].formatVersion = 'v16.6';
-          h[0].mainStoryMeta = meta ? { kind: meta.kind, provider: meta.provider, passed: meta.passed, unverified: meta.unverified, attempts: meta.attempts, attemptsBreakdown: meta.attemptsBreakdown || '', promptSize: meta.promptSize, sessionId: meta.sessionId, reason: meta.reason || '', rejectedDraftExcerpt: meta.rejectedDraftExcerpt || '', rejectedDraftClimax: meta.rejectedDraftClimax || '', rejectedChecks: meta.rejectedChecks || [], rejectedDraftLength: meta.rejectedDraftLength != null ? meta.rejectedDraftLength : '', rejectedDraftStage: meta.rejectedDraftStage || '', rejectedDraftFinishReason: meta.rejectedDraftFinishReason || '', rejectedDraftPromptSize: meta.rejectedDraftPromptSize != null ? meta.rejectedDraftPromptSize : '', rejectedDraftProbe: meta.rejectedDraftProbe || [], aiDraftLength: meta.aiDraftLength != null ? meta.aiDraftLength : '', aiFinishReason: meta.aiFinishReason || '' } : null;
+          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.7) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.7) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
+          h[0].formatVersion = 'v16.7';
+          h[0].mainStoryMeta = meta ? { kind: meta.kind, provider: meta.provider, passed: meta.passed, unverified: meta.unverified, attempts: meta.attempts, attemptsBreakdown: meta.attemptsBreakdown || '', promptSize: meta.promptSize, sessionId: meta.sessionId, reason: meta.reason || '', rejectedDraftExcerpt: meta.rejectedDraftExcerpt || '', rejectedDraftClimax: meta.rejectedDraftClimax || '', rejectedChecks: meta.rejectedChecks || [], rejectedDraftLength: meta.rejectedDraftLength != null ? meta.rejectedDraftLength : '', rejectedDraftStage: meta.rejectedDraftStage || '', rejectedDraftFinishReason: meta.rejectedDraftFinishReason || '', rejectedDraftPromptSize: meta.rejectedDraftPromptSize != null ? meta.rejectedDraftPromptSize : '', rejectedDraftProbe: meta.rejectedDraftProbe || [], aiDraftLength: meta.aiDraftLength != null ? meta.aiDraftLength : '', aiFinishReason: meta.aiFinishReason || '', stageDiagnostics: meta.stageDiagnostics || [], failedStage: meta.failedStage || '' } : null;
           // Saved validation note, stated plainly: System A is battle integrity
           // (story-independent). When the main story is AI, System B below is
           // the AI main-story validation, not the fallback-episode check.
           if (meta && meta.kind === 'ai' && Array.isArray(meta.checks)) {
             h[0].validation = h[0].validation || {};
             h[0].validation.accuracy = meta.checks.map(function (c) { return { name: c.name, passed: (c.state === 'PASSED' ? true : (c.state === 'UNVERIFIED' ? 'unverified' : false)), detail: c.detail }; });
-            h[0].validationNote = 'Saved validation: System A is battle integrity; System B is the v16.6 AI main-story validation; System C is the fallback-episode quality check.';
+            h[0].validationNote = 'Saved validation: System A is battle integrity; System B is the v16.7 AI main-story validation; System C is the fallback-episode quality check.';
           }
           localStorage.setItem('warroom_battles_v3', JSON.stringify(h.slice(0, 20)));
         }
@@ -3324,7 +3328,7 @@ var V163_MAX_POSTS_PER_BATTLE = 10;
 var v163PostCount = 0;
 var v163PostBudget = 10;
 function isAbortErrorV163(msg) { return /abort|timed out|timeout/i.test(String(msg || '')); }
-function chargePostV163() { if (v163PostBudget != null && v163PostCount >= v163PostBudget) throw new Error('Pollinations post budget exhausted for this battle (cap ' + v163PostBudget + ' POSTs)'); v163PostCount++; }
+function chargePostV163(budgetObj) { if (budgetObj) { if (budgetObj.count >= budgetObj.budget) throw new Error('Pollinations post budget exhausted for this battle (cap ' + budgetObj.budget + ' POSTs)'); budgetObj.count++; return; } if (v163PostBudget != null && v163PostCount >= v163PostBudget) throw new Error('Pollinations post budget exhausted for this battle (cap ' + v163PostBudget + ' POSTs)'); v163PostCount++; }
 function isTokenLimitErrorV162(msg) { return /output_token_limit|token limit/i.test(String(msg || '')); }
 function isRateLimit402V162(msg) { return /\b402\b/.test(String(msg || '')); }
 function delayV162(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
@@ -3341,6 +3345,401 @@ function delayV162(ms) { return new Promise(function (r) { setTimeout(r, ms); })
    retry is the remedy for an interrupted request, not a longer wait. An
    abort reason never blames the provider as fact: a local network drop
    (e.g. weakened Wi-Fi) can also abort a request. */
+/* v16.7 — MULTI-STAGE SCENE GENERATION (primary keyless path).
+   The single-shot 600–800-word request repeatedly truncated or degenerated
+   on the legacy keyless endpoint (a 20B reasoning model with a small
+   anonymous output budget, plain-text responses carrying no finish reason,
+   and prompt-content caching). v16.7 therefore generates six small stages
+   instead of one large story: outline, opening, combat scene 1, combat
+   scene 2, climax, aftermath — each targeting ~150–300 words, each stage
+   prompt kept under ~1,500 chars (hard guard 2,000). Total assembled
+   target ~900–1,300 words, one seamless narrative, Cinematic voice
+   throughout. The v16.6 checker (checkMainStoryV16 and its helpers) is
+   NOT changed in v16.7: it still runs, unchanged, on the assembled whole.
+   Continuity between stages is carried ONLY by the compact continuity
+   record below — stages never see each other's full prose, except the
+   immediately preceding scene's last sentence as a join anchor.
+   Per-stage correction policy (separately justified architecture change):
+   one correction per failed stage, at most 2 corrections per battle.
+   POST budget: HARD cap 10 POSTs per battle TOTAL, including 402/abort
+   retries (chargePostV163 counts every Pollinations POST). Generation
+   plan: 6 stage POSTs + up to 2 correction POSTs = 8, leaving at most
+   2 retry slots inside the cap; a correction is available only while
+   POSTs remain under the cap, and a stage failing after correction
+   falls back honestly — never a partial assembly as an AI story.
+   Continuation is APP-SIDE ONLY (a new prompt carrying the truncated
+   text); the provider offers no continuation feature on this path, and
+   it must never be described as one. */
+var V167_STAGE_PROMPT_MAX = 2000;
+var V167_STAGE_ORDER = ['outline', 'opening', 'combat1', 'combat2', 'climax', 'aftermath'];
+function stageLabelV167(s) {
+  return ({ outline: 'outline', opening: 'opening', combat1: 'combat scene 1', combat2: 'combat scene 2', climax: 'climax', aftermath: 'aftermath' })[s] || s;
+}
+function parse402WaitMsV167(msg) {
+  try {
+    if (typeof V162_402_WAIT_MS !== 'undefined' && V162_402_WAIT_MS !== 35000) return V162_402_WAIT_MS;
+    const m = String(msg || '').match(/please wait (\d+)\s*seconds?/i);
+    if (m) { const w = parseInt(m[1], 10) + 15; return Math.max(50, Math.min(90, w)) * 1000; }
+  } catch (e) {}
+  return 60000;
+}
+/* Compact structured continuity record. Fighter fields are truncated
+   hard so the record plus a stage brief stays small. */
+function buildContinuityV167(b) {
+  let s = null;
+  try { s = buildBattleSummaryV16(b); } catch (e) { s = { fighters: [], battlefield: 'Open Arena', winner: b.winner, victoryMode: b.victoryMode, loser: '', finishingAbility: null, finishingEvent: null, roundLines: [] }; }
+  const fighters = s.fighters.map(function (f) {
+    return { name: f.name, variant: f.variant || 'Base', continuity: f.continuity || '', style: truncV162(f.style || '', 60), powers: (f.powers || []).slice(0, 3), signature: f.signature || '', limits: truncV162(f.weakness || '[NOT KNOWN]', 60) };
+  });
+  const roundNums = [];
+  (b.events || []).forEach(function (e) { if (roundNums.indexOf(e.round) === -1) roundNums.push(e.round); });
+  roundNums.sort(function (x, y) { return x - y; });
+  const roundLines = (s.roundLines || []).map(function (ln) { return truncV162(ln, 110); });
+  const finRound = s.finishingEvent ? s.finishingEvent.round : (roundNums.length ? roundNums[roundNums.length - 1] : null);
+  let loserState = 'stalemate';
+  if (!b.stalemate) loserState = (b.victoryMode === 'death' ? 'dead' : 'unconscious, not dead');
+  const abilities = [];
+  (b.events || []).forEach(function (e) { if (e.ability && abilities.indexOf(e.ability) === -1) abilities.push(e.ability); });
+  return { fighters: fighters, battlefield: s.battlefield || 'Open Arena', victoryMode: s.victoryMode, winner: s.winner, loser: s.loser || '', loserState: loserState, finishingAbility: s.finishingAbility || null, finishingRound: finRound, roundNums: roundNums, roundLines: roundLines, abilities: abilities, outlineBeats: [], coveredThrough: 0, lastSentence: '' };
+}
+function continuityTextV167(rec, keepAllRounds) {
+  const fs = rec.fighters.map(function (f) { return f.name + ' (' + f.variant + ', ' + f.continuity + ') — style: ' + f.style + '; powers: ' + (f.powers.join(', ') || '[NOT KNOWN]') + '; signature: ' + (f.signature || 'none') + '; limits: ' + f.limits; }).join(' | ');
+  let beatList = rec.outlineBeats.slice();
+  let rounds = rec.roundLines.slice();
+  function assemble() {
+    const beats = beatList.length ? beatList.join(' / ') : 'not yet outlined';
+    return 'BATTLE: ' + fs + '. Battlefield: ' + rec.battlefield + '. Mode: ' + rec.victoryMode + '. Winner (do not change): ' + rec.winner + '. Loser: ' + (rec.loser || 'none') + ' (' + rec.loserState + '). Finishing ability: ' + (rec.finishingAbility || 'none — stalemate') + ' (round ' + (rec.finishingRound != null ? rec.finishingRound : '—') + '). Outline beats: ' + beats + '. Rounds: ' + rounds.join(' | ') + '. BANNED: no invented winners, transforms, abilities, equipment, deaths, or recoveries; no knowledge not acquired in the record; no post-defeat actions.';
+  }
+  let txt = assemble();
+  if (!keepAllRounds) {
+    while (txt.length > 700 && rounds.length > 1) {
+      let idx = -1;
+      for (let i = 0; i < rounds.length; i++) { if (rec.finishingRound == null || rounds[i].indexOf('Round ' + rec.finishingRound + ':') !== 0) { idx = i; break; } }
+      if (idx === -1) break;
+      rounds.splice(idx, 1);
+      txt = assemble();
+    }
+    while (txt.length > 700 && beatList.length > 1) { beatList.pop(); txt = assemble(); }
+    if (txt.length > 700) txt = txt.slice(0, 700);
+  }
+  return txt;
+}
+function stageRoundsV167(rec, stage) {
+  const fin = rec.finishingRound;
+  const pre = rec.roundNums.filter(function (r) { return fin == null || r < fin; });
+  if (stage === 'combat1') return pre.slice(0, Math.ceil(pre.length / 2));
+  if (stage === 'combat2') return pre.slice(Math.ceil(pre.length / 2));
+  if (stage === 'climax') return fin != null ? [fin] : rec.roundNums.slice(-1);
+  return [];
+}
+function stageBriefV167(rec, stage) {
+  const fin = rec.finishingAbility;
+  if (stage === 'outline') return 'Write ONLY a structured outline (labelled beats, one line each), about 120–180 words, covering opening → escalation → climax → aftermath in order. Name the finishing ability as the climax beat' + (fin ? ' (' + fin + ')' : ' (there is no finishing ability — the battle is a stalemate, so state the stalemate as the ending beat)') + '. Do NOT write story prose.';
+  if (stage === 'opening') return 'Write ONLY the opening scene, about 200–250 words. Setting, atmosphere, both fighters by their full names, positions. Do not write later rounds, the climax, or the aftermath. End with a complete sentence.';
+  if (stage === 'combat1' || stage === 'combat2') {
+    const rs = stageRoundsV167(rec, stage);
+    if (!rs.length) return 'Write ONLY a short bridging passage, about 100 words, of positioning, atmosphere, and reactions already in the continuity record. Do not invent events, the climax, or the aftermath. End with a complete sentence.';
+    return 'Write ONLY the combat scene for round' + (rs.length > 1 ? 's ' : ' ') + rs.join(', ') + ', about 200–250 words, in order, using only events in those rounds. Do not write the climax or the aftermath. End with a complete sentence.';
+  }
+  if (stage === 'climax') {
+    if (!fin) return 'Write ONLY the final exchange scene, about 200–250 words. There is no finishing ability and no winner — do not invent a finish. End with a complete sentence.';
+    return 'Write ONLY the climax scene, about 200–250 words. The decisive sequence must end with the finishing ability name verbatim, exactly as recorded, in its climax sentence: ' + fin + '. Do not write the aftermath yet. End with a complete sentence.';
+  }
+  return 'Write ONLY the aftermath, about 120–180 words, as the final paragraph(s). State the winner by full name and the loser state (' + rec.loserState + '), the battlefield, and the outcome. Nothing after it. End with a complete sentence.';
+}
+function buildStagePromptV167(rec, stage, opts) {
+  opts = opts || {};
+  let prompt;
+  if (opts.continuation) {
+    prompt = 'STAGE: ' + stage + ' — CONTINUATION. The previous scene text stopped mid-sentence: "' + opts.truncatedText + '". Continue from exactly this point: begin with the next sentence; do not repeat any text already written; do not change anything already written. Write only the continuation, about 150–250 words, ending with a complete sentence. Cinematic narrator, past tense. Do not contradict the continuity record. Do not change the winner, the finishing ability, or the final states. Do not invent events, abilities, equipment, deaths, or recoveries. No damage numbers, no HP numbers, no stats in prose.';
+  } else if (opts.correction) {
+    prompt = 'STAGE: ' + stage + ' — REVISION (correction attempt 2: write fresh). The previous attempt at this scene failed these stage checks: ' + (opts.failedChecks || []).join(' | ') + '. Write ONLY this scene fresh (do not copy the previous attempt). ' + stageBriefV167(rec, stage) + (rec.lastSentence ? ' Previous scene ended: "' + rec.lastSentence.slice(0, 120) + '". Continue the narrative flow without repeating it.' : '') + ' RULES: Do not contradict the continuity record. Do not change the winner, the finishing ability, or the final states. Do not invent events, abilities, equipment, deaths, or recoveries. No damage numbers, no HP numbers, no stats in prose. Cinematic narrator, past tense. CONDENSED CONTINUITY BRIEF: ' + continuityTextV167(rec, false);
+  } else {
+    prompt = 'STAGE: ' + stage + '. ' + stageBriefV167(rec, stage) + (rec.lastSentence && stage !== 'outline' ? ' Previous scene ended: "' + rec.lastSentence.slice(0, 120) + '". Continue the narrative flow without repeating it.' : '') + ' RULES: Do not contradict the continuity record. Do not change the winner, the finishing ability, or the final states. Do not invent events, abilities, equipment, deaths, or recoveries. No damage numbers, no HP numbers, no stats in prose. Cinematic narrator, past tense, one voice throughout. CONTINUITY RECORD: ' + continuityTextV167(rec, false);
+  }
+  if (prompt.length > V167_STAGE_PROMPT_MAX) {
+    const rec2 = JSON.parse(JSON.stringify(rec));
+    rec2.roundLines = rec2.roundLines.filter(function (ln) { return rec.finishingRound == null || ln.indexOf('Round ' + rec.finishingRound + ':') === 0; });
+    if (!opts.correction && !opts.continuation) prompt = 'STAGE: ' + stage + '. ' + stageBriefV167(rec, stage) + ' RULES: Do not contradict the continuity record. Do not change the winner, the finishing ability, or the final states. Do not invent events, abilities, equipment, deaths, or recoveries. No damage numbers, no HP numbers, no stats in prose. Cinematic narrator, past tense, one voice throughout. CONTINUITY RECORD: ' + continuityTextV167(rec2, false);
+    if (prompt.length > V167_STAGE_PROMPT_MAX) prompt = prompt.slice(0, V167_STAGE_PROMPT_MAX);
+  }
+  return prompt;
+}
+function firstSentenceV167(t) { const s = sentencesV166(t); return s.length ? s[0] : String(t || '').trim(); }
+function lastCompleteSentenceV167(t) {
+  const s = sentencesV166(t);
+  for (let i = s.length - 1; i >= 0; i--) { if (/[.!?…]$/.test(s[i].trim())) return s[i].trim(); }
+  return '';
+}
+function parseOutlineBeatsV167(text) {
+  const lines = String(text || '').split('\n').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
+  const src = lines.length >= 2 ? lines : sentencesV166(text);
+  return src.slice(0, 5).map(function (s) { return truncV162(s, 80); });
+}
+function stageAftermathOkV167(rec, text) {
+  if (rec.loserState === 'stalemate') return /stalemate|no winner|no death/i.test(text);
+  if (!storyHasPhraseV162(text, rec.winner)) return false;
+  if (rec.loserState === 'dead') {
+    const clean = String(text).replace(/not\s+merely\s+unconscious/gi, '');
+    return (/\bdead\b|\bdied\b|\bkilled\b/i.test(text)) && !/merely unconscious|unconscious, not dead/i.test(clean);
+  }
+  const clean = String(text).replace(/not\s+(dead|killed|died)/gi, '').replace(/never\s+(dead|killed|died)/gi, '').replace(/unconscious,?\s+not\s+dead/gi, '');
+  return /unconscious/i.test(text) && !/\bdead\b|\bkilled\b|\bdied\b/i.test(clean);
+}
+function stageContradictionV167(rec, text) {
+  try {
+    const roster = (typeof ROSTER !== 'undefined' ? ROSTER : []);
+    const names = rec.fighters.map(function (f) { return f.name; });
+    const allowed = {};
+    rec.fighters.forEach(function (f) {
+      if (f.signature) allowed[normTextV162(f.signature)] = true;
+      (f.powers || []).forEach(function (p) { allowed[normTextV162(p)] = true; });
+    });
+    (rec.abilities || []).forEach(function (a) { allowed[normTextV162(a)] = true; });
+    if (rec.finishingAbility) allowed[normTextV162(rec.finishingAbility)] = true;
+    for (let i = 0; i < roster.length; i++) {
+      const rf = roster[i];
+      if (names.indexOf(rf.name) !== -1) continue;
+      if (!rf.sig || rf.sig.length < 8) continue;
+      if (allowed[normTextV162(rf.sig)]) continue;
+      if (storyHasPhraseV162(text, rf.sig)) return 'uses signature of non-participant ' + rf.name + ' (' + rf.sig + ')';
+    }
+  } catch (e) {}
+  return null;
+}
+/* Stage-local validation (diagnostic gate for one scene, NOT the whole
+   story checker). The full unchanged v16.6 checker still runs on the
+   assembled whole; these checks only decide whether a stage is corrected. */
+function validateStageV167(stage, text, rec, assigned) {
+  const failed = [];
+  const t = String(text || '').trim();
+  if (t.length < 20) failed.push('Stage text too short');
+  if (!completenessV166(t)) failed.push('Stage does not end with a complete sentence (truncated)');
+  if (/\b\d+\s*(HP|hit points|damage)\b/i.test(t)) failed.push('Stage contains damage/HP numbers');
+  const contra = stageContradictionV167(rec, t);
+  if (contra) failed.push('Stage contradicts the continuity record: ' + contra);
+  const names = rec.fighters.map(function (f) { return f.name; });
+  const anyNamed = names.some(function (n) { return storyHasPhraseV162(t, n); });
+  const bothNamed = names.every(function (n) { return storyHasPhraseV162(t, n); });
+  if (stage === 'outline') {
+    if (!anyNamed) failed.push('Outline does not name a fighter');
+    if (rec.finishingAbility && !storyHasPhraseV162(t, rec.finishingAbility)) failed.push('Outline does not name the finishing ability as the climax beat');
+  } else if (stage === 'opening') {
+    if (!bothNamed) failed.push('Opening scene does not name both fighters');
+  } else if (stage === 'combat1' || stage === 'combat2') {
+    if (!anyNamed) failed.push('Combat scene does not name a fighter');
+  } else if (stage === 'climax') {
+    if (!anyNamed) failed.push('Climax scene does not name a fighter');
+    if (rec.finishingAbility && !storyHasPhraseV162(t, rec.finishingAbility)) failed.push('Climax scene does not name the finishing ability verbatim');
+  } else if (stage === 'aftermath') {
+    if (!stageAftermathOkV167(rec, t)) failed.push('Aftermath does not state the winner and loser state');
+  }
+  return { failed: failed };
+}
+function assembleStagesV167(scenes) {
+  const order = ['opening', 'combat1', 'combat2', 'climax', 'aftermath'];
+  const parts = [];
+  const joinTrims = [];
+  order.forEach(function (stage) {
+    let txt = String(scenes[stage] || '').trim();
+    if (!txt) return;
+    if (parts.length) {
+      const prevLast = lastCompleteSentenceV167(parts[parts.length - 1]);
+      const sents = sentencesV166(txt);
+      if (prevLast && sents.length > 1 && normTextV162(sents[0]) === normTextV162(prevLast)) {
+        txt = sents.slice(1).join(' ');
+        joinTrims.push(stage);
+      }
+    }
+    if (txt) parts.push(txt);
+  });
+  return { text: parts.join('\n\n'), joinTrims: joinTrims };
+}
+/* v16.7 per-stage fetch wrapper: at most ONE 402 wait-retry and ONE
+   abort retry PER STAGE (flags persist across correction attempts for
+   the same stage within one generation run), session-gated, stage-named
+   status lines, 402 wait parsed from the body (stated wait + 15s,
+   bounded 50–90s) instead of the fixed ~35s. The 75s per-request timeout
+   is unchanged. */
+async function fetchStageV167(stageKey, fn, isCurrent, setStatus, counters) {
+  const flags = counters.retryFlags[stageKey] || (counters.retryFlags[stageKey] = { wait402Done: false, abortDone: false });
+  while (true) {
+    try {
+      counters.stagePosts[stageKey] = (counters.stagePosts[stageKey] || 0) + 1;
+      return await fn();
+    } catch (e) {
+      const msg = e.message || 'Provider request failed';
+      if (!isCurrent()) throw e;
+      if (/post budget exhausted/i.test(msg)) throw e;
+      if (isRateLimit402V162(msg) && !flags.wait402Done) {
+        flags.wait402Done = true;
+        counters.stageRetries[stageKey] = (counters.stageRetries[stageKey] || 0) + 1;
+        const waitMs = parse402WaitMsV167(msg);
+        setStatus('Free anonymous limit reached — waiting about ' + Math.round(waitMs / 1000) + ' seconds, then retrying once… (' + stageLabelV167(stageKey) + ' stage)');
+        await delayV162(waitMs);
+        if (!isCurrent()) throw new Error('Superseded by a newer battle');
+        continue;
+      }
+      if (isAbortErrorV163(msg) && flags.abortDone) throw new Error('AI request interrupted (possibly a network drop; not necessarily a provider fault) — retry also failed');
+      if (isAbortErrorV163(msg) && !flags.abortDone) {
+        flags.abortDone = true;
+        counters.stageRetries[stageKey] = (counters.stageRetries[stageKey] || 0) + 1;
+        setStatus('Connection interrupted — retrying once… (' + stageLabelV167(stageKey) + ' stage)');
+        await delayV162(typeof V163_ABORT_RETRY_DELAY_MS !== 'undefined' ? V163_ABORT_RETRY_DELAY_MS : 3000);
+        if (!isCurrent()) throw new Error('Superseded by a newer battle');
+        continue;
+      }
+      throw e;
+    }
+  }
+}
+function stageDiagnosticsHtmlV167(diags) {
+  if (!diags || !diags.length) return '';
+  return '<p>Stage diagnostics (multi-stage generation, Technical Details only):</p><p>' + diags.map(function (d) {
+    return esc(d.stage) + ' stage — prompt ' + d.promptChars + ' chars, response ' + d.responseChars + ' chars, elapsed ' + d.elapsedMs + 'ms, status ' + d.status + ', finish signal: ' + (d.finishReason ? d.finishReason : 'not reported by provider') + (d.cachedFlag ? ' — ' + d.cachedFlag : '') + (d.joinTrim ? ' — join trim: duplicated sentence removed' : '');
+  }).join('<br>') + '</p>';
+}
+/* Multi-stage runner. fetchRaw(prompt) must return {text, provider,
+   finishReason, rawKind} and charge the POST budget itself (Pollinations
+   primitives do; Gemini does not, so its posts are counted separately
+   by the caller). Returns an object describing success or the failed
+   stage; it NEVER returns a partial assembly as an AI story. */
+async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters) {
+  const rec = buildContinuityV167(b);
+  const scenes = {};
+  const diags = [];
+  const seenTexts = [];
+  let failedStage = null;
+  let failedReason = '';
+  let lastStageText = '';
+  let lastStagePromptSize = 0;
+  let lastStageFinish = '';
+  if (counters.correctionsUsed == null) counters.correctionsUsed = 0;
+  let correctionsUsed = counters.correctionsUsed;
+  function cacheFlagFor(text, elapsedMs) {
+    if (elapsedMs < 5000 && seenTexts.indexOf(text) !== -1) return 'possible cached response (response in ' + elapsedMs + 'ms identical to an earlier stage response; not confirmed as caching)';
+    return '';
+  }
+  async function runAttempt(stage, prompt) {
+    const t0 = Date.now();
+    const res = await fetchStageV167(stage, function () { return fetchRaw(prompt); }, isCurrent, setStatus, counters);
+    const elapsed = Date.now() - t0;
+    return { text: res.text, finishReason: res.finishReason || '', provider: res.provider || '', elapsedMs: elapsed, promptChars: prompt.length };
+  }
+  async function runStage(stage) {
+    const assigned = stageRoundsV167(rec, stage);
+    setStatus('Preparing battle story… (' + stageLabelV167(stage) + ' stage — multi-stage generation can take several minutes with rate-limit waits)');
+    let prompt = buildStagePromptV167(rec, stage, {});
+    let att;
+    try { att = await runAttempt(stage, prompt); } catch (e) { return { transportError: e.message || 'Provider request failed' }; }
+    lastStageText = att.text; lastStagePromptSize = att.promptChars; lastStageFinish = att.finishReason;
+    let val = validateStageV167(stage, att.text, rec, assigned);
+    let cachedFlag = cacheFlagFor(att.text, att.elapsedMs);
+    if (seenTexts.indexOf(att.text) === -1) seenTexts.push(att.text);
+    if (!val.failed.length) {
+      diags.push({ stage: stage, promptChars: att.promptChars, responseChars: att.text.length, elapsedMs: att.elapsedMs, status: 'ok', finishReason: att.finishReason, cachedFlag: cachedFlag, joinTrim: false });
+      return { text: att.text, provider: att.provider };
+    }
+    if (correctionsUsed >= 2) return { failed: val.failed, text: att.text, finishReason: att.finishReason };
+    correctionsUsed++;
+    counters.correctionsUsed = correctionsUsed;
+    counters.stageCorrections[stage] = (counters.stageCorrections[stage] || 0) + 1;
+    const truncated = val.failed.some(function (f) { return f.indexOf('truncated') !== -1; });
+    if (truncated) {
+      const prefix = att.text;
+      const contPrompt = buildStagePromptV167(rec, stage, { continuation: true, truncatedText: String(prefix).slice(-500) });
+      let cont;
+      try { cont = await runAttempt(stage, contPrompt); } catch (e) { return { transportError: e.message || 'Provider request failed', text: prefix, finishReason: att.finishReason }; }
+      lastStageText = prefix; lastStagePromptSize = cont.promptChars; lastStageFinish = cont.finishReason;
+      const joined = prefix.replace(/\s+$/, '') + ' ' + String(cont.text || '').trim();
+      const contFirst = normTextV162(firstSentenceV167(cont.text));
+      const contFirstTrim = contFirst.replace(/[.!?\u2026]+$/, '');
+      const prefixNorm = normTextV162(prefix);
+      const overlap = contFirst !== '' && (contFirst === normTextV162(lastCompleteSentenceV167(prefix)) || (contFirstTrim.length >= 20 && prefixNorm.indexOf(contFirstTrim) !== -1));
+      if (!overlap) {
+        const val2 = validateStageV167(stage, joined, rec, assigned);
+        if (!val2.failed.length) {
+          diags.push({ stage: stage, promptChars: cont.promptChars, responseChars: joined.length, elapsedMs: cont.elapsedMs, status: 'corrected (continuation)', finishReason: cont.finishReason, cachedFlag: cacheFlagFor(joined, cont.elapsedMs), joinTrim: false });
+          return { text: joined, provider: cont.provider };
+        }
+      }
+      const corrPrompt = buildStagePromptV167(rec, stage, { correction: true, failedChecks: val.failed });
+      let fresh;
+      try { fresh = await runAttempt(stage, corrPrompt); } catch (e) { return { transportError: e.message || 'Provider request failed', text: prefix, finishReason: att.finishReason }; }
+      lastStageText = fresh.text; lastStagePromptSize = fresh.promptChars; lastStageFinish = fresh.finishReason;
+      const val3 = validateStageV167(stage, fresh.text, rec, assigned);
+      if (!val3.failed.length) {
+        diags.push({ stage: stage, promptChars: fresh.promptChars, responseChars: fresh.text.length, elapsedMs: fresh.elapsedMs, status: 'corrected (fresh after discarded continuation)', finishReason: fresh.finishReason, cachedFlag: cacheFlagFor(fresh.text, fresh.elapsedMs), joinTrim: false });
+        return { text: fresh.text, provider: fresh.provider };
+      }
+      return { failed: val3.failed, text: fresh.text, finishReason: fresh.finishReason };
+    }
+    const corrPrompt = buildStagePromptV167(rec, stage, { correction: true, failedChecks: val.failed });
+    let corr;
+    try { corr = await runAttempt(stage, corrPrompt); } catch (e) { return { transportError: e.message || 'Provider request failed', text: att.text, finishReason: att.finishReason }; }
+    lastStageText = corr.text; lastStagePromptSize = corr.promptChars; lastStageFinish = corr.finishReason;
+    const val2 = validateStageV167(stage, corr.text, rec, assigned);
+    if (!val2.failed.length) {
+      diags.push({ stage: stage, promptChars: corr.promptChars, responseChars: corr.text.length, elapsedMs: corr.elapsedMs, status: 'corrected', finishReason: corr.finishReason, cachedFlag: cacheFlagFor(corr.text, corr.elapsedMs), joinTrim: false });
+      return { text: corr.text, provider: corr.provider };
+    }
+    return { failed: val2.failed, text: corr.text, finishReason: corr.finishReason };
+  }
+  let provider = '';
+  for (let i = 0; i < V167_STAGE_ORDER.length; i++) {
+    const stage = V167_STAGE_ORDER[i];
+    const r = await runStage(stage);
+    if (r.transportError) {
+      failedStage = stage;
+      failedReason = 'AI generation incomplete — ' + stageLabelV167(stage) + ' stage failed to generate — ' + r.transportError;
+      if (r.text) lastStageText = r.text;
+      return { ok: false, failedStage: failedStage, reason: failedReason, stages: diags, lastText: lastStageText, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, provider: provider, failedChecks: (r.failed || []) };
+    }
+    if (r.failed) {
+      failedStage = stage;
+      const outLimit = /length|MAX_TOKENS|output_token_limit/i.test(r.finishReason || lastStageFinish || '');
+      failedReason = 'AI generation incomplete — ' + stageLabelV167(stage) + ' stage failed after correction — ' + (outLimit ? 'Draft stopped before finishing (provider output limit) — draft did not pass validation' : 'Draft incomplete/truncated — no complete AI story — Draft did not pass validation');
+      lastStageText = r.text || lastStageText;
+      lastStageFinish = r.finishReason || lastStageFinish;
+      return { ok: false, failedStage: failedStage, reason: failedReason, stages: diags, lastText: lastStageText, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, provider: provider, failedChecks: (r.failed || []) };
+    }
+    provider = r.provider || provider;
+    if (stage === 'outline') {
+      rec.outlineBeats = parseOutlineBeatsV167(r.text);
+    } else {
+      scenes[stage] = r.text;
+      rec.lastSentence = lastCompleteSentenceV167(r.text) || String(r.text).trim().slice(-200);
+      const assigned = stageRoundsV167(rec, stage);
+      if (assigned.length) rec.coveredThrough = Math.max.apply(null, assigned);
+    }
+  }
+  const assembled = assembleStagesV167(scenes);
+  diags.forEach(function (d) { if (assembled.joinTrims.indexOf(d.stage) !== -1) d.joinTrim = true; });
+  const checks = checkMainStoryV16(b, assembled.text);
+  const counts = countStoryChecksV16(checks);
+  if (counts.failed === 0) {
+    return { ok: true, text: assembled.text, checks: checks, stages: diags, provider: provider, joinTrims: assembled.joinTrims };
+  }
+  const asmOutLimit = /length|MAX_TOKENS|output_token_limit/i.test(lastStageFinish || '');
+  return { ok: false, failedStage: 'assembly', reason: 'AI generation incomplete — assembly stage failed validation — ' + (asmOutLimit ? 'Draft stopped before finishing (provider output limit) — draft did not pass validation' : 'Draft incomplete/truncated — no complete AI story — Draft did not pass validation'), stages: diags, lastText: assembled.text, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, checks: checks, provider: provider };
+}
+function multiStageBreakdownV167(counters) {
+  const parts = [];
+  V167_STAGE_ORDER.forEach(function (stage) {
+    const posts = counters.stagePosts[stage] || 0;
+    if (!posts) return;
+    const corr = counters.stageCorrections[stage] || 0;
+    const ret = counters.stageRetries[stage] || 0;
+    let s = stageLabelV167(stage) + ' ×' + posts;
+    const extra = [];
+    if (corr) extra.push(corr + ' correction' + (corr === 1 ? '' : 's'));
+    if (ret) extra.push(ret + ' retr' + (ret === 1 ? 'y' : 'ies'));
+    if (extra.length) s += ' (' + extra.join(', ') + ')';
+    parts.push(s);
+  });
+  return parts.join(', ');
+}
+
 async function generateMainStoryV16(b, sessionId, opts) {
   opts = opts || {};
   const sid = sessionId || makeSessionIdV16(b);
@@ -3360,199 +3759,135 @@ async function generateMainStoryV16(b, sessionId, opts) {
   resetMainStoryUIV161(sid);
   setStatus('Preparing battle story…');
   setStory('<p>Preparing battle story… Online AI generation runs automatically for this battle.</p>');
-  let prompt = '';
-  try { prompt = buildPromptV16(b); } catch (e) { prompt = 'Write a battle story for ' + (b.winner || 'the winner') + ' vs the loser, based on the recorded events.'; }
-  let condensedPrompt = '';
-  try { condensedPrompt = buildCondensedPromptV162(b); } catch (e) { condensedPrompt = ''; }
-  let attempts = 0;
+  const postBudgetV167 = { count: 0, budget: V163_MAX_POSTS_PER_BATTLE };
+  v163PostCount = 0;
+  v163PostBudget = V163_MAX_POSTS_PER_BATTLE;
+  const counters = { stagePosts: {}, stageCorrections: {}, stageRetries: {}, retryFlags: {} };
+  let geminiPosts = 0;
   let lastReason = '';
   let lastChecks = null;
   let lastProvider = '';
   let lastDraftText = '';
   let lastFailedChecks = null;
+  let lastRunFailedChecks = null;
   let lastDraftStage = '';
   let lastDraftFinishReason = '';
   let lastDraftPromptSize = 0;
-  let stageAttemptCounts = { initial: 0, revision: 0, keyed: 0, gemini: 0 };
-  let retryCountsByStage = {};
-  function attemptsBreakdownV165() {
+  let allStageDiags = [];
+  let lastFailedStage = '';
+  let totalPromptChars = 0;
+  function breakdownAll() {
     const parts = [];
-    [['initial', 'initial'], ['revision', 'revision'], ['keyed', 'keyed'], ['gemini', 'gemini']].forEach(function (pair) {
-      const base = stageAttemptCounts[pair[0]] || 0; const ret = retryCountsByStage[pair[1]] || 0;
-      if (base > 0) parts.push(pair[1] + ' ×' + (base + ret) + (ret > 0 ? ' (' + ret + ' retr' + (ret === 1 ? 'y' : 'ies') + ')' : ''));
-    });
-    return parts.join(', ');
+    const bd = multiStageBreakdownV167(counters);
+    if (bd) parts.push(bd);
+    return parts.join('; ');
   }
-  v163PostCount = 0;
-  v163PostBudget = V163_MAX_POSTS_PER_BATTLE;
-  async function fetchStageV163(stage, fn) {
-    let wait402Done = false;
-    let abortDone = false;
-    while (true) {
-      try { return await fn(); }
-      catch (e) {
-        const msg = e.message || 'Provider request failed';
-        if (!isCurrent()) throw e;
-        if (/post budget exhausted/i.test(msg)) throw e;
-        if (isRateLimit402V162(msg) && !wait402Done) {
-          wait402Done = true;
-          attempts++;
-          retryCountsByStage[stage] = (retryCountsByStage[stage] || 0) + 1;
-          setStatus('Free anonymous limit reached — waiting about 35 seconds, then retrying once… (' + stage + ' stage)');
-          await delayV162(typeof V162_402_WAIT_MS !== 'undefined' ? V162_402_WAIT_MS : 35000);
-          if (!isCurrent()) throw new Error('Superseded by a newer battle');
-          continue;
-        }
-        if (isAbortErrorV163(msg) && !abortDone) {
-          abortDone = true;
-          attempts++;
-          retryCountsByStage[stage] = (retryCountsByStage[stage] || 0) + 1;
-          setStatus('Connection interrupted — retrying once… (' + stage + ' stage)');
-          await delayV162(typeof V163_ABORT_RETRY_DELAY_MS !== 'undefined' ? V163_ABORT_RETRY_DELAY_MS : 3000);
-          if (!isCurrent()) throw new Error('Superseded by a newer battle');
-          continue;
-        }
-        if (isAbortErrorV163(msg) && abortDone) {
-          throw new Error('AI request interrupted (possibly a network drop; not necessarily a provider fault) — retry also failed. Last error: ' + msg);
-        }
-        throw e;
-      }
+  function attemptsTotal() {
+    return postBudgetV167.count + geminiPosts;
+  }
+  function renderAi(meta) {
+    lastMainStoryMeta = meta;
+    if (isCurrent()) {
+      setStatus('Online AI story ready.');
+      setStory(esc(meta._storyText).replace(/\n/g, '<br>'));
+      renderMainStoryLabelV16(meta, sid);
+      renderMainStoryDiagnosticsV16(meta, sid);
+      if (opts.onReady) { try { opts.onReady(meta, esc(meta._storyText).replace(/\n/g, '<br>')); } catch (e) {} }
     }
+    return meta;
   }
   try {
-    let draft = null;
+    /* PRIMARY: multi-stage keyless generation. The old single-shot
+       fetch helper (fetchPollinationsStoryV16) is retained for direct
+       tests and legacy callers, but the primary path never calls it —
+       a truncated single-shot story must not render through it. */
+    const keylessFetch = async function (prompt) {
+      try { return await pollinationsPostOnceV162(prompt, V16_AI_TIMEOUT_MS, postBudgetV167); }
+      catch (e) { throw new Error('Pollinations request failed: ' + explainPollinationsErrorV161(e.message || 'Provider request failed')); }
+    };
+    let run = await runMultiStageV167(b, keylessFetch, isCurrent, setStatus, counters);
+    allStageDiags = allStageDiags.concat(run.stages || []);
+    run.stages.forEach(function (d) { totalPromptChars += d.promptChars || 0; });
+    if (run.ok) {
+      const counts = countStoryChecksV16(run.checks);
+      const meta = { kind: 'ai', provider: run.provider || 'Pollinations (POST, keyless)', passed: counts.passed, unverified: counts.unverified, attempts: attemptsTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: run.checks, aiDraftLength: run.text.length, aiFinishReason: (run.stages.length ? (run.stages[run.stages.length - 1].finishReason || '') : ''), stageDiagnostics: run.stages, _storyText: run.text };
+      lastProvider = meta.provider;
+      return renderAi(meta);
+    }
+    lastReason = run.reason;
+    lastChecks = run.checks || null;
+    lastDraftText = run.lastText || '';
+    lastDraftStage = run.failedStage || '';
+    lastDraftFinishReason = run.lastFinishReason || '';
+    lastDraftPromptSize = run.lastPromptSize || 0;
+    lastFailedStage = run.failedStage || '';
+    lastProvider = run.provider || '';
+    lastRunFailedChecks = run.failedChecks || null;
+    /* SECONDARY: saved Pollinations key ONLY, multi-stage too, after
+       keyless fails. Never runs (and never asks) when no key is saved. */
     try {
-      attempts++;
-      stageAttemptCounts.initial++;
-      draft = await fetchStageV163('initial', function () { return fetchPollinationsStoryV16(prompt, V16_AI_TIMEOUT_MS, condensedPrompt); });
-      lastProvider = draft.provider;
-    } catch (e) {
-      lastReason = e.message || 'Provider request failed'; draft = null;
-    }
-    if (draft) {
-      let checks = checkMainStoryV16(b, draft.text);
-      lastChecks = checks;
-      lastDraftText = draft.text;
-      lastDraftStage = (draft.via === 'post-condensed' ? 'initial-condensed' : 'initial');
-      lastDraftPromptSize = (draft.via === 'post-condensed' ? condensedPrompt.length : prompt.length);
-      lastDraftFinishReason = draft.finishReason || '';
-      const counts = countStoryChecksV16(checks);
-      if (counts.failed > 0) {
-        const failures = checks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }).join(' | ');
-        try {
-          attempts++;
-          stageAttemptCounts.revision++;
-          const _finAbV164 = (function () { try { const _s = buildBattleSummaryV16(b); return _s.finishingAbility || ''; } catch (e) { return ''; } })();
-          /* v16.5 — revision prompt is built from the condensed brief, not
-             the full 4500-char prompt, so it stays bounded instead of
-             ~9,000–11,000 chars, and it requires the COMPLETE revised
-             story (opening to aftermath) rather than inviting a partial
-             correction with "Fix ONLY these, change nothing else". */
-          const _incompleteV166 = checks.some(function (c) { return c.state === 'FAILED' && (c.name === 'Story ends with an aftermath' || c.name === 'Story is complete (not truncated)'); });
-          const _completeNoteV166 = _incompleteV166 ? ('COMPLETENESS NOTE — your previous draft was incomplete/truncated: it ended at "' + String(draft.text).slice(-100).replace(/\n/g, ' ') + '" and did not reach a complete climax and aftermath. The revision must be the COMPLETE story from opening to aftermath, not a continuation fragment and not only the changed passages.\n\n') : '';
-          const revisionPrompt = condensedPrompt + '\n\nREVISION — your previous draft failed these checks:\n' + failures + '\n\n' + _completeNoteV166 + V163_NAMING_RULE + ' This naming rule applies even if the failed checks do not mention names: the revised draft must still name both fighters by their full recorded names in its opening paragraph and again in the climax.\n\n' + (_finAbV164 ? verbatimClimaxRuleV164(_finAbV164) + ' This verbatim-climax rule applies even if the failed checks do not mention the finishing ability.\n\n' : '') + 'REVISED STORY INSTRUCTION — Return the COMPLETE revised story, from opening to aftermath, not only the changed passages. The final paragraph must be the aftermath matching the final winner and loser states. Length: about 600–800 words. It must not stop mid-fight, and must end with a complete sentence. Do not change events, the winner, or the final state.\n\nPrevious draft:\n' + draft.text;
-          const revised = await fetchStageV163('revision', function () { return fetchPollinationsStoryV16(revisionPrompt, V16_AI_TIMEOUT_MS, condensedPrompt); });
-          lastProvider = revised.provider;
-          draft = revised;
-          checks = checkMainStoryV16(b, revised.text);
-          lastChecks = checks;
-          lastDraftText = revised.text;
-          lastDraftStage = (revised.via === 'post-condensed' ? 'revision-condensed' : 'revision');
-          lastDraftPromptSize = (revised.via === 'post-condensed' ? condensedPrompt.length : revisionPrompt.length);
-          lastDraftFinishReason = revised.finishReason || '';
-        } catch (e) { lastReason = 'Revision request failed (no revised draft returned) — diagnostics below are for the initial draft. Last error: ' + (e.message || 'Provider request failed'); draft = null; }
+      const hasPKey = (typeof getPollinationsKey === 'function' ? !!getPollinationsKey() : false);
+      if (hasPKey && postBudgetV167.count < V163_MAX_POSTS_PER_BATTLE) {
+        const keyedFetch = async function (prompt) {
+          const r = await fetchPollinationsStoryWithKeyV161(prompt, V16_AI_TIMEOUT_MS, null, postBudgetV167);
+          return r;
+        };
+        const run2 = await runMultiStageV167(b, keyedFetch, isCurrent, setStatus, counters);
+        allStageDiags = allStageDiags.concat(run2.stages || []);
+        run2.stages.forEach(function (d) { totalPromptChars += d.promptChars || 0; });
+        if (run2.ok) {
+          const counts2 = countStoryChecksV16(run2.checks);
+          const meta2 = { kind: 'ai', provider: run2.provider || 'Pollinations (POST, your saved key)', passed: counts2.passed, unverified: counts2.unverified, attempts: attemptsTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: run2.checks, pollinationsKeyTried: true, aiDraftLength: run2.text.length, aiFinishReason: (run2.stages.length ? (run2.stages[run2.stages.length - 1].finishReason || '') : ''), stageDiagnostics: run2.stages, _storyText: run2.text };
+          lastProvider = meta2.provider;
+          return renderAi(meta2);
+        }
+        lastReason = run2.reason;
+        lastChecks = run2.checks || lastChecks;
+        lastDraftText = run2.lastText || lastDraftText;
+        lastDraftStage = run2.failedStage || lastDraftStage;
+        lastDraftFinishReason = run2.lastFinishReason || lastDraftFinishReason;
+        lastDraftPromptSize = run2.lastPromptSize || lastDraftPromptSize;
+        lastFailedStage = run2.failedStage || lastFailedStage;
+        lastProvider = run2.provider || lastProvider;
+        lastRunFailedChecks = run2.failedChecks || lastRunFailedChecks;
       }
-      if (draft) {
-        const counts2 = countStoryChecksV16(lastChecks);
-        if (counts2.failed === 0) {
-          const meta = { kind: 'ai', provider: lastProvider, passed: counts2.passed, unverified: counts2.unverified, attempts: attempts, attemptsBreakdown: attemptsBreakdownV165(), promptSize: prompt.length, sessionId: sid, checks: lastChecks, aiDraftLength: draft.text.length, aiFinishReason: draft.finishReason || '' };
-          lastMainStoryMeta = meta;
-          if (isCurrent()) {
-            setStatus('Online AI story ready.');
-            setStory(esc(draft.text).replace(/\n/g, '<br>'));
-            renderMainStoryLabelV16(meta, sid);
-            renderMainStoryDiagnosticsV16(meta, sid);
-            if (opts.onReady) { try { opts.onReady(meta, esc(draft.text).replace(/\n/g, '<br>')); } catch (e) {} }
-          }
-          return meta;
+    } catch (e) { if (!lastReason) lastReason = e.message || 'Provider request failed'; }
+    /* OPTIONAL: Gemini, only with a previously saved key, only after
+       Pollinations fails (any failure reason qualifies). Multi-stage too. */
+    try {
+      const hasKey = (typeof getGeminiKey === 'function' ? !!getGeminiKey() : false);
+      if (hasKey) {
+        const geminiFetch = async function (prompt) {
+          if (postBudgetV167.count >= V163_MAX_POSTS_PER_BATTLE) throw new Error('Pollinations post budget exhausted for this battle (cap ' + V163_MAX_POSTS_PER_BATTLE + ' POSTs)');
+          postBudgetV167.count++;
+          const r = await fetchGeminiStoryV16(prompt);
+          return r;
+        };
+        const run3 = await runMultiStageV167(b, geminiFetch, isCurrent, setStatus, counters);
+        allStageDiags = allStageDiags.concat(run3.stages || []);
+        run3.stages.forEach(function (d) { totalPromptChars += d.promptChars || 0; });
+        if (run3.ok) {
+          const counts3 = countStoryChecksV16(run3.checks);
+          const meta3 = { kind: 'ai', provider: run3.provider || 'Gemini (your saved key)', passed: counts3.passed, unverified: counts3.unverified, attempts: attemptsTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: run3.checks, geminiTried: true, aiDraftLength: run3.text.length, aiFinishReason: (run3.stages.length ? (run3.stages[run3.stages.length - 1].finishReason || '') : ''), stageDiagnostics: run3.stages, _storyText: run3.text };
+          lastProvider = meta3.provider;
+          return renderAi(meta3);
         }
-        lastReason = 'Draft did not pass validation';
+        lastReason = run3.reason;
+        lastChecks = run3.checks || lastChecks;
+        lastDraftText = run3.lastText || lastDraftText;
+        lastDraftStage = run3.failedStage || lastDraftStage;
+        lastDraftFinishReason = run3.lastFinishReason || lastDraftFinishReason;
+        lastDraftPromptSize = run3.lastPromptSize || lastDraftPromptSize;
+        lastFailedStage = run3.failedStage || lastFailedStage;
+        lastProvider = run3.provider || lastProvider;
+        lastRunFailedChecks = run3.failedChecks || lastRunFailedChecks;
       }
-    }
-    // v16.1 secondary attempt: saved Pollinations key ONLY, after the keyless
-    // attempt failed. Never runs (and never asks) when no key is saved.
-    if (!draft) {
-      try {
-        const hasPKey = (typeof getPollinationsKey === 'function' ? !!getPollinationsKey() : false);
-        if (hasPKey) {
-          attempts++;
-          stageAttemptCounts.keyed++;
-          const k = await fetchStageV163('keyed', function () { return fetchPollinationsStoryWithKeyV161(prompt, V16_AI_TIMEOUT_MS, condensedPrompt); });
-          lastProvider = k.provider;
-          const kChecks = checkMainStoryV16(b, k.text);
-          lastChecks = kChecks;
-          lastDraftText = k.text;
-          lastDraftStage = (k.via === 'post-key-condensed' ? 'keyed-condensed' : 'keyed');
-          lastDraftPromptSize = (k.via === 'post-key-condensed' ? condensedPrompt.length : prompt.length);
-          lastDraftFinishReason = k.finishReason || '';
-          const kc = countStoryChecksV16(kChecks);
-          if (kc.failed === 0) {
-            const meta = { kind: 'ai', provider: lastProvider, passed: kc.passed, unverified: kc.unverified, attempts: attempts, attemptsBreakdown: attemptsBreakdownV165(), promptSize: prompt.length, sessionId: sid, checks: kChecks, pollinationsKeyTried: true, aiDraftLength: k.text.length, aiFinishReason: k.finishReason || '' };
-            lastMainStoryMeta = meta;
-            if (isCurrent()) {
-              setStatus('Online AI story ready.');
-              setStory(esc(k.text).replace(/\n/g, '<br>'));
-              renderMainStoryLabelV16(meta, sid);
-              renderMainStoryDiagnosticsV16(meta, sid);
-              if (opts.onReady) { try { opts.onReady(meta, esc(k.text).replace(/\n/g, '<br>')); } catch (e) {} }
-            }
-            return meta;
-          }
-          lastReason = 'Draft did not pass validation';
-        }
-      } catch (e) { if (!lastReason) lastReason = e.message || 'Provider request failed'; }
-    }
-    // Optional Gemini attempt, only with a previously saved key, only after
-    // Pollinations failed or failed validation (any failure reason qualifies).
-    if (true) {
-      try {
-        const hasKey = (typeof getGeminiKey === 'function' ? !!getGeminiKey() : false);
-        if (hasKey) {
-          attempts++;
-          stageAttemptCounts.gemini++;
-          const g = await fetchGeminiStoryV16(prompt);
-          lastProvider = g.provider;
-          const gChecks = checkMainStoryV16(b, g.text);
-          lastChecks = gChecks;
-          lastDraftText = g.text;
-          lastDraftStage = 'gemini';
-          lastDraftPromptSize = prompt.length;
-          lastDraftFinishReason = g.finishReason || '';
-          const gc = countStoryChecksV16(gChecks);
-          if (gc.failed === 0) {
-            const meta = { kind: 'ai', provider: lastProvider, passed: gc.passed, unverified: gc.unverified, attempts: attempts, attemptsBreakdown: attemptsBreakdownV165(), promptSize: prompt.length, sessionId: sid, checks: gChecks, geminiTried: true, aiDraftLength: g.text.length, aiFinishReason: g.finishReason || '' };
-            lastMainStoryMeta = meta;
-            if (isCurrent()) {
-              setStatus('Online AI story ready.');
-              setStory(esc(g.text).replace(/\n/g, '<br>'));
-              renderMainStoryLabelV16(meta, sid);
-              renderMainStoryDiagnosticsV16(meta, sid);
-              if (opts.onReady) { try { opts.onReady(meta, esc(g.text).replace(/\n/g, '<br>')); } catch (e) {} }
-            }
-            return meta;
-          }
-          lastReason = 'Draft did not pass validation';
-        }
-      } catch (e) { if (!lastReason) lastReason = e.message || 'Provider request failed'; }
-    }
+    } catch (e) { if (!lastReason) lastReason = e.message || 'Provider request failed'; }
     if (!lastReason) lastReason = 'Provider request failed';
-    if (lastChecks) { const _fc = countStoryChecksV16(lastChecks); if (_fc.failed > 0) lastFailedChecks = lastChecks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }); }
-    /* v16.5 — truncation-aware reason: a draft the provider stopped
-       before finishing is reported as such, never as a plain validation
-       failure and never as a pass or a story. */
-    if (lastDraftText && (lastDraftFinishReason === 'length' || lastDraftFinishReason === 'MAX_TOKENS') && lastReason === 'Draft did not pass validation') lastReason = 'Draft stopped before finishing (provider output limit) — draft did not pass validation';
-    else if (lastReason === 'Draft did not pass validation' && lastChecks && lastChecks.some(function (c) { return c.state === 'FAILED' && (c.name === 'Story ends with an aftermath' || c.name === 'Story is complete (not truncated)' || c.name === 'Finishing ability / event matches the record' || c.name === 'No invented decisive event'); })) lastReason = 'Draft incomplete/truncated — no complete AI story — Draft did not pass validation';
-    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attempts, attemptsBreakdown: attemptsBreakdownV165(), promptSize: prompt.length, sessionId: sid, checks: lastChecks, reason: lastReason, rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: lastFailedChecks || [], rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks) };
+    let lastStageFailedChecks = lastRunFailedChecks;
+    if (lastStageFailedChecks && lastStageFailedChecks.length) lastFailedChecks = lastStageFailedChecks;
+    else if (lastChecks) { const _fc = countStoryChecksV16(lastChecks); if (_fc.failed > 0) lastFailedChecks = lastChecks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }); }
+    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attemptsTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: lastChecks, reason: lastReason, rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: lastFailedChecks || [], rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks || (lastDraftText ? checkMainStoryV16(b, lastDraftText) : null)), stageDiagnostics: allStageDiags, failedStage: lastFailedStage };
     lastMainStoryMeta = meta;
     if (isCurrent()) {
       setStatus('Online AI generation was unavailable — showing the offline episode instead.');
@@ -3563,7 +3898,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
     }
     return meta;
   } catch (e) {
-    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attempts, attemptsBreakdown: attemptsBreakdownV165(), promptSize: prompt.length, sessionId: sid, checks: lastChecks, reason: (e && e.message) || 'Provider request failed', rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: (lastFailedChecks && lastFailedChecks.length ? lastFailedChecks : (lastChecks ? lastChecks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }) : [])), rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks) };
+    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attemptsTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: lastChecks, reason: (e && e.message) || 'Provider request failed', rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: (lastFailedChecks && lastFailedChecks.length ? lastFailedChecks : (lastChecks ? lastChecks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }) : [])), rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks || (lastDraftText ? checkMainStoryV16(b, lastDraftText) : null)), stageDiagnostics: allStageDiags, failedStage: lastFailedStage };
     lastMainStoryMeta = meta;
     if (isCurrent()) {
       setStatus('Online AI generation was unavailable — showing the offline episode instead.');
@@ -3577,6 +3912,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
     try { if (currentStoryTimeoutId) { clearTimeout(currentStoryTimeoutId); currentStoryTimeoutId = null; } } catch (e) {}
     if (currentStorySessionId === sid) { currentStoryController = null; currentStoryInFlight = false; }
     try { if (retryBtn) retryBtn.disabled = false; } catch (e) {}
+    try { v163PostCount = postBudgetV167.count; } catch (e) {}
   }
 }
 function retryMainStoryV16() {
