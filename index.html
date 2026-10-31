@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.10 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.11 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.10</h1><span>1V1 DEATH BATTLES • ENGINE v16.10 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v16.11</h1><span>1V1 DEATH BATTLES • ENGINE v16.11 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -912,7 +912,7 @@ function viewHistoryLegacy(id){
   document.getElementById('consistency-note').innerText='Loaded from history saved on this device only. It is not synced to other devices.';
   const _inL=document.getElementById('integrity-note'); if(_inL) _inL.innerText='Loaded from history saved on this device only. No live battle record is shown here.';
   const _anL=document.getElementById('accuracy-note'); if(_anL) _anL.innerText='Loaded from history saved on this device only. No live battle record is shown here.';
-  const _pl=document.getElementById('pipeline-stages'); if(_pl){ const _fake={rounds:x.rounds||0,events:(x.eventRecord||[]),battlefield:{name:x.battlefield||''},seed:x.seed,narrativePlan:null,chapterCoverage:null}; _pl.innerHTML=`<b>Online Storytelling Pipeline — this saved battle (7 stages):</b><br>Stage 1 Research: saved dossier references are in the result description above.<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${_fake.rounds} rounds, ${_fake.events.length} recorded events on ${esc(x.battlefield||'')}. Battle seed: ${_fake.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Narrative Planning: causal beats from this saved battle's own event record.<br>Stage 5 AI Storytelling: rule-based episode below is the verified default; optional AI episode (if generated) is checked and never replaces a failed verified episode.<br>Stage 6 Consistency Review: see the Saved Consistency Check above.<br>Stage 7 Final Episode: below, followed by the separate Combat Breakdown and verdict. Saved on this device only (see Battle History). This pipeline block is rendered ONLY from this saved entry's own record — never from the most recent battle.`; }
+  const _pl=document.getElementById('pipeline-stages'); if(_pl){ const _fake={rounds:x.rounds||0,events:(x.eventRecord||[]),battlefield:{name:x.battlefield||''},seed:x.seed,narrativePlan:null,chapterCoverage:null}; _pl.innerHTML=`<b>Online Storytelling Pipeline — this saved battle (7 stages):</b><br>Stage 1 Research: saved dossier references are in the result description above.<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${_fake.rounds} rounds, ${_fake.events.length} recorded events on ${esc(x.battlefield||'')}. Battle seed: ${_fake.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Narrative Planning: causal beats from this saved battle's own event record.<br>Stage 5 AI Storytelling: the AI story below is a fictionalised retelling of the recorded outcome (locked winner, finisher, loser state, mode, and battlefield; Combat Details is the authoritative round-by-round record); the rule-based episode is the honestly labelled fallback when online generation is unavailable.<br>Stage 6 Consistency Review: see the Saved Consistency Check above.<br>Stage 7 Final Episode: below, followed by the separate Combat Breakdown and verdict. Saved on this device only (see Battle History). This pipeline block is rendered ONLY from this saved entry's own record — never from the most recent battle.`; }
   document.getElementById('story-output').innerHTML=sanitizeStoryHtml(x.story); document.getElementById('breakdown-output').innerHTML=sanitizeStoryHtml(x.breakdown); try{ const _ml=document.getElementById('main-story-label'); if(_ml) _ml.innerText=(x.mainStoryMeta&&x.mainStoryMeta.kind==='ai')?('Saved online AI story — '+x.mainStoryMeta.provider+' — checked: '+x.mainStoryMeta.passed+' passed, '+x.mainStoryMeta.unverified+' unverified.'):('Saved episode — shown exactly as saved on this device.'+(x.mainStoryMeta&&x.mainStoryMeta.kind==='offline'?' This saved entry used the offline fallback.':'')); const _ms=document.getElementById('main-story-status'); if(_ms) _ms.innerText=''; const _dg=document.getElementById('main-story-diagnostics'); if(_dg&&x.mainStoryMeta) _dg.innerHTML='Saved session: '+esc(x.mainStoryMeta.sessionId||'—')+'<br>Provider: '+esc(x.mainStoryMeta.provider||'—')+'<br>Attempts: '+esc(String(x.mainStoryMeta.attempts||0))+' generation + '+esc(String(x.mainStoryMeta.attempts402Excluded||0))+' 402 wait-retries (not counted toward cap)'; }catch(e){}
 }
 function exportCurrentSavedEpisode(){ if(currentHistoryId!=null) exportSavedEpisode(currentHistoryId); else {const _en=document.getElementById('export-note'); if(_en) _en.innerText='No saved episode is open yet — run a battle or open one from Battle History first.'; else alert('No saved episode is open yet.');} }
@@ -1312,7 +1312,7 @@ function pipelineHtml(b, checks){
   const refsLine=refs.map(r=>r.fighter+' ('+r.continuity+'): '+r.sources.map(s=>s.name+' '+s.status).join('; ')).join(' | ');
   const allPass=checks.every(c=>c.passed);
   const plan=b.narrativePlan||buildNarrativePlan(b);
-  return `<b>Online Storytelling Pipeline — this battle (7 stages):</b><br>Stage 1 Research: ${esc(refsLine)}<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${b.rounds} rounds, ${b.events.length} recorded events on ${esc(b.battlefield.name)}. Battle seed: ${b.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Narrative Planning: ${plan.beats.length} causal beats (decision → response → opening → injury → next decision); chapter coverage III=${(b.chapterCoverage?b.chapterCoverage.III:[]).join(',')} IV=${(b.chapterCoverage?b.chapterCoverage.IV:[]).join(',')} V=${(b.chapterCoverage?b.chapterCoverage.V:[]).join(',')}.<br>Stage 5 AI Storytelling: rule-based episode below is the verified default; optional AI episode (if generated) is checked with the same checkers and never replaces a failed verified episode.<br>Stage 6 Consistency Review: ${allPass?'PASSED':('FAILED — '+checks.filter(c=>!c.passed).map(c=>c.name+': '+c.detail).join(' | '))}.<br>Stage 7 Final Episode: below, followed by the separate Combat Breakdown and verdict. Saved on this device only (see Battle History).`;
+  return `<b>Online Storytelling Pipeline — this battle (7 stages):</b><br>Stage 1 Research: ${esc(refsLine)}<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${b.rounds} rounds, ${b.events.length} recorded events on ${esc(b.battlefield.name)}. Battle seed: ${b.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Narrative Planning: ${plan.beats.length} causal beats (decision → response → opening → injury → next decision); chapter coverage III=${(b.chapterCoverage?b.chapterCoverage.III:[]).join(',')} IV=${(b.chapterCoverage?b.chapterCoverage.IV:[]).join(',')} V=${(b.chapterCoverage?b.chapterCoverage.V:[]).join(',')}.<br>Stage 5 AI Storytelling: the AI story below is a fictionalised retelling of the recorded outcome (locked winner, finisher, loser state, mode, and battlefield; Combat Details is the authoritative round-by-round record); the rule-based episode is the honestly labelled fallback when online generation is unavailable.<br>Stage 6 Consistency Review: ${allPass?'PASSED':('FAILED — '+checks.filter(c=>!c.passed).map(c=>c.name+': '+c.detail).join(' | '))}.<br>Stage 7 Final Episode: below, followed by the separate Combat Breakdown and verdict. Saved on this device only (see Battle History).`;
 }
 /* Story Brain additions: scene handling for study/protect, and reason-aware prose. */
 const _origSceneForRound=sceneForRound;
@@ -2428,10 +2428,10 @@ function showResults(){
   const cl=document.getElementById('consistency-lines'); if(cl) cl.innerHTML='<b>Legacy combined check is not used in v15.</b> See Systems A, B, and C below, each with its own result.';
   const il=document.getElementById('integrity-lines'); if(il) il.innerHTML='<b>System A — Battle Integrity:</b> '+validationSummaryV14(integrity)+'<br>'+validationLinesHtmlV14(integrity);
   const in2=document.getElementById('integrity-note'); if(in2) in2.innerText='System A — Battle Integrity: '+validationSummaryV14(integrity)+'. Authoritative record: winner='+fr.winner+', loser='+fr.loserName+', victoryMode='+fr.victoryMode+', finishingEventId='+(fr.finishingEventId!=null?fr.finishingEventId:'none')+', finishingAbility='+(fr.finishingAbility||'none')+'.';
-  const al=document.getElementById('accuracy-lines'); if(al) al.innerHTML='<b>System B — Narrative Factual Accuracy (rule-based fallback episode — not the AI main story; the AI story\'s own validation is in Technical Details):</b> '+validationSummaryV14(accuracy)+'<br>'+validationLinesHtmlV14(accuracy);
-  const an=document.getElementById('accuracy-note'); if(an) an.innerText='System B — Narrative Factual Accuracy (rule-based fallback episode — not the AI main story; the AI story\'s own validation is in Technical Details): '+validationSummaryV14(accuracy)+'. An episode can be factually consistent but poor quality, or well written but factually wrong — that distinction is shown here, not hidden in a combined score.';
+  const al=document.getElementById('accuracy-lines'); if(al) al.innerHTML='<b>System B — Narrative Factual Accuracy (rule-based fallback episode — not the AI main story; the AI story\'s own hard-constraint validation is in Technical Details and checks the locked list, not event-by-event accuracy):</b> '+validationSummaryV14(accuracy)+'<br>'+validationLinesHtmlV14(accuracy);
+  const an=document.getElementById('accuracy-note'); if(an) an.innerText='System B — Narrative Factual Accuracy (rule-based fallback episode — not the AI main story; the AI story\'s own hard-constraint validation is in Technical Details and checks the locked list, not event-by-event accuracy): '+validationSummaryV14(accuracy)+'. An episode can be factually consistent but poor quality, or well written but factually wrong — that distinction is shown here, not hidden in a combined score.';
   const qn=document.getElementById('quality-note'); if(qn) qn.innerText=qFail?('System C — Story Quality: ISSUES FOUND ('+qFail+' failed). Quality issues alone do not unverify a factually consistent episode.'):('System C — Story Quality: '+validationSummaryV14(quality)+'.');
-  const ql=document.getElementById('quality-lines'); if(ql) ql.innerHTML='<b>System C — Story Quality (separate from factual accuracy; rule-based fallback episode — not the AI main story; the AI story\'s own validation is in Technical Details):</b> '+validationSummaryV14(quality)+'<br>'+validationLinesHtmlV14(quality);
+  const ql=document.getElementById('quality-lines'); if(ql) ql.innerHTML='<b>System C — Story Quality (separate from factual accuracy; rule-based fallback episode — not the AI main story; the AI story\'s own hard-constraint validation is in Technical Details):</b> '+validationSummaryV14(quality)+'<br>'+validationLinesHtmlV14(quality);
   const pl=document.getElementById('pipeline-stages'); if(pl) pl.innerHTML=pipelineHtml(b,integrity);
   // v16: fallback-episode integrity/accuracy/quality above describe the fallback
   // episode, not the AI main story. The AI main story's own validation is
@@ -2459,7 +2459,7 @@ function saveBattle(b,story,breakdown,integrity,accuracy,quality){
     const h=loadHistory();
     const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]);
     const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant));
-    h.unshift({id:Date.now(),formatVersion:'v16.10',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.10 online AI main story, or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
+    h.unshift({id:Date.now(),formatVersion:'v16.11',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.11 online AI main story (fictionalised retelling of the recorded outcome), or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
     localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));
   }catch(e){}
   renderHistory();
@@ -2481,8 +2481,8 @@ function renderHistory(){
 function savedStoryMetaV162(x) {
   const m = x.mainStoryMeta;
   if (!m) return { label: 'Saved before story-kind tracking — chapters shown as saved; story kind not recorded.', diagnostics: 'Story kind not recorded for this saved entry (saved before story-kind tracking). Chapters shown exactly as saved.' };
-  if (m.kind === 'ai') return { label: 'Saved online AI story — ' + (m.provider || 'online AI') + ' — checked: ' + (m.passed || 0) + ' passed, ' + (m.unverified || 0) + ' unverified (unverified is not counted as passed). Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || '—') + '<br>Provider attempts: ' + (m.attempts || 0) + ' generation + ' + (m.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + promptSizesLineV1610(m) + (m.aiDraftLength != null && m.aiDraftLength !== '' ? '<br>AI story length: ' + m.aiDraftLength + ' characters.' : '') + (m.aiFinishReason !== undefined ? '<br>Provider finish signal: ' + (m.aiFinishReason ? m.aiFinishReason : 'not reported by provider') + '.' : '') + (m.stageDiagnostics && m.stageDiagnostics.length ? '<br>' + stageDiagnosticsHtmlV167(m.stageDiagnostics) : '') + (m.fidelityChecks && m.fidelityChecks.length ? '<br>Event-fidelity checks:<br>' + m.fidelityChecks.map(function (c) { return (c.state === 'PASSED' ? '✅ ' : (c.state === 'UNVERIFIED' ? '❓ UNVERIFIED — ' : '❌ ')) + esc(c.name) + ' — ' + esc(c.detail); }).join('<br>') : '') };
-  return { label: V16_OFFLINE_LABEL + ' Reason: ' + (m.reason || 'Online AI generation was unavailable.') + ' This saved entry used the offline fallback — it is not an online AI story. Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || 'Offline fallback (rule-based episode)') + '<br>Provider attempts: ' + (m.attempts || 0) + ' generation + ' + (m.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + promptSizesLineV1610(m) + '<br>Fallback reason: ' + (m.reason || 'Online AI generation was unavailable.') + (m.failedStage ? '<br>Failed stage: ' + m.failedStage : '') + (m.stageDiagnostics && m.stageDiagnostics.length ? '<br>' + stageDiagnosticsHtmlV167(m.stageDiagnostics) : '') + (m.rejectedDraftExcerpt ? '<br>' + rejectedDraftDetailsHtmlV164(m) : '') + (m.fidelityChecks && m.fidelityChecks.length ? '<br>Event-fidelity checks:<br>' + m.fidelityChecks.map(function (c) { return (c.state === 'PASSED' ? '✅ ' : (c.state === 'UNVERIFIED' ? '❓ UNVERIFIED — ' : '❌ ')) + esc(c.name) + ' — ' + esc(c.detail); }).join('<br>') : '') };
+  if (m.kind === 'ai') return { label: 'Saved online AI story (fictionalised retelling of the recorded outcome) — ' + (m.provider || 'online AI') + ' — hard-constraint checked (locked list): ' + (m.passed || 0) + ' passed, ' + (m.unverified || 0) + ' unverified (unverified is not counted as passed). Combat Details is the authoritative round-by-round record. Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || '—') + '<br>Provider attempts: ' + (m.attempts || 0) + ' generation + ' + (m.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + promptSizesLineV1610(m) + (m.aiDraftLength != null && m.aiDraftLength !== '' ? '<br>AI story length: ' + m.aiDraftLength + ' characters.' : '') + (m.aiFinishReason !== undefined ? '<br>Provider finish signal: ' + (m.aiFinishReason ? m.aiFinishReason : 'not reported by provider') + '.' : '') + (m.stageDiagnostics && m.stageDiagnostics.length ? '<br>' + stageDiagnosticsHtmlV167(m.stageDiagnostics) : '') + (m.fidelityChecks && m.fidelityChecks.length ? '<br>Hard-constraint checks (locked list — v16.11 outcome-fixed model):<br>' + (m.hardConstraintChecks || m.fidelityChecks).map(function (c) { return (c.state === 'PASSED' ? '✅ ' : (c.state === 'UNVERIFIED' ? '❓ UNVERIFIED — ' : '❌ ')) + esc(c.name) + ' — ' + esc(c.detail); }).join('<br>') : '') };
+  return { label: V16_OFFLINE_LABEL + ' Reason: ' + (m.reason || 'Online AI generation was unavailable.') + ' This saved entry used the offline fallback — it is not an online AI story. Session: ' + (m.sessionId || '—') + '.', diagnostics: 'Saved session: ' + (m.sessionId || '—') + '<br>Provider: ' + (m.provider || 'Offline fallback (rule-based episode)') + '<br>Provider attempts: ' + (m.attempts || 0) + ' generation + ' + (m.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap)' + (m.attemptsBreakdown ? '; breakdown: ' + m.attemptsBreakdown : '') + promptSizesLineV1610(m) + '<br>Fallback reason: ' + (m.reason || 'Online AI generation was unavailable.') + (m.failedStage ? '<br>Failed stage: ' + m.failedStage : '') + (m.stageDiagnostics && m.stageDiagnostics.length ? '<br>' + stageDiagnosticsHtmlV167(m.stageDiagnostics) : '') + (m.rejectedDraftExcerpt ? '<br>' + rejectedDraftDetailsHtmlV164(m) : '') + (m.fidelityChecks && m.fidelityChecks.length ? '<br>Hard-constraint checks (locked list — v16.11 outcome-fixed model):<br>' + (m.hardConstraintChecks || m.fidelityChecks).map(function (c) { return (c.state === 'PASSED' ? '✅ ' : (c.state === 'UNVERIFIED' ? '❓ UNVERIFIED — ' : '❌ ')) + esc(c.name) + ' — ' + esc(c.detail); }).join('<br>') : '') };
 }
 function viewHistory(id){
   const x=loadHistory().find(h=>h.id===id); if(!x) return;
@@ -2519,7 +2519,7 @@ function viewHistory(id){
   document.getElementById('result-desc').innerText=x.date+' • '+x.battlefield+(x.continuities?' • Continuities: '+x.continuities.join(' vs '):'')+(x.victoryType?' • Victory: '+x.victoryType:'')+(x.seed!=null?' • Battle seed: '+x.seed+' — same seed + fighters + variants + battlefield reproduces the same battle':'')+(x.researchRefs?' • Research: '+x.researchRefs.map(r=>r.fighter+': '+r.sources.map(s=>s.name+' '+s.status).join(', ')).join(' | '):'')+(v.legacy?' • ⚠️ Saved in an older format — read-only, format differs.':(' • Format: '+(x.formatVersion||'v15.1')+'.'));
   const cl2=document.getElementById('consistency-lines'); if(cl2) cl2.innerHTML='See Systems A, B, and C below for this saved entry. Reopening does not rerun the battle and does not change the saved result.';
   const il2=document.getElementById('integrity-lines'); if(il2) il2.innerHTML=x.validation&&x.validation.integrity?('<b>Saved System A — Battle Integrity:</b><br>'+validationLinesHtmlV14(x.validation.integrity)):'<b>Saved System A — Battle Integrity:</b> Not stored for this legacy entry (UNVERIFIED on reopen — not recomputed from a different battle).';
-  const al2=document.getElementById('accuracy-lines'); if(al2) al2.innerHTML=x.validation&&x.validation.accuracy?('<b>Saved System B — Narrative Factual Accuracy (fallback-episode check, or the AI main-story validation when this saved entry is an AI story):</b><br>'+validationLinesHtmlV14(x.validation.accuracy)):'<b>Saved System B — Narrative Factual Accuracy:</b> Not stored for this legacy entry (UNVERIFIED on reopen — not recomputed from a different battle).';
+  const al2=document.getElementById('accuracy-lines'); if(al2) al2.innerHTML=x.validation&&x.validation.accuracy?('<b>Saved System B — Narrative Factual Accuracy (fallback-episode check, or the AI main-story hard-constraint validation (locked list, not event-by-event accuracy) when this saved entry is an AI story):</b><br>'+validationLinesHtmlV14(x.validation.accuracy)):'<b>Saved System B — Narrative Factual Accuracy:</b> Not stored for this legacy entry (UNVERIFIED on reopen — not recomputed from a different battle).';
   const ql2=document.getElementById('quality-lines'); if(ql2) ql2.innerHTML=x.validation&&x.validation.quality?('<b>Saved System C — Story Quality (rule-based fallback episode — not the AI main story):</b><br>'+validationLinesHtmlV14(x.validation.quality)):(x.quality?('<b>Saved Narrative Quality Check (legacy):</b><br>'+x.quality.map(c=>(c.passed===true?'✅ ':(c.passed==='unverified'?'❓ UNVERIFIED — ':'❌ '))+esc(c.name)+' — '+esc(c.detail||'')).join('<br>')):'No saved quality check for this entry.');
   const qn2=document.getElementById('quality-note'); if(qn2) qn2.innerText='Loaded from history saved on this device only. Reopening does not rerun the battle and never mutates the original result.';
   // v16.4: clear/replace EVERY live-only note in a saved view. Previously
@@ -2529,13 +2529,13 @@ function viewHistory(id){
   const _inS = document.getElementById('integrity-note');
   if (_inS) _inS.innerText = (x.validation && x.validation.integrity) ? ('Saved System A — Battle Integrity for THIS saved entry. Authoritative record for this saved entry: winner=' + x.winner + ', loser=' + (x.loser || '') + ', victoryMode=' + (x.victoryMode || '') + ', finishingEventId=' + (x.finalRecord && x.finalRecord.finishingEventId != null ? x.finalRecord.finishingEventId : 'none') + ', finishingAbility=' + (x.finalRecord && x.finalRecord.finishingAbility ? x.finalRecord.finishingAbility : 'none') + '.') : 'Saved System A — Battle Integrity: not recorded for this saved episode (no live battle record is shown here).';
   const _anS = document.getElementById('accuracy-note');
-  if (_anS) _anS.innerText = (x.validation && x.validation.accuracy) ? 'Saved System B — Narrative Factual Accuracy for THIS saved entry (see Saved System B lines above; fallback-episode check, or the AI main-story validation when this saved entry is an AI story).' : 'Saved System B — Narrative Factual Accuracy: not recorded for this saved episode (no live battle record is shown here).';
+  if (_anS) _anS.innerText = (x.validation && x.validation.accuracy) ? 'Saved System B — Narrative Factual Accuracy for THIS saved entry (see Saved System B lines above; fallback-episode check, or the AI main-story hard-constraint validation (locked list, not event-by-event accuracy) when this saved entry is an AI story).' : 'Saved System B — Narrative Factual Accuracy: not recorded for this saved episode (no live battle record is shown here).';
   const _rdS = document.getElementById('result-dossier-output');
   if (_rdS) _rdS.innerHTML = x.researchRefs ? ('<b>Saved dossier references for this saved entry:</b> ' + x.researchRefs.map(function (r) { return esc(r.fighter) + ': ' + r.sources.map(function (s) { return esc(s.name) + ' ' + esc(s.status); }).join('; '); }).join('<br>')) : 'Saved dossier references: not recorded for this saved episode (no live battle record is shown here).';
   const _aioS = document.getElementById('ai-story-output');
   if (_aioS) _aioS.innerText = 'The main story above is the saved episode (online AI story or labelled offline fallback, as shown in its banner). Rejected draft diagnostics, if any, are in Technical Details — never presented as the story.';
   document.getElementById('consistency-note').innerText='Loaded from history saved on this device only. It is not synced to other devices.';
-  const _pl=document.getElementById('pipeline-stages'); if(_pl){ const _fake={rounds:x.rounds||0,events:(x.eventRecord||[]),battlefield:{name:x.battlefield||''},seed:x.seed}; _pl.innerHTML=`<b>Online Storytelling Pipeline — this saved battle (7 stages):</b><br>Stage 1 Research: saved dossier references are in the result description above.<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${_fake.rounds} rounds, ${_fake.events.length} recorded events on ${esc(x.battlefield||'')}. Battle seed: ${_fake.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Narrative Planning: causal beats from this saved battle's own event record.<br>Stage 5 AI Storytelling: rule-based episode below is the verified default; optional AI episode (if generated) is checked and never replaces a failed verified episode.<br>Stage 6 Consistency Review: see Systems A, B, and C above for this saved entry.<br>Stage 7 Final Episode: below, followed by the separate Combat Breakdown and verdict. Saved on this device only (see Battle History). This pipeline block is rendered ONLY from this saved entry's own record — never from the most recent battle.`; }
+  const _pl=document.getElementById('pipeline-stages'); if(_pl){ const _fake={rounds:x.rounds||0,events:(x.eventRecord||[]),battlefield:{name:x.battlefield||''},seed:x.seed}; _pl.innerHTML=`<b>Online Storytelling Pipeline — this saved battle (7 stages):</b><br>Stage 1 Research: saved dossier references are in the result description above.<br>Stage 2 Matchup Analysis: scaling, transformations, weaknesses and win conditions for the selected continuities.<br>Stage 3 Combat Simulation: ${_fake.rounds} rounds, ${_fake.events.length} recorded events on ${esc(x.battlefield||'')}. Battle seed: ${_fake.seed} — same seed + fighters + variants + battlefield reproduces the same battle.<br>Stage 4 Narrative Planning: causal beats from this saved battle's own event record.<br>Stage 5 AI Storytelling: the AI story below is a fictionalised retelling of the recorded outcome (locked winner, finisher, loser state, mode, and battlefield; Combat Details is the authoritative round-by-round record); the rule-based episode is the honestly labelled fallback when online generation is unavailable.<br>Stage 6 Consistency Review: see Systems A, B, and C above for this saved entry.<br>Stage 7 Final Episode: below, followed by the separate Combat Breakdown and verdict. Saved on this device only (see Battle History). This pipeline block is rendered ONLY from this saved entry's own record — never from the most recent battle.`; }
   const _smv = savedStoryMetaV162(x);
   document.getElementById('story-output').innerHTML='<p style="border:2px solid var(--yellow);padding:10px;border-radius:6px"><b>'+esc(_smv.label)+'</b></p>'+sanitizeStoryHtml(x.story); document.getElementById('breakdown-output').innerHTML=sanitizeStoryHtml(x.breakdown);
   try { const _lbl=document.getElementById('main-story-label'); if(_lbl) _lbl.innerText=_smv.label; const _sts=document.getElementById('main-story-status'); if(_sts) _sts.innerText='Saved episode — shown exactly as saved on this device; this view does not rerun generation.'; const _dg=document.getElementById('main-story-diagnostics'); if(_dg) _dg.innerHTML=_smv.diagnostics; } catch (e) {}
@@ -2645,8 +2645,8 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10'].includes(x.formatVersion);
-  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10 record.'};
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11'].includes(x.formatVersion);
+  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
 
@@ -3309,7 +3309,7 @@ function resetMainStoryUIV161(sid) {
     const diag = document.getElementById('main-story-diagnostics');
     if (diag) diag.innerHTML = sid ? ('Session: ' + esc(sid) + '<br>Provider: —<br>Attempts: 0<br>Prompt size: —<br>Validation: pending — this battle only, no previous battle\'s session, reason, or validation is shown.') : 'No story generated yet for this battle.';
     const ai = document.getElementById('ai-story-output');
-    if (ai) ai.innerText = sid ? 'Preparing battle story for this battle…' : 'The main story above is the online AI story (or the labelled offline fallback). Rejected draft diagnostics, if any, are in Technical Details — never presented as the story.';
+    if (ai) ai.innerText = sid ? 'Preparing battle story for this battle…' : 'The main story above is the online AI story — a fictionalised retelling of the recorded outcome; Combat Details is the authoritative round-by-round record — (or the labelled offline fallback). Rejected draft diagnostics, if any, are in Technical Details — never presented as the story.';
     const so = document.getElementById('story-output');
     if (so && sid) so.innerHTML = '<p>Preparing battle story… Online AI generation runs automatically for this battle.</p>';
     lastMainStoryMeta = null;
@@ -3324,7 +3324,7 @@ function renderMainStoryLabelV16(meta, expectedSession) {
   const label = document.getElementById('main-story-label');
   if (!label) return;
   if (!meta) { label.innerText = ''; return; }
-  if (meta.kind === 'ai') label.innerText = 'Online AI Story — ' + meta.provider + ' — checked against the battle record: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified (unverified is not counted as passed).';
+  if (meta.kind === 'ai') label.innerText = 'Online AI Story (fictionalised retelling of the recorded outcome) — ' + meta.provider + ' — hard-constraint checked (locked list): ' + meta.passed + ' passed, ' + meta.unverified + ' unverified (unverified is not counted as passed). Combat Details is the authoritative round-by-round record.';
   else if (meta.kind === 'offline') label.innerText = V16_OFFLINE_LABEL + ' Reason: ' + meta.reason + ' The online version is the primary experience when available; this offline episode is the rule-based fallback.';
   else if (meta.kind === 'saved') label.innerText = 'Saved episode — shown exactly as saved on this device.';
   else label.innerText = '';
@@ -3365,8 +3365,9 @@ function renderMainStoryDiagnosticsV16(meta, expectedSession) {
     if (meta.aiDraftLength != null) lines.push('AI story length: ' + meta.aiDraftLength + ' characters.');
     lines.push('Provider finish signal: ' + (meta.aiFinishReason ? meta.aiFinishReason : 'not reported by provider') + '.');
   }
+  if (meta.kind === 'ai') lines.push('Story model: outcome-fixed, middle-loose — this story is a fictionalised retelling of the recorded outcome; Combat Details is the authoritative round-by-round record. Minor middle divergence (invented minor exchanges, no round numbers, missing minor exchanges) is not a failure.');
   if (meta.checks) lines.push('Validation:<br>' + storyChecksHtmlV16(meta.checks));
-  if (meta.fidelityChecks && meta.fidelityChecks.length) lines.push('Event-fidelity checks:<br>' + meta.fidelityChecks.map(function (c) { return (c.state === 'PASSED' ? '✅ ' : (c.state === 'UNVERIFIED' ? '❓ UNVERIFIED — ' : '❌ ')) + esc(c.name) + ' — ' + esc(c.detail); }).join('<br>'));
+  if (meta.fidelityChecks && meta.fidelityChecks.length) lines.push('Hard-constraint checks (locked list — winner, finisher, loser state, mode, battlefield, canon powers, transforms, power scaling, post-defeat action, knowledge, personality decisions; minor middle divergence is not a failure):<br>' + (meta.hardConstraintChecks || meta.fidelityChecks).map(function (c) { return (c.state === 'PASSED' ? '✅ ' : (c.state === 'UNVERIFIED' ? '❓ UNVERIFIED — ' : '❌ ')) + esc(c.name) + ' — ' + esc(c.detail); }).join('<br>'));
   if (meta.reason) lines.push('Fallback reason: ' + meta.reason);
   if (meta.rejectedDraftExcerpt) lines.push(rejectedDraftDetailsHtmlV164(meta));
   el.innerHTML = lines.join('<br>');
@@ -3388,16 +3389,16 @@ function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, qual
       try {
         const h = loadHistory();
         if (h.length) {
-          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.10) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.10) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
-          h[0].formatVersion = 'v16.10';
-          h[0].mainStoryMeta = meta ? { kind: meta.kind, provider: meta.provider, passed: meta.passed, unverified: meta.unverified, attempts: meta.attempts, attempts402Excluded: meta.attempts402Excluded != null ? meta.attempts402Excluded : '', attemptsBreakdown: meta.attemptsBreakdown || '', promptSize: meta.promptSize, sessionId: meta.sessionId, reason: meta.reason || '', rejectedDraftExcerpt: meta.rejectedDraftExcerpt || '', rejectedDraftClimax: meta.rejectedDraftClimax || '', rejectedChecks: meta.rejectedChecks || [], rejectedDraftLength: meta.rejectedDraftLength != null ? meta.rejectedDraftLength : '', rejectedDraftStage: meta.rejectedDraftStage || '', rejectedDraftFinishReason: meta.rejectedDraftFinishReason || '', rejectedDraftPromptSize: meta.rejectedDraftPromptSize != null ? meta.rejectedDraftPromptSize : '', rejectedDraftProbe: meta.rejectedDraftProbe || [], aiDraftLength: meta.aiDraftLength != null ? meta.aiDraftLength : '', aiFinishReason: meta.aiFinishReason || '', stageDiagnostics: meta.stageDiagnostics || [], failedStage: meta.failedStage || '', providersUsed: meta.providersUsed || [], stageCount: meta.stageCount || '', stagePromptSizes: meta.stagePromptSizes || [], fidelityChecks: meta.fidelityChecks || [] } : null;
+          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.11) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.11) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
+          h[0].formatVersion = 'v16.11';
+          h[0].mainStoryMeta = meta ? { kind: meta.kind, provider: meta.provider, passed: meta.passed, unverified: meta.unverified, attempts: meta.attempts, attempts402Excluded: meta.attempts402Excluded != null ? meta.attempts402Excluded : '', attemptsBreakdown: meta.attemptsBreakdown || '', promptSize: meta.promptSize, sessionId: meta.sessionId, reason: meta.reason || '', rejectedDraftExcerpt: meta.rejectedDraftExcerpt || '', rejectedDraftClimax: meta.rejectedDraftClimax || '', rejectedChecks: meta.rejectedChecks || [], rejectedDraftLength: meta.rejectedDraftLength != null ? meta.rejectedDraftLength : '', rejectedDraftStage: meta.rejectedDraftStage || '', rejectedDraftFinishReason: meta.rejectedDraftFinishReason || '', rejectedDraftPromptSize: meta.rejectedDraftPromptSize != null ? meta.rejectedDraftPromptSize : '', rejectedDraftProbe: meta.rejectedDraftProbe || [], aiDraftLength: meta.aiDraftLength != null ? meta.aiDraftLength : '', aiFinishReason: meta.aiFinishReason || '', stageDiagnostics: meta.stageDiagnostics || [], failedStage: meta.failedStage || '', providersUsed: meta.providersUsed || [], stageCount: meta.stageCount || '', stagePromptSizes: meta.stagePromptSizes || [], hardConstraintChecks: meta.hardConstraintChecks || meta.fidelityChecks || [], fidelityChecks: meta.fidelityChecks || [] } : null;
           // Saved validation note, stated plainly: System A is battle integrity
           // (story-independent). When the main story is AI, System B below is
           // the AI main-story validation, not the fallback-episode check.
           if (meta && meta.kind === 'ai' && Array.isArray(meta.checks)) {
             h[0].validation = h[0].validation || {};
             h[0].validation.accuracy = meta.checks.map(function (c) { return { name: c.name, passed: (c.state === 'PASSED' ? true : (c.state === 'UNVERIFIED' ? 'unverified' : false)), detail: c.detail }; });
-            h[0].validationNote = 'Saved validation: System A is battle integrity; System B is the v16.10 AI main-story validation; System C is the fallback-episode quality check.';
+            h[0].validationNote = 'Saved validation: System A is battle integrity; System B is the v16.11 AI main-story hard-constraint validation (locked list, not event-by-event accuracy); System C is the fallback-episode quality check.';
           }
           localStorage.setItem('warroom_battles_v3', JSON.stringify(h.slice(0, 20)));
         }
@@ -3524,8 +3525,11 @@ function parse402WaitMsV167(msg) {
 function buildContinuityV167(b) {
   let s = null;
   try { s = buildBattleSummaryV16(b); } catch (e) { s = { fighters: [], battlefield: 'Open Arena', winner: b.winner, victoryMode: b.victoryMode, loser: '', finishingAbility: null, finishingEvent: null, roundLines: [] }; }
+  const origByNameV1611 = {};
+  [...(b.alpha || []), ...(b.beta || [])].forEach(function (f) { if (f && f.name) origByNameV1611[f.name] = f; });
   const fighters = s.fighters.map(function (f) {
-    return { name: f.name, variant: f.variant || 'Base', continuity: f.continuity || '', style: truncV162(f.style || '', 60), powers: (f.powers || []).slice(0, 3), signature: f.signature || '', limits: truncV162(f.weakness || '[NOT KNOWN]', 60) };
+    const o = origByNameV1611[f.name] || {};
+    return { name: f.name, variant: f.variant || 'Base', continuity: f.continuity || '', style: truncV162(f.style || '', 60), powers: (f.powers || []).slice(0, 3), signature: f.signature || '', limits: truncV162(f.weakness || '[NOT KNOWN]', 60), tier: o.tier || 'UNKNOWN', trait: o.trait || '', feat: o.feat || '', persNote: o.persNote || o.pers || f.personality || '', usage: o.usage || f.powerUsage || '', trans: o.trans || f.transform || '', tAtk: o.tAtk || 0, tDef: o.tDef || 0, immunities: o.immunities || [], _orig: o };
   });
   const roundNums = [];
   (b.events || []).forEach(function (e) { if (roundNums.indexOf(e.round) === -1) roundNums.push(e.round); });
@@ -3536,7 +3540,27 @@ function buildContinuityV167(b) {
   if (!b.stalemate) loserState = (b.victoryMode === 'death' ? 'dead' : 'unconscious, not dead');
   const abilities = [];
   (b.events || []).forEach(function (e) { if (e.ability && abilities.indexOf(e.ability) === -1) abilities.push(e.ability); });
-  return { fighters: fighters, battlefield: s.battlefield || 'Open Arena', victoryMode: s.victoryMode, winner: s.winner, loser: s.loser || '', loserState: loserState, finishingAbility: s.finishingAbility || null, finishingRound: finRound, roundNums: roundNums, roundLines: roundLines, abilities: abilities, outlineBeats: [], coveredThrough: 0, lastSentence: '', events: (b.events || []).slice(), turningPoints: (s.turningPoints || []).slice() };
+  let battlefieldDescV1611 = 'Flat, open ground. No cover, no hazards.';
+  try {
+    if (b.battlefield && b.battlefield.desc) battlefieldDescV1611 = b.battlefield.desc;
+    else if (typeof BATTLEFIELDS !== 'undefined') { const bf = BATTLEFIELDS.find(function (x) { return x.name === (s.battlefield || 'Open Arena'); }); if (bf && bf.desc) battlefieldDescV1611 = bf.desc; }
+  } catch (e) {}
+  function canHurtV1611(attName, defName) {
+    try {
+      const a = origByNameV1611[attName], d = origByNameV1611[defName];
+      if (!a || !d || typeof canHarmV14 !== 'function') return { can: null, path: 'unknown' };
+      const h = canHarmV14(a, d);
+      return { can: !!(h.canOrdinary || h.canSig || h.bypass), path: h.path || '' };
+    } catch (e) { return { can: null, path: 'unknown' }; }
+  }
+  let canHurtV1611Obj = null;
+  try {
+    if (fighters.length === 2) canHurtV1611Obj = { a: canHurtV1611(fighters[0].name, fighters[1].name), b: canHurtV1611(fighters[1].name, fighters[0].name) };
+  } catch (e) { canHurtV1611Obj = null; }
+  const transformsV1611 = (b.events || []).filter(function (e) { return e.type === 'transform'; }).map(function (e) { const o = origByNameV1611[e.actor] || {}; return { actor: e.actor || '', detail: e.detail || o.trans || '', tAtk: o.tAtk || 0, tDef: o.tDef || 0 }; });
+  const decisionsV1611 = (b.events || []).filter(function (e) { return e.type === 'choice' || e.type === 'refused'; }).map(function (e) { return { type: e.type, actor: e.actor || '', detail: e.detail || '', reason: e.reason || '' }; });
+  const cannotHarmV1611 = (b.events || []).filter(function (e) { return e.type === 'attack' && e.cannotHarm; }).map(function (e) { return { actor: e.actor || '', ability: e.ability || '', target: e.target || '' }; });
+  return { fighters: fighters, battlefield: s.battlefield || 'Open Arena', battlefieldDesc: battlefieldDescV1611, victoryMode: s.victoryMode, winner: s.winner, loser: s.loser || '', loserState: loserState, finishingAbility: s.finishingAbility || null, finishingRound: finRound, roundNums: roundNums, roundLines: roundLines, abilities: abilities, outlineBeats: [], coveredThrough: 0, lastSentence: '', events: (b.events || []).slice(), turningPoints: (s.turningPoints || []).slice(), canHurt: canHurtV1611Obj, transforms: transformsV1611, decisions: decisionsV1611, cannotHarm: cannotHarmV1611 };
 }
 function continuityTextV167(rec, keepAllRounds) {
   const fs = rec.fighters.map(function (f) { return f.name + ' (' + f.variant + ', ' + f.continuity + ') — style: ' + f.style + '; powers: ' + (f.powers.join(', ') || '[NOT KNOWN]') + '; signature: ' + (f.signature || 'none') + '; limits: ' + f.limits; }).join(' | ');
@@ -3822,7 +3846,8 @@ var V1610_STAGE_PROMPT_TARGET = 800;
 var V1610_MAX_TOKENS = { opening: 400, combat1: 400, combat2: 400, climax: 350, aftermath: 250 };
 var V1610_WORD_TARGETS = { opening: 150, combat1: 150, combat2: 150, climax: 120, aftermath: 100 };
 var V1610_STAGE_ORDER = ['opening', 'combat1', 'combat2', 'climax', 'aftermath'];
-var V1610_STAGE_CACHE_KEY = 'warroom_stage_cache_v1610';
+var V1610_STAGE_CACHE_KEY = 'warroom_stage_cache_v1611';
+/* v16.11: cache key bumped from v1610 because every stage prompt changed (brief, not transcript); v16.10 cached stages must not reuse. */
 var V1610_DEFEAT_WORDS = /\b(incapacitat\w*|unconscious|knocked[\s-]out|dead|died|killed|lifeless|was finished|had finished|finished off)\b/i;
 var V1610_ENDING_WORDS = /\b(the fight (ended|was over|had ended|concluded)|the battle (ended|was over|had ended|concluded|was decided)|battle concluded|fight concluded|the outcome was decided|the victor was decided)\b/i;
 var V1610_HIT_WORDS = /\b(hit|landed|struck|connected|slammed|found its mark|hit home|tore into|blasted|drove home)\b/i;
@@ -3885,90 +3910,42 @@ function stageRoundLinesV1610(rec, stage) {
   evs.forEach(function (e) { if (!byRound[e.round]) { byRound[e.round] = []; order.push(e.round); } byRound[e.round].push(stageEventClauseV1610(e)); });
   return order.map(function (r) { return 'R' + r + ': ' + byRound[r].join('; '); }).join(' ');
 }
-function stageBriefV1610(rec, stage) {
-  const fin = rec.finishingAbility;
-  if (stage === 'opening') return 'Write ONLY the opening scene, about 150 words. Setting, atmosphere, both fighters by their full names, positions. Do not write later rounds, the climax, or the aftermath.';
-  if (stage === 'combat1' || stage === 'combat2') {
-    const rs = stageRoundsV167(rec, stage);
-    if (!rs.length) return 'Write ONLY a short bridging passage, about 150 words, of positioning, atmosphere, and reactions already in the record. Do not invent events, the climax, or the aftermath.';
-    return 'Write ONLY the combat scene for rounds ' + rs.join(', ') + ', about 150 words, in order, using ONLY the events listed below.';
-  }
-  if (stage === 'climax') {
-    if (!fin) return 'Write ONLY the final exchange scene, about 120 words. There is no finishing ability and no winner — do not invent a finish.';
-    return 'Write ONLY the climax scene, about 120 words. End with the finishing ability name verbatim, exactly as recorded, in the final climax sentence: ' + fin + '. The loser ends exactly as recorded: ' + loserNameV1610(rec) + ' (' + rec.loserState + '). Do not write the aftermath yet. End with a complete sentence.';
-  }
-  if (rec.loserState === 'stalemate') return 'Write ONLY the aftermath, about 100 words, as the final paragraph(s). State plainly that the battle ended in a stalemate with no winner, the battlefield, and the outcome. Nothing after it.';
-  return 'Write ONLY the aftermath, about 100 words, as the final paragraph(s). State the winner by full name (' + rec.winner + ') and the loser state (' + loserNameV1610(rec) + ' ' + rec.loserState + '), the battlefield, and the outcome. Nothing after it.';
-}
+function stageBriefV1610(rec, stage) { return chapterBriefV1611(rec, stage); }
+function stageBriefV1611(rec, stage) { return chapterBriefV1611(rec, stage); }
 function buildStagePromptV1610(rec, stage, opts) {
   opts = opts || {};
-  const brief = stageBriefV1610(rec, stage);
-  const beats = deriveOutlineBeatsV1610(rec);
-  const roundLines = stageRoundLinesV1610(rec, stage);
-  const hasEvents = !!roundLines;
-  const isCombat = (stage === 'combat1' || stage === 'combat2');
-  function fightersLine(styleLen) {
-    return rec.fighters.map(function (f) {
-      const vn = (f.variant && f.variant !== 'Base') ? ' (' + f.variant + ')' : '';
-      return f.name + vn + (styleLen > 0 ? ' — ' + truncV162(f.style || '', styleLen) : '');
-    }).join(' | ');
-  }
-  function outcomeLine() {
-    const finPart = rec.finishingAbility ? (rec.finishingAbility + (isCombat || stage === 'opening' ? ' (not in this scene)' : '')) : 'none — stalemate';
-    return 'Winner: ' + rec.winner + ' (do not change). Finisher: ' + finPart + '. Loser: ' + (loserNameV1610(rec) || 'none') + ' (' + rec.loserState + ').';
-  }
-  function rulesLine() { return 'RULES: Assigned rounds only. Winner, finisher, and final states do not change. No invented events, deaths, or recoveries. No post-defeat actions. No damage/HP numbers. Cinematic narrator, past tense.'; }
-  function outcomeLineCompact() {
-    const finPart = rec.finishingAbility ? (rec.finishingAbility + (isCombat || stage === 'opening' ? ' (not in this scene)' : '')) : 'none — stalemate';
-    return 'Winner: ' + rec.winner + '. Finisher: ' + finPart + '. Loser: ' + (loserNameV1610(rec) || 'none') + ' (' + rec.loserState + ').';
-  }
-  function repairRulesLine() { return 'RULES: Assigned rounds only. Do not change winner, finisher, or final states. No invented events, deaths, or recoveries. No post-defeat actions. No damage/HP numbers.'; }
-  function repairBrief() {
-    let b = brief.replace('Write ONLY', 'Rewrite');
-    if (isCombat) b = b.replace('in order, using ONLY the events listed below.', 'using ONLY these events.');
-    return b;
-  }
-  function build(styleLen, withBeats, withFighters, checksMax) {
+  function assemble(level) {
+    const brief = buildStoryBriefV1611(rec, stage, level);
     let p;
     if (opts.correction) {
-      /* Repair header quotes the FIRST failed check in short form (full
-         failed-check detail stays in diagnostics as the correction
-         reason); further failures are counted, not pasted, so the repair
-         prompt stays under the 800-char target on fixture battles. */
       const checks = (opts.failedChecks || []);
-      let checksText = checks.length ? String(checks[0]) : 'stage checks';
-      const cm = (checksMax == null ? 90 : checksMax);
-      if (checksText.length > cm) checksText = checksText.slice(0, cm) + '…';
+      let checksText = checks.length ? String(checks[0]) : 'hard-constraint checks';
+      if (checksText.length > 90) checksText = checksText.slice(0, 90) + '…';
       if (checks.length > 1) checksText += ' (+' + (checks.length - 1) + ' more)';
-      const header = 'STAGE: ' + stage + ' — REVISION. The previous attempt failed these stage checks: ' + checksText + '. Rewrite fresh. ';
-      if (hasEvents) {
-        const guard = rec.finishingAbility ? (stage === 'climax' ? ' Finisher: ' + rec.finishingAbility + '. Loser: ' + loserNameV1610(rec) + ' (' + rec.loserState + ').' : ' Finisher: ' + rec.finishingAbility + ' (not in this scene).') : '';
-        p = header + repairBrief() + ' ' + repairRulesLine() + guard + ' EVENTS: ' + roundLines;
-      } else {
-        p = header + repairBrief() + ' ' + repairRulesLine() + ' CONDENSED CONTINUITY BRIEF: ' + (withBeats ? beats.join(' ') + ' ' : '') + (withFighters ? 'FIGHTERS: ' + fightersLine(styleLen) + '. ' : '') + outcomeLineCompact();
-      }
+      p = 'STAGE: ' + stage + ' — REVISION. The previous attempt failed these hard-constraint checks: ' + checksText + '. Rewrite fresh. ' + chapterBriefV1611(rec, stage) + ' ' + brief;
     } else {
-      p = 'STAGE: ' + stage + '. ' + brief + (withFighters ? ' FIGHTERS: ' + fightersLine(styleLen) + '.' : '') + ' ' + outcomeLine();
-      if (withBeats) p += ' BEATS (derived locally from the record, not AI-generated): ' + beats.join(' ');
-      p += ' ' + rulesLine();
-      if (hasEvents) p += ' EVENTS (only these, in order): ' + roundLines;
+      p = 'STAGE: ' + stage + '. ' + chapterBriefV1611(rec, stage) + ' ' + brief;
     }
     return p;
   }
-  /* Shrink ladder: beats first (combat stages never carry a beats line —
-     their events already contain those turning points), then style
-     40 -> 15 -> 0, then the fighters line for event-carrying stages
-     (their events + outcome line already name both fighters). The final
-     slice to the 2000-char per-stage guard is a safety net only; it is
-     not reached by any fixture battle. */
-  let prompt = build(40, !isCombat, true, 90);
-  if (prompt.length > V1610_STAGE_PROMPT_TARGET) prompt = build(15, !isCombat, true, 90);
-  if (prompt.length > V1610_STAGE_PROMPT_TARGET) prompt = build(15, false, true, 90);
-  if (prompt.length > V1610_STAGE_PROMPT_TARGET) prompt = build(0, false, true, 50);
-  if (prompt.length > V1610_STAGE_PROMPT_TARGET) prompt = build(0, false, false, 50);
+  /* Shrink ladder (same philosophy as v16.10): full dossier brief first,
+     then compact dossier, then minimal dossier; corrections add a level-4
+     minimal brief (fighters + battlefield + locked outcome + 1 beat only,
+     no power-gap/can-hurt/dossier sentences) because the REVISION header
+     itself costs chars. The 2000-char guard is a safety net only. No level
+     ever carries a round-by-round transcript: only the brief + chapter
+     assignment + chapter beats. Correction prompts quote the locked fact
+     via the brief's LOCKED OUTCOME line (the separate locked line was
+     redundant there and pushed corrections over the 800-char target). */
+  let prompt = assemble(0);
+  if (prompt.length > V1611_STAGE_PROMPT_TARGET) prompt = assemble(1);
+  if (prompt.length > V1611_STAGE_PROMPT_TARGET) prompt = assemble(2);
+  if (prompt.length > V1611_STAGE_PROMPT_TARGET) prompt = assemble(3);
+  if (opts.correction && prompt.length > V1611_STAGE_PROMPT_TARGET) prompt = assemble(4);
   if (prompt.length > V167_STAGE_PROMPT_MAX) prompt = prompt.slice(0, V167_STAGE_PROMPT_MAX);
   return prompt;
 }
+function buildStagePromptV1611(rec, stage, opts) { return buildStagePromptV1610(rec, stage, opts); }
 function hashPromptV1610(s) {
   let h = 5381;
   const x = String(s || '');
@@ -4167,141 +4144,540 @@ function fidelityMisattributionV1610(text, rec, abilityMap) {
   }
   return null;
 }
-function fidelityChecksForStageV1610(stage, text, rec, assigned, prevTexts) {
-  const checks = [];
-  function push(name, state, detail) { checks.push({ name: 'Event-fidelity: ' + name, state: state, detail: detail }); }
-  const t = String(text || '');
-  const sents = sentencesV166(t);
-  const abilityMap = fidelityAbilityRoundsV1610(rec);
-  const fighterInfo = fidelityFighterInfoV1610(rec);
-  const fighterNames = Object.keys(fighterInfo);
-  const assignedRounds = assigned || [];
-  const stageMax = (stage === 'aftermath') ? Infinity : (assignedRounds.length ? Math.max.apply(null, assignedRounds) : 0);
-  const lastRound = (rec.roundNums && rec.roundNums.length) ? Math.max.apply(null, rec.roundNums) : 0;
-  const prev = prevTexts || [];
-  const prevLastText = prev.length ? prev[prev.length - 1] : '';
-  if (stage !== 'aftermath') {
-    const bad = [];
-    sents.forEach(function (s) {
-      if (!V1610_DEFEAT_WORDS.test(s)) return;
-      fighterNames.forEach(function (fn) {
-        /* Proximity rule: the defeat wording must FOLLOW the fighter's
-           name within the sentence (subject-first prose: "Batman lay
-           incapacitated"). A fighter merely named later in the same
-           sentence ("...while Spider-Man stood over him") is a
-           bystander, not the defeated one, and is not flagged. (Defeat
-           wording placed BEFORE the name is missed; accepted limit.) */
-        const rx = new RegExp(escRegExpV1610(fn) + '[\\s\\S]{0,60}?' + V1610_DEFEAT_WORDS.source, 'i');
-        if (!rx.test(s)) return;
-        const fi = fighterInfo[fn];
-        if ((fi.defeatRound != null && fi.defeatRound > stageMax) || fi.lastActing > stageMax) {
-          const d = fn + ' is described as defeated in this stage, but the record has ' + fn + ' acting again in round ' + fi.lastActing + (fi.defeatRound != null ? ' and only defeated in round ' + fi.defeatRound : ' (never defeated in the record)') + '; keep ' + fn + ' hurt but still standing in this stage';
-          if (bad.indexOf(d) === -1) bad.push(d);
+/* v16.11 DELIBERATE CHANGE: the old event-by-event fidelity checker bodies
+   are REMOVED here. The gate is the hard-constraint checker below
+   (hardConstraintChecksForStageV1611 / hardConstraintChecksForAssemblyV1611);
+   the legacy fidelity* entry-point names survive only as aliases at the end
+   of the v16.11 block, returning hard-constraint checks. Ability-before-round,
+   round-timing premature-ending, and full-transcript logic are gone. */
+/* ============ WAR-ROOM v16.11 — OUTCOME-FIXED, MIDDLE-LOOSE ============
+   Supersedes the v16.10 event-by-event fidelity model as the pass/fail
+   gate. Evidence for the change (live test 2026-10-31, v16.10): the
+   event-fidelity checker caught non-participant signatures and ran
+   repairs, but missed "final" wording, hit-and-miss in one passage,
+   mercy-round premature endings, and invented arena/trait details,
+   while risking a false positive on transformed ability names (plain
+   "Heat Vision" matched against earlier rounds when the finisher was
+   "Sun-Charged Heat Vision"). The engine record stays the truth and
+   the outcome stays locked; the middle is fictionalised by design.
+   What the hard-constraint checker below does NOT do, deliberately:
+   - it never fails a minor-event divergence: an invented minor
+     exchange, an attack placed in a different part of the middle than
+     recorded, missing minor exchanges, and prose without round
+     numbers are all LOOSE and pass;
+   - it never fails an ability for appearing in a different chapter
+     than recorded (the old ability-before-round check is gone);
+   - it never duplicates a check the unchanged v16.6 checker
+     (checkMainStoryV16) or stage validation (validateStageV167)
+     already fails: finisher presence, winner named, aftermath,
+     repeated sentences at assembly, damage/HP numbers, and
+     non-participant signatures at assembly are left to those gates,
+     and this checker covers only the locked aspects they miss
+     (detached-only finisher, death-mode pure-KO wording, cannot-harm
+     as a FAILED item instead of UNVERIFIED, post-defeat action as a
+     FAILED item instead of UNVERIFIED, arena, transform effect,
+     mercy contradiction, unacquired-knowledge phrasing, Wikipedia
+     text, trait misattribution, and seam repetition per stage).
+   Stage prompts no longer carry a round-by-round event transcript:
+   they carry the story brief (fighters + versions + tiers + power
+   gap + can-hurt + resistances/weaknesses/regen + locked outcome +
+   dossier fields + chapter beats only). Hard rules live once in the
+   /openai system prompt; every stage prompt carries only the one-line
+   locked outcome (data, not a repeated rules paragraph) because the
+   Classic/Gemini paths have no system channel. Stage cache key is
+   bumped (prompts changed, so v16.10 cached stages must not reuse).
+   Canon dossier schema, engine mapping, and roster deepening are NOT
+   in this build (next phase); dossier lines here use only profile
+   data the roster already has, and missing fields read "unknown". */
+var V1611_STAGE_PROMPT_TARGET = 800;
+var V1611_MAX_TOKENS = { opening: 400, combat1: 400, combat2: 400, climax: 350, aftermath: 250 };
+var V1611_WORD_TARGETS = { opening: 150, combat1: 150, combat2: 150, climax: 120, aftermath: 100 };
+var V1611_STAGE_ORDER = ['opening', 'combat1', 'combat2', 'climax', 'aftermath'];
+var V1611_STAGE_CACHE_KEY = 'warroom_stage_cache_v1611';
+var V1611_CHAPTER = { opening: 'arrival and testing', combat1: 'escalation', combat2: 'turning point', climax: 'decisive clash', aftermath: 'aftermath' };
+function stageOrderV1611(rec) { return stageOrderV1610(rec); }
+function battlefieldDescV1611(rec) {
+  if (rec && rec.battlefieldDesc) return rec.battlefieldDesc;
+  if (rec && rec.battlefield === 'Open Arena') return 'Flat, open ground. No cover, no hazards.';
+  return 'Battlefield properties not recorded for this battlefield — do not invent features.';
+}
+function dossierLineV1611(f, orig) {
+  var o = orig || {};
+  var feat = o.feat || f.feat || '';
+  var featText = feat ? truncV162(String(feat), 40) : 'unknown';
+  var pers = o.persNote || o.pers || f.persNote || '';
+  var persText = pers ? truncV162(String(pers), 40) : 'unknown';
+  var moral = '';
+  try { moral = (typeof moralRestrictionForV14 === 'function') ? moralRestrictionForV14(o.name ? o : f) : ''; } catch (e) { moral = ''; }
+  var moralText = moral ? truncV162(String(moral), 60) : 'unknown';
+  var equip = 'unknown';
+  try {
+    var prof = (typeof structuredProfileForV14 === 'function') ? structuredProfileForV14(o.name ? o : f) : null;
+    if (prof && prof.equipment && prof.equipment.text && !/Not established/i.test(prof.equipment.text)) equip = truncV162(String(prof.equipment.text), 40);
+  } catch (e) {}
+  var regen = 'none listed';
+  try {
+    var prof2 = (typeof structuredProfileForV14 === 'function') ? structuredProfileForV14(o.name ? o : f) : null;
+    if (prof2 && prof2.regen && prof2.regen.text) regen = truncV162(String(prof2.regen.text), 50);
+  } catch (e) {}
+  if (o.trait === 'regen') regen = 'regeneration heals while alive only, never revives after defeat';
+  var resist = 'unknown';
+  try {
+    var dp = (typeof defenseProfileForV14 === 'function') ? defenseProfileForV14(o.name ? o : f) : null;
+    if (dp && dp.notes) resist = truncV162(String(dp.notes), 60);
+  } catch (e) {}
+  var vnote = '';
+  if (o.variantId === 'v2' && o.v2 && o.trans && o.v2 === o.trans) vnote = ' Version note (flagged, not merged): selected variant is the same form as the in-combat transformation, so no second transformation is legal from it.';
+  return (f.name || '') + ' (' + (f.variant || 'Base') + ', tier ' + (f.tier || 'UNKNOWN') + '): powers: ' + (((f.powers || []).join(', ')) || 'unknown') + '; limits: ' + truncV162(f.limits || 'unknown', 40) + '; style: ' + truncV162(f.style || 'unknown', 30) + '; demonstrated feat: ' + featText + '; voice/personality: ' + persText + '; moral boundary (would not do): ' + moralText + '; equipment: ' + equip + '; regeneration: ' + regen + '; resistances: ' + resist + '.' + vnote;
+}
+function dossierLineCompactV1611(f) {
+  return (f.name || '') + ' (' + (f.variant || 'Base') + ', tier ' + (f.tier || 'UNKNOWN') + '): powers: ' + truncV162(((f.powers || []).join(', ')) || 'unknown', 45) + '; limits: ' + truncV162(f.limits || 'unknown', 30) + '; style: ' + truncV162(f.style || 'unknown', 25) + '; feat: ' + (f.feat ? truncV162(String(f.feat), 30) : 'unknown') + '.';
+}
+function dossierLineMinimalV1611(f) {
+  return (f.name || '') + ' (' + (f.variant || 'Base') + ', tier ' + (f.tier || 'UNKNOWN') + '): powers: ' + truncV162(((f.powers || []).join(', ')) || 'unknown', 35) + '.';
+}
+function turningBeatsV1611(rec) {
+  var beats = [];
+  (rec.events || []).forEach(function (e) {
+    if (e.type === 'transform') beats.push((e.actor || '') + ' transformed into ' + (e.detail || '') + ', changing the fight');
+    else if (e.type === 'choice') beats.push((e.actor || '') + ' held the finish (mercy)' + (e.reason ? ' — ' + e.reason : ''));
+    else if (e.type === 'refused') beats.push((e.actor || '') + ' refused an action on principle');
+    else if (e.type === 'prepare') beats.push((e.actor || '') + ' prepared a counter');
+    else if (e.type === 'study') beats.push((e.actor || '') + ' studied the opponent');
+    else if (e.type === 'detected') beats.push((e.actor || '') + ' detected a prepared counter and avoided it');
+    else if (e.type === 'attack' && e.counterExploited) beats.push((e.actor || '') + ' landed a prepared counter');
+  });
+  return beats;
+}
+function chapterBeatsV1611(rec, stage) {
+  var beats = turningBeatsV1611(rec);
+  if (stage === 'opening') return [];
+  if (stage === 'combat1') return beats.slice(0, Math.ceil(beats.length / 2));
+  if (stage === 'combat2') return beats.slice(Math.ceil(beats.length / 2));
+  if (stage === 'climax') {
+    var out = [];
+    if (rec.finishingAbility) out.push('Decisive sequence: ' + rec.finishingAbility + '.');
+    beats.forEach(function (b) { if (/transformed into|held the finish/i.test(b) && out.indexOf(b) === -1) out.push(b); });
+    return out;
+  }
+  if (rec.loserState === 'stalemate') return ['Outcome: stalemate, no winner.'];
+  return ['Outcome: ' + rec.winner + ' wins; loser ' + loserNameV1610(rec) + ' (' + rec.loserState + ').'];
+}
+function lockedLineV1611(rec, stage) {
+  var fin = rec.finishingAbility ? rec.finishingAbility + (stage === 'climax' ? ' (verbatim, full sentence)' : (stage === 'aftermath' ? ' (decided)' : ' (not this chapter)')) : 'none — stalemate';
+  return 'Winner: ' + (rec.winner || 'none') + ' (locked). Finisher: ' + fin + '. Loser: ' + (loserNameV1610(rec) || 'none') + ' (' + rec.loserState + '). Mode: ' + rec.victoryMode + '.';
+}
+function buildStoryBriefV1611(rec, stage, compact) {
+  compact = compact || 0;
+  var fs = rec.fighters || [];
+  var fighterLines = fs.map(function (f) {
+    if (compact === 3 || compact === 4) return (f.name || '') + ' (' + (f.variant || 'Base') + ', tier ' + (f.tier || 'UNKNOWN') + ')';
+    if (compact === 2) return dossierLineMinimalV1611(f);
+    if (compact === 1) return dossierLineCompactV1611(f);
+    return dossierLineV1611(f, f._orig || null);
+  });
+  var gap = 'Power gap: unknown.';
+  try {
+    if (fs.length === 2 && typeof tierScore === 'function') {
+      var a = tierScore(fs[0].tier), b = tierScore(fs[1].tier);
+      if (a != null && b != null) gap = 'Power gap: ' + (a === b ? 'even tiers' : (a > b ? fs[0].name + ' outranks ' + fs[1].name + ' by ' + (a - b) + ' tier(s)' : fs[1].name + ' outranks ' + fs[0].name + ' by ' + (b - a) + ' tier(s)')) + '.';
+    }
+  } catch (e) {}
+  var hurt = 'Can-hurt: unknown from the profile — do not assume.';
+  try {
+    if (rec.canHurt && fs.length === 2) {
+      var ha = rec.canHurt.a, hb = rec.canHurt.b;
+      var fa = function (h) { return h == null || h.can == null ? 'unknown' : (h.can ? 'yes' : 'no'); };
+      hurt = 'Can ' + fs[0].name + ' hurt ' + fs[1].name + ': ' + fa(ha) + '. Can ' + fs[1].name + ' hurt ' + fs[0].name + ': ' + fa(hb) + '.';
+      if (compact === 0) {
+        if (ha && ha.path) hurt += ' ' + fs[0].name + ' path: ' + truncV162(String(ha.path), 60);
+        if (hb && hb.path) hurt += ' ' + fs[1].name + ' path: ' + truncV162(String(hb.path), 60);
+      }
+    }
+  } catch (e) {}
+  if (compact === 4) {
+    var b4 = chapterBeatsV1611(rec, stage).slice(0, 1).map(function (b) { return truncV162(b, 60); }).join('; ') || (stage === 'opening' ? 'Opening test only.' : 'No beat for this chapter — positioning and fictionalised exchanges only.');
+    return 'STORY BRIEF. FIGHTERS: ' + fighterLines.join(' | ') + ' BATTLEFIELD: ' + rec.battlefield + ' — ' + battlefieldDescV1611(rec) + ' LOCKED OUTCOME: ' + lockedLineV1611(rec, stage) + ' CHAPTER BEATS (' + V1611_CHAPTER[stage] + ' only): ' + b4;
+  }
+  var beats = chapterBeatsV1611(rec, stage);
+  var beatsText = (compact === 3 ? beats.slice(0, 1) : beats.slice(0, 2)).length ? (compact === 3 ? beats.slice(0, 1) : beats.slice(0, 2)).map(function (b) { return truncV162(b, 60); }).join('; ') : (stage === 'opening' ? 'Opening test only.' : 'No beat for this chapter — positioning and fictionalised exchanges only.');
+  var regenLine = '';
+  if (compact === 0) {
+    var anyRegen = fs.some(function (f) { return f.trait === 'regen'; });
+    regenLine = ' Regeneration limits: ' + (anyRegen ? 'regeneration heals while alive only, never revives after defeat.' : 'none listed.');
+  }
+  var weakNote = compact === 0 ? ' A weakness counts only with a recorded exploit in this fight; a weakness field alone is not a counter.' : '';
+  return 'STORY BRIEF (fictionalised retelling; Combat Details authoritative). FIGHTERS: ' + fighterLines.join(' | ') + ' ' + gap + ' ' + hurt + weakNote + regenLine + ' BATTLEFIELD: ' + rec.battlefield + ' — ' + battlefieldDescV1611(rec) + ' LOCKED OUTCOME: ' + lockedLineV1611(rec, stage) + ' CHAPTER BEATS (' + V1611_CHAPTER[stage] + ' only): ' + beatsText;
+}
+function chapterBriefV1611(rec, stage) {
+  var fin = rec.finishingAbility;
+  if (stage === 'opening') return 'Write ONLY the arrival and testing chapter (about 150 words): both fighters by full name, atmosphere and positions on the recorded battlefield, early testing exchanges only. No decisive clash, finisher, or final defeat yet.';
+  if (stage === 'combat1') return 'Write ONLY the escalation chapter (about 150 words): exchanges grow harder, momentum shifts; fictionalised exchanges allowed, locked outcome unchanged. No decisive clash or final defeat yet.';
+  if (stage === 'combat2') return 'Write ONLY the turning-point chapter (about 150 words): the fight turns on the chapter beats below; fictionalised exchanges allowed, locked outcome unchanged. No decisive clash or final defeat yet.';
+  if (stage === 'climax') {
+    if (!fin) return 'Write ONLY the final exchange chapter, about 120 words. There is no finishing ability and no winner — do not invent a finish. End with a complete sentence.';
+    return 'Write ONLY the decisive clash chapter (about 120 words). Finisher verbatim inside a full sentence describing the decisive action: ' + fin + '. Never standalone; never paraphrased. Loser ends exactly as recorded: ' + loserNameV1610(rec) + ' (' + rec.loserState + '). No aftermath yet.';
+  }
+  if (rec.loserState === 'stalemate') return 'Write ONLY the aftermath chapter (about 100 words): plainly state the stalemate with no winner, the battlefield, and the outcome. Nothing after it. End with a complete sentence.';
+  return 'Write ONLY the aftermath chapter (about 100 words): winner by full name (' + rec.winner + '), loser state (' + loserNameV1610(rec) + ' ' + rec.loserState + '), battlefield, outcome. Nothing after it. End with a complete sentence.';
+}
+function stageBriefV1611(rec, stage) { return chapterBriefV1611(rec, stage); }
+
+/* ---- Hard-constraint checker (v16.11 gate) ---- */
+function hardPushV1611(checks, name, state, detail) { checks.push({ name: 'Hard-constraint: ' + name, state: state, detail: detail }); }
+function hardDefeatReV1611(name) { return new RegExp(escRegExpV1610(name) + '[\\s\\S]{0,60}?' + V1610_DEFEAT_WORDS.source, 'i'); }
+/* Subject-aware defeat test (v16.11): the defeat wording must follow the
+   named fighter without the OTHER fighter's name in between, so a standard
+   aftermath sentence ("Winner stood as the winner while Loser lay dead")
+   is not misread as the winner being defeated. */
+function hardNameDefeatV1611(s, name, other) {
+  if (!name) return false;
+  var ni = s.search(new RegExp(escRegExpV1610(name), 'i'));
+  if (ni === -1) return false;
+  var rest = s.slice(ni + name.length);
+  var m = rest.match(V1610_DEFEAT_WORDS);
+  if (!m) return false;
+  if (other) { var oi = rest.search(new RegExp(escRegExpV1610(other), 'i')); if (oi !== -1 && oi < m.index) return false; }
+  return true;
+}
+function hardCleanNegV1611(s) { return String(s || '').replace(/not\s+(dead|killed|died)/gi, '').replace(/never\s+(dead|killed|died)/gi, '').replace(/unconscious,?\s+not\s+dead/gi, ''); }
+function hardArenaDetailV1611(text, rec) {
+  var desc = battlefieldDescV1611(rec);
+  var isOpen = (rec && rec.battlefield === 'Open Arena') || /no cover, no hazards/i.test(desc);
+  if (!isOpen) return null;
+  var words = ['crowds?', 'audience', 'spectators', 'stands', 'grandstand', 'seating', 'cathedral', 'rooftops?', 'warehouses?', 'buildings?', 'trees', 'forest', 'ruins', 'machinery', 'pillars?', 'columns?'];
+  var sents = sentencesV166(text);
+  for (var i = 0; i < sents.length; i++) {
+    var s = sents[i];
+    for (var w = 0; w < words.length; w++) {
+      var re = new RegExp('\\b(' + words[w] + ')\\b', 'i');
+      var m = s.match(re);
+      if (!m) continue;
+      if (new RegExp('\\b(no|without|not a)\\s+' + words[w] + '\\b', 'i').test(s)) continue;
+      return 'invented battlefield feature on Open Arena (flat, open ground, no cover, no hazards): "' + m[1] + '" contradicts the recorded battlefield';
+    }
+    if (/\btook cover\b/i.test(s)) return 'invented battlefield feature on Open Arena (flat, open ground, no cover, no hazards): taking cover contradicts the recorded battlefield';
+    if (/\bhazards?\b/i.test(s)) return 'invented battlefield feature on Open Arena (flat, open ground, no cover, no hazards): hazards contradict the recorded battlefield';
+    if (/\bbehind (a |the )?cover\b/i.test(s) || /\busing cover\b/i.test(s)) return 'invented battlefield feature on Open Arena (flat, open ground, no cover, no hazards): cover contradicts the recorded battlefield';
+  }
+  return null;
+}
+function hardFinisherDetailV1611(text, rec) {
+  if (!rec.finishingAbility) return null;
+  var sents = sentencesV166(text);
+  var finWords = normTextV162(rec.finishingAbility).split(' ').filter(function (w) { return !!w; }).length;
+  var found = false, full = false;
+  sents.forEach(function (s) {
+    if (!storyHasPhraseV162(s, rec.finishingAbility)) return;
+    found = true;
+    var w = normTextV162(s).split(' ').filter(function (x) { return !!x; }).length;
+    if (w > finWords + 3) full = true;
+  });
+  if (!found) return null;
+  if (!full) return 'finisher "' + rec.finishingAbility + '" appears only as a detached standalone line; weave it into a full sentence describing the decisive action';
+  return null;
+}
+function hardCannotHarmDetailV1611(text, rec) {
+  var evs = rec.events || [];
+  var bad = evs.filter(function (e) { return e.type === 'attack' && e.cannotHarm; });
+  if (!bad.length) return null;
+  var hitRe = /\b(struck|landed|wounded|hurt|injured|damaged|knocked|smashed|tore into|blasted|connected|found its mark|hit home|battered|hit)\b/i;
+  var negRe = /\b(blocked|avoided|no harm|did not hurt|failed to|dodged|missed|shrugged off|no effect)\b/i;
+  var sents = sentencesV166(text);
+  for (var i = 0; i < sents.length; i++) {
+    var clauses = sents[i].split(/[,;]|\s+but\s+|\s+and\s+|\s+while\s+/i);
+    for (var c = 0; c < clauses.length; c++) {
+      var cl = clauses[c];
+      if (negRe.test(cl)) continue;
+      for (var k = 0; k < bad.length; k++) {
+        var be = bad[k];
+        if (be.ability && storyHasPhraseV162(cl, be.ability) && hitRe.test(cl)) return (be.actor || '') + ' cannot harm ' + (be.target || '') + ' in the record, but ' + be.ability + ' is described as landing/hurting here';
+        if (be.actor && be.target && storyHasPhraseV162(cl, be.actor) && storyHasPhraseV162(cl, be.target) && hitRe.test(cl)) {
+          var landed = evs.some(function (e) { return e.type === 'attack' && e.actor === be.actor && e.target === be.target && !e.blocked && !e.cannotHarm && !e.counterDetected && (e.damage == null || e.damage > 0); });
+          if (!landed) return (be.actor || '') + ' cannot harm ' + (be.target || '') + ' in the record, but is described as hurting ' + (be.target || '') + ' here';
         }
-      });
-    });
-    if (bad.length) push('no premature incapacitation or death', 'FAILED', bad.join(' '));
-    else push('no premature incapacitation or death', 'PASSED', 'No fighter is described as defeated before their recorded defeat.');
-  }
-  if (stage === 'opening' || stage === 'combat1' || stage === 'combat2') {
-    const ended = sents.some(function (s) { return V1610_ENDING_WORDS.test(s); });
-    if (ended && lastRound > stageMax) push('no premature ending', 'FAILED', 'This stage says the fight ended, but the record has rounds after this stage (up to round ' + lastRound + '); do not end the fight here.');
-    else push('no premature ending', 'PASSED', 'This stage does not end the fight early.');
-  }
-  if (stage !== 'aftermath') {
-    const bad = [];
-    Object.keys(abilityMap).forEach(function (k) {
-      const a = abilityMap[k];
-      if (!storyHasPhraseV162(t, a.ability)) return;
-      const covered = a.rounds.some(function (r) { return assignedRounds.indexOf(r) !== -1; });
-      if (!covered) bad.push(a.ability + ' is recorded in round(s) ' + a.rounds.join(', ') + ' but this stage covers round(s) ' + (assignedRounds.length ? assignedRounds.join(', ') : 'none (opening)') + ' only');
-    });
-    if (bad.length) push('no ability before its round', 'FAILED', bad.join('; ') + '.');
-    else push('no ability before its round', 'PASSED', 'Every named ability belongs to this stage’s rounds.');
-  }
-  const hitMiss = fidelityHitMissV1610(t, prevLastText, abilityMap);
-  if (hitMiss.failed) push('no hit-and-miss contradiction for one ability', 'FAILED', hitMiss.failed);
-  else if (hitMiss.unverified) push('no hit-and-miss contradiction for one ability', 'UNVERIFIED', hitMiss.unverified);
-  else push('no hit-and-miss contradiction for one ability', 'PASSED', 'No ability is described both as landing and as missing.');
-  const mis = fidelityMisattributionV1610(t, rec, abilityMap);
-  if (mis) push('no trait or ability misattribution', 'FAILED', mis + '.');
-  else push('no trait or ability misattribution', 'PASSED', 'Abilities and traits are attributed to their recorded owners.');
-  const seam = [];
-  const trimmed = t.trim();
-  if (trimmed && !/[.!?…]["')\]}»]?$/.test(trimmed)) seam.push('stage text ends without terminal punctuation (truncated at the stage join)');
-  if (/\b[A-Za-z]\.\s*$/.test(trimmed)) seam.push('stage text ends mid-word (a single-letter fragment before the final stop)');
-  if (/[-–—]\s*$/.test(trimmed)) seam.push('stage text ends with a dangling hyphen or dash');
-  const prevSents = {};
-  prev.forEach(function (pt) { sentencesV166(pt).forEach(function (s) { const k = normTextV162(s); if (k.length >= 20) prevSents[k] = s; }); });
-  sents.forEach(function (s) { const k = normTextV162(s); if (k.length >= 20 && prevSents[k]) seam.push('sentence repeated from an earlier stage: "' + s.slice(0, 80) + '"'); });
-  if (seam.length) push('no seam defects at the stage join', 'FAILED', seam.join('; ') + '.');
-  else push('no seam defects at the stage join', 'PASSED', 'Stage text ends completely and does not repeat an earlier stage.');
-  if (prevLastText) {
-    const prevSentsArr = sentencesV166(prevLastText);
-    if (prevSentsArr.length && sents.length) {
-      /* Join-opening compares the first 8 words, not 5: two valid
-         consecutive combat scenes may both open "X and Y traded ..."
-         and differ only at word 6 ("blows" vs "harder blows"). A true
-         repeated opening shares 8+ words or the whole sentence (the
-         latter is also caught by the repeated-sentence check). The
-         assembled-whole join check below uses the same 8-word rule. */
-      const curFirst = fidelityNormWordsV1610(sents[0]).slice(0, 8).join(' ');
-      const prevLast = fidelityNormWordsV1610(prevSentsArr[prevSentsArr.length - 1]).slice(0, 8).join(' ');
-      const prevFirst = fidelityNormWordsV1610(prevSentsArr[0]).slice(0, 8).join(' ');
-      if (curFirst && (curFirst === prevLast || curFirst === prevFirst)) push('no repeated sentence opening across a stage join', 'FAILED', 'This stage opens with the previous stage’s wording ("' + sents[0].slice(0, 80) + '").');
-      else push('no repeated sentence opening across a stage join', 'PASSED', 'This stage opens with new wording.');
+      }
     }
   }
-  if (/\b\d+\s*(HP|hit points|damage)\b/i.test(t)) push('no damage / HP numbers in prose', 'FAILED', 'This stage contains damage or HP numbers.');
-  else push('no damage / HP numbers in prose', 'PASSED', 'No damage/HP numbers found in this stage.');
-  if (/Round \d+:/i.test(t) || /dealt \d+ damage/i.test(t)) push('prose does not restate the combat log', 'FAILED', 'This stage restates the combat log (Round N: / dealt N damage) instead of narrating it.');
-  else push('prose does not restate the combat log', 'PASSED', 'No combat-log restatement found in this stage.');
-  if (/wikipedia/i.test(t) || /\bis a fictional (character|hero|villain)\b/i.test(t) || /\bfirst appeared in\b/i.test(t)) push('no Wikipedia-description text', 'FAILED', 'This stage contains encyclopedia-style description text.');
-  else push('no Wikipedia-description text', 'PASSED', 'No Wikipedia-description text found in this stage.');
-  const selfTalk = fidelitySelfTalkV1610(t, rec);
-  if (selfTalk) push('no third-person self-talk in dialogue', 'FAILED', selfTalk + '.');
-  else push('no third-person self-talk in dialogue', 'PASSED', 'No self-naming or signature announcement found in attributable dialogue.');
-  return checks;
+  return null;
 }
-function fidelityChecksForAssemblyV1610(rec, scenes, order) {
-  const checks = [];
-  function push(name, state, detail) { checks.push({ name: 'Event-fidelity: ' + name, state: state, detail: detail }); }
-  const texts = (order || []).map(function (s) { return scenes[s] || ''; }).filter(function (tx) { return !!tx; });
-  const whole = texts.join('\n\n');
-  const seen = {};
-  const dups = [];
-  texts.forEach(function (tx) {
-    sentencesV166(tx).forEach(function (s) {
-      const k = normTextV162(s);
-      if (k.length < 20) return;
-      if (seen[k]) { if (dups.indexOf(s) === -1) dups.push(s); } else seen[k] = true;
+function hardPostDefeatDetailV1611(text, rec, defeatBefore) {
+  var loser = loserNameV1610(rec);
+  if (!loser || rec.loserState === 'stalemate') return null;
+  var verbRe = /\b(struck|attacked|unleashed|fired|launched|charged|countered|landed|fought back|struck back|hit back|retaliated|pressed the attack)\b/i;
+  var sents = sentencesV166(text);
+  var defeated = !!defeatBefore;
+  for (var i = 0; i < sents.length; i++) {
+    var s = sents[i];
+    if (!defeated && hardNameDefeatV1611(s, loser, rec.winner)) { defeated = true; continue; }
+    if (!defeated) continue;
+    var nameIdx = s.search(new RegExp(escRegExpV1610(loser), 'i'));
+    var vm = s.match(verbRe);
+    if (nameIdx !== -1 && vm && nameIdx < vm.index) return loser + ' acts decisively after defeat ("' + s.slice(0, 80) + '"), but a defeated fighter does not act decisively after defeat';
+  }
+  return null;
+}
+function hardKnowledgeDetailV1611(text, rec) {
+  var hasPrep = (rec.events || []).some(function (e) { return e.type === 'prepare' || e.type === 'detected' || e.type === 'study'; });
+  if (hasPrep) return null;
+  var sents = sentencesV166(text);
+  for (var i = 0; i < sents.length; i++) {
+    var s = sents[i];
+    if (!/\b(knew|learned|discovered|already knew)\b/i.test(s)) continue;
+    if (!/\b(trap|prepared counter|ambush|secret plan)\b/i.test(s)) continue;
+    var hit = (rec.fighters || []).some(function (f) { return storyHasPhraseV162(s, f.name); });
+    if (hit) return 'a fighter is given knowledge of a prepared counter/trap that the record never shows that fighter acquiring';
+  }
+  return null;
+}
+function hardMercyContradictionV1611(text, rec) {
+  var hasChoice = (rec.events || []).some(function (e) { return e.type === 'choice'; });
+  if (!hasChoice) return null;
+  if (/(showed no mercy|gave no quarter|without (any )?hesitation|without (a )?pause|never held back|never hesitated|struck at the first opportunity|finished (him|her|them) at once)/i.test(text)) return 'mercy hold contradicted: the record has a fighter holding the finish (mercy), but the story says the finish was given without hesitation or mercy';
+  return null;
+}
+function hardMercyMentionedV1611(text) { return /(mercy|held (the )?finish|held back|stayed (his|her|their) hand|hesitat|paused|spared|gave (him|her|them) a chance)/i.test(text); }
+function hardTransformClaimV1611(text, rec) {
+  var claims = [];
+  (rec.fighters || []).forEach(function (f) {
+    if (f.trans && storyHasPhraseV162(text, f.trans)) claims.push(f.trans);
+  });
+  var sents = sentencesV166(text);
+  sents.forEach(function (s) {
+    (rec.fighters || []).forEach(function (f) {
+      if (storyHasPhraseV162(s, f.name) && /transform(ed|s)? into/i.test(s) && claims.indexOf(f.trans || '') === -1 && f.trans) claims.push(f.trans);
     });
   });
-  if (dups.length) push('no repeated sentence across stages', 'FAILED', dups.length + ' repeated sentence(s) across stages, e.g. "' + dups[0].slice(0, 80) + '"');
-  else push('no repeated sentence across stages', 'PASSED', 'No sentence repeats across stages.');
-  const joinBad = [];
-  for (let i = 1; i < texts.length; i++) {
-    const prevSents = sentencesV166(texts[i - 1]);
-    const curSents = sentencesV166(texts[i]);
-    if (!prevSents.length || !curSents.length) continue;
-    const prevLast = fidelityNormWordsV1610(prevSents[prevSents.length - 1]).slice(0, 8).join(' ');
-    const prevFirst = fidelityNormWordsV1610(prevSents[0]).slice(0, 8).join(' ');
-    const curFirst = fidelityNormWordsV1610(curSents[0]).slice(0, 8).join(' ');
-    if (curFirst && (curFirst === prevLast || curFirst === prevFirst)) joinBad.push('stage ' + (i + 1) + ' opens with the previous stage’s wording');
+  return claims;
+}
+function hardConstraintChecksForStageV1611(stage, text, rec, assigned, prevTexts) {
+  var checks = [];
+  var t = String(text || '');
+  var sents = sentencesV166(t);
+  var loser = loserNameV1610(rec);
+  var stalemate = rec.loserState === 'stalemate';
+  var prev = prevTexts || [];
+  var prevLast = prev.length ? prev[prev.length - 1] : '';
+  if (stalemate) {
+    hardPushV1611(checks, 'winner locked', 'PASSED', 'Stalemate — no winner is locked.');
+    hardPushV1611(checks, 'loser state locked', 'PASSED', 'Stalemate — no loser state is required.');
+  } else {
+    var wrongWin = null;
+    sents.forEach(function (s) {
+      if (wrongWin) return;
+      var vm = s.match(/(won the (battle|fight|match)|emerged victorious|was victorious|claimed victory|stood as the winner|was declared (the )?winner|took the victory)/i);
+      if (!vm || !loser) return;
+      var prefix = s.slice(0, vm.index);
+      var lastName = '';
+      (rec.fighters || []).forEach(function (f) { if (storyHasPhraseV162(prefix, f.name)) lastName = f.name; });
+      if (lastName === loser) wrongWin = loser + ' is declared the winner here, but the recorded winner is ' + rec.winner;
+    });
+    if (wrongWin) hardPushV1611(checks, 'winner locked', 'FAILED', wrongWin + '.');
+    else hardPushV1611(checks, 'winner locked', 'PASSED', 'No fighter other than the recorded winner is declared the winner.');
+    var winnerDead = null;
+    sents.forEach(function (s) {
+      if (winnerDead) return;
+      var clean = hardCleanNegV1611(s);
+      if (rec.winner && hardNameDefeatV1611(clean, rec.winner, loser)) winnerDead = rec.winner + ' is described as defeated here, but the recorded winner is ' + rec.winner + ' and stands at the end';
+    });
+    if (winnerDead) hardPushV1611(checks, 'winner locked (winner alive)', 'FAILED', winnerDead + '.');
+    else hardPushV1611(checks, 'winner locked (winner alive)', 'PASSED', 'The recorded winner is not described as defeated.');
+    if (stage === 'opening' || stage === 'combat1' || stage === 'combat2') {
+      var prem = null;
+      sents.forEach(function (s) {
+        if (prem) return;
+        if (loser && hardNameDefeatV1611(s, loser, rec.winner)) prem = 'premature incapacitation: ' + loser + ' is described as incapacitated/dead in this chapter, but the record has ' + loser + ' fighting on until the decisive clash; keep ' + loser + ' hurt but still standing in this chapter';
+      });
+      if (prem) hardPushV1611(checks, 'loser state locked (no premature defeat)', 'FAILED', prem + '.');
+      else hardPushV1611(checks, 'loser state locked (no premature defeat)', 'PASSED', 'No fighter is described as defeated before the decisive clash chapter.');
+    } else {
+      var swap = null;
+      if (rec.victoryMode === 'death' && /(unconscious, not dead|merely unconscious)/i.test(t)) swap = 'loser state swapped: death mode, but the loser is described as merely unconscious, not dead';
+      if (rec.victoryMode === 'incapacitation') {
+        sents.forEach(function (s) {
+          if (swap) return;
+          var clean = hardCleanNegV1611(s);
+          if (loser && storyHasPhraseV162(s, loser) && /\b(dead|died|killed)\b/i.test(clean)) swap = 'loser state swapped: incapacitation mode, but the loser is described as dead';
+        });
+      }
+      if (swap) hardPushV1611(checks, 'loser state locked', 'FAILED', swap + '.');
+      else hardPushV1611(checks, 'loser state locked', 'PASSED', 'Loser state matches the recorded mode in this chapter.');
+    }
   }
-  if (joinBad.length) push('no repeated sentence opening across a stage join', 'FAILED', joinBad.join('; ') + '.');
-  else push('no repeated sentence opening across a stage join', 'PASSED', 'No stage join repeats the previous stage’s opening.');
-  if (/\b\d+\s*(HP|hit points|damage)\b/i.test(whole)) push('no damage / HP numbers in prose', 'FAILED', 'The assembled story contains damage or HP numbers.');
-  else push('no damage / HP numbers in prose', 'PASSED', 'No damage/HP numbers found in prose.');
-  if (/Round \d+:/i.test(whole) || /dealt \d+ damage/i.test(whole)) push('prose does not restate the combat log', 'FAILED', 'The assembled story restates the combat log (Round N: / dealt N damage).');
-  else push('prose does not restate the combat log', 'PASSED', 'No combat-log restatement found.');
-  if (/wikipedia/i.test(whole) || /\bis a fictional (character|hero|villain)\b/i.test(whole) || /\bfirst appeared in\b/i.test(whole)) push('no Wikipedia-description text', 'FAILED', 'The assembled story contains encyclopedia-style description text.');
-  else push('no Wikipedia-description text', 'PASSED', 'No Wikipedia-description text found.');
-  const selfTalk = fidelitySelfTalkV1610(whole, rec);
-  if (selfTalk) push('no third-person self-talk in dialogue', 'FAILED', selfTalk + '.');
-  else push('no third-person self-talk in dialogue', 'PASSED', 'No self-naming or signature announcement found in attributable dialogue.');
+  if (stage === 'climax') {
+    var finDet = hardFinisherDetailV1611(t, rec);
+    if (finDet) hardPushV1611(checks, 'finisher in a full climax sentence', 'FAILED', finDet + '.');
+    else if (rec.finishingAbility && !storyHasPhraseV162(t, rec.finishingAbility)) hardPushV1611(checks, 'finisher in a full climax sentence', 'UNVERIFIED', 'Finisher presence is checked by stage validation; this check covers only the detached-sentence form.');
+    else hardPushV1611(checks, 'finisher in a full climax sentence', 'PASSED', rec.finishingAbility ? 'Finisher appears inside a full sentence describing the decisive action.' : 'No finisher in the record (stalemate) — no finisher sentence is required.');
+  } else {
+    hardPushV1611(checks, 'finisher in a full climax sentence', 'PASSED', 'Finisher is required only in the decisive clash chapter.');
+  }
+  if (stage === 'climax' || stage === 'aftermath') {
+    var modeBad = null;
+    if (rec.victoryMode === 'death' && /(won by incapacitation|incapacitation victory|victory by incapacitation)/i.test(t)) modeBad = 'victory mode swapped: death mode, but the story calls it an incapacitation victory';
+    if (rec.victoryMode === 'incapacitation' && /(won by death|death victory|victory by death)/i.test(t)) modeBad = 'victory mode swapped: incapacitation mode, but the story calls it a death victory';
+    if (modeBad) hardPushV1611(checks, 'victory mode locked', 'FAILED', modeBad + '.');
+    else hardPushV1611(checks, 'victory mode locked', 'PASSED', 'Victory mode is not contradicted.');
+  } else {
+    hardPushV1611(checks, 'victory mode locked', 'PASSED', 'Victory mode is stated only in the decisive clash and aftermath chapters.');
+  }
+  var arena = hardArenaDetailV1611(t, rec);
+  if (arena) hardPushV1611(checks, 'battlefield locked', 'FAILED', arena + '.');
+  else hardPushV1611(checks, 'battlefield locked', 'PASSED', 'No battlefield feature contradicting the recorded battlefield was found (atmospheric wording without a feature assertion passes).');
+  var abilityMap = null;
+  try { abilityMap = fidelityAbilityRoundsV1610(rec); } catch (e) { abilityMap = {}; }
+  var mis = null;
+  try { mis = fidelityMisattributionV1610(t, rec, abilityMap); } catch (e) { mis = null; }
+  if (mis) hardPushV1611(checks, 'canon powers and traits only', 'FAILED', mis + '.');
+  else hardPushV1611(checks, 'canon powers and traits only', 'PASSED', 'Abilities and traits are attributed to their recorded owners.');
+  var claims = hardTransformClaimV1611(t, rec);
+  var hasTransEv = (rec.events || []).some(function (e) { return e.type === 'transform'; });
+  if (claims.length && !hasTransEv) hardPushV1611(checks, 'transforms only if engine-triggered', 'FAILED', 'story-only transform: ' + claims.join(', ') + ' appears only in the story; the record has no transform event.');
+  else hardPushV1611(checks, 'transforms only if engine-triggered', 'PASSED', hasTransEv ? 'Transform claim matches a recorded transform event (effect is checked on the assembled story).' : 'No transformation claimed, matching the record.');
+  var ch = hardCannotHarmDetailV1611(t, rec);
+  if (ch) hardPushV1611(checks, 'power scaling (cannot-harm)', 'FAILED', ch + '.');
+  else hardPushV1611(checks, 'power scaling (cannot-harm)', 'PASSED', 'No cannot-harm attack is described as hurting its target.');
+  var pd = hardPostDefeatDetailV1611(t, rec, stage === 'aftermath');
+  if (pd) hardPushV1611(checks, 'no post-defeat action', 'FAILED', pd + '.');
+  else hardPushV1611(checks, 'no post-defeat action', 'PASSED', 'No defeated fighter acts decisively after defeat in this chapter.');
+  var kn = hardKnowledgeDetailV1611(t, rec);
+  if (kn) hardPushV1611(checks, 'no unacquired knowledge', 'FAILED', kn + '.');
+  else hardPushV1611(checks, 'no unacquired knowledge', 'PASSED', 'No prepared-counter knowledge phrasing without a recorded acquisition was found (mechanical scope: prepared-counter/trap knowledge only).');
+  var mc = hardMercyContradictionV1611(t, rec);
+  if (mc) hardPushV1611(checks, 'personality decisions not contradicted', 'FAILED', mc + '.');
+  else hardPushV1611(checks, 'personality decisions not contradicted', 'PASSED', 'No recorded personality decision (mercy hold, refusal, preparation) is contradicted in this chapter.');
+  if (stage === 'opening' || stage === 'combat1' || stage === 'combat2') {
+    var ended = sents.some(function (s) { return V1610_ENDING_WORDS.test(s); });
+    if (ended) hardPushV1611(checks, 'no ending before the decisive clash', 'FAILED', 'This chapter says the fight ended, but the decisive clash is still to come; do not end the fight here.');
+    else hardPushV1611(checks, 'no ending before the decisive clash', 'PASSED', 'This chapter does not end the fight before the decisive clash.');
+  } else {
+    hardPushV1611(checks, 'no ending before the decisive clash', 'PASSED', 'Ending the fight belongs in the decisive clash and aftermath chapters.');
+  }
+  var hm = null;
+  try { hm = fidelityHitMissV1610(t, prevLast, abilityMap); } catch (e) { hm = null; }
+  if (hm && hm.failed) hardPushV1611(checks, 'no hit-and-miss contradiction for one ability', 'FAILED', hm.failed);
+  else if (hm && hm.unverified) hardPushV1611(checks, 'no hit-and-miss contradiction for one ability', 'UNVERIFIED', hm.unverified);
+  else hardPushV1611(checks, 'no hit-and-miss contradiction for one ability', 'PASSED', 'No ability is described both as landing and as missing.');
+  if (/wikipedia/i.test(t) || /\bis a fictional (character|hero|villain)\b/i.test(t) || /\bfirst appeared in\b/i.test(t)) hardPushV1611(checks, 'no Wikipedia-description text', 'FAILED', 'This chapter contains encyclopedia-style description text.');
+  else hardPushV1611(checks, 'no Wikipedia-description text', 'PASSED', 'No Wikipedia-description text found in this chapter.');
+  var st = null;
+  try { st = fidelitySelfTalkV1610(t, rec); } catch (e) { st = null; }
+  if (st) hardPushV1611(checks, 'no third-person self-talk in dialogue', 'FAILED', st + '.');
+  else hardPushV1611(checks, 'no third-person self-talk in dialogue', 'PASSED', 'No self-naming or signature announcement found in attributable dialogue.');
+  var seam = [];
+  var prevSents = {};
+  prev.forEach(function (pt) { sentencesV166(pt).forEach(function (s) { var k = normTextV162(s); if (k.length >= 20) prevSents[k] = s; }); });
+  sents.forEach(function (s) { var k = normTextV162(s); if (k.length >= 20 && prevSents[k]) seam.push('repeated sentence from an earlier chapter: "' + s.slice(0, 80) + '"'); });
+  if (prevLast) {
+    var prevArr = sentencesV166(prevLast);
+    if (prevArr.length && sents.length) {
+      var curFirst = fidelityNormWordsV1610(sents[0]).slice(0, 8).join(' ');
+      var prevLastW = fidelityNormWordsV1610(prevArr[prevArr.length - 1]).slice(0, 8).join(' ');
+      var prevFirstW = fidelityNormWordsV1610(prevArr[0]).slice(0, 8).join(' ');
+      if (curFirst && (curFirst === prevLastW || curFirst === prevFirstW)) seam.push('this chapter opens with the previous chapter’s wording ("' + sents[0].slice(0, 80) + '")');
+    }
+  }
+  if (seam.length) hardPushV1611(checks, 'no repeated sentence across chapters', 'FAILED', seam.join('; ') + '.');
+  else hardPushV1611(checks, 'no repeated sentence across chapters', 'PASSED', 'This chapter does not repeat an earlier chapter.');
   return checks;
 }
+function hardConstraintChecksForAssemblyV1611(rec, scenes, order) {
+  var checks = [];
+  var texts = (order || []).map(function (s) { return scenes[s] || ''; }).filter(function (tx) { return !!tx; });
+  var whole = texts.join('\n\n');
+  var loser = loserNameV1610(rec);
+  var stalemate = rec.loserState === 'stalemate';
+  if (stalemate) {
+    hardPushV1611(checks, 'winner locked', 'PASSED', 'Stalemate — no winner is locked.');
+    hardPushV1611(checks, 'loser state locked', 'PASSED', 'Stalemate — no loser state is required.');
+  } else {
+    var wrongWin = null;
+    sentencesV166(whole).forEach(function (s) {
+      if (wrongWin) return;
+      var vm = s.match(/(won the (battle|fight|match)|emerged victorious|was victorious|claimed victory|stood as the winner|was declared (the )?winner|took the victory)/i);
+      if (!vm || !loser) return;
+      var prefix = s.slice(0, vm.index);
+      var lastName = '';
+      (rec.fighters || []).forEach(function (f) { if (storyHasPhraseV162(prefix, f.name)) lastName = f.name; });
+      if (lastName === loser) wrongWin = loser + ' is declared the winner, but the recorded winner is ' + rec.winner;
+    });
+    if (wrongWin) hardPushV1611(checks, 'winner locked', 'FAILED', wrongWin + '.');
+    else hardPushV1611(checks, 'winner locked', 'PASSED', 'No fighter other than the recorded winner is declared the winner.');
+    var winnerDead = null;
+    sentencesV166(whole).forEach(function (s) {
+      if (winnerDead) return;
+      if (rec.winner && hardNameDefeatV1611(hardCleanNegV1611(s), rec.winner, loser)) winnerDead = rec.winner + ' is described as defeated, but the recorded winner stands at the end';
+    });
+    if (winnerDead) hardPushV1611(checks, 'winner locked (winner alive)', 'FAILED', winnerDead + '.');
+    else hardPushV1611(checks, 'winner locked (winner alive)', 'PASSED', 'The recorded winner is not described as defeated.');
+    if (rec.victoryMode === 'death') {
+      var paras = paragraphsV166(whole);
+      var lastPara = paras.length ? paras[paras.length - 1] : whole;
+      var lastClean = hardCleanNegV1611(lastPara);
+      if (loser && storyHasPhraseV162(lastPara, loser) && !/\b(dead|died|killed)\b/i.test(lastClean) && /(unconscious|knocked[\s-]out|did not rise|never rose)/i.test(lastPara)) hardPushV1611(checks, 'loser state locked', 'FAILED', 'loser state swapped: death mode, but the final paragraph describes ' + loser + ' only as unconscious/knocked out, never dead (a KO is not a death in death mode).');
+      else hardPushV1611(checks, 'loser state locked', 'PASSED', 'Death-mode loser state is not reduced to a KO in the final paragraph (incapacitation-mode death wording is covered by the unchanged v16.6 checker).');
+    } else {
+      hardPushV1611(checks, 'loser state locked', 'PASSED', 'Incapacitation-mode loser death wording is covered by the unchanged v16.6 checker; no additional swap found here.');
+    }
+  }
+  var finDet = hardFinisherDetailV1611(whole, rec);
+  if (finDet) hardPushV1611(checks, 'finisher in a full climax sentence', 'FAILED', finDet + '.');
+  else if (rec.finishingAbility && !storyHasPhraseV162(whole, rec.finishingAbility)) hardPushV1611(checks, 'finisher in a full climax sentence', 'UNVERIFIED', 'Finisher presence is checked by the unchanged v16.6 checker; this check covers only the detached-sentence form.');
+  else hardPushV1611(checks, 'finisher in a full climax sentence', 'PASSED', rec.finishingAbility ? 'Finisher appears inside a full sentence describing the decisive action.' : 'No finisher in the record (stalemate) — no finisher sentence is required.');
+  var modeBad = null;
+  if (rec.victoryMode === 'death' && /(won by incapacitation|incapacitation victory|victory by incapacitation)/i.test(whole)) modeBad = 'victory mode swapped: death mode, but the story calls it an incapacitation victory';
+  if (rec.victoryMode === 'incapacitation' && /(won by death|death victory|victory by death)/i.test(whole)) modeBad = 'victory mode swapped: incapacitation mode, but the story calls it a death victory';
+  if (modeBad) hardPushV1611(checks, 'victory mode locked', 'FAILED', modeBad + '.');
+  else hardPushV1611(checks, 'victory mode locked', 'PASSED', 'Victory mode is not contradicted.');
+  var arena = hardArenaDetailV1611(whole, rec);
+  if (arena) hardPushV1611(checks, 'battlefield locked', 'FAILED', arena + '.');
+  else hardPushV1611(checks, 'battlefield locked', 'PASSED', 'No battlefield feature contradicting the recorded battlefield was found (atmospheric wording without a feature assertion passes).');
+  var abilityMap = null;
+  try { abilityMap = fidelityAbilityRoundsV1610(rec); } catch (e) { abilityMap = {}; }
+  var mis = null;
+  try { mis = fidelityMisattributionV1610(whole, rec, abilityMap); } catch (e) { mis = null; }
+  if (mis) hardPushV1611(checks, 'canon powers and traits only', 'FAILED', mis + '.');
+  else hardPushV1611(checks, 'canon powers and traits only', 'PASSED', 'Abilities and traits are attributed to their recorded owners (non-participant signatures are covered by the unchanged v16.6 checker).');
+  var claims = hardTransformClaimV1611(whole, rec);
+  var hasTransEv = (rec.events || []).some(function (e) { return e.type === 'transform'; });
+  if (claims.length && !hasTransEv) hardPushV1611(checks, 'transforms only if engine-triggered', 'FAILED', 'story-only transform: ' + claims.join(', ') + ' appears only in the story; the record has no transform event.');
+  else if (hasTransEv) {
+    if (!claims.length) hardPushV1611(checks, 'transforms only if engine-triggered', 'UNVERIFIED', 'Transform events exist in the record, but the story does not name the transformation — not counted as passed.');
+    else {
+      var firstIdx = whole.length;
+      claims.forEach(function (c) { var ix = whole.search(new RegExp(escRegExpV1610(c), 'i')); if (ix !== -1 && ix < firstIdx) firstIdx = ix; });
+      var after = firstIdx < whole.length ? whole.slice(firstIdx) : '';
+      if (/\b(stronger|harder|faster|surging|surge|charged|aura|blazing|overwhelming)\b|turned the tide|momentum (swung|shifted)|new power/i.test(after)) hardPushV1611(checks, 'transforms only if engine-triggered', 'PASSED', 'Recorded transform is named and shown changing the fight (effect wording follows the transform).');
+      else hardPushV1611(checks, 'transforms only if engine-triggered', 'FAILED', 'transform named but not shown changing the fight: no effect wording follows the transform (a transform must change the fight, not just be mentioned).');
+    }
+  } else hardPushV1611(checks, 'transforms only if engine-triggered', 'PASSED', 'No transformation claimed, matching the record.');
+  var ch = hardCannotHarmDetailV1611(whole, rec);
+  if (ch) hardPushV1611(checks, 'power scaling (cannot-harm)', 'FAILED', ch + '.');
+  else hardPushV1611(checks, 'power scaling (cannot-harm)', 'PASSED', 'No cannot-harm attack is described as hurting its target.');
+  var pd = hardPostDefeatDetailV1611(whole, rec, false);
+  if (pd) hardPushV1611(checks, 'no post-defeat action', 'FAILED', pd + '.');
+  else hardPushV1611(checks, 'no post-defeat action', 'PASSED', 'No defeated fighter acts decisively after defeat.');
+  var kn = hardKnowledgeDetailV1611(whole, rec);
+  if (kn) hardPushV1611(checks, 'no unacquired knowledge', 'FAILED', kn + '.');
+  else hardPushV1611(checks, 'no unacquired knowledge', 'PASSED', 'No prepared-counter knowledge phrasing without a recorded acquisition was found (mechanical scope: prepared-counter/trap knowledge only).');
+  var hasChoice = (rec.events || []).some(function (e) { return e.type === 'choice'; });
+  var mc = hardMercyContradictionV1611(whole, rec);
+  if (mc) hardPushV1611(checks, 'personality decisions not contradicted', 'FAILED', mc + '.');
+  else if (hasChoice && hardMercyMentionedV1611(whole)) hardPushV1611(checks, 'personality decisions not contradicted', 'PASSED', 'Mercy hold in the record is reflected in the story.');
+  else if (hasChoice) hardPushV1611(checks, 'personality decisions not contradicted', 'UNVERIFIED', 'Mercy hold in the record, but no mercy wording was found in the story — not counted as passed (omission is not failed; only an explicit contradiction fails).');
+  else hardPushV1611(checks, 'personality decisions not contradicted', 'PASSED', 'No mercy/personality decision in the record to reflect or contradict.');
+  if (/wikipedia/i.test(whole) || /\bis a fictional (character|hero|villain)\b/i.test(whole) || /\bfirst appeared in\b/i.test(whole)) hardPushV1611(checks, 'no Wikipedia-description text', 'FAILED', 'The assembled story contains encyclopedia-style description text.');
+  else hardPushV1611(checks, 'no Wikipedia-description text', 'PASSED', 'No Wikipedia-description text found.');
+  return checks;
+}
+/* v16.11 DELIBERATE CHANGE: the old event-fidelity entry points are kept
+   only as aliases so any saved-view or diagnostic caller does not crash.
+   They return hard-constraint checks, NOT event-fidelity checks, and the
+   generation gate calls the hard-constraint functions directly. The old
+   ability-before-round, premature-ending-as-round-timing, and full
+   round-transcript logic is no longer a gate anywhere. */
+function fidelityChecksForStageV1610(stage, text, rec, assigned, prevTexts) { return hardConstraintChecksForStageV1611(stage, text, rec, assigned, prevTexts); }
+function fidelityChecksForAssemblyV1610(rec, scenes, order) { return hardConstraintChecksForAssemblyV1611(rec, scenes, order); }
 
 /* v16.8 per-stage fetch wrapper: at most ONE 402 wait-retry and ONE
    abort retry PER STAGE (flags persist across correction attempts for
@@ -4401,7 +4777,7 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters, ca
   let lastStageText = '';
   let lastStagePromptSize = 0;
   let lastStageFinish = '';
-  let lastFidelityChecks = null;
+  let lastHardChecks = null;
   function cacheFlagFor(text, elapsedMs) {
     if (elapsedMs < 5000 && seenTexts.indexOf(text) !== -1) return 'possible cached response (response in ' + elapsedMs + 'ms identical to an earlier stage response; not confirmed as caching)';
     return '';
@@ -4441,7 +4817,7 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters, ca
       const cached = readStageCacheV1610(cacheSid, stage, prompt);
       if (cached) {
         const v0 = validateStageV167(stage, cached.text, rec, assigned);
-        const f0 = fidelityChecksForStageV1610(stage, cached.text, rec, assigned, prevTexts);
+        const f0 = hardConstraintChecksForStageV1611(stage, cached.text, rec, assigned, prevTexts);
         if (!v0.failed.length && !f0.some(function (c) { return c.state === 'FAILED'; })) {
           counters.promptCharsTotal += prompt.length;
           counters.stageCacheHits = counters.stageCacheHits || {};
@@ -4456,7 +4832,7 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters, ca
     try { att = await attemptWithChainV169(stage, prompt); } catch (e) { pushFailedDiagV169(stage, prompt.length, e); return { transportError: e.message || 'Provider request failed' }; }
     lastStageText = att.text; lastStagePromptSize = att.promptChars; lastStageFinish = att.finishReason;
     const val = validateStageV167(stage, att.text, rec, assigned);
-    const fid = fidelityChecksForStageV1610(stage, att.text, rec, assigned, prevTexts);
+    const fid = hardConstraintChecksForStageV1611(stage, att.text, rec, assigned, prevTexts);
     const fidFailed = fid.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; });
     const failed = val.failed.concat(fidFailed);
     let cachedFlag = cacheFlagFor(att.text, att.elapsedMs);
@@ -4477,8 +4853,8 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters, ca
        90-char first-check truncation. Full "name: detail" strings stay
        in diagnostics as the correction reason. */
     const promptChecks = failed.map(function (f) {
-      if (f.indexOf('Event-fidelity: ') === 0) {
-        const rest = f.slice('Event-fidelity: '.length);
+      if (f.indexOf('Hard-constraint: ') === 0) {
+        const rest = f.slice('Hard-constraint: '.length);
         const ci = rest.indexOf(': ');
         return ci !== -1 ? rest.slice(ci + 2) : rest;
       }
@@ -4489,7 +4865,7 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters, ca
     try { corr = await attemptWithChainV169(stage, corrPrompt); } catch (e) { pushFailedDiagV169(stage, corrPrompt.length, e); return { transportError: e.message || 'Provider request failed', text: att.text, finishReason: att.finishReason }; }
     lastStageText = corr.text; lastStagePromptSize = corr.promptChars; lastStageFinish = corr.finishReason;
     const val2 = validateStageV167(stage, corr.text, rec, assigned);
-    const fid2 = fidelityChecksForStageV1610(stage, corr.text, rec, assigned, prevTexts);
+    const fid2 = hardConstraintChecksForStageV1611(stage, corr.text, rec, assigned, prevTexts);
     const fidFailed2 = fid2.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; });
     const failed2 = val2.failed.concat(fidFailed2);
     if (!failed2.length) {
@@ -4515,8 +4891,8 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters, ca
       failedReason = 'AI generation incomplete — ' + stageLabelV167(stage) + ' stage failed after correction — ' + (outLimit ? 'Draft stopped before finishing (provider output limit) — draft did not pass validation' : 'Draft incomplete/truncated — no complete AI story — Draft did not pass validation');
       lastStageText = r.text || lastStageText;
       lastStageFinish = r.finishReason || lastStageFinish;
-      lastFidelityChecks = r.fidelityChecks || null;
-      return { ok: false, failedStage: failedStage, reason: failedReason, stages: diags, lastText: lastStageText, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, provider: provider, failedChecks: (r.failed || []), fidelityChecks: lastFidelityChecks, stageCount: orderV1610.length, stageOrder: orderV1610 };
+      lastHardChecks = r.hardConstraintChecks || r.fidelityChecks || null;
+      return { ok: false, failedStage: failedStage, reason: failedReason, stages: diags, lastText: lastStageText, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, provider: provider, failedChecks: (r.failed || []), hardConstraintChecks: lastHardChecks, fidelityChecks: lastHardChecks, stageCount: orderV1610.length, stageOrder: orderV1610 };
     }
     provider = r.provider || provider;
     scenes[stage] = r.text;
@@ -4529,16 +4905,16 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters, ca
   diags.forEach(function (d) { if (assembled.joinTrims.indexOf(d.stage) !== -1) d.joinTrim = true; });
   const checks = checkMainStoryV16(b, assembled.text);
   const counts = countStoryChecksV16(checks);
-  const asmFid = fidelityChecksForAssemblyV1610(rec, scenes, orderV1610);
-  const asmFidFailed = asmFid.filter(function (c) { return c.state === 'FAILED'; });
-  if (counts.failed === 0 && !asmFidFailed.length) {
-    return { ok: true, text: assembled.text, checks: checks, fidelityChecks: asmFid, stages: diags, provider: provider, joinTrims: assembled.joinTrims, stageCount: orderV1610.length, stageOrder: orderV1610 };
+  const asmHard = hardConstraintChecksForAssemblyV1611(rec, scenes, orderV1610);
+  const asmHardFailed = asmHard.filter(function (c) { return c.state === 'FAILED'; });
+  if (counts.failed === 0 && !asmHardFailed.length) {
+    return { ok: true, text: assembled.text, checks: checks, hardConstraintChecks: asmHard, fidelityChecks: asmHard, stages: diags, provider: provider, joinTrims: assembled.joinTrims, stageCount: orderV1610.length, stageOrder: orderV1610 };
   }
   const asmOutLimit = /length|MAX_TOKENS|output_token_limit/i.test(lastStageFinish || '');
-  const asmReason = asmFidFailed.length
-    ? 'AI generation incomplete — assembly stage failed event-fidelity — ' + asmFidFailed.map(function (c) { return c.name + ': ' + c.detail; }).join(' | ')
+  const asmReason = asmHardFailed.length
+    ? 'AI generation incomplete — assembly stage failed hard-constraint checks — ' + asmHardFailed.map(function (c) { return c.name + ': ' + c.detail; }).join(' | ')
     : 'AI generation incomplete — assembly stage failed validation — ' + (asmOutLimit ? 'Draft stopped before finishing (provider output limit) — draft did not pass validation' : 'Draft incomplete/truncated — no complete AI story — Draft did not pass validation');
-  return { ok: false, failedStage: 'assembly', reason: asmReason, stages: diags, lastText: assembled.text, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, checks: checks, fidelityChecks: asmFid, provider: provider, stageCount: orderV1610.length, stageOrder: orderV1610 };
+  return { ok: false, failedStage: 'assembly', reason: asmReason, stages: diags, lastText: assembled.text, lastPromptSize: lastStagePromptSize, lastFinishReason: lastStageFinish, checks: checks, hardConstraintChecks: asmHard, fidelityChecks: asmHard, provider: provider, stageCount: orderV1610.length, stageOrder: orderV1610 };
 }
 
 function multiStageBreakdownV167(counters) {
@@ -4642,7 +5018,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
   try {
     const chainV169 = [];
     chainV169.push({ key: 'openai', label: 'Pollinations /openai (POST, keyless)', budget: budgetsV169.openai, fetch: async function (prompt, stage) {
-      const r = await fetchOpenAICompatibleV169({ baseUrl: 'https://text.pollinations.ai/openai', model: 'openai-fast', messages: [{ role: 'system', content: 'You are a battle-story writer. Follow the brief exactly. Never change the winner, the finishing event, or the final states. Never invent events, abilities, equipment, deaths, or recoveries. Never describe a fighter as defeated before the finishing round, and never end the fight before the finishing round. No damage numbers, no HP numbers, no stats in prose. No repeated sentences. Cinematic narrator, past tense, one voice throughout.' }, { role: 'user', content: prompt }], reasoningEffort: 'low', temperature: 0.3, maxTokens: (V1610_MAX_TOKENS[stage] || 400), stream: false, timeoutMs: V16_AI_TIMEOUT_MS, budgetObj: budgetsV169.openai });
+      const r = await fetchOpenAICompatibleV169({ baseUrl: 'https://text.pollinations.ai/openai', model: 'openai-fast', messages: [{ role: 'system', content: 'You are a battle-story writer writing a fictionalised retelling of a recorded battle outcome. Never change the winner, the finishing event, or the final states. The winner, finisher, loser state, victory mode, and battlefield are locked; canon powers only for the exact version selected; transforms only if the engine triggered one, and a transform must change the fight; a fighter who cannot harm the opponent in the record must not be shown hurting them; no fighter acts decisively after defeat; no knowledge a fighter could not have acquired in the fight; recorded personality decisions (mercy hold, refusal, preparation) must not be contradicted. The middle may be fictionalised from power scaling and canon: invented minor exchanges are allowed, and prose must not be required to carry round numbers. The finisher must appear verbatim inside a full sentence describing the decisive action, never as a standalone line. The battlefield must match its recorded properties exactly. No damage numbers, no HP numbers, no stats in prose. No repeated sentences. Cinematic narrator, past tense, one voice throughout.' }, { role: 'user', content: prompt }], reasoningEffort: 'low', temperature: 0.3, maxTokens: (V1610_MAX_TOKENS[stage] || 400), stream: false, timeoutMs: V16_AI_TIMEOUT_MS, budgetObj: budgetsV169.openai });
       r.provider = 'Pollinations /openai (POST, keyless)';
       return r;
     }});
@@ -4661,7 +5037,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
       const counts = countStoryChecksV16(run.checks);
       const providersUsed = [];
       run.stages.forEach(function (d) { if (d.provider && providersUsed.indexOf(d.provider) === -1) providersUsed.push(d.provider); });
-      const meta = { kind: 'ai', provider: run.provider || 'Pollinations /openai (POST, keyless)', providersUsed: providersUsed, passed: counts.passed, unverified: counts.unverified, attempts: attemptsTotal(), attempts402Excluded: attempts402ExcludedTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: run.checks, aiDraftLength: run.text.length, aiFinishReason: (run.stages.length ? (run.stages[run.stages.length - 1].finishReason || '') : ''), stageDiagnostics: run.stages, stageCount: run.stageCount || run.stages.length, stagePromptSizes: (run.stages || []).map(function (d) { return { stage: d.stage, promptChars: d.promptChars || 0 }; }), fidelityChecks: run.fidelityChecks || [], _storyText: run.text };
+      const meta = { kind: 'ai', provider: run.provider || 'Pollinations /openai (POST, keyless)', providersUsed: providersUsed, passed: counts.passed, unverified: counts.unverified, attempts: attemptsTotal(), attempts402Excluded: attempts402ExcludedTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: run.checks, aiDraftLength: run.text.length, aiFinishReason: (run.stages.length ? (run.stages[run.stages.length - 1].finishReason || '') : ''), stageDiagnostics: run.stages, stageCount: run.stageCount || run.stages.length, stagePromptSizes: (run.stages || []).map(function (d) { return { stage: d.stage, promptChars: d.promptChars || 0 }; }), hardConstraintChecks: run.hardConstraintChecks || run.fidelityChecks || [], fidelityChecks: run.fidelityChecks || [], _storyText: run.text };
       lastProvider = meta.provider;
       return renderAi(meta);
     }
@@ -4678,7 +5054,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
     let lastStageFailedChecks = lastRunFailedChecks;
     if (lastStageFailedChecks && lastStageFailedChecks.length) lastFailedChecks = lastStageFailedChecks;
     else if (lastChecks) { const _fc = countStoryChecksV16(lastChecks); if (_fc.failed > 0) lastFailedChecks = lastChecks.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }); }
-    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attemptsTotal(), attempts402Excluded: attempts402ExcludedTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: lastChecks, reason: lastReason, rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: lastFailedChecks || [], rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks || (lastDraftText ? checkMainStoryV16(b, lastDraftText) : null)), stageDiagnostics: allStageDiags, fidelityChecks: run.fidelityChecks || [], failedStage: lastFailedStage };
+    const meta = { kind: 'offline', provider: 'Offline fallback (rule-based episode)', passed: 0, unverified: 0, attempts: attemptsTotal(), attempts402Excluded: attempts402ExcludedTotal(), attemptsBreakdown: breakdownAll(), promptSize: totalPromptChars, sessionId: sid, checks: lastChecks, reason: lastReason, rejectedDraftExcerpt: lastDraftText ? lastDraftText.slice(0, 500) : '', rejectedDraftClimax: lastDraftText ? (lastDraftText.length > 500 ? lastDraftText.slice(-500) : lastDraftText) : '', rejectedChecks: lastFailedChecks || [], rejectedDraftLength: lastDraftText ? lastDraftText.length : 0, rejectedDraftStage: lastDraftStage, rejectedDraftFinishReason: lastDraftFinishReason, rejectedDraftPromptSize: lastDraftPromptSize, rejectedDraftProbe: buildRejectedProbeV165(b, lastDraftText, lastChecks || (lastDraftText ? checkMainStoryV16(b, lastDraftText) : null)), stageDiagnostics: allStageDiags, hardConstraintChecks: run.hardConstraintChecks || run.fidelityChecks || [], fidelityChecks: run.fidelityChecks || [], failedStage: lastFailedStage };
     lastMainStoryMeta = meta;
     if (isCurrent()) {
       setStatus('Online AI generation was unavailable — showing the offline episode instead.');
