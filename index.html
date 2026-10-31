@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.12 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.13 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.12</h1><span>1V1 DEATH BATTLES • ENGINE v16.12 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v16.13</h1><span>1V1 DEATH BATTLES • ENGINE v16.13 • ONLINE AI STORY FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -2460,7 +2460,7 @@ function saveBattle(b,story,breakdown,integrity,accuracy,quality){
     const h=loadHistory();
     const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]);
     const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant));
-    h.unshift({id:Date.now(),formatVersion:'v16.12',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.12 online AI main story (fictionalised retelling of the recorded outcome), or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
+    h.unshift({id:Date.now(),formatVersion:'v16.13',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.13 online AI main story (fictionalised retelling of the recorded outcome), or labelled offline fallback episode when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
     localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));
   }catch(e){}
   renderHistory();
@@ -2650,8 +2650,8 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12'].includes(x.formatVersion);
-  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12 record.'};
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13'].includes(x.formatVersion);
+  return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12/v16.13 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
 
@@ -2952,13 +2952,18 @@ function aftermathOkV166(b, plain) {
   const winnerNamed = wf ? fighterNameMatchV162(txt, wf) : storyHasPhraseV162(txt, b.winner);
   if (!winnerNamed) return false;
   const nt = normTextV162(txt);
+  /* v16.13 DELIBERATE CHANGE: same synonym fix as the stage gate, or a
+     stage-passing "knocked out" aftermath would still die at assembly.
+     Scope is already the final paragraph (or final sentence of a
+     one-paragraph draft) via aftermathTextV166; only the wording set
+     changes here. The hard rule (winner + loser state) is unchanged. */
   if (b.victoryMode === 'incapacitation') {
-    const clean = txt.replace(/not\s+(dead|killed|died)/gi, '').replace(/never\s+(dead|killed|died)/gi, '').replace(/unconscious,?\s+not\s+dead/gi, '');
-    return /unconscious/i.test(nt) && !/\bdead\b|\bkilled\b|\bdied\b/i.test(clean);
+    const clean = txt.replace(/not\s+(dead|killed|died|lifeless)/gi, '').replace(/never\s+(dead|killed|died|lifeless)/gi, '').replace(/unconscious,?\s+not\s+dead/gi, '');
+    return /\bunconscious\b|\bknocked out\b|\bincapacitated\b|\bout cold\b/i.test(nt) && !/\bdead\b|\bkilled\b|\bdied\b|\blifeless\b/i.test(clean);
   }
   if (b.victoryMode === 'death') {
     const clean = txt.replace(/not\s+merely\s+unconscious/gi, '');
-    return (/\bdead\b|\bdied\b|\bkilled\b/i.test(nt)) && !/merely unconscious|unconscious, not dead/i.test(clean);
+    return (/\bdead\b|\bdied\b|\bkilled\b|\blifeless\b/i.test(nt)) && !/merely unconscious|unconscious, not dead/i.test(clean);
   }
   return true;
 }
@@ -3360,7 +3365,7 @@ function renderMainStoryDiagnosticsV16(meta, expectedSession) {
   const lines = [];
   lines.push('Session: ' + (meta.sessionId || '—'));
   lines.push('Provider: ' + (meta.provider || '—'));
-  lines.push('Provider attempts: ' + (meta.attempts || 0) + ' generation + ' + (meta.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap) (multi-stage: opening + combat scenes + climax + aftermath — 3 stages for ≤4-round battles, 5 otherwise; outline beats derived locally, no AI outline POST; up to 1 repair per stage; each provider attempt has its own 10-POST budget — Pollinations /openai, Pollinations Classic, saved key, Gemini — and a stage failing on one provider tries the next provider for that stage; 402 wait-retries excluded from the cap, abort retries counted)' + (meta.attemptsBreakdown ? '; breakdown: ' + meta.attemptsBreakdown : '') + (meta.providersUsed && meta.providersUsed.length ? '; providers used: ' + meta.providersUsed.join(', ') : '') + (meta.geminiTried ? ' + Gemini attempt(s)' : ''));
+  lines.push('Provider attempts: ' + (meta.attempts || 0) + ' generation + ' + (meta.attempts402Excluded || 0) + ' 402 wait-retries (not counted toward cap) (multi-stage: opening + combat scenes + climax + aftermath — 3 stages for ≤4-round battles, 5 otherwise; outline beats derived locally, no AI outline POST; up to 1 repair per stage, plus an aftermath-only simplified second repair (400 tokens) and an aftermath-only provider retry for that stage; each provider attempt has its own 10-POST budget — Pollinations /openai, Pollinations Classic, saved key, Gemini — and a stage failing on one provider tries the next provider for that stage; 402 wait-retries excluded from the cap, abort retries counted)' + (meta.attemptsBreakdown ? '; breakdown: ' + meta.attemptsBreakdown : '') + (meta.providersUsed && meta.providersUsed.length ? '; providers used: ' + meta.providersUsed.join(', ') : '') + (meta.geminiTried ? ' + Gemini attempt(s)' : ''));
           if (meta.failedStage) lines.push('Failed stage: ' + meta.failedStage);
           if (meta.stageDiagnostics && meta.stageDiagnostics.length) lines.push(stageDiagnosticsHtmlV167(meta.stageDiagnostics));
   if (meta.stagePromptSizes && meta.stagePromptSizes.length) lines.push('Prompt sizes (per stage; per-stage guard 2000 chars, target under 800): ' + meta.stagePromptSizes.map(function (p) { return stageLabelV167(p.stage) + ' ' + p.promptChars + ' chars'; }).join(', ') + '; total of stage prompts: ' + (meta.promptSize || 0) + ' chars (multi-stage total — not compared against the old single-shot 4500 cap).');
@@ -3394,8 +3399,8 @@ function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, qual
       try {
         const h = loadHistory();
         if (h.length) {
-          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.12) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.12) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
-          h[0].formatVersion = 'v16.12';
+          h[0].storyGenerationMethod = meta && meta.kind === 'ai' ? ('Online AI story (v16.13) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline fallback episode (v16.13) — ' + V16_OFFLINE_LABEL + ' Reason: ' + (meta && meta.reason ? meta.reason : ''));
+          h[0].formatVersion = 'v16.13';
           h[0].mainStoryMeta = meta ? { kind: meta.kind, provider: meta.provider, passed: meta.passed, unverified: meta.unverified, attempts: meta.attempts, attempts402Excluded: meta.attempts402Excluded != null ? meta.attempts402Excluded : '', attemptsBreakdown: meta.attemptsBreakdown || '', promptSize: meta.promptSize, sessionId: meta.sessionId, reason: meta.reason || '', rejectedDraftExcerpt: meta.rejectedDraftExcerpt || '', rejectedDraftClimax: meta.rejectedDraftClimax || '', rejectedChecks: meta.rejectedChecks || [], rejectedDraftLength: meta.rejectedDraftLength != null ? meta.rejectedDraftLength : '', rejectedDraftStage: meta.rejectedDraftStage || '', rejectedDraftFinishReason: meta.rejectedDraftFinishReason || '', rejectedDraftPromptSize: meta.rejectedDraftPromptSize != null ? meta.rejectedDraftPromptSize : '', rejectedDraftProbe: meta.rejectedDraftProbe || [], aiDraftLength: meta.aiDraftLength != null ? meta.aiDraftLength : '', aiFinishReason: meta.aiFinishReason || '', stageDiagnostics: meta.stageDiagnostics || [], failedStage: meta.failedStage || '', providersUsed: meta.providersUsed || [], stageCount: meta.stageCount || '', stagePromptSizes: meta.stagePromptSizes || [], hardConstraintChecks: meta.hardConstraintChecks || meta.fidelityChecks || [], fidelityChecks: meta.fidelityChecks || [] } : null;
           // Saved validation note, stated plainly: System A is battle integrity
           // (story-independent). When the main story is AI, System B below is
@@ -3656,15 +3661,33 @@ function parseOutlineBeatsV167(text) {
   const src = lines.length >= 2 ? lines : sentencesV166(text);
   return src.slice(0, 5).map(function (s) { return truncV162(s, 80); });
 }
+/* v16.13 AFTERMATH CHECKER FIX (stage gate). The old checker tested the
+   WHOLE aftermath text and required the literal word "unconscious", so
+   "knocked out" / "incapacitated" / "out cold" failed, and a metaphor
+   like "dead silence" in an early paragraph failed an incapacitation
+   aftermath. The new checker tests the FINAL PARAGRAPH only (blank-line
+   split; a single-paragraph text is its own final paragraph) and accepts
+   synonyms. The hard rule is unchanged: winner by full name AND loser
+   state must be in that final paragraph. A complete probe aftermath at
+   250 tokens still FAILS this checker on loser state (no dead word) —
+   token budget alone never fixed that; the wording + scope do. */
+var V1613_UNCONSCIOUS_WORDS = /\bunconscious\b|\bknocked[\s-]out\b|\bincapacitated\b|\bout cold\b/i;
+var V1613_DEAD_WORDS = /\bdead\b|\bdied\b|\bkilled\b|\blifeless\b/i;
+function finalParagraphV1613(text) {
+  var parts = String(text || '').split(/\n\s*\n/).map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
+  if (parts.length) return parts[parts.length - 1];
+  return String(text || '').trim();
+}
 function stageAftermathOkV167(rec, text) {
-  if (rec.loserState === 'stalemate') return /stalemate|no winner|no death/i.test(text);
-  if (!storyHasPhraseV162(text, rec.winner)) return false;
+  var fp = finalParagraphV1613(text);
+  if (rec.loserState === 'stalemate') return /stalemate|no winner|no death/i.test(fp);
+  if (!storyHasPhraseV162(fp, rec.winner)) return false;
   if (rec.loserState === 'dead') {
-    const clean = String(text).replace(/not\s+merely\s+unconscious/gi, '');
-    return (/\bdead\b|\bdied\b|\bkilled\b/i.test(text)) && !/merely unconscious|unconscious, not dead/i.test(clean);
+    var cleanDead = fp.replace(/not\s+merely\s+unconscious/gi, '');
+    return V1613_DEAD_WORDS.test(cleanDead) && !/merely\s+unconscious|unconscious,?\s+not\s+dead/i.test(cleanDead);
   }
-  const clean = String(text).replace(/not\s+(dead|killed|died)/gi, '').replace(/never\s+(dead|killed|died)/gi, '').replace(/unconscious,?\s+not\s+dead/gi, '');
-  return /unconscious/i.test(text) && !/\bdead\b|\bkilled\b|\bdied\b/i.test(clean);
+  var clean = fp.replace(/not\s+(dead|killed|died|lifeless)/gi, '').replace(/never\s+(dead|killed|died|lifeless)/gi, '').replace(/unconscious,?\s+not\s+dead/gi, '');
+  return V1613_UNCONSCIOUS_WORDS.test(fp) && !V1613_DEAD_WORDS.test(clean);
 }
 function stageContradictionV167(rec, text) {
   try {
@@ -3791,7 +3814,7 @@ function assembleStagesV167(scenes) {
    Per-stage max_tokens on /openai: opening 400, combat 400, climax
    350, aftermath 250. Classic keeps its existing behaviour.
    (5) STAGE CACHE / RESUME: each successful stage is saved
-   immediately to localStorage under 'warroom_stage_cache_v1612',
+   immediately to localStorage under 'warroom_stage_cache_v1613',
    keyed by battle session id + stage name + prompt hash. A later run
    with the SAME session id (the retry path for a failed run) reuses
    cached successful stages without a POST and retries only from the
@@ -3848,10 +3871,10 @@ function assembleStagesV167(scenes) {
    which the rules forbid. Round numbers + qualitative state carry the
    same correction. */
 var V1610_STAGE_PROMPT_TARGET = 800;
-var V1610_MAX_TOKENS = { opening: 400, combat1: 400, combat2: 400, climax: 350, aftermath: 250 };
+var V1610_MAX_TOKENS = { opening: 400, combat1: 400, combat2: 400, climax: 350, aftermath: 600 }; /* v16.13: aftermath 250->600 (reasoning headroom); repair also 600. Cell B of the probes was a cache hit, so 600 is NOT claimed proven better — it is the cheapest change with no observed downside. */
 var V1610_WORD_TARGETS = { opening: 150, combat1: 150, combat2: 150, climax: 120, aftermath: 100 };
 var V1610_STAGE_ORDER = ['opening', 'combat1', 'combat2', 'climax', 'aftermath'];
-var V1610_STAGE_CACHE_KEY = 'warroom_stage_cache_v1612';
+var V1610_STAGE_CACHE_KEY = 'warroom_stage_cache_v1613'; /* v16.13: bumped because aftermath prompts + checker changed; v16.12 cached stages must not reuse. */
 /* v16.11: cache key bumped from v1610 because every stage prompt changed (brief, not transcript); v16.10 cached stages must not reuse. */
 var V1610_DEFEAT_WORDS = /\b(incapacitat\w*|unconscious|knocked[\s-]out|dead|died|killed|lifeless|was finished|had finished|finished off)\b/i;
 var V1610_ENDING_WORDS = /\b(the fight (ended|was over|had ended|concluded)|the battle (ended|was over|had ended|concluded|was decided)|battle concluded|fight concluded|the outcome was decided|the victor was decided)\b/i;
@@ -3931,6 +3954,10 @@ function buildStagePromptV1610(rec, stage, opts) {
     } else {
       p = 'STAGE: ' + stage + '. ' + chapterBriefV1611(rec, stage) + ' ' + brief;
     }
+    /* v16.13: aftermath prompts only — one-line battlefield-fidelity
+       instruction. It is appended after the brief, so the shrink ladder
+       below still enforces the 800-char target (levels step down). */
+    if (stage === 'aftermath') p += V1613_CROWD_GUARD;
     return p;
   }
   /* Shrink ladder (same philosophy as v16.10): full dossier brief first,
@@ -3946,11 +3973,28 @@ function buildStagePromptV1610(rec, stage, opts) {
   if (prompt.length > V1611_STAGE_PROMPT_TARGET) prompt = assemble(1);
   if (prompt.length > V1611_STAGE_PROMPT_TARGET) prompt = assemble(2);
   if (prompt.length > V1611_STAGE_PROMPT_TARGET) prompt = assemble(3);
-  if (opts.correction && prompt.length > V1611_STAGE_PROMPT_TARGET) prompt = assemble(4);
+  /* v16.13: the aftermath crowd guard pushes even the level-3 minimal
+     brief over the 800-char target (fixture: 892 with the long guard), so
+     aftermath initial prompts may also step to level 4. That is safe
+     for aftermath specifically: level 4 still carries fighters +
+     battlefield + LOCKED OUTCOME + 1 beat, which is everything an
+     aftermath chapter needs, and the guard stays in place. Other
+     stages keep level 4 for corrections only. */
+  if (prompt.length > V1611_STAGE_PROMPT_TARGET && (opts.correction || stage === 'aftermath')) prompt = assemble(4);
   if (prompt.length > V167_STAGE_PROMPT_MAX) prompt = prompt.slice(0, V167_STAGE_PROMPT_MAX);
   return prompt;
 }
 function buildStagePromptV1611(rec, stage, opts) { return buildStagePromptV1610(rec, stage, opts); }
+/* v16.13: simplified SECOND repair for aftermath only. Used only after
+   the normal correction fails for the aftermath stage; it is not the
+   same prompt again. Its output passes the new checker by construction:
+   winner by full name + loser state in the (only) paragraph, on the
+   recorded battlefield, no audience/crowd/feature invention. 400 tokens. */
+function buildAftermathSecondRepairPromptV1613(rec) {
+  if (rec.loserState === 'stalemate') return 'STAGE: aftermath — SECOND REPAIR. Write exactly 2 sentences, nothing else: No winner emerged. The battle ended in a stalemate on ' + (rec.battlefield || 'Open Arena') + '. No other sentences, no audience, no crowd, no invented battlefield feature.';
+  var state = (rec.loserState === 'dead') ? 'dead' : 'unconscious';
+  return 'STAGE: aftermath — SECOND REPAIR. Write exactly 2 sentences, nothing else: ' + rec.winner + ' won. ' + loserNameV1610(rec) + ' is ' + state + ' on ' + (rec.battlefield || 'Open Arena') + '. No other sentences, no audience, no crowd, no invented battlefield feature.';
+}
 function hashPromptV1610(s) {
   let h = 5381;
   const x = String(s || '');
@@ -4195,10 +4239,12 @@ function fidelityMisattributionV1610(text, rec, abilityMap) {
    in this build (next phase); dossier lines here use only profile
    data the roster already has, and missing fields read "unknown". */
 var V1611_STAGE_PROMPT_TARGET = 800;
-var V1611_MAX_TOKENS = { opening: 400, combat1: 400, combat2: 400, climax: 350, aftermath: 250 };
+var V1611_MAX_TOKENS = { opening: 400, combat1: 400, combat2: 400, climax: 350, aftermath: 600 }; /* v16.13: aftermath 250->600, same as V1610_MAX_TOKENS. */
+var V1613_SECOND_REPAIR_MAX_TOKENS = 400; /* v16.13: simplified aftermath second repair budget. */
+var V1613_CROWD_GUARD = ' BATTLEFIELD FIDELITY: no audience, crowd, or invented feature.'; /* v16.13: aftermath prompts only, kept compact (63 chars) so even a REVISION correction prompt stays under the 800-char target. The probe aftermath text invented "a crowd that had once roared" on Open Arena even with the battlefield stated; the guard names that failure class (audience/crowd) plus a generic invented-feature ban. */
 var V1611_WORD_TARGETS = { opening: 150, combat1: 150, combat2: 150, climax: 120, aftermath: 100 };
 var V1611_STAGE_ORDER = ['opening', 'combat1', 'combat2', 'climax', 'aftermath'];
-var V1611_STAGE_CACHE_KEY = 'warroom_stage_cache_v1612';
+var V1611_STAGE_CACHE_KEY = 'warroom_stage_cache_v1613';
 var V1611_CHAPTER = { opening: 'arrival and testing', combat1: 'escalation', combat2: 'turning point', climax: 'decisive clash', aftermath: 'aftermath' };
 function stageOrderV1611(rec) { return stageOrderV1610(rec); }
 function battlefieldDescV1611(rec) {
@@ -5278,22 +5324,22 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters, ca
   function pushFailedDiagV169(stage, promptChars, err) {
     diags.push({ stage: stage, promptChars: promptChars, responseChars: 0, elapsedMs: (err && err._elapsedMs) || 0, status: 'failed', finishReason: '', provider: (err && err._providerLabel) || '', model: '', usage: null, errorCode: (err && (err.errorCode || err.status)) || '', retryAfter: (err && err.retryAfter) || '', cachedFlag: '', joinTrim: false });
   }
-  async function runAttempt(stage, prompt, prov) {
+  async function runAttempt(stage, prompt, prov, maxTokensOverride) {
     const t0 = Date.now();
     if (prov && prov.budget) counters.budgetObj = prov.budget;
     if (chainModeV169 && prov) counters.retryFlags[stage] = {};
     const fetchFn = (prov && prov.fetch) ? prov.fetch : fetchRaw;
     counters.promptCharsTotal += prompt.length;
-    const res = await fetchStageV167(stage, function () { return fetchFn(prompt, stage); }, isCurrent, setStatus, counters);
+    const res = await fetchStageV167(stage, function () { return fetchFn(prompt, stage, maxTokensOverride); }, isCurrent, setStatus, counters);
     const elapsed = Date.now() - t0;
-    return { text: res.text, finishReason: res.finishReason || '', provider: res.provider || (prov && prov.label) || '', model: res.model || '', usage: res.usage || null, errorCode: res.errorCode || '', retryAfter: res.retryAfter || '', elapsedMs: elapsed, promptChars: prompt.length, maxTokens: (prov && prov.key === 'openai') ? (V1610_MAX_TOKENS[stage] || 400) : '' };
+    return { text: res.text, finishReason: res.finishReason || '', provider: res.provider || (prov && prov.label) || '', model: res.model || '', usage: res.usage || null, errorCode: res.errorCode || '', retryAfter: res.retryAfter || '', elapsedMs: elapsed, promptChars: prompt.length, maxTokens: (prov && prov.key === 'openai') ? (maxTokensOverride || V1610_MAX_TOKENS[stage] || 400) : '' };
   }
-  async function attemptWithChainV169(stage, prompt) {
+  async function attemptWithChainV169(stage, prompt, maxTokensOverride) {
     let lastErr = null;
     for (let i = 0; i < providersV169.length; i++) {
       const prov = providersV169[i];
       const t0 = Date.now();
-      try { return await runAttempt(stage, prompt, prov); }
+      try { return await runAttempt(stage, prompt, prov, maxTokensOverride); }
       catch (e) {
         lastErr = e;
         try { lastErr._providerLabel = prov.label || ''; lastErr._elapsedMs = Date.now() - t0; } catch (e2) {}
@@ -5365,6 +5411,65 @@ async function runMultiStageV167(b, fetchRaw, isCurrent, setStatus, counters, ca
       diags.push({ stage: stage, promptChars: corr.promptChars, responseChars: corr.text.length, elapsedMs: corr.elapsedMs, status: 'corrected', finishReason: corr.finishReason, cachedFlag: cacheFlagFor(corr.text, corr.elapsedMs), joinTrim: false, provider: corr.provider, model: corr.model, usage: corr.usage, errorCode: corr.errorCode, retryAfter: corr.retryAfter, maxTokens: corr.maxTokens, correctionReason: failed.join(' | ') });
       if (cacheSid) saveStageCacheV1610(cacheSid, stage, corrPrompt, corr);
       return { text: corr.text, provider: corr.provider };
+    }
+    /* v16.13 AFTERMATH RESCUE — aftermath stage only, in order:
+       (a) simplified second repair (exactly 2 sentences, 400 tokens)
+       on the same chain; (b) provider retry FOR THIS STAGE ONLY —
+       a fresh attempt, then one correction, on each chain provider
+       not already used for this stage, in chain order. Either rescue
+       must pass the same stage validation + hard-constraint checks;
+       a rescued text is cached under its own prompt like any stage.
+       Other stages keep the old behaviour: correction failure is a
+       run failure, with no second repair and no checker-failure
+       provider retry (transport errors already try the chain). */
+    if (stage === 'aftermath') {
+      counters.stageCorrections[stage] = (counters.stageCorrections[stage] || 0) + 1;
+      var srPrompt = buildAftermathSecondRepairPromptV1613(rec);
+      var sr = null;
+      try { sr = await attemptWithChainV169(stage, srPrompt, V1613_SECOND_REPAIR_MAX_TOKENS); } catch (e) { pushFailedDiagV169(stage, srPrompt.length, e); }
+      if (sr) {
+        var srVal = validateStageV167(stage, sr.text, rec, assigned);
+        var srFid = hardConstraintChecksForStageV1611(stage, sr.text, rec, assigned, prevTexts);
+        var srFailed = srVal.failed.concat(srFid.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }));
+        if (!srFailed.length) {
+          diags.push({ stage: stage, promptChars: sr.promptChars, responseChars: sr.text.length, elapsedMs: sr.elapsedMs, status: 'second-repair', finishReason: sr.finishReason, cachedFlag: cacheFlagFor(sr.text, sr.elapsedMs), joinTrim: false, provider: sr.provider, model: sr.model, usage: sr.usage, errorCode: sr.errorCode, retryAfter: sr.retryAfter, maxTokens: sr.maxTokens, correctionReason: failed.join(' | ') + ' | second repair (exactly 2 sentences)' });
+          if (cacheSid) saveStageCacheV1610(cacheSid, stage, srPrompt, sr);
+          return { text: sr.text, provider: sr.provider };
+        }
+        lastStageText = sr.text; lastStagePromptSize = sr.promptChars; lastStageFinish = sr.finishReason;
+      }
+      var usedProviders = [att.provider, corr.provider];
+      if (sr) usedProviders.push(sr.provider);
+      for (var pi = 0; pi < providersV169.length; pi++) {
+        var prov = providersV169[pi];
+        if (!prov || usedProviders.indexOf(prov.label) !== -1) continue;
+        var rp = null;
+        try { rp = await runAttempt(stage, prompt, prov); } catch (e) { pushFailedDiagV169(stage, prompt.length, e); continue; }
+        var rpVal = validateStageV167(stage, rp.text, rec, assigned);
+        var rpFid = hardConstraintChecksForStageV1611(stage, rp.text, rec, assigned, prevTexts);
+        var rpFailed = rpVal.failed.concat(rpFid.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }));
+        if (!rpFailed.length) {
+          diags.push({ stage: stage, promptChars: rp.promptChars, responseChars: rp.text.length, elapsedMs: rp.elapsedMs, status: 'provider-retry', finishReason: rp.finishReason, cachedFlag: cacheFlagFor(rp.text, rp.elapsedMs), joinTrim: false, provider: rp.provider, model: rp.model, usage: rp.usage, errorCode: rp.errorCode, retryAfter: rp.retryAfter, maxTokens: rp.maxTokens, correctionReason: 'provider retry after correction failed: ' + failed.join(' | ') });
+          if (cacheSid) saveStageCacheV1610(cacheSid, stage, prompt, rp);
+          return { text: rp.text, provider: rp.provider };
+        }
+        counters.stageCorrections[stage] = (counters.stageCorrections[stage] || 0) + 1;
+        var rpPromptChecks = rpFailed.map(function (f) {
+          if (f.indexOf('Hard-constraint: ') === 0) { var rest = f.slice('Hard-constraint: '.length); var ci = rest.indexOf(': '); return ci !== -1 ? rest.slice(ci + 2) : rest; }
+          return f;
+        });
+        var rpCorrPrompt = buildStagePromptV1610(rec, stage, { correction: true, failedChecks: rpPromptChecks });
+        var rpc = null;
+        try { rpc = await runAttempt(stage, rpCorrPrompt, prov); } catch (e) { pushFailedDiagV169(stage, rpCorrPrompt.length, e); continue; }
+        var rpcVal = validateStageV167(stage, rpc.text, rec, assigned);
+        var rpcFid = hardConstraintChecksForStageV1611(stage, rpc.text, rec, assigned, prevTexts);
+        var rpcFailed = rpcVal.failed.concat(rpcFid.filter(function (c) { return c.state === 'FAILED'; }).map(function (c) { return c.name + ': ' + c.detail; }));
+        if (!rpcFailed.length) {
+          diags.push({ stage: stage, promptChars: rpc.promptChars, responseChars: rpc.text.length, elapsedMs: rpc.elapsedMs, status: 'provider-retry-corrected', finishReason: rpc.finishReason, cachedFlag: cacheFlagFor(rpc.text, rpc.elapsedMs), joinTrim: false, provider: rpc.provider, model: rpc.model, usage: rpc.usage, errorCode: rpc.errorCode, retryAfter: rpc.retryAfter, maxTokens: rpc.maxTokens, correctionReason: 'provider retry correction: ' + rpFailed.join(' | ') });
+          if (cacheSid) saveStageCacheV1610(cacheSid, stage, rpCorrPrompt, rpc);
+          return { text: rpc.text, provider: rpc.provider };
+        }
+      }
     }
     return { failed: failed2, fidelityChecks: fid2, text: corr.text, finishReason: corr.finishReason };
   }
@@ -5510,8 +5615,8 @@ async function generateMainStoryV16(b, sessionId, opts) {
   }
   try {
     const chainV169 = [];
-    chainV169.push({ key: 'openai', label: 'Pollinations /openai (POST, keyless)', budget: budgetsV169.openai, fetch: async function (prompt, stage) {
-      const r = await fetchOpenAICompatibleV169({ baseUrl: 'https://text.pollinations.ai/openai', model: 'openai-fast', messages: [{ role: 'system', content: 'You are a battle-story writer writing a fictionalised retelling of a recorded battle outcome. Never change the winner, the finishing event, or the final states. The winner, finisher, loser state, victory mode, and battlefield are locked; canon powers only for the exact version selected; transforms only if the engine triggered one, and a transform must change the fight; a fighter who cannot harm the opponent in the record must not be shown hurting them; no fighter acts decisively after defeat; no knowledge a fighter could not have acquired in the fight; recorded personality decisions (mercy hold, refusal, preparation) must not be contradicted. The middle may be fictionalised from power scaling and canon: invented minor exchanges are allowed, and prose must not be required to carry round numbers. The finisher must appear verbatim inside a full sentence describing the decisive action, never as a standalone line. The battlefield must match its recorded properties exactly. No damage numbers, no HP numbers, no stats in prose. No repeated sentences. Cinematic narrator, past tense, one voice throughout.' }, { role: 'user', content: prompt }], reasoningEffort: 'low', temperature: 0.3, maxTokens: (V1610_MAX_TOKENS[stage] || 400), stream: false, timeoutMs: V16_AI_TIMEOUT_MS, budgetObj: budgetsV169.openai });
+    chainV169.push({ key: 'openai', label: 'Pollinations /openai (POST, keyless)', budget: budgetsV169.openai, fetch: async function (prompt, stage, maxTokensOverride) {
+      const r = await fetchOpenAICompatibleV169({ baseUrl: 'https://text.pollinations.ai/openai', model: 'openai-fast', messages: [{ role: 'system', content: 'You are a battle-story writer writing a fictionalised retelling of a recorded battle outcome. Never change the winner, the finishing event, or the final states. The winner, finisher, loser state, victory mode, and battlefield are locked; canon powers only for the exact version selected; transforms only if the engine triggered one, and a transform must change the fight; a fighter who cannot harm the opponent in the record must not be shown hurting them; no fighter acts decisively after defeat; no knowledge a fighter could not have acquired in the fight; recorded personality decisions (mercy hold, refusal, preparation) must not be contradicted. The middle may be fictionalised from power scaling and canon: invented minor exchanges are allowed, and prose must not be required to carry round numbers. The finisher must appear verbatim inside a full sentence describing the decisive action, never as a standalone line. The battlefield must match its recorded properties exactly. No damage numbers, no HP numbers, no stats in prose. No repeated sentences. Cinematic narrator, past tense, one voice throughout.' }, { role: 'user', content: prompt }], reasoningEffort: 'low', temperature: 0.3, maxTokens: (maxTokensOverride || V1610_MAX_TOKENS[stage] || 400), stream: false, timeoutMs: V16_AI_TIMEOUT_MS, budgetObj: budgetsV169.openai }); /* v16.13: reasoning stays 'low' — 'none' is REJECTED (HTTP 400, probe cell C) and 'minimal' was never probed, so neither is used. */
       r.provider = 'Pollinations /openai (POST, keyless)';
       return r;
     }});
