@@ -8,7 +8,7 @@ breakdown.
 ## Play it
 
 Open `index.html` in a browser — no install, no build step. This is now
-WAR-ROOM v16.13, the 1v1 Death Battle game, and the main game on GitHub Pages.
+WAR-ROOM v16.14, the 1v1 Death Battle game, and the main game on GitHub Pages.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -73,17 +73,17 @@ killing blow.
 
 ## Roster
 
-v16.13 ships 194 playable fighters: Anime 17, Comics 17, Video Games 16,
+v16.14 ships 194 playable fighters: Anime 17, Comics 17, Video Games 16,
 Movies & TV 16, Animation 16, Fantasy & Sci-Fi 16. The long-term target
 is 100 per category; that target is NOT a claim that 600 are implemented.
 New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v16.13 Aftermath fix (1v1 Death Battles, aftermath 600 tokens, final-paragraph aftermath checker with loser-state synonyms, 2-sentence second repair for aftermath only, provider retry for aftermath stage only, battlefield-fidelity prompt guard, canon dossier 26-field schema unchanged, 314-test harness)
-- `war-room-v16.13.html` — same as `index.html`
-- `war-room-v16.13-tests.js` — Node regression harness (314 tests)
-- `war-room-v16.12.html` — previous 1v1 version, kept as an archive
+- `index.html` — latest, WAR-ROOM v16.14 Aftermath fix (1v1 Death Battles, aftermath 600 tokens, final-paragraph aftermath checker with loser-state synonyms, 2-sentence second repair for aftermath only, provider retry for aftermath stage only, battlefield-fidelity prompt guard, canon dossier 26-field schema unchanged, 314-test harness)
+- `war-room-v16.14.html` — same as `index.html`
+- `war-room-v16.14-tests.js` — Node regression harness (335 tests)
+- `war-room-v16.13.html` — previous 1v1 version, kept as an archive
 - `war-room-v14.html` — previous 1v1 version, kept as an archive
 - `war-room-v13.1.html` — previous 1v1 version, kept as an archive
 - `war-room-v13.html` — previous 1v1 version, kept as an archive
