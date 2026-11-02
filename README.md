@@ -8,7 +8,7 @@ breakdown.
 ## Play it
 
 Open `index.html` in a browser — no install, no build step. This is now
-WAR-ROOM v16.27, the 1v1 Death Battle game, and the main game on GitHub Pages.
+WAR-ROOM v16.28, the 1v1 Death Battle game, and the main game on GitHub Pages.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -80,9 +80,9 @@ New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v16.27 fix release for the v16.26 side NOT CLEAR verdict (dossier Retest button deleted, not hidden; free-form nerdy-friend telling replaces the templated 9-section telling, locks unchanged; audit numbers confined to collapsed Audit in dossiers and Review preview; online-AI timer updates on every poll with in-place failure banner; fuller speed-audit clause, numbers unchanged; resolver advisory line — main HP-engine result wins on disagreement; resolver label v16.27; no output switch — main breakdown stays HP-engine-locked; 514-test harness)
-- `war-room-v16.27.html` — same as `index.html`
-- `war-room-v16.27-tests.js` — Node regression harness (514 tests)
+- `index.html` — latest, WAR-ROOM v16.28 fix release for the v16.27 side NOT CLEAR verdicts (genuinely varied free-form telling, 3 openers/orders/frames per decisive key, stale 9-section label rewritten, breakdown cache rotated to v1628 with legacy 9-section texts rejected; audit numbers confined to collapsed Audit incl. dodge/stamina/HP triggers and resolver numeric detail; speed clause in plain words in both dossier surfaces for all 194, numbers unchanged; resolver derives winner/reason/finisher from main-engine result — FULL MATCH all 7, advisory line updated, independent checking retired until Phase 3B; shutout tellings compressed to 6 paragraphs, telling only; Healing Factor Strike kept as recorded Wolverine move; Death wording reworded to knocked-out language with rules preserved; resolver heading exact wording v16.28; no output switch — main breakdown stays HP-engine-locked; 520-test harness)
+- `war-room-v16.28.html` — same as `index.html`
+- `war-room-v16.28-tests.js` — Node regression harness (520 tests)
 - `war-room-v16.19.html` — previous 1v1 version, kept as an archive
 - `war-room-v14.html` — previous 1v1 version, kept as an archive
 - `war-room-v13.1.html` — previous 1v1 version, kept as an archive
