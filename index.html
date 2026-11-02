@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.22 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.23 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.22</h1><span>1V1 DEATH BATTLES • ENGINE v16.22 • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v16.23</h1><span>1V1 DEATH BATTLES • ENGINE v16.23 • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -2457,7 +2457,7 @@ function renderDossier(ids){
     const fanRow=fm?(used.fandom?`✅ Fan-run Fandom wiki (${esc(fm.d)}, fan-run, not official canon) — FOUND ${fmt(used.time)}${isCached?' — CACHED':(isFresh?' — FRESH — re-fetched on '+fmt(used.time):'')} — <a href="${safeUrl(used.fandom.url)}" target="_blank" rel="noopener" style="color:var(--cyan)">Open page</a><br><span style="color:var(--dim)">Excerpt (dossier only): ${esc(used.fandom.extract.slice(0,200))}…</span>`:`${researchStatusLabel(used.fandomStatus||'NO_DATA')} — continuity: ${esc(continuityFor(f))}`):'No Fandom mapping in this build — NOT KNOWN for this fighter.';
     const prof=f?structuredProfileForV14(f):null;
     const conflict=((used.wikiStatus==='FOUND')!==(used.fandomStatus==='FOUND'))?'Conflict/coverage flag: sources disagree in coverage (one found, one no entry) — treated as uncertain coverage, not as proof. Only the selected continuity\'s record decides combat.':'Conflict/coverage flag: sources agree in coverage, but excerpts may still disagree — uncertain stays uncertain; only the selected continuity\'s record decides combat.';
-    return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)} — ${f?esc(continuityFor(f)):''}</b><br>${wikiRow}<br>${fanRow}<br><b>Cache key (v15, version-keyed):</b> fighter + variant + continuity — changing version never reuses another version's research.<br><b>Abilities (character record, per source model):</b> ${prof?esc(prof.powers.map(x=>x.name).join(', ')):'NOT KNOWN'}<br><b>Feats (character record):</b> ${prof?esc(prof.feats.text):'NOT KNOWN'}<br><b>Limitations (character record):</b> ${prof?esc(prof.limitations.text):'NOT KNOWN'}<br><b>Fan opinion / discussion:</b> fan-run wiki pages and YouTube searches are discussion to investigate, not established fact. They never auto-grant powers and never change stats in v15.<br><b>Conflicting versions:</b> only the selected continuity above is used; versions are not silently merged.<br><b>${esc(conflict)}</b><br><b>Research stat bonus:</b> none in v15 — REMOVED. Research fills dossier fields only.</div>`;
+    return `<div style="margin-bottom:12px"><b style="color:var(--cyan)">${f?f.icon+' '+esc(f.name):esc(id)} — ${f?esc(continuityFor(f)):''}</b><br>${wikiRow}<br>${fanRow}<br><b>Cache key (v15, version-keyed):</b> fighter + variant + continuity — changing version never reuses another version's research.<br><b>Abilities (character record, per source model):</b> ${prof?esc(prof.powers.map(x=>x.name).join(', ')):'NOT KNOWN'}<br><b>Feats (character record):</b> ${prof?esc(prof.feats.text):'NOT KNOWN'}<br><b>Limitations (character record):</b> ${prof?esc(prof.limitations.text):'NOT KNOWN'}<br><b>Fan opinion / discussion:</b> fan-run wiki pages and YouTube searches are discussion to investigate, not established fact. They never auto-grant powers and never change stats in v15.<br><b>Conflicting versions:</b> only the selected continuity above is used; versions are not silently merged.<br><b>${esc(conflict)}</b><br><b>Research stat bonus:</b> none in v15 — REMOVED. Research fills dossier fields only.<br><b>Structured power profile (v16.23):</b> ' + esc(powerProfileSummaryV1623(f)) + '</div>`;
   }).join('');
 }
 /* ---- 8. Results, history (v15 format, validated, never mutating on reopen) ---- */
@@ -2534,7 +2534,7 @@ function saveBattle(b,story,breakdown,integrity,accuracy,quality){
     const h=loadHistory();
     const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]);
     const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant));
-    h.unshift({id:Date.now(),formatVersion:'v16.22',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.19 online AI breakdown (9 sections, locked to the recorded outcome), or labelled offline breakdown when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
+    h.unshift({id:Date.now(),formatVersion:'v16.23',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.19 online AI breakdown (9 sections, locked to the recorded outcome), or labelled offline breakdown when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
     localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));
   }catch(e){}
   renderHistory();
@@ -2749,7 +2749,7 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22'].includes(x.formatVersion);
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23'].includes(x.formatVersion);
   return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12/v16.13/v16.14/v16.15/v16.16/v16.17/v16.18/v16.19/v16.20 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
@@ -3560,7 +3560,7 @@ function savePendingBattleV1618(b, breakdown, integrity, accuracy, quality, fall
     try { e.verdictProse = (typeof buildVerdictFallbackV1614 === 'function' ? buildVerdictFallbackV1614(b) : ''); } catch (e2) { e.verdictProse = ''; }
     e.battleRecord = battleRecordForV1618(b);
     e.storyGenerationMethod = 'Offline verdict (pending — online verdict still generating when saved; this entry updates in place when the verdict resolves). The verdict below is the rule-based offline fallback, never an online AI verdict.';
-    e.formatVersion = 'v16.22';
+    e.formatVersion = 'v16.23';
     if (!e.mainStoryMeta) e.mainStoryMeta = { kind: 'offline', verdict: true, pending: true, sessionId: sid, provider: '—', passed: 0, unverified: 0, attempts: 0, attempts402Excluded: 0, promptSize: 0, reason: 'Online verdict still generating' };
     else { e.mainStoryMeta.pending = true; e.mainStoryMeta.sessionId = sid; }
     localStorage.setItem('warroom_battles_v3', JSON.stringify(h.slice(0, 20)));
@@ -3593,7 +3593,7 @@ function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, qual
     entry.sessionId = sid;
     /* v16.21 DELIBERATE CHANGE: a breakdown that resolves offline is labelled online-failed — distinct from pending and from resolved-ai. Pending is never silently cleared into a resolved-looking state on failure. The verdict path keeps confirmed-offline. */
     entry.verdictStatus = (meta && meta.kind === 'ai') ? 'resolved-ai' : ((meta && meta.breakdown) ? 'online-failed' : 'confirmed-offline');
-    if (meta && meta.breakdown) { entry.resultKind = 'breakdown'; entry.breakdownStatus = (meta.kind === 'ai') ? 'resolved-ai' : 'online-failed'; entry.formatVersion = 'v16.22'; entry.storyGenerationMethod = (meta.kind === 'ai') ? ('Online AI breakdown (v16.22) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline breakdown (v16.22) — ' + V1619_OFFLINE_BREAKDOWN_LABEL + ' Reason: ' + (meta.reason || '')); if (storyHtml) { try { entry.breakdownProse = stripHtml(storyHtml); entry.verdictProse = entry.breakdownProse; } catch (e2) {} } }
+    if (meta && meta.breakdown) { entry.resultKind = 'breakdown'; entry.breakdownStatus = (meta.kind === 'ai') ? 'resolved-ai' : 'online-failed'; entry.formatVersion = 'v16.23'; entry.storyGenerationMethod = (meta.kind === 'ai') ? ('Online AI breakdown (v16.23) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline breakdown (v16.23) — ' + V1619_OFFLINE_BREAKDOWN_LABEL + ' Reason: ' + (meta.reason || '')); if (storyHtml) { try { entry.breakdownProse = stripHtml(storyHtml); entry.verdictProse = entry.breakdownProse; } catch (e2) {} } }
     entry.verdictPending = false;
     if (meta && meta.kind === 'ai' && storyHtml) { try { entry.verdictProse = stripHtml(storyHtml); } catch (e2) {} }
     if (!entry.battleRecord) entry.battleRecord = battleRecordForV1618(b);
@@ -4787,6 +4787,8 @@ function dossierPanelHtmlV1612(f) {
       rows += '<p><b>Win conditions in this build:</b> ' + esc(_sd.winCondition.outcomes.join(', ')) + '. Sealing: ' + esc(_sd.winCondition.sealing) + '. Containment: ' + esc(_sd.winCondition.containment) + '. Battlefield removal: ' + esc(_sd.winCondition.battlefieldRemoval) + '. ' + esc(_sd.winCondition.note) + '</p>';
     }
   } catch (e) {}
+  /* v16.23 PHASE 1 — structured power profile panel (same function the breakdown prompt reads). */
+  try { rows += powerProfileHtmlV1623(f); } catch (e) {}
   return rows;
 }
 /* v16.12 gated dossier-law checks: appended to the hard-constraint lists
@@ -6551,6 +6553,510 @@ function sharedDossierFieldsV1620(f) {
     winCondition: { outcomes: ['death', 'incapacitation', 'stalemate'], sealing: 'not simulated', containment: 'not simulated', battlefieldRemoval: 'not simulated', note: 'Sealing, containment, and battlefield removal are not simulated engine outcomes in this build; the breakdown must never claim them as the victory.' }
   };
 }
+/* ============ v16.23 PHASE 1 — STRUCTURED POWER PROFILE (foundation) ============ */
+/* One COMPACT profile per fighter/version, read by the dossier panel (below)
+   and by the breakdown prompt (buildBreakdownPromptV1619). The engine does NOT
+   yet consume condition triggers or range: the HP-threshold transform trigger
+   and the keyword damage mapping stay in the engine unchanged in v16.23, so no
+   battle outcome changes in this phase. Phase 2 builds the character-rule
+   resolver on this schema; Phase 3 switches the output to it. Until then this
+   profile is a shared record, not a new engine path.
+   Status vocabulary per field: demonstrated / interpretation / derived /
+   uncertain / conditional / unknown. Unknown is never filled in.
+   Durability vocabulary: mortal, regenerative, invulnerable, intangible,
+   immortal, other. "Mortal" here means ONLY that no special durability is
+   recorded in this profile — it is not a canon claim about the character's
+   mortality (gods, monsters, and machines with no recorded special durability
+   still read "mortal" with that disclaimer until their dossier batch is
+   written). No fighter is assigned intangible or immortal in v16.23: no
+   roster/dossier field states either as a durability type.
+   Damage dealt: the SIGNATURE type below is AUTHORED (explicit per-fighter
+   table SIG_DAMAGE_V1623, primary type only; SIG_DAMAGE_UNCERTAIN_V1623 lists
+   the signatures where two types compete and the primary is interpretation).
+   Every other power stays KEYWORD-DERIVED via damageTypeCanonicalV14 and is
+   labelled as such — keyword-derived types are never presented as authored.
+   Nature: deep-dossier physiology + Raven/Sephiroth style text only (v16.20
+   rule, unchanged). Taglines (Hellfire rider, Demon hunter, Demon slayer) and
+   style mentions for other fighters (Danny half-ghost, Steven half-Gem) are
+   NOT parsed into a nature. Power source: unknown for all 194 — no roster or
+   dossier field states one as a schema value, and prose is never parsed into it.
+   Hax: unknown for all 194 — no roster/dossier field states a hax condition
+   (what it does, what it needs, what stops it), and power names are never
+   inferred as hax. Range: only fighters whose usage/style text states a range
+   behaviour get a range; all others are unknown, and pushed-out behaviour is
+   unknown except Green Arrow (usage states the forced-close behaviour).
+   Panel/summary wording uses words, tiers, and states only — no new
+   HP/ATK/DEF numbers are introduced into the breakdown by this profile. */
+var SIG_DAMAGE_V1623 = {
+  goku: "energy",
+  naruto: "energy",
+  tanjiro: "physical",
+  gojo: "energy",
+  superman: "energy",
+  batman: "physical",
+  spiderman: "physical",
+  wonderwoman: "physical",
+  mario: "energy",
+  link: "physical",
+  chief: "energy",
+  kratos: "physical",
+  vader: "internal",
+  luke: "physical",
+  neo: "physical",
+  wick: "physical",
+  aang: "energy",
+  ben: "physical",
+  danny: "environmental",
+  jack: "physical",
+  gandalf: "magic",
+  geralt: "physical",
+  spock: "internal",
+  doctor: "environmental",
+  vegeta: "energy",
+  deadpool: "physical",
+  luffy: "physical",
+  ichigo: "energy",
+  saitama: "physical",
+  deku: "physical",
+  sasuke: "energy",
+  levi: "physical",
+  eren: "physical",
+  madara: "physical",
+  allmight: "physical",
+  yuji: "physical",
+  kaneki: "physical",
+  zoro: "physical",
+  thor: "physical",
+  hulk: "environmental",
+  ironman: "energy",
+  captainamerica: "physical",
+  flash: "physical",
+  blackpanther: "physical",
+  drstrange: "magic",
+  thanos: "physical",
+  wolverine: "physical",
+  greenlantern: "energy",
+  aquaman: "physical",
+  daredevil: "physical",
+  sonic: "physical",
+  pikachu: "energy",
+  samus: "energy",
+  doomslayer: "physical",
+  snake: "physical",
+  cloud: "physical",
+  sephiroth: "physical",
+  ryu: "energy",
+  megaman: "energy",
+  kirby: "physical",
+  dante: "physical",
+  lara: "physical",
+  harry: "magic",
+  terminator: "physical",
+  robocop: "physical",
+  rambo: "physical",
+  buffy: "physical",
+  bond: "physical",
+  ethan: "physical",
+  bourne: "physical",
+  godzilla: "energy",
+  predator: "energy",
+  optimus: "physical",
+  irongiant: "physical",
+  korra: "physical",
+  steven: "physical",
+  finn: "physical",
+  jake: "physical",
+  invincible: "physical",
+  omniman: "physical",
+  atomeve: "energy",
+  rick: "energy",
+  robin: "physical",
+  raven: "magic",
+  beastboy: "physical",
+  shera: "physical",
+  aragorn: "physical",
+  legolas: "physical",
+  sauron: "physical",
+  saruman: "magic",
+  yoda: "physical",
+  obiwan: "physical",
+  kirk: "energy",
+  paul: "physical",
+  jonsnow: "physical",
+  daenerys: "energy",
+  dumbledore: "magic",
+  voldemort: "magic",
+  kakashi: "energy",
+  gaara: "restraint",
+  killua: "energy",
+  gon: "physical",
+  edward: "physical",
+  rukia: "environmental",
+  natsu: "energy",
+  erza: "physical",
+  supergirl: "energy",
+  nightwing: "physical",
+  greenarrow: "physical",
+  blackwidow: "energy",
+  scarletwitch: "magic",
+  vision: "energy",
+  cyclops: "energy",
+  storm: "energy",
+  ezio: "physical",
+  aloy: "physical",
+  leonkennedy: "physical",
+  crashbandicoot: "environmental",
+  spyro: "energy",
+  steve: "physical",
+  jinkazama: "energy",
+  chunli: "physical",
+  indiana: "physical",
+  ripley: "physical",
+  jacksparrow: "physical",
+  johnmcclane: "physical",
+  sarahconnor: "physical",
+  madmax: "physical",
+  darthmaul: "physical",
+  toph: "physical",
+  zuko: "energy",
+  katara: "physical",
+  starfire: "energy",
+  cyborg: "environmental",
+  battlebeast: "physical",
+  allen: "physical",
+  marceline: "environmental",
+  frodo: "physical",
+  gimli: "physical",
+  galadriel: "energy",
+  hansolo: "energy",
+  chewbacca: "energy",
+  hermione: "magic",
+  ronweasley: "magic",
+  beatrix: "internal",
+  snape: "magic",
+  piccolo: "energy",
+  jiraiya: "energy",
+  rocklee: "physical",
+  shikamaru: "restraint",
+  hisoka: "physical",
+  kenpachi: "physical",
+  toshiro: "environmental",
+  sakura: "physical",
+  hawkeye: "physical",
+  martianmanhunter: "energy",
+  zatanna: "magic",
+  shazam: "energy",
+  ghostrider: "magic",
+  punisher: "physical",
+  blade: "physical",
+  msmarvel: "physical",
+  nathandrake: "physical",
+  ellie: "physical",
+  arthurmorgan: "physical",
+  bayonetta: "magic",
+  sora: "physical",
+  scorpion: "physical",
+  subzero: "environmental",
+  wario: "physical",
+  rocky: "physical",
+  riddick: "physical",
+  johnmatrix: "physical",
+  dutch: "physical",
+  t1000: "physical",
+  agentsmith: "physical",
+  morpheus: "physical",
+  gandalf2: "magic",
+  azula: "energy",
+  sokka: "physical",
+  iroh: "energy",
+  kimpossible: "physical",
+  shego: "energy",
+  kyoshi: "energy",
+  zaheer: "energy",
+  bolin: "energy",
+  samwise: "physical",
+  boromir: "physical",
+  eowyn: "physical",
+  elrond: "physical",
+  bilbo: "physical",
+  duncan: "physical",
+  gurney: "physical",
+  stilgar: "physical"
+};
+var SIG_DAMAGE_UNCERTAIN_V1623 = ["tanjiro", "spiderman", "wonderwoman", "vader", "neo", "aang", "ben", "geralt", "madara", "thor", "hulk", "optimus", "korra", "atomeve", "edward", "jinkazama", "indiana", "toph", "katara", "hisoka", "sora", "scorpion", "boromir", "ghostrider", "galadriel", "kirby", "kyoshi", "zaheer", "marceline"];
+var RANGE_V1623 = {
+  goku: {r: "close", a: "Closes distance fast, probes, then escalates"},
+  kratos: {r: "close", a: "Brutal close combat, absorbs punishment"},
+  wick: {r: "close", a: "Gun-fu: closes distance, chains pistol, knife and throws"},
+  luffy: {r: "close", a: "Stretches to close distance, bounces off blows"},
+  ichigo: {r: "close", a: "Closes with sword speed, builds pressure"},
+  wolverine: {r: "close", a: "Heals through punishment, closes with claws"},
+  doomslayer: {r: "close", a: "Charges head-on with shotgun and chainsaw"},
+  gon: {r: "close", a: "Charges in on instinct"},
+  rocklee: {r: "close", a: "Closes distance at speed with taijutsu"},
+  blade: {r: "close", a: "Closes fast with sword work, never stops moving"},
+  eowyn: {r: "close", a: "Refuses to fall, closes distance"},
+  mario: {r: "close", a: "Bounces and jumps at close range"},
+  levi: {r: "close", a: "ODM mobility, then precise blade strikes"},
+  nightwing: {r: "close", a: "Acrobatics and escrima, striking from angles"},
+  ezio: {r: "close", a: "Strikes from concealment"},
+  killua: {r: "close", a: "Blurs with Godspeed, strikes from blind spots"},
+  snake: {r: "close", a: "Stealth and CQC"},
+  shazam: {r: "close", a: "Flies in fast, hits hard"},
+  vader: {r: "mid", a: "Controls distance with the Force, then closes for lightsaber duels"},
+  predator: {r: "mid", a: "Cloaking and plasma to hunt, then closes with wrist blades"},
+  lara: {r: "mid", a: "Dual pistols and agility to control range, then closes"},
+  bond: {r: "mid", a: "Gadgets and guns to control, then closes hand-to-hand"},
+  greenarrow: {r: "mid", a: "Trick arrows to control range; when forced, closes with martial arts"},
+  samus: {r: "mid", a: "Beams and missiles at range, then closes with morph ball tactics"},
+  megaman: {r: "mid", a: "Mega Buster at range, adapts weapons"},
+  cyclops: {r: "mid", a: "Holds range, angles optic blasts"},
+  hawkeye: {r: "mid", a: "Keeps range, picks trick arrows"},
+  aloy: {r: "mid", a: "Studies, then precision arrows and traps"},
+  legolas: {r: "mid", a: "Bow speed and agility to stay untouchable"},
+  gojo: {r: "mid", a: "Keeps distance behind Infinity, controls space"},
+  superman: {r: "mid", a: "Controls range with heat vision and freeze breath"},
+  ironman: {r: "mid", a: "Flight and repulsors to control range"},
+  ryu: {r: "mid", a: "Hadoken to control range, Shoryuken on openings"},
+  piccolo: {r: "mid", a: "Controls range with ki, commits on an opening"},
+  toshiro: {r: "mid", a: "Controls range with ice, freezes openings"},
+  subzero: {r: "mid", a: "Freezes the field, controls distance with ice"},
+  rukia: {r: "mid", a: "Ice dances control range, then Bankai"},
+  kaneki: {r: "mid", a: "Kagune tendrils to control range"},
+  greenlantern: {r: "mid", a: "Constructs to control the field"},
+  drstrange: {r: "mid", a: "Portals and shields to control the field"},
+  madara: {r: "mid", a: "Susanoo and wood release to control the field"},
+  sephiroth: {r: "mid", a: "Masamune reach and magic to control distance"},
+  jake: {r: "mid", a: "Stretching and shapeshifting to control range"},
+  spiderman: {r: "mid", a: "Webs and spider-sense to stay untouchable, builds momentum"},
+  danny: {r: "mid", a: "Phases and flies to stay untouchable, then ecto blasts"},
+  thor: {r: "mid", a: "Throws Mjolnir, calls lightning, then closes for melee"},
+  starfire: {r: "mid", a: "Flies and fires starbolts, then closes"},
+  chief: {r: "mid", a: "Cover and firepower, precise fire"},
+  zatanna: {r: "mid", a: "Reverse-speech spells, avoids close combat"},
+  storm: {r: "full-screen", a: "Commands weather over the whole battlefield"}
+};
+var TRANSFORM_CONDITION_V1623 = {
+  goku: "Pushed in the fight (usage: transforms only when pushed)",
+  vegeta: "Pride demands it (usage: transforms when pride demands it)",
+  superman: "Outmatched (usage: escalates to Sun-Charged when outmatched)",
+  link: "Pressed (usage: unleashes Fierce Deity only when pressed)",
+  luffy: "When the fight demands it (usage: escalates to Gear 5 only when the fight demands it)",
+  aang: "When the fight demands it (usage: enters Avatar State only when the fight demands it)",
+  kenpachi: "When the fight demands it (usage: escalates to Bankai when the fight demands it)",
+  kyoshi: "When the fight demands it (usage: enters Avatar State when the fight demands it)",
+  natsu: "Pushed (usage: escalates to Dragon Force when pushed)",
+  rocklee: "Pushed (usage: opens gates when pushed)",
+  sora: "Pushed (usage: shifts form when pushed)",
+  jiraiya: "Prepared (weakness text: Sage Mode needs preparation time)"
+};
+function tierBandV1623(t) {
+  if (t === "EX") return "beyond scale";
+  if (t === "S+") return "top tier";
+  if (t === "S") return "high tier";
+  if (t === "A+") return "upper-mid tier";
+  if (t === "A") return "mid tier";
+  return "unknown tier";
+}
+function speedBandV1623(sp, dex) {
+  var s = (typeof sp === "number") ? sp : 1;
+  var speed = (s >= 1.5) ? "blinding" : (s >= 1.35) ? "very fast" : (s >= 1.2) ? "fast" : (s >= 1.1) ? "above average" : "steady";
+  var d = (typeof dex === "number") ? dex : 7;
+  var reaction = (d >= 10) ? "exceptional reaction" : (d >= 9) ? "sharp reaction" : (d >= 8) ? "trained reaction" : (d >= 7) ? "average reaction" : "slow reaction";
+  return { speed: speed, reaction: reaction };
+}
+function staminaBandV1623(sta) {
+  var v = (typeof sta === "number") ? sta : 7;
+  if (v >= 10) return "exceptional endurance";
+  if (v >= 9) return "high endurance";
+  if (v >= 8) return "solid endurance";
+  if (v >= 7) return "average endurance";
+  return "limited endurance";
+}
+function staminaLimitV1623(f) {
+  var w = (f && f.weak) || "";
+  if (/drain|timeout|time limit|needs preparation time|takes a moment/i.test(w)) return { text: w, status: "stated (profile weakness text)" };
+  return { text: "No stamina or time limit is stated in this profile beyond the engine stamina pool.", status: "unknown" };
+}
+function durabilityV1623(f, base, d, deep) {
+  function mapType(t) {
+    if (t === "regenerative") return "regenerative";
+    if (t === "invulnerable") return "invulnerable";
+    if (t === "force-field") return "other";
+    if (t === "normal") return "mortal";
+    return "mortal";
+  }
+  var type, status, wayToLose, note;
+  if (deep && d.durability && d.durability.type) {
+    type = mapType(d.durability.type);
+    status = d.durability.status || "interpretation";
+    wayToLose = d.durability.howLose || "HP 0.";
+  } else if ((base.trait || "") === "regen") {
+    type = "regenerative"; status = "derived from engine trait";
+    wayToLose = "HP 0 after the regeneration cap is exhausted (heals while alive only, never revives).";
+  } else if ((base.trait || "") === "invulnerable") {
+    type = "invulnerable"; status = "derived from engine trait";
+    wayToLose = "HP 0, normally via a bypass or overwhelming gap.";
+  } else if ((base.trait || "") === "infinity_void") {
+    type = "other"; status = "derived from engine trait";
+    wayToLose = "HP 0; only EX-tier attackers or a recorded bypass get through at meaningful strength.";
+  } else {
+    type = "mortal"; status = "derived from engine trait";
+    wayToLose = "HP 0 (any recorded loss).";
+  }
+  note = "";
+  if (type === "mortal") note = "Mortal here means only that no special durability is recorded in this profile — not a canon claim about mortality.";
+  if (type === "other") note = "Barrier defence, not a body type: the barrier stops attacks before contact in the engine.";
+  try {
+    var sd = (typeof sharedDossierFieldsV1620 === "function") ? sharedDossierFieldsV1620(f) : null;
+    if (sd && sd.durabilityNote) note = note ? (note + " " + sd.durabilityNote) : sd.durabilityNote;
+  } catch (e) {}
+  return { type: type, status: status, wayToLose: wayToLose, note: note };
+}
+function powerProfileV1623(f) {
+  var base = null;
+  try { base = (f && f.id && typeof byId === "function" && byId(f.id)) || f || {}; } catch (e) { base = f || {}; }
+  var d = null, deep = false;
+  try { d = dossierForV1612(f); deep = !!(d && d.deep); } catch (e) {}
+  var sd = null;
+  try { sd = sharedDossierFieldsV1620(f); } catch (e) {}
+  var id = base.id || (f && f.id) || "";
+  var sb = speedBandV1623(base.sp, base.dex);
+  var dur = durabilityV1623(f, base, d, deep);
+  var lim = staminaLimitV1623(base);
+  var sigName = base.sig || "unknown";
+  var sigType = SIG_DAMAGE_V1623.hasOwnProperty(id) ? SIG_DAMAGE_V1623[id] : "unknown";
+  var sigStatus = SIG_DAMAGE_V1623.hasOwnProperty(id)
+    ? (SIG_DAMAGE_UNCERTAIN_V1623.indexOf(id) !== -1 ? "authored (v16.23 per-signature table; primary type only — interpretation, two types compete)" : "authored (v16.23 per-signature table)")
+    : "unknown — no authored entry (table gap, flagged)";
+  var powersetTypes = [];
+  try {
+    (structuredPowersForV14(base) || []).forEach(function (p) {
+      if (p && p.damageType && powersetTypes.indexOf(p.damageType) === -1) powersetTypes.push(p.damageType);
+    });
+  } catch (e) {}
+  var resisted = [];
+  try {
+    var res = (defenseProfileForV14(base).resistances || {});
+    Object.keys(res).forEach(function (t) { if (res[t] !== 1) resisted.push(t); });
+  } catch (e) {}
+  var bypassed = [];
+  try { (sd && sd.damageBypassed ? sd.damageBypassed.types : []).forEach(function (t) { if (bypassed.indexOf(t) === -1) bypassed.push(t); }); } catch (e) {}
+  if (/magic bypasses/i.test(base.weak || "") && bypassed.indexOf("magic") === -1) bypassed.push("magic");
+  if (/kryptonite/i.test(base.weak || "") && bypassed.indexOf("kryptonite") === -1) bypassed.push("kryptonite");
+  var exploitable = [];
+  try { exploitable = (sd && sd.weaknesses) || []; } catch (e) {}
+  var nature = (sd && sd.nature) || { value: "unknown", status: "unknown" };
+  var trans = [];
+  if (base.trans) {
+    var cond = TRANSFORM_CONDITION_V1623.hasOwnProperty(id) ? TRANSFORM_CONDITION_V1623[id] : "unknown — no condition beyond the engine HP rule is stated in this profile";
+    var condStatus = TRANSFORM_CONDITION_V1623.hasOwnProperty(id) ? "stated (profile usage/weakness text)" : "unknown";
+    var costText = "No stamina cost is stated in the profile — the transformation uses the fighter's action in the round it triggers (engine rule).";
+    try {
+      if (deep && d.transforms) { for (var ti = 0; ti < d.transforms.length; ti++) { if (d.transforms[ti].name === base.trans && d.transforms[ti].cost) costText = d.transforms[ti].cost; } }
+    } catch (e) {}
+    trans.push({ name: base.trans, conditionTrigger: cond, conditionStatus: condStatus,
+      engineTrigger: "HP at or below 45% of maximum (engine rule, unchanged in v16.23)",
+      cost: costText, duration: "Held for the rest of the battle in this simulation (engine rule)",
+      effectWords: "Raises attack and defence in the engine; values are shown in the Legal transformations row, not repeated here as new numbers." });
+  }
+  var range = RANGE_V1623.hasOwnProperty(id)
+    ? { value: RANGE_V1623[id].r, approach: RANGE_V1623[id].a,
+        pushedOut: (id === "greenarrow") ? "When forced, closes with martial arts (usage)" : "unknown — no pushed-out-of-range behaviour is stated in this profile",
+        status: "stated (profile usage/style text)" }
+    : { value: "unknown", approach: "unknown",
+        pushedOut: "unknown — no pushed-out-of-range behaviour is stated in this profile",
+        status: "unknown" };
+  var prep = null;
+  try { prep = (deep && d.prep) ? d.prep : null; } catch (e) {}
+  if (!prep) prep = { carried: "unknown", limit: "unknown — never assumed infinite" };
+  var prepNote = (((base.trait || "") === "prep") && !/3 prepared counters/.test(prep.limit || "")) ? "Engine cap: 3 prepared counters per battle for FINITE-prep fighters (engine rule); no carried-items list is stated in this profile." : "";
+  var moral = "No moral restriction is stated in this profile — none is assumed.";
+  try { moral = moralRestrictionForV14(base); } catch (e) {}
+  return {
+    fighterId: id, name: base.name || (f && f.name) || "unknown",
+    variant: (f && f.variant) || "Base", variantId: (f && f.variantId) || "base",
+    variantNote: "Profile fields are per selected version; another version's feats are never merged. The second variant changes roster stats and (where listed) the first power; signature, durability and range carry over as the same profile unless a future version batch states otherwise.",
+    tier: { value: base.tier || "unknown", band: tierBandV1623(base.tier),
+      feat: base.feat || "unknown",
+      featStatus: base.feat ? "stated (profile feat, general terms)" : "unknown",
+      status: "roster tier (game scale, not a canon measurement)" },
+    speed: { band: sb.speed, reaction: sb.reaction,
+      status: "derived from roster speed/dexterity numbers (game scale, not a canon measurement)" },
+    durability: dur,
+    damage: {
+      signature: { name: sigName, type: sigType, status: sigStatus },
+      powersetTypes: powersetTypes,
+      powersetStatus: "keyword-derived (damageTypeCanonicalV14) — NOT authored",
+      resisted: resisted,
+      resistedStatus: "engine derivation from record traits (not a canon measurement); all other types x1",
+      bypassed: bypassed,
+      bypassedStatus: bypassed.length ? "stated (deep dossier power interaction and/or profile weakness text)" : "None stated"
+    },
+    hax: { entries: [],
+      status: "unknown — no hax condition is recorded in any roster or dossier field in this build; power names are never inferred as hax",
+      note: "Candidates such as Infinity, intangibility, or shadow possession are NOT claimed as hax until a future hax batch states their conditions." },
+    stamina: { band: staminaBandV1623(base.sta), limit: lim.text, limitStatus: lim.status,
+      timeLimit: "No separate time limit is stated, except where the stamina limit above states one (timeout, time limit, or preparation time). Transform duration: " + (base.trans ? "held for the rest of the battle in this simulation (engine rule)" : "no transformation in this build") + "." },
+    nature: nature,
+    powerSource: { value: "unknown", status: "unknown",
+      note: "No roster or dossier field states a power source as a schema value in v16.23; prose is never parsed into this field." },
+    style: { description: base.style || "unknown",
+      status: base.style ? "stated (profile style text)" : "unknown",
+      tags: (deep && d.style && d.style.tags) || [] },
+    personality: { voice: base.persNote || base.pers || "unknown",
+      status: base.persNote ? "stated (profile personality note)" : "derived from personality code",
+      moral: moral, moralStatus: "derived from personality code" },
+    transforms: trans,
+    relationships: (deep && d.relationships) || [],
+    fears: (deep && d.fears) || [],
+    peeves: (deep && d.peeves) || [],
+    prep: prep, prepNote: prepNote,
+    weaknesses: { profile: base.weak || "unknown", exploitable: exploitable },
+    range: range,
+    winCondition: (sd && sd.winCondition) || { outcomes: ["death", "incapacitation", "stalemate"], sealing: "not simulated", containment: "not simulated", battlefieldRemoval: "not simulated", note: "Sealing, containment, and battlefield removal are not simulated engine outcomes in this build." }
+  };
+}
+function powerProfileSummaryV1623(f) {
+  try {
+    var p = powerProfileV1623(f);
+    var sig = p.damage.signature.name + " deals " + p.damage.signature.type + " damage [" + p.damage.signature.status + "]";
+    var pow = p.damage.powersetTypes.length ? ("other powers (keyword-derived, not authored): " + p.damage.powersetTypes.join(", ")) : "other powers: none recorded";
+    var res = p.damage.resisted.length ? ("resists (engine derivation): " + p.damage.resisted.join(", ")) : "resists: none below x1 (all types x1)";
+    var byp = p.damage.bypassed.length ? ("bypassed by: " + p.damage.bypassed.join(", ")) : "bypassed by: none stated";
+    var exp = p.weaknesses.exploitable.length ? p.weaknesses.exploitable.map(function (w) { return w.text + " (" + w.condition + ")"; }).join("; ") : "none with a recorded engine exploit path";
+    var tr = p.transforms.length ? (p.transforms[0].name + " — condition trigger: " + p.transforms[0].conditionTrigger + " [" + p.transforms[0].conditionStatus + "]; engine trigger (unchanged): " + p.transforms[0].engineTrigger) : "no transformation in this build";
+    var prep = "prep: " + (p.prep.carried || "unknown") + "; limit: " + (p.prep.limit || "unknown") + (p.prepNote ? " " + p.prepNote : "");
+    return p.name + " (" + p.variant + "): tier " + p.tier.value + " (" + p.tier.band + "); feat: " + p.tier.feat + "; speed " + p.speed.band + ", " + p.speed.reaction + "; durability " + p.durability.type + " — way to lose: " + p.durability.wayToLose + "; " + sig + "; " + pow + "; " + res + "; " + byp + "; hax: unknown (none recorded); nature/origin: " + p.nature.value + " (" + p.nature.status + "); power source: unknown; style: " + p.style.description + "; personality: " + p.personality.voice + "; moral: " + p.personality.moral + "; transform: " + tr + "; " + prep + "; exploitable weaknesses: " + exp + "; range: " + p.range.value + " (approach: " + p.range.approach + "; pushed out: " + p.range.pushedOut + "); win conditions: " + p.winCondition.outcomes.join(", ") + " (sealing/containment/battlefield removal: not simulated).";
+  } catch (e) {
+    return "Structured power profile unavailable (profile function error — nothing is invented).";
+  }
+}
+function powerProfileHtmlV1623(f) {
+  var p = powerProfileV1623(f);
+  function st(s) { return ' <span style="color:var(--dim)">[' + esc(String(s)) + ']</span>'; }
+  var rows = "";
+  rows += "<p><b>Structured power profile (v16.23 Phase 1 — panel, prompt, and future resolver read the same fields; words, tiers, and states only):</b></p>";
+  rows += "<p><b>Power tier:</b> " + esc(p.tier.value) + " (" + esc(p.tier.band) + ")" + st(p.tier.status) + " <b>Feat behind it:</b> " + esc(p.tier.feat) + st(p.tier.featStatus) + "</p>";
+  rows += "<p><b>Speed:</b> " + esc(p.speed.band) + " — " + esc(p.speed.reaction) + st(p.speed.status) + "</p>";
+  rows += "<p><b>Durability type:</b> " + esc(p.durability.type) + st(p.durability.status) + " <b>Defined way to lose:</b> " + esc(p.durability.wayToLose) + (p.durability.note ? " " + esc(p.durability.note) : "") + "</p>";
+  rows += "<p><b>Damage dealt — signature (authored):</b> " + esc(p.damage.signature.name) + " deals " + esc(p.damage.signature.type) + st(p.damage.signature.status) + " <b>Other powers (keyword-derived, NOT authored):</b> " + esc(p.damage.powersetTypes.length ? p.damage.powersetTypes.join(", ") : "none recorded") + st(p.damage.powersetStatus) + "</p>";
+  rows += "<p><b>Damage resisted:</b> " + esc(p.damage.resisted.length ? p.damage.resisted.join(", ") : "none below x1 — all types x1") + st(p.damage.resistedStatus) + " <b>What bypasses them:</b> " + esc(p.damage.bypassed.length ? p.damage.bypassed.join(", ") : "None stated") + st(p.damage.bypassedStatus) + "</p>";
+  rows += "<p><b>Hax (with conditions):</b> None recorded." + st(p.hax.status) + " " + esc(p.hax.note) + "</p>";
+  rows += "<p><b>Stamina:</b> " + esc(p.stamina.band) + " <b>Limit / exhaustion state:</b> " + esc(p.stamina.limit) + st(p.stamina.limitStatus) + " <b>Time limits:</b> " + esc(p.stamina.timeLimit) + "</p>";
+  rows += "<p><b>Nature / origin:</b> " + esc(p.nature.value) + st(p.nature.status) + " <b>Power source:</b> " + esc(p.powerSource.value) + st(p.powerSource.status) + "</p>";
+  rows += "<p><b>Fighting style:</b> " + esc(p.style.description) + st(p.style.status) + " Tags: " + esc((p.style.tags || []).join(", ") || "none") + ".</p>";
+  rows += "<p><b>Personality / moral rules:</b> " + esc(p.personality.voice) + " " + esc(p.personality.moral) + st(p.personality.moralStatus) + "</p>";
+  rows += "<p><b>Transforms (condition trigger recorded alongside the unchanged engine trigger):</b> " + (p.transforms.length ? p.transforms.map(function (t) { return esc(t.name) + " — condition: " + esc(t.conditionTrigger) + st(t.conditionStatus) + "; engine trigger: " + esc(t.engineTrigger) + "; cost: " + esc(t.cost) + "; duration: " + esc(t.duration) + "; effect: " + esc(t.effectWords); }).join("<br>") : "None in this build.") + "</p>";
+  rows += "<p><b>Relationships (apply only if the opponent matches):</b> " + ((p.relationships || []).length ? (p.relationships || []).map(function (r) { return esc(r.opponentName) + " — " + esc(r.relation) + ": " + esc(r.behaviour) + st(r.status); }).join("<br>") : "[NOT KNOWN]") + "</p>";
+  rows += "<p><b>Fears:</b> " + ((p.fears || []).length ? (p.fears || []).map(function (x) { return esc(x.trigger) + " → " + esc(x.effect) + st(x.status); }).join("<br>") : "[NOT KNOWN]") + "</p>";
+  rows += "<p><b>Peeves / triggers:</b> " + ((p.peeves || []).length ? (p.peeves || []).map(function (x) { return esc(x.trigger) + " → " + esc(x.effect) + st(x.status); }).join("<br>") : "[NOT KNOWN]") + "</p>";
+  rows += "<p><b>Prep (finite items, never a generic stat boost):</b> Carried: " + esc(p.prep.carried || "unknown") + ". Limit: " + esc(p.prep.limit || "unknown") + (p.prepNote ? " " + esc(p.prepNote) : "") + "</p>";
+  rows += "<p><b>Weaknesses (exploitable only):</b> " + (p.weaknesses.exploitable.length ? esc(p.weaknesses.exploitable.map(function (w) { return w.text + " — " + w.condition; }).join("; ")) : "None with a recorded engine exploit path (the full profile weakness text stays in the Weaknesses row above; it grants nothing on its own.)") + "</p>";
+  rows += "<p><b>Optimal range:</b> " + esc(p.range.value) + st(p.range.status) + " <b>How they approach:</b> " + esc(p.range.approach) + " <b>When pushed out of it:</b> " + esc(p.range.pushedOut) + "</p>";
+  rows += "<p><b>Version note:</b> " + esc(p.variantNote) + "</p>";
+  return rows;
+}
 function breakdownSavedViewHtmlV1620(x) {
   /* Last-resort repair for a breakdown entry with no saved prose
      (the rare v16.19 fresh-entry case): rebuild the deterministic
@@ -6771,6 +7277,11 @@ function buildBreakdownPromptV1619(b) {
       return fr.name + ' — nature/origin: ' + sd.nature.value + ' (' + sd.nature.status + '); power source: ' + sd.powerSource.value + ' (' + sd.powerSource.status + '); damage dealt: ' + (sd.damageDealt.types.length ? sd.damageDealt.types.join(', ') : 'none recorded') + '; damage resisted (below x1): ' + (sd.damageResisted.reductions.length ? sd.damageResisted.reductions.map(function (r) { return r.type + ' x' + r.mult; }).join(', ') : 'none — all types x1') + '; damage that bypasses them: ' + (sd.damageBypassed.types.length ? sd.damageBypassed.types.join(', ') : 'None stated') + '; exploitable weaknesses: ' + (sd.weaknesses.length ? sd.weaknesses.map(function (w) { return w.text + ' (' + w.condition + ')'; }).join('; ') : 'none with a recorded engine exploit path') + '; durability: ' + sd.durabilityType + '; way to lose: ' + sd.wayToLose.text + '; win conditions: ' + sd.winCondition.outcomes.join(', ') + ' (sealing/containment/battlefield removal: not simulated).';
     }).join(' | ');
   } catch (e) { shared = ''; }
+  /* v16.23 PHASE 1 — power-profile context for the prompt (same fields as the dossier panel; words/tiers/states only, no battle numbers; outcome lines above are unchanged). */
+  try {
+    var _fa23 = [...(b.alpha || []), ...(b.beta || [])];
+    shared += ' POWER PROFILE (v16.23 — the dossier panel and this prompt read the same fields; unknown stays unknown; the engine HP trigger for transforms is unchanged): ' + _fa23.map(function (fr) { return powerProfileSummaryV1623(fr); }).join(' | ');
+  } catch (e) {}
   var regenLine = '';
   try {
     var _recs = recoveryInfoV1620(b);
