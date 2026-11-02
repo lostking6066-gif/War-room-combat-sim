@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.24 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.25 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.24</h1><span>1V1 DEATH BATTLES • ENGINE v16.24 • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v16.25</h1><span>1V1 DEATH BATTLES • ENGINE v16.25 • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -500,6 +500,22 @@ function sanitizeStoryHtml(html){let s=String(html||''); s=s.replace(/<script[\s
 /* ============ ROSTER UI, INFO, VARIANTS ============ */
 function renderChips(){document.getElementById('cat-chips').innerHTML=CATS.map(c=>`<button class="chip ${c===catFilter?'on':''}" onclick="setCat('${c}')">${c}</button>`).join('')}
 function setCat(c){catFilter=c;renderChips();renderRoster()}
+/* v16.25 PART 9 — starting-form wording. Base is the starting form only:
+   mid-fight transformations may still trigger (Goku Super Saiyan Blue,
+   Vegeta Super Saiyan Blue Evolution in the live test). No event is added
+   to the battle log for this wording, so event counts are untouched. */
+function startingFormNoteV1625(variantLabel, hasLegalTransform) {
+  var label = variantLabel || 'Base';
+  if (label === 'Base') return 'Starting form: Base — transformations may trigger mid-fight.';
+  if (hasLegalTransform) return 'Starting form: ' + label + ' — transformations may trigger mid-fight.';
+  return 'Starting form: ' + label + ' — no further in-combat transformation is legal from this version.';
+}
+function startingFormNoteForFighterV1625(f, variantLabel, variantId) {
+  var label = variantLabel || 'Base';
+  var legal = false;
+  try { legal = !!(f && f.trans && label !== f.trans && !(variantId === 'v2' && f.v2 && f.v2 === f.trans)); } catch (e) { legal = false; }
+  return startingFormNoteV1625(label, legal);
+}
 function renderRoster(){
   const pool=document.getElementById('fighter-pool');
   const list=ROSTER.filter(f=>(catFilter==='All'||f.cat===catFilter)&&((f.name+' '+f.fr+' '+f.alias).toLowerCase().includes(searchTerm)));
@@ -508,8 +524,10 @@ function renderRoster(){
   try { const _tn = document.getElementById('roster-type-note'); if (_tn) { const _q = (searchTerm || '').toLowerCase(); _tn.innerText = (/angel|demon|immortal|devil/.test(_q)) ? 'Angel, Demon, and Immortal types are not yet in the roster with engine support. Taglines such as demon hunter, demon slayer, or hellfire do not imply a typed demon, angel, or immortal fighter — Ghost Rider, Deadpool, and Wolverine are not relabelled by this note. Typed fighters with full dossiers, durability types, win conditions, and engine support will come as a separate later roster batch, not a name dump.' : ''; } } catch (e) {}
   pool.innerHTML=list.map(f=>{
     const sel=selected.includes(f.id); const v=selectedVariants[f.id]||'base';
+    const _sfNote1625=startingFormNoteForFighterV1625(f, v==='v2'?f.v2:'Base', v);
     return `<div class="card ${sel?'sel':''}"><div class="ic">${f.icon}</div><b>${esc(f.name)}</b><small>${esc(f.fr)} • ${esc(f.cat)} • ${f.tier}</small><small>${esc(f.style)}</small>
     <small style="color:var(--dim)">Continuity / Version:</small><select onclick="event.stopPropagation()" onchange="setVariant('${f.id}',this.value)"><option value="base" ${v==='base'?'selected':''}>Base</option>${f.v2?`<option value="v2" ${v==='v2'?'selected':''}>${esc(f.v2)}</option>`:''}</select>
+    <small style="color:var(--dim)">${esc(_sfNote1625)}</small>
     <div class="mini"><button class="btn small" onclick="event.stopPropagation();openInfo('${f.id}')">Info</button><button class="btn small ${sel?'mag':''}" onclick="event.stopPropagation();toggleFighter('${f.id}')">${sel?'Remove':'Select'}</button></div></div>`;
   }).join('') || '<p class="note">No fighters match that search.</p>';
   renderSlots();
@@ -526,7 +544,7 @@ function renderSlots(){
   const labels=['Fighter A','Fighter B'];
   for(let i=0;i<2;i++){const id=selected[i]; const f=id?byId(id):null; const v=f?variantOf(f):null;
     if(f){const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0]; const inst=makeBattleInstance(f,bf); const c=canonResearch[id]||{}; const resStatus=c.time?`Research: Wikipedia ${c.wiki?'✅ found':'❌ no data'} • Fan-run Fandom wiki ${c.fandom?'✅ found':'❌ no data'}`:`Research: fetching automatically…`;
-    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(continuityFor(f))})</small></span><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (no research bonus in v15 — research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(inst, bf)}</small><small style="color:var(--dim)">Research details live in the Research Dossier below, not on this card.</small></div>`;}
+    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(continuityFor(f))})</small></span><small style="color:var(--dim)">${esc(startingFormNoteForFighterV1625(f, v.label, selectedVariants[f.id]||'base'))}</small><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (no research bonus in v15 — research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(inst, bf)}</small><small style="color:var(--dim)">Research details live in the Research Dossier below, not on this card.</small></div>`;}
     else el.innerHTML+=`<div class="slot"><span>${labels[i]} (Empty — pick a fighter)</span></div>`;}
   document.getElementById('roster-count').innerText=`${selected.length}/2 Selected`;
   document.getElementById('review-btn').disabled=selected.length!==2;
@@ -1902,12 +1920,190 @@ function legalTransitionsFor(f){
 function signatureDefForV14(f){
   return {name:f.sig||'Not established',mult:f.sigMult||1,cost:'15 stamina; used only as a tactical decision (prepared counter ready, target at/below 35% HP, studied opening, or impulsive opening) with at least 2 rounds between signatures',condition:'Tactical decision through the single resolveAttack pipeline — never a fixed action number.',effect:'Signature multiplier x'+(f.sigMult||1)+' applied through resolveAttack; the signature grants no effect beyond its damage type and multiplier unless its structured power entry records a bypass or restraint.'};
 }
+/* ================= v16.25 PART 11a — PER-POWER CHARACTER RECORDS =================
+   One record per demonstrated power for the 15 fighters in the 7 live-test
+   battles (plus Gojo, Ghost Rider, Pikachu, already covered by those battles
+   and the 5-fighter Part 1 test). No records are invented for the other 179
+   fighters — their powers stay unknown, never filled to complete a table.
+   Record rule for damageType (dt): a real type only where it is established —
+   the authored signature type, ki/heat/thunder energy families, and magic
+   powers whose magic nature is stated. Every other power is dt "unknown" and
+   combat uses the keyword fallback, labelled as a guess, never as authored.
+   outcomeIfLands is the primary outcome against an ordinary body, from the
+   defender body, not HP subtraction: no effect / resisted / wounding /
+   incapacitating / sealing / removal / lethal. No record in the 15 claims
+   sealing or removal as a power outcome. */
+var POWER_RECORDS_V1625 = {
+  spiderman: {
+    "Web + Impact Combo": {e: "Webbing binds the target, then impact strikes land on the bound target", r: "mid for the webbing, close for the impact", ch: "ordinary bodies that webbing can bind", nh: "invulnerable bodies — webbing cannot bind them and impact cannot hurt them [interpretation]", sb: "cutting, heat, or super-strength breaking the webbing; web-fluid running out", cl: "web-fluid is finite (stated weakness); responsibility slows him", o: "wounding", on: "binds then strikes; against an ordinary body it wounds and can incapacitate, it does not by itself kill", s: "demonstrated", dt: "physical", nhv: ["invulnerable"]},
+    "Web Shot": {e: "Webbing shot binds the target", r: "mid", ch: "ordinary bodies", nh: "invulnerable bodies — webbing cannot bind them [interpretation]", sb: "cutting, heat, or super-strength breaking the webbing; web-fluid running out", cl: "web-fluid is finite (stated weakness)", o: "incapacitating", on: "binds the target; the follow-up strike, not the webbing, wounds", s: "demonstrated", dt: "restraint", nhv: ["invulnerable"]},
+    "Wall-Crawl Kick": {e: "Kick delivered from a wall-crawl approach", r: "close", ch: "ordinary bodies", nh: "invulnerable bodies [interpretation]", sb: "durability absorbing the kick; speed advantage", cl: "no specific cost stated for this power", o: "wounding", on: "a strike, not a restraint", s: "interpretation", dt: "unknown", nhv: []},
+    "Spider-Sense Counter": {e: "Spider-sense warns of danger and the counter answers it", r: "close — a counter to an incoming attack", ch: "ordinary attackers", nh: "none stated", sb: "an attack too fast or too broad to counter", cl: "no specific cost stated for this power", o: "wounding", on: "counter-strike; the sense itself wounds nothing", s: "interpretation", dt: "unknown", nhv: []},
+    "Symbiote Rage": {e: "Symbiote-empowered strikes after the Symbiote Surge transformation", r: "close", ch: "ordinary bodies", nh: "invulnerable bodies [interpretation]", sb: "durability absorbing the strikes", cl: "no specific cost stated for this power", o: "wounding", on: "transformed signature attack", s: "interpretation", dt: "unknown", nhv: []}
+  },
+  batman: {
+    "Gadget Barrage": {e: "Barrage of utility-belt gadgets", r: "mid", ch: "ordinary bodies; prepared counters exploit recorded weaknesses", nh: "invulnerable bodies with ordinary gadgets [interpretation] — a recorded weakness exploit (Kryptonite) is the exception, via a prepared counter", sb: "armour or durability absorbing gadgets; finite gadgets", cl: "finite gadgets and finite prep (3 prepared counters per battle, engine cap)", o: "wounding", on: "wounds ordinary bodies; it does not finish an invulnerable body on its own", s: "demonstrated", dt: "physical", nhv: ["invulnerable"]},
+    "Batarang Throw": {e: "Thrown batarang", r: "mid", ch: "ordinary bodies", nh: "invulnerable bodies [interpretation]", sb: "durability absorbing the batarang; dodging", cl: "finite gadgets", o: "wounding", on: "a thrown strike", s: "demonstrated", dt: "unknown", nhv: ["invulnerable"]},
+    "Smoke Pellet Ambush": {e: "Smoke conceals the fighter, then an ambush strike follows", r: "close to mid", ch: "ordinary bodies, through the ambush strike", nh: "none stated for the smoke itself", sb: "senses that see through smoke; durability absorbing the strike", cl: "finite gadgets", o: "no effect", on: "smoke alone wounds nothing; it sets up the ambush strike, which wounds", s: "demonstrated", dt: "unknown", nhv: []},
+    "Grapple Kick": {e: "Grapple-assisted kick", r: "close", ch: "ordinary bodies", nh: "invulnerable bodies [interpretation]", sb: "durability absorbing the kick", cl: "finite gadgets", o: "wounding", on: "a strike, not a restraint", s: "interpretation", dt: "unknown", nhv: []}
+  },
+  goku: {
+    "Kamehameha": {e: "Full-screen ki beam", r: "full-screen", ch: "ordinary bodies; invulnerable-class bodies take reduced energy damage, not negated", nh: "none stated — energy is reduced, not negated, by invulnerable bodies", sb: "durability resistance; dodging or blocking; stamina drain in very long fights", cl: "stamina drains in very long fights (stated weakness)", o: "wounding", on: "wounds; it does not by itself state a lethal finish", s: "demonstrated", dt: "energy", nhv: []},
+    "Ki Blast": {e: "Ki bolt", r: "mid to full-screen", ch: "ordinary bodies", nh: "none stated", sb: "durability resistance; dodging or blocking", cl: "no specific cost stated for this power; Goku stated limit is stamina drains in very long fights", o: "wounding", on: "a ki strike", s: "demonstrated", dt: "energy", nhv: []},
+    "Instant Transmission Strike": {e: "Teleport to the target, then strike", r: "close — the teleport closes the distance", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the strike; an opponent who reads the teleport", cl: "no specific cost stated for this power", o: "wounding", on: "a strike delivered by teleport", s: "interpretation", dt: "unknown", nhv: []},
+    "Dragon Fist": {e: "Dragon-shaped ki fist strike", r: "close", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the strike", cl: "no specific cost stated for this power", o: "wounding", on: "a strike, not a beam", s: "interpretation", dt: "unknown", nhv: []},
+    "God Kamehameha": {e: "Transformed ki beam after Super Saiyan Blue", r: "full-screen", ch: "ordinary bodies", nh: "none stated", sb: "durability resistance; dodging or blocking", cl: "stamina drains in very long fights (stated weakness)", o: "wounding", on: "transformed signature attack", s: "demonstrated", dt: "energy", nhv: []}
+  },
+  vegeta: {
+    "Galick Gun": {e: "Full-screen ki beam", r: "full-screen", ch: "ordinary bodies", nh: "none stated", sb: "durability resistance; dodging or blocking", cl: "pride drives him to a direct duel and to refuse help (stated weakness); no stamina limit is stated for Vegeta", o: "wounding", on: "wounds; it does not by itself state a lethal finish", s: "demonstrated", dt: "energy", nhv: []},
+    "Ki Blast": {e: "Ki bolt", r: "mid to full-screen", ch: "ordinary bodies", nh: "none stated", sb: "durability resistance; dodging or blocking", cl: "no specific cost stated for this power", o: "wounding", on: "a ki strike", s: "demonstrated", dt: "energy", nhv: []},
+    "Final Flash": {e: "Full-screen ki beam", r: "full-screen", ch: "ordinary bodies", nh: "none stated", sb: "durability resistance; dodging or blocking", cl: "no specific cost stated for this power", o: "wounding", on: "a ki beam", s: "demonstrated", dt: "energy", nhv: []},
+    "Big Bang Attack": {e: "Full-screen ki blast", r: "full-screen", ch: "ordinary bodies", nh: "none stated", sb: "durability resistance; dodging or blocking", cl: "no specific cost stated for this power", o: "wounding", on: "a ki blast", s: "demonstrated", dt: "energy", nhv: []},
+    "Blue Evolution Final Flash": {e: "Transformed ki beam after Super Saiyan Blue Evolution", r: "full-screen", ch: "ordinary bodies", nh: "none stated", sb: "durability resistance; dodging or blocking", cl: "pride drives him to a direct duel (stated weakness)", o: "wounding", on: "transformed signature attack", s: "demonstrated", dt: "energy", nhv: []}
+  },
+  superman: {
+    "Heat Vision": {e: "Line-of-sight heat beam", r: "mid to full-screen, line of sight", ch: "ordinary bodies at full effect; invulnerable-class bodies take reduced damage, not negated", nh: "none stated — heat is reduced, not negated, by invulnerable bodies", sb: "durability resistance; breaking line of sight; Kryptonite or magic bypass his durability (weakness text, not this power)", cl: "solar-powered; no specific cost stated for Heat Vision in this profile", o: "wounding", on: "wounds; it does not by itself state a lethal finish", s: "demonstrated", dt: "energy", nhv: []},
+    "Super Punch": {e: "Superhuman punch", r: "close", ch: "ordinary bodies", nh: "invulnerable-class bodies take reduced damage, not negated", sb: "durability resistance", cl: "no specific cost stated for this power", o: "wounding", on: "a punch", s: "demonstrated", dt: "unknown", nhv: []},
+    "Freeze Breath": {e: "Freezing breath chills and immobilises", r: "mid", ch: "ordinary bodies", nh: "none stated", sb: "heat or durability resisting the freeze", cl: "no specific cost stated for this power", o: "incapacitating", on: "freezes and immobilises; it is not a direct wound", s: "demonstrated", dt: "unknown", nhv: []},
+    "Tornado Spin": {e: "Spinning wind displaces and disorients", r: "mid", ch: "ordinary bodies", nh: "none stated", sb: "anchoring or durability resisting displacement", cl: "no specific cost stated for this power", o: "incapacitating", on: "displaces and disorients; it is not a direct wound", s: "interpretation", dt: "unknown", nhv: []},
+    "Sun-Charged Heat Vision": {e: "Sun-charged line-of-sight heat beam after Sun-Charged transformation", r: "mid to full-screen, line of sight", ch: "ordinary bodies", nh: "none stated", sb: "durability resistance; breaking line of sight", cl: "solar-powered; no specific cost stated for this power", o: "wounding", on: "transformed signature attack", s: "interpretation", dt: "energy", nhv: []}
+  },
+  rocky: {
+    "Body Blow Barrage": {e: "Close boxing barrage of body blows", r: "close", ch: "ordinary bodies", nh: "invulnerable bodies — demonstrated live: 1386-0 shutout vs Superman, Rocky dealt 0", sb: "superhuman durability; speed advantage", cl: "human stamina; slow against superhuman speed (stated weakness)", o: "wounding", on: "wounds ordinary bodies; it does not hurt an invulnerable body", s: "demonstrated", dt: "physical", nhv: ["invulnerable"]},
+    "Left Hook": {e: "Boxing left hook", r: "close", ch: "ordinary bodies", nh: "invulnerable bodies — demonstrated live: Rocky dealt 0 across all attacks vs Superman", sb: "superhuman durability; speed advantage", cl: "human stamina; slow against superhuman speed (stated weakness)", o: "wounding", on: "a boxing strike", s: "demonstrated", dt: "unknown", nhv: ["invulnerable"]},
+    "Uppercut Combo": {e: "Boxing uppercut combination", r: "close", ch: "ordinary bodies", nh: "invulnerable bodies — demonstrated live: Rocky dealt 0 across all attacks vs Superman", sb: "superhuman durability; speed advantage", cl: "human stamina; slow against superhuman speed (stated weakness)", o: "wounding", on: "a boxing combination", s: "demonstrated", dt: "unknown", nhv: ["invulnerable"]}
+  },
+  deadpool: {
+    "Katana + Gun Combo": {e: "Katana strikes combined with gunfire", r: "close for the katana, mid for the gunfire", ch: "ordinary and regenerative bodies — they recover while alive, so wounds do not finish them by themselves", nh: "bodies that regenerate from any wound while alive are not finished by wounding alone — the outcome stays wounding, not lethal, against them", sb: "regeneration while alive; durability", cl: "recklessness; humour distracts him (stated weakness)", o: "wounding", on: "wounds; it does not state a lethal finish against a regenerative body", s: "demonstrated", dt: "physical", nhv: []},
+    "Katana Slash": {e: "Katana slash", r: "close", ch: "ordinary and regenerative bodies", nh: "none stated", sb: "regeneration while alive; durability", cl: "recklessness (stated weakness)", o: "wounding", on: "a blade strike", s: "demonstrated", dt: "unknown", nhv: []},
+    "Pistol Shot": {e: "Pistol shot", r: "mid", ch: "ordinary and regenerative bodies", nh: "none stated", sb: "regeneration while alive; durability; dodging", cl: "recklessness (stated weakness)", o: "wounding", on: "a gunshot", s: "demonstrated", dt: "unknown", nhv: []},
+    "Chimichanga Throw": {e: "Thrown food, a distraction", r: "mid", ch: "none as a weapon", nh: "every body as a damaging attack — it is not one", sb: "ignored as a threat", cl: "none stated", o: "no effect", on: "distraction only, not a damaging attack", s: "interpretation", dt: "unknown", nhv: []},
+    "Maximum Effort Combo": {e: "Maximum-effort combination after Maximum Effort transformation", r: "close to mid", ch: "ordinary and regenerative bodies", nh: "none stated", sb: "regeneration while alive; durability", cl: "recklessness (stated weakness)", o: "wounding", on: "transformed signature attack", s: "interpretation", dt: "unknown", nhv: []}
+  },
+  wolverine: {
+    "Adamantium Claw Slash": {e: "Adamantium claw slash", r: "close", ch: "ordinary and regenerative bodies — wounds, but regenerative foes recover while alive", nh: "none stated", sb: "regeneration while alive; durability", cl: "adamantium weight; rage (stated weakness)", o: "wounding", on: "wounds; it does not state a lethal finish against a regenerative body", s: "demonstrated", dt: "physical", nhv: []},
+    "Healing Factor Strike": {e: "Strike backed by a healing factor", r: "close", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the strike", cl: "adamantium weight; rage (stated weakness)", o: "wounding", on: "a strike; the healing itself wounds nothing", s: "interpretation", dt: "unknown", nhv: []},
+    "Berserker Lunge": {e: "Berserker lunge with claws", r: "close", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the lunge; dodging", cl: "rage (stated weakness)", o: "wounding", on: "a lunging strike", s: "interpretation", dt: "unknown", nhv: []},
+    "Berserker Barrage": {e: "Berserker claw barrage after Berserker Rage transformation", r: "close", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the barrage", cl: "rage (stated weakness)", o: "wounding", on: "transformed signature attack", s: "interpretation", dt: "unknown", nhv: []}
+  },
+  saitama: {
+    "Serious Punch": {e: "Serious punch carrying impossible power", r: "close", ch: "nearly any body", nh: "nothing recorded stops it", sb: "nothing recorded stops it; boredom delays seriousness", cl: "boredom; rarely takes a fight seriously at first (stated weakness)", o: "lethal", on: "lethal vs nearly any body in the record; regeneration-from-total-destruction is not recorded, so it is not assumed either way", s: "demonstrated", dt: "physical", nhv: []},
+    "Normal Punch": {e: "Ordinary-looking punch that still carries impossible power", r: "close", ch: "ordinary bodies", nh: "none stated", sb: "durability at the top of the scale, where recorded", cl: "boredom (stated weakness)", o: "wounding", on: "carries impossible power; a lethal outcome is recorded for Serious Punch, not assumed for every normal punch", s: "interpretation", dt: "unknown", nhv: []},
+    "Consecutive Normal Punches": {e: "Rapid consecutive normal punches", r: "close", ch: "ordinary bodies", nh: "none stated", sb: "durability at the top of the scale, where recorded", cl: "boredom (stated weakness)", o: "wounding", on: "repeated strikes; a lethal outcome is not assumed for them", s: "interpretation", dt: "unknown", nhv: []},
+    "Serious Table Flip": {e: "Serious-series flip of the battlefield surface after Serious Series transformation", r: "close to mid", ch: "ordinary bodies", nh: "none stated", sb: "durability at the top of the scale, where recorded", cl: "boredom (stated weakness)", o: "wounding", on: "serious-series attack; the record states Serious Punch as the lethal signature, so lethal is not assumed for this power", s: "interpretation", dt: "unknown", nhv: []}
+  },
+  frodo: {
+    "Sting Thrust": {e: "Close Elvish thrust with Sting", r: "close", ch: "ordinary bodies", nh: "invulnerable bodies [interpretation, supported by the resolver rule: tier gap plus recorded resistance to the physical signature]", sb: "durability; small and fragile frame (stated weakness)", cl: "small and fragile; Ring corruption (stated weakness)", o: "wounding", on: "wounds ordinary bodies; it does not hurt an invulnerable body", s: "demonstrated", dt: "physical", nhv: ["invulnerable"]},
+    "Rock Throw": {e: "Thrown rock", r: "mid", ch: "ordinary bodies", nh: "invulnerable bodies [interpretation]", sb: "durability absorbing the rock; dodging", cl: "small and fragile (stated weakness)", o: "wounding", on: "a thrown strike", s: "interpretation", dt: "unknown", nhv: ["invulnerable"]},
+    "Stealth Feint": {e: "Feint that creates an opening", r: "close", ch: "none by itself", nh: "every body as a damaging attack — it is not one", sb: "an opponent who does not react to the feint", cl: "small and fragile (stated weakness)", o: "no effect", on: "creates an opening; damage comes from the follow-up, not the feint", s: "interpretation", dt: "unknown", nhv: []}
+  },
+  raven: {
+    "Dark Magic Blast": {e: "Dark magic blast", r: "mid", ch: "ordinary bodies; magic bypasses much of invulnerable durability where that bypass is recorded", nh: "none stated", sb: "magic resistance where recorded; emotion control breaking focus (stated weakness)", cl: "emotion control; demon father (stated weakness)", o: "wounding", on: "wounds; it does not by itself state a lethal finish", s: "demonstrated", dt: "magic", nhv: []},
+    "Telekinesis Strike": {e: "Telekinetic force strikes or moves the target", r: "mid", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the force; emotion control breaking focus", cl: "emotion control (stated weakness)", o: "wounding", on: "a force strike", s: "interpretation", dt: "unknown", nhv: []},
+    "Portal Blast": {e: "Blast delivered through a portal", r: "mid", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the blast; emotion control breaking focus", cl: "emotion control (stated weakness)", o: "wounding", on: "a blast through a portal", s: "interpretation", dt: "unknown", nhv: []},
+    "Raven Finale": {e: "Demon-surge finishing magic after Demon Surge transformation", r: "mid", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the magic; emotion control breaking focus", cl: "emotion control (stated weakness)", o: "wounding", on: "transformed signature attack", s: "interpretation", dt: "unknown", nhv: []}
+  },
+  sephiroth: {
+    "Masamune Slash": {e: "Long-blade Masamune slash", r: "close — long blade, melee range", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the slash; dodging", cl: "overconfidence; madness (stated weakness)", o: "wounding", on: "a blade strike", s: "demonstrated", dt: "physical", nhv: []},
+    "Shadow Flare": {e: "Shadow flare blast", r: "mid", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the blast", cl: "overconfidence; madness (stated weakness)", o: "wounding", on: "a blast; its damage type is not established in the record, so combat uses the keyword fallback, labelled", s: "interpretation", dt: "unknown", nhv: []},
+    "Octaslash": {e: "Eight rapid slashes", r: "close", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the slashes; dodging", cl: "overconfidence; madness (stated weakness)", o: "wounding", on: "repeated blade strikes", s: "interpretation", dt: "unknown", nhv: []},
+    "Supernova Strike": {e: "Cosmic-scale strike after One-Winged Angel Form transformation", r: "full-screen [interpretation — the record does not state a range]", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the strike", cl: "overconfidence; madness (stated weakness)", o: "wounding", on: "transformed signature attack; a lethal outcome is not assumed for it", s: "interpretation", dt: "unknown", nhv: []}
+  },
+  gojo: {
+    "Hollow Purple": {e: "Erasure blast combining attraction and repulsion", r: "mid to full-screen", ch: "ordinary bodies", nh: "none stated", sb: "durability or bypass where recorded; Six Eyes strain", cl: "Six Eyes strain (stated weakness)", o: "lethal", on: "erasure blast; lethal vs ordinary bodies", s: "demonstrated", dt: "energy", nhv: []},
+    "Cursed Energy Punch": {e: "Punch charged with cursed energy", r: "close", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the punch", cl: "Six Eyes strain (stated weakness)", o: "wounding", on: "a charged punch", s: "interpretation", dt: "energy", nhv: []},
+    "Blue: Attraction": {e: "Attraction pulls the target toward a point", r: "mid", ch: "none by itself", nh: "every body as a damaging attack — it is not one", sb: "anchoring or a counter-pull", cl: "Six Eyes strain (stated weakness)", o: "no effect", on: "pull sets up Red or Purple; damage comes from the follow-up, not the pull", s: "demonstrated", dt: "unknown", nhv: []},
+    "Red: Repulsion": {e: "Repulsion drives the target away with violent force", r: "mid", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the force", cl: "Six Eyes strain (stated weakness)", o: "wounding", on: "a force blast", s: "demonstrated", dt: "unknown", nhv: []},
+    "Unlimited Void Crush": {e: "Domain overwhelms with information, then crushes, after Unlimited Void transformation", r: "close to mid — domain range", ch: "ordinary bodies", nh: "domain-immune bodies: unknown, not assumed", sb: "a recorded domain defence, where one exists — none is assumed", cl: "Six Eyes strain (stated weakness)", o: "incapacitating", on: "incapacitating (information overload) to lethal (crush); domain-immune bodies are unknown, not assumed", s: "interpretation", dt: "unknown", nhv: []}
+  },
+  ghostrider: {
+    "Hellfire Chain Strike": {e: "Hellfire chain strike that burns body and soul", r: "mid — chain reach", ch: "ordinary and supernatural bodies", nh: "none stated", sb: "durability resistance where recorded", cl: "no specific cost stated for this power in this profile", o: "wounding", on: "burns body and soul (demonstrated: burned supernatural foes with hellfire)", s: "demonstrated", dt: "magic", nhv: []},
+    "Penance Stare": {e: "Forces the guilty to feel their sins", r: "close — eye contact", ch: "guilty souls", nh: "the innocent or soulless (STATED weakness: Penance Stare fails on the innocent or soulless)", sb: "innocence or soullessness", cl: "none stated beyond the innocence and soulless limit", o: "incapacitating", on: "incapacitating vs guilty souls; NO EFFECT vs the innocent or soulless", s: "demonstrated", dt: "unknown", nhv: []},
+    "Motorcycle Charge": {e: "Charge on the hellfire motorcycle", r: "close to mid", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the charge; dodging", cl: "no specific cost stated for this power", o: "wounding", on: "a charging strike", s: "interpretation", dt: "unknown", nhv: []}
+  },
+  pikachu: {
+    "Thunderbolt": {e: "Electric thunderbolt", r: "mid", ch: "ordinary bodies at full effect; conductive bodies at full effect", nh: "grounded or insulated bodies resist (Pokémon-internal Ground immunity translated cross-franchise as interpretation — explicitly NOT an engine rule until Phase 3)", sb: "grounding or insulation (interpretation); size and stamina (stated weakness)", cl: "size and stamina (stated weakness)", o: "wounding", on: "wounds; audit note superseding the roster feat line (Beat legendaries with Ash): Regice clean KO; Latios simultaneous KO and draw, not a win; Tapu Koko conditional on a Z-Move; Silvally finisher not a fresh 1v1", s: "demonstrated", dt: "energy", nhv: []},
+    "Quick Attack": {e: "Very fast tackle", r: "close", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the tackle; speed advantage", cl: "size and stamina (stated weakness)", o: "wounding", on: "a fast tackle", s: "interpretation", dt: "unknown", nhv: []},
+    "Iron Tail": {e: "Tail hardened to iron, swung as a strike", r: "close", ch: "ordinary bodies", nh: "none stated", sb: "durability absorbing the strike", cl: "size and stamina (stated weakness)", o: "wounding", on: "a tail strike", s: "interpretation", dt: "unknown", nhv: []},
+    "Gigantamax Thunder": {e: "Gigantamax electric thunder after Gigantamax Surge transformation", r: "mid to full-screen", ch: "ordinary bodies", nh: "grounded or insulated bodies resist (interpretation, as for Thunderbolt)", sb: "grounding or insulation (interpretation)", cl: "size and stamina (stated weakness)", o: "wounding", on: "transformed signature attack; electric", s: "interpretation", dt: "energy", nhv: []}
+  }
+};
+function powerRecordV1625(fighterId, powerName) {
+  try {
+    var m = POWER_RECORDS_V1625[fighterId];
+    if (!m) return null;
+    var r = m[powerName];
+    if (!r) return null;
+    var isSig = false;
+    try { var _bf = (typeof byId === "function") ? byId(fighterId) : null; if (_bf && _bf.sig === powerName) isSig = true; } catch (e) {}
+    return { fighterId: fighterId, power: powerName, isSignature: isSig, effect: r.e, reach: r.r, canHurt: r.ch, cannotHurt: r.nh, stoppedBy: r.sb, costLimit: r.cl, outcomeIfLands: r.o, outcomeNote: r.on, status: r.s, damageType: r.dt || "unknown", cannotHurtVs: r.nhv || [] };
+  } catch (e) { return null; }
+}
+function powerRecordsForV1625(fighterId) {
+  try {
+    var m = POWER_RECORDS_V1625[fighterId] || {};
+    return Object.keys(m).map(function (n) { return powerRecordV1625(fighterId, n); });
+  } catch (e) { return []; }
+}
+function powerRecordsHtmlV1625(f) {
+  try {
+    var id = (f && f.id) || "";
+    var recs = powerRecordsForV1625(id);
+    if (!recs.length) return "<p><b>Character power records (v16.25):</b> no per-power record is established for this fighter in this build — powers stay unknown, never invented.</p>";
+    var rows = recs.map(function (r) {
+      return esc(r.power) + (r.isSignature ? " [signature]" : "") + " — what it does: " + esc(r.effect) + "; reach: " + esc(r.reach) + "; can hurt: " + esc(r.canHurt) + "; cannot hurt: " + esc(r.cannotHurt) + "; what stops it: " + esc(r.stoppedBy) + "; cost or limit: " + esc(r.costLimit) + "; outcome if it lands: " + esc(r.outcomeIfLands) + " — " + esc(r.outcomeNote) + " [" + esc(r.status) + "]" + (r.damageType !== "unknown" ? "; recorded damage type: " + esc(r.damageType) : "; damage type: unknown — combat uses the keyword fallback, labelled");
+    }).join("<br>");
+    return "<p><b>Character power records (v16.25 — per power, not a fighter stat sheet; signature is one power among a demonstrated repertoire):</b><br>" + rows + "</p>";
+  } catch (e) { return "<p><b>Character power records (v16.25):</b> unavailable — nothing is invented.</p>"; }
+}
+/* v16.25 PART 1 — ONE damage source. Hierarchy, in order: (1) the fighter
+   signature uses the authored SIG_DAMAGE_V1623 type — the keyword type is
+   fully retired for signatures; (2) a Part 11 record type, where one is
+   established; (3) the keyword fallback, ALWAYS labelled as a guess, never
+   as authored. A keyword value is never displayed as a type without its
+   fallback label. damageTypeCanonicalV14 itself stays as the labelled
+   fallback function; it is not deleted. Attacker-less objects (harness
+   fixtures) resolve a signature name through a lazily built roster map;
+   a shared signature name with differing authored types falls back to the
+   keyword, labelled ambiguous. */
+var _SIG_NAME_MAP_V1625 = null;
+function damageTypeCombatV1625(fighter, ability) {
+  var name = ability || "";
+  try {
+    if (fighter && fighter.id) {
+      var sigName = fighter.sig || null;
+      if (!sigName) { try { var _b = (typeof byId === "function") ? byId(fighter.id) : null; if (_b) sigName = _b.sig; } catch (e) {} }
+      if (sigName && name === sigName) {
+        try { if (typeof SIG_DAMAGE_V1623 !== "undefined" && SIG_DAMAGE_V1623 && SIG_DAMAGE_V1623.hasOwnProperty(fighter.id)) return { type: SIG_DAMAGE_V1623[fighter.id], source: "authored-signature" }; } catch (e) {}
+      }
+      var rec = powerRecordV1625(fighter.id, name);
+      if (rec && rec.damageType && rec.damageType !== "unknown") return { type: rec.damageType, source: "part11-record" };
+    } else {
+      try {
+        if (!_SIG_NAME_MAP_V1625) {
+          _SIG_NAME_MAP_V1625 = {}; var _amb = {};
+          (ROSTER || []).forEach(function (fr) {
+            if (!fr.sig) return;
+            var _t = null; try { _t = SIG_DAMAGE_V1623[fr.id]; } catch (e) {}
+            if (_t === undefined || _t === null) return;
+            if (_SIG_NAME_MAP_V1625.hasOwnProperty(fr.sig) && _SIG_NAME_MAP_V1625[fr.sig] !== _t) _amb[fr.sig] = true;
+            else _SIG_NAME_MAP_V1625[fr.sig] = _t;
+          });
+          Object.keys(_amb).forEach(function (k) { delete _SIG_NAME_MAP_V1625[k]; });
+        }
+        if (_SIG_NAME_MAP_V1625.hasOwnProperty(name)) return { type: _SIG_NAME_MAP_V1625[name], source: "authored-signature" };
+      } catch (e) {}
+    }
+  } catch (e) {}
+  return { type: damageTypeCanonicalV14(name), source: "keyword-fallback" };
+}
+
 function structuredPowersForV14(f){
   let ps=[];
   try{ ps=(typeof actualPowersFor==='function'?actualPowersFor(f):((typeof POWERS!=='undefined'&&POWERS[f.id])||[])); }catch(e){ ps=[]; }
-  const out=ps.map((name,i)=>{ const dt=damageTypeCanonicalV14(name); return {name:name,effect:dt+' attack through the single resolveAttack pipeline',combatUse:(i===0 && f.variantId==='v2')?'Variant power — replaces the first power for this version':'Cycled power in battle',requirements:'Must belong to the selected version\'s powerset; no other requirement is listed in this profile.',limits:'No limit is established in this profile beyond the engine\'s damage, defence, stamina and cannot-harm rules.',canBypass:(dt==='mental'||dt==='psychic'||dt==='internal'||dt==='magic'),canEscapeRestraint:/transmission|teleport|dash|flight/i.test(name),versionHasIt:true,damageType:dt}; });
-  if(f.transformed && typeof TRANSSIG!=='undefined' && TRANSSIG[f.id]) out.push({name:TRANSSIG[f.id],effect:damageTypeCanonicalV14(TRANSSIG[f.id])+' transformed signature attack through resolveAttack',combatUse:'Transformed signature — used instead of the base signature after transformation',requirements:'Fighter must have transformed in this battle.',limits:'No extra effect beyond multiplier and damage type is established in this profile.',canBypass:(['mental','psychic','internal','magic'].includes(damageTypeCanonicalV14(TRANSSIG[f.id]))),canEscapeRestraint:false,versionHasIt:true,damageType:damageTypeCanonicalV14(TRANSSIG[f.id]),isSignature:true});
-  if(f.sig) out.push({name:f.sig,effect:damageTypeCanonicalV14(f.sig)+' signature attack through resolveAttack',combatUse:'Signature — tactical decision (see signature definition)',requirements:'Signature action slot (see signature definition).',limits:'No extra effect beyond multiplier and damage type is established in this profile.',canBypass:(['mental','psychic','internal','magic'].includes(damageTypeCanonicalV14(f.sig))),canEscapeRestraint:false,versionHasIt:true,damageType:damageTypeCanonicalV14(f.sig),isSignature:true});
+  const out=ps.map((name,i)=>{ const ct=damageTypeCombatV1625(f,name); const dt=ct.type; return {name:name,effect:dt+' attack through the single resolveAttack pipeline ['+ct.source+(ct.source==='keyword-fallback'?' — not authored; the authored type for this power is unknown':'')+']',combatUse:(i===0 && f.variantId==='v2')?'Variant power — replaces the first power for this version':'Cycled power in battle',requirements:'Must belong to the selected version\'s powerset; no other requirement is listed in this profile.',limits:'No limit is established in this profile beyond the engine\'s damage, defence, stamina and cannot-harm rules.',canBypass:(dt==='mental'||dt==='psychic'||dt==='internal'||dt==='magic'),canEscapeRestraint:/transmission|teleport|dash|flight/i.test(name),versionHasIt:true,damageType:dt,damageTypeSource:ct.source}; });
+  if(f.transformed && typeof TRANSSIG!=='undefined' && TRANSSIG[f.id]) { const ctT=damageTypeCombatV1625(f,TRANSSIG[f.id]); out.push({name:TRANSSIG[f.id],effect:ctT.type+' transformed signature attack through resolveAttack ['+ctT.source+(ctT.source==='keyword-fallback'?' — not authored; the authored type for this power is unknown':'')+']',combatUse:'Transformed signature — used instead of the base signature after transformation',requirements:'Fighter must have transformed in this battle.',limits:'No extra effect beyond multiplier and damage type is established in this profile.',canBypass:(['mental','psychic','internal','magic'].includes(ctT.type)),canEscapeRestraint:false,versionHasIt:true,damageType:ctT.type,damageTypeSource:ctT.source,isSignature:true}); }
+  if(f.sig) { const ctS=damageTypeCombatV1625(f,f.sig); out.push({name:f.sig,effect:ctS.type+' signature attack through resolveAttack ['+ctS.source+(ctS.source==='keyword-fallback'?' — not authored; the authored type for this power is unknown':'')+']',combatUse:'Signature — tactical decision (see signature definition)',requirements:'Signature action slot (see signature definition).',limits:'No extra effect beyond multiplier and damage type is established in this profile.',canBypass:(['mental','psychic','internal','magic'].includes(ctS.type)),canEscapeRestraint:false,versionHasIt:true,damageType:ctS.type,damageTypeSource:ctS.source,isSignature:true}); }
   return out;
 }
 function moralRestrictionForV14(f){
@@ -1973,9 +2169,10 @@ function immunitiesForV15(f){const im=[]; if(f&&Array.isArray(f.immunities)) f.i
 function damageTypeInfoV15(ability){const s=(ability||'').toLowerCase(); const known=/poison|venom|toxin|seal|reality|rewrite|magic|spell|hex|chaos|witch|mind|psychic|overshadow|force grip|nerve pinch|internal|curse|word of power|web|grip|pinch|restrain|freeze|smoke|gravity|tornado|sonic|blast|beam|energy|fire|flame|lightning|heat vision|ki |kamehameha|rasengan|chakra|ecto|igni|light burst|heal|regen|recover/.test(s); return {type:damageTypeCanonicalV14(ability),source:known?'established keyword mapping':'inferred/default (physical — the profile does not establish a type for this power, so it is NOT presented as canon)'};}
 function resolveAttackV14(o){
   const att=o.attacker, def=o.target;
-  const dtype=damageTypeCanonicalV14(o.ability);
+  const _ct1625=damageTypeCombatV1625(att, o.ability);
+  const dtype=_ct1625.type;
   /* v15: an explicit per-type immunity is absolute for that type unless the caller records a bypass mechanism for this specific ability. A generic resistance multiplier never overrides it (checked before any resistance is applied). */
-  if(immunitiesForV15(def).includes(dtype)&&!o.bypassMechanism){ return {damage:0,outcome:'immune',cannotHarm:false,immune:true,notes:'immune: defender is immune to '+dtype+' damage; no damage is dealt unless a recorded bypass mechanism for this specific ability exists',fieldBreak:false,boostUsed:false}; }
+  if(immunitiesForV15(def).includes(dtype)&&!o.bypassMechanism){ return {damage:0,outcome:'immune',cannotHarm:false,immune:true,notes:'immune: defender is immune to '+dtype+' damage; no damage is dealt unless a recorded bypass mechanism for this specific ability exists',fieldBreak:false,boostUsed:false,dtype:dtype,dtypeSource:_ct1625.source}; }
   const defProf=defenseProfileForV14(def);
   const attTier=tierScore(att.tier), defTier=tierScore(def.tier);
   const tierGap=(attTier!==null&&defTier!==null)?(defTier-attTier):null;
@@ -1985,7 +2182,7 @@ function resolveAttackV14(o){
   /* v15: the tier-gap cannot-harm gate is a PHYSICAL-durability gate. Physical durability does not block nonphysical effects by default, so magic/psychic/internal/reality/sealing/poison attacks skip this gate (they still pass through resistances, field pools, and the per-hit cap below). Crits never bypass the gate for gated types. */
   const nonPhysical=['magic','psychic','mental','internal','reality','sealing','poison'];
   if(tierGap!==null&&tierGap>=2&&(def.dur||7)>=9&&!isBypass&&!nonPhysical.includes(dtype)){
-    return {damage:0,outcome:'cannot-harm',cannotHarm:true,harmScope:'cannot harm under current rules (no counter, knowledge, or bypass in this matchup — NOT "cannot ever harm")',notes:'cannot-harm: tier gap plus high durability makes ordinary attacks implausible; crits do not bypass this; only a recorded weakness exploit, demonstrated counter, or bypass can harm this defender',fieldBreak:false,boostUsed:false};
+    return {damage:0,outcome:'cannot-harm',cannotHarm:true,harmScope:'cannot harm under current rules (no counter, knowledge, or bypass in this matchup — NOT "cannot ever harm")',notes:'cannot-harm: tier gap plus high durability makes ordinary attacks implausible; crits do not bypass this; only a recorded weakness exploit, demonstrated counter, or bypass can harm this defender',fieldBreak:false,boostUsed:false,dtype:dtype,dtypeSource:_ct1625.source};
   }
   let notes=[];
   let scale=1;
@@ -2010,7 +2207,7 @@ function resolveAttackV14(o){
   const cap=Math.max(1,Math.floor(def.maxHp*0.5));
   if(dmg>cap){ dmg=cap; notes.push('per-hit cap applied: no single blow exceeds half the defender maximum HP'); }
   dmg=Math.max(0,dmg);
-  return {damage:dmg,outcome:dmg>0?'hit':'no damage',cannotHarm:false,notes:notes.join('; '),fieldBreak:fieldBreak,boostUsed:!!(o.boost&&o.boost!==1)};
+  return {damage:dmg,outcome:dmg>0?'hit':'no damage',cannotHarm:false,notes:notes.join('; '),fieldBreak:fieldBreak,boostUsed:!!(o.boost&&o.boost!==1),dtype:dtype,dtypeSource:_ct1625.source};
 }
 /* ---- 3. Battle-instance and stat build: NO research bonus ---- */
 function applyBattlefieldOnceV15(inst,bf){if(!inst||!bf) return inst; if(inst.battlefieldApplied===bf.id) return inst; if(inst.battlefieldApplied&&inst._bfAtk!==undefined){inst.atk-=inst._bfAtk; inst.def-=inst._bfDef;} inst.atk+=bf.atk; inst.def+=bf.def; inst._bfAtk=bf.atk; inst._bfDef=bf.def; inst.battlefieldApplied=bf.id; return inst;}
@@ -2191,7 +2388,7 @@ function generateAnalysis(a,b){
   const harmAB=canHarmV14(a,b), harmBA=canHarmV14(b,a);
   const tierGapAB=(tierScore(a.tier)!==null&&tierScore(b.tier)!==null)?Math.abs(tierScore(a.tier)-tierScore(b.tier)):null;
   const uncertain=(tierGapAB!==null&&tierGapAB<=1&&Math.abs((a.pw||7)-(b.pw||7))<=2);
-  const html=`<p><b>Preview — not a prediction. The preview does not determine the winner; the combat engine does. No aggregate score is used in v15, and durability is counted once only.</b></p><p><b>Start-of-fight stats (before transformation bonuses):</b> ${a.name} HP ${a.startHp||a.maxHp} / ATK ${a.startAtk||a.atk} / DEF ${a.startDef||a.def}; ${b.name} HP ${b.startHp||b.maxHp} / ATK ${b.startAtk||b.atk} / DEF ${b.startDef||b.def}. Transformation bonuses are listed separately below and apply only if that fighter transforms: ${a.name} +${a.tAtk||0} ATK / +${a.tDef||0} DEF for ${a.trans||'no transformation'}; ${b.name} +${b.tAtk||0} ATK / +${b.tDef||0} DEF for ${b.trans||'no transformation'}. These start stats are the same numbers shown in Chapter I and in the breakdown. Research bonus: none in v15.</p><p><b>Stat builds:</b> ${statBuildString(a)}; ${statBuildString(b)}.</p>`+cats.map(c=>`<p><b>${c.label}:</b> ${c.w} — ${c.ev}</p>`).join('')+
+  const html=`<p><b>Starting forms:</b> ` + esc(startingFormNoteForFighterV1625(a, a.variant||'Base', a.variantId||'base')) + ' ' + esc(startingFormNoteForFighterV1625(b, b.variant||'Base', b.variantId||'base')) + `</p><p><b>Preview — not a prediction. The preview does not determine the winner; the combat engine does. No aggregate score is used in v15, and durability is counted once only.</b></p><p><b>Start-of-fight stats (before transformation bonuses):</b> ${a.name} HP ${a.startHp||a.maxHp} / ATK ${a.startAtk||a.atk} / DEF ${a.startDef||a.def}; ${b.name} HP ${b.startHp||b.maxHp} / ATK ${b.startAtk||b.atk} / DEF ${b.startDef||b.def}. Transformation bonuses are listed separately below and apply only if that fighter transforms: ${a.name} +${a.tAtk||0} ATK / +${a.tDef||0} DEF for ${a.trans||'no transformation'}; ${b.name} +${b.tAtk||0} ATK / +${b.tDef||0} DEF for ${b.trans||'no transformation'}. These start stats are the same numbers shown in Chapter I and in the breakdown. Research bonus: none in v15.</p><p><b>Stat builds:</b> ${statBuildString(a)}; ${statBuildString(b)}.</p>`+cats.map(c=>`<p><b>${c.label}:</b> ${c.w} — ${c.ev}</p>`).join('')+
   `<p><b>Can ${a.name} hurt ${b.name} with ordinary attacks?</b> ${harmAB.canOrdinary?'Yes.':'No.'} ${harmAB.path}</p><p><b>Can ${b.name} hurt ${a.name} with ordinary attacks?</b> ${harmBA.canOrdinary?'Yes.':'No.'} ${harmBA.path}</p>`+
   `<p><b>Can ${b.name} resist ${a.name}'s strongest abilities?</b> Resistances for ${b.name}: ${Object.entries(defenseProfileForV14(b).resistances).map(([k,v])=>k+' x'+v).join(', ')}. Force-field pool (engine parameter): ${fieldPoolForV14(b)} HP, if any. ${a.name}'s signature is ${a.sig} (x${a.sigMult}); whether it gets through depends on the recorded exchanges, not on this preview.</p><p><b>Can ${a.name} resist ${b.name}'s strongest abilities?</b> Resistances for ${a.name}: ${Object.entries(defenseProfileForV14(a).resistances).map(([k,v])=>k+' x'+v).join(', ')}. Force-field pool (engine parameter): ${fieldPoolForV14(a)} HP, if any. ${b.name}'s signature is ${b.sig} (x${b.sigMult}).</p>`+
   `<p><b>Demonstrated counters — ${a.name} vs ${b.name}:</b> ${demonstratedCounterV14(a,b).join(' ')}</p><p><b>Demonstrated counters — ${b.name} vs ${a.name}:</b> ${demonstratedCounterV14(b,a).join(' ')}</p>`+
@@ -2470,14 +2667,28 @@ function validationSummaryV14(lines){
 function validationLinesHtmlV14(lines){
   return lines.map(c=>(c.passed===true?'✅ ':(c.passed==='unverified'?'❓ UNVERIFIED — ':'❌ '))+esc(c.name)+' — '+esc(c.detail)).join('<br>');
 }
+/* v16.25 PART 5 — victory header, pure function. Death mode says knocked
+   out (HP 0), not dead, IN the header itself, not just setup small print.
+   Incapacitation says unconscious, not dead. Used by the live results
+   path only; the legacy path is left untouched. */
+function victoryHeaderV1625(b) {
+  if (!b) return { title: 'RESULT', desc: '' };
+  var w = b.winner || '';
+  var l = (b.loserFighter && b.loserFighter.name) || '';
+  var bf = (b.battlefield && b.battlefield.name) || '';
+  if (b.stalemate) return { title: 'STALEMATE — NO DEATH', desc: 'No winner on ' + bf + ': no death. Victory condition: ' + (b.victoryCondition || '') + '.' };
+  if (b.victoryMode === 'incapacitation') return { title: 'INCAPACITATION BREAKDOWN — ' + w + ' Wins — loser ' + l + ' unconscious, not dead', desc: 'Winner: ' + w + '. Loser: ' + l + ' — unconscious, not dead. In Incapacitation mode a knockout is never labelled death. Victory condition: ' + (b.victoryCondition || '') + '. Battlefield: ' + bf + '.' };
+  return { title: 'DEATH BATTLE BREAKDOWN — ' + w + ' Wins — loser ' + l + ' knocked out (HP 0), not dead', desc: 'Death mode: HP 0 means knocked out, not dead. Winner: ' + w + '. Loser: ' + l + ' — knocked out (HP 0), not dead. Victory condition: ' + (b.victoryCondition || '') + '. Battlefield: ' + bf + '. The episode below was generated only from the recorded battle events and the pre-battle analysis.' };
+}
 function showResults(){
   const b=currentBattle; if(!b) return;
   updateModeHeadings(b.victoryMode);
   document.getElementById('battle-screen').classList.remove('active');
   document.getElementById('results-screen').classList.add('active');
   const a=b.alpha[0], f2=b.beta[0];
-  document.getElementById('result-title').innerText=b.stalemate?'STALEMATE — NO DEATH':(b.victoryMode==='incapacitation'?('INCAPACITATION BREAKDOWN — '+b.winner+' Wins'):('DEATH BATTLE BREAKDOWN — '+b.winner+' Wins'));
-  document.getElementById('result-desc').innerText=b.stalemate?`${a.name} vs ${f2.name} on ${b.battlefield.name}: no death. Victory condition: ${b.victoryCondition}.`:`Winner: ${b.winner}. Loser: ${b.loserFighter?b.loserFighter.name:''}. Victory condition: ${b.victoryCondition}. Battlefield: ${b.battlefield.name}. The episode below was generated only from the recorded battle events and the pre-battle analysis.`;
+  var _vh1625 = victoryHeaderV1625(b);
+  document.getElementById('result-title').innerText=_vh1625.title;
+  document.getElementById('result-desc').innerText=b.stalemate?`${a.name} vs ${f2.name} on ${b.battlefield.name}: no death. Victory condition: ${b.victoryCondition}.` : _vh1625.desc;
   const fr=b.finalRecord||{winner:b.winner,loserName:b.loserFighter?b.loserFighter.name:'',victoryMode:b.victoryMode,victoryCondition:b.victoryCondition};
   // v16: the rule-based episode is the FALLBACK ONLY. It is NOT rendered as the
   // main story first and then replaced. The main story area shows a status
@@ -2525,7 +2736,7 @@ function showResults(){
   }catch(e){
     document.getElementById('story-output').innerHTML=breakdownHtmlV1619(buildBreakdownOfflineV1619(b), b);
     renderMainStoryLabelV16({kind:'offline',breakdown:true,reason:'Automatic generation could not start'});
-    try{ if(_sid) b._v16SessionId=_sid; const _savedId2=saveMainStoryOnceV16(b, breakdownHtmlV1619(buildBreakdownOfflineV1619(b), b), breakdown, integrity, accuracy, quality, {kind:'offline',breakdown:true,reason:'Automatic generation could not start',sessionId:_sid}); if(_savedId2!=null) currentHistoryId=_savedId2; }catch(e2){}
+    try{ if(_sid) b._v16SessionId=_sid; const _savedId2=saveMainStoryOnceV16(b, breakdownHtmlV1619(buildBreakdownOfflineV1619(b), b), breakdown, integrity, accuracy, quality, {kind:'offline',breakdown:true,reason:'Automatic generation could not start',sessionId:_sid}); if(_savedId2!=null) currentHistoryId=_savedId2; try{ syncOnlineBreakdownStatusV1625(_sid, {kind:'offline',breakdown:true,reason:'Automatic generation could not start'}); }catch(e3){} }catch(e2){}
   }
 }
 function validateSavedEpisodeV14(x){ /* v15: delegates to the stricter importer; v14 records are legacy read-only, v15 records are current. */
@@ -2536,7 +2747,7 @@ function saveBattle(b,story,breakdown,integrity,accuracy,quality){
     const h=loadHistory();
     const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]);
     const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant));
-    h.unshift({id:Date.now(),formatVersion:'v16.24',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.19 online AI breakdown (9 sections, locked to the recorded outcome), or labelled offline breakdown when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,resolverComparisonV1624:(function(){ try { return resolverComparisonForBattleV1624(b); } catch (e) { return { error: 'resolver comparison unavailable' }; } })(),storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
+    h.unshift({id:Date.now(),formatVersion:'v16.25',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.19 online AI breakdown (9 sections, locked to the recorded outcome), or labelled offline breakdown when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,resolverComparisonV1624:(function(){ try { return resolverComparisonForBattleV1624(b); } catch (e) { return { error: 'resolver comparison unavailable' }; } })(),storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
     localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));
   }catch(e){}
   renderHistory();
@@ -2547,7 +2758,7 @@ function renderHistory(){
   el.innerHTML=h.map(x=>{
     const v=validateSavedEpisodeV14(x);
     const flag=!v.ok?`<br><small>⚠️ Unopenable saved record — ${esc(v.reason)}</small>`:(!v.legacy?'':`<br><small>⚠️ Saved in an older format — read-only, format differs. Opening it does not change its original result.</small>`);
-    return `<div style="margin-bottom:10px"><b>${esc(x.date)} — ${esc(x.winner)}</b> on ${esc(x.battlefield)}<br><small>${esc((x.alpha||[]).join(', '))} vs ${esc((x.beta||[]).join(', '))}</small>${x.continuities?`<br><small>Continuities: ${esc(x.continuities.join(' vs '))}</small>`:''}${x.victoryType?`<br><small>Victory: ${esc(x.victoryType)}</small>`:''}${x.victoryMode?`<br><small>Mode: ${esc(x.victoryMode)}</small>`:''}${x.verdictStatus === 'pending' ? (x.resultKind === 'breakdown' ? '<br><small>Breakdown pending — online breakdown still generating</small>' : '<br><small>Verdict pending — online verdict still generating</small>') : (x.verdictStatus === 'online-failed' ? '<br><small>Online breakdown failed — offline breakdown shown (not pending, not resolved as AI)</small>' : '')}${flag}<br><button class="btn small" onclick="viewHistory(${x.id})">View saved episode</button> <button class="btn small" onclick="exportSavedEpisodeFile(${x.id},'json')">Download JSON</button> <button class="btn small" onclick="exportSavedEpisodeFile(${x.id},'story')">Download story</button></div>`;
+    return `<div style="margin-bottom:10px"><b>${esc(x.date)} — ${esc(x.winner)}</b> on ${esc(x.battlefield)}<br><small>${esc((x.alpha||[]).join(', '))} vs ${esc((x.beta||[]).join(', '))}</small>${x.continuities?`<br><small>Continuities: ${esc(x.continuities.join(' vs '))}</small>`:''}${x.victoryType?`<br><small>Victory: ${esc(x.victoryType)}</small>`:''}${x.victoryMode?`<br><small>Mode: ${esc(x.victoryMode)}</small>`:''}${x.verdictStatus === 'pending' ? (x.resultKind === 'breakdown' ? '<br><small>Breakdown pending — online breakdown still generating</small>' : '<br><small>Verdict pending — online verdict still generating</small>') : (x.verdictStatus === 'online-failed' ? ('<br><small>Online breakdown failed — offline breakdown shown (not pending, not resolved as AI)</small>' + (x.mainStoryMeta && x.mainStoryMeta.reason ? '<br><small>Reason: ' + esc(x.mainStoryMeta.reason) + '</small>' : '')) : '')}${flag}<br><button class="btn small" onclick="viewHistory(${x.id})">View saved episode</button> <button class="btn small" onclick="exportSavedEpisodeFile(${x.id},'json')">Download JSON</button> <button class="btn small" onclick="exportSavedEpisodeFile(${x.id},'story')">Download story</button></div>`;
   }).join('')+'<p class="note">Saved episodes are stored on this device only (localStorage) and can be lost if browser storage is cleared. They are not saved online. Reopening a saved episode does not rerun the battle and never mutates its original result.</p>';
 }
 /* v16.2 — saved-view story-kind rendering. The saved entry's own
@@ -2599,7 +2810,7 @@ function viewHistory(id){
     const _aioU = document.getElementById('ai-story-output'); if (_aioU) _aioU.innerText = 'No saved story available for an unopenable record.';
     return;
   }
-  document.getElementById('result-title').innerText='Saved Battle — '+x.winner+(v.legacy?' (older-format legacy — read-only)':'');
+  document.getElementById('result-title').innerText='Saved Battle — '+x.winner+(x.victoryMode==='incapacitation' ? (x.loser ? ' — loser '+x.loser+' unconscious, not dead' : ' — loser unconscious, not dead') : (x.loser ? ' — loser '+x.loser+' knocked out (HP 0), not dead' : ''))+(v.legacy?' (older-format legacy — read-only)':'');
   document.getElementById('result-desc').innerText=x.date+' • '+x.battlefield+(x.continuities?' • Continuities: '+x.continuities.join(' vs '):'')+(x.victoryType?' • Victory: '+x.victoryType:'')+(x.seed!=null?' • Battle seed: '+x.seed+' — same seed + fighters + variants + battlefield reproduces the same battle':'')+(x.researchRefs?' • Research: '+x.researchRefs.map(r=>r.fighter+': '+r.sources.map(s=>s.name+' '+s.status).join(', ')).join(' | '):'')+(v.legacy?' • ⚠️ Saved in an older format — read-only, format differs.':(' • Format: '+(x.formatVersion||'v15.1')+'.'));
   const cl2=document.getElementById('consistency-lines'); if(cl2) cl2.innerHTML='See Systems A, B, and C below for this saved entry. Reopening does not rerun the battle and does not change the saved result.';
   const il2=document.getElementById('integrity-lines'); if(il2) il2.innerHTML=x.validation&&x.validation.integrity?('<b>Saved System A — Battle Integrity:</b><br>'+validationLinesHtmlV14(x.validation.integrity)):'<b>Saved System A — Battle Integrity:</b> Not stored for this legacy entry (UNVERIFIED on reopen — not recomputed from a different battle).';
@@ -2751,7 +2962,7 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24'].includes(x.formatVersion);
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25'].includes(x.formatVersion);
   return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12/v16.13/v16.14/v16.15/v16.16/v16.17/v16.18/v16.19/v16.20 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
@@ -3571,14 +3782,53 @@ function savePendingBattleV1618(b, breakdown, integrity, accuracy, quality, fall
     return e.id;
   } catch (e) { return null; }
 }
+/* v16.25 PART 8 — single online-status source for Details + history +
+   banner. One function writes the SAME status and reason to EVERY history
+   entry with the session id (not just the first match), then re-renders
+   history, so history flips in the same tick as Technical Details once a
+   failure is determined. This is NOT a generation-speed change (Phase 4):
+   while attempts are still running, "Generating…" stays honest; the fix
+   is that no surface lingers pending after failure is known. */
+function forEachHistoryEntryBySessionV1625(sid, fn) {
+  if (!sid) return 0;
+  try {
+    var h = loadHistory();
+    var n = 0;
+    h.forEach(function (x) { if (x.sessionId === sid || (x.mainStoryMeta && x.mainStoryMeta.sessionId === sid)) { fn(x); n++; } });
+    if (n) localStorage.setItem('warroom_battles_v3', JSON.stringify(h.slice(0, 20)));
+    return n;
+  } catch (e) { return 0; }
+}
+function syncOnlineBreakdownStatusV1625(sid, meta) {
+  var count = 0;
+  try {
+    var status = (meta && meta.kind === 'ai') ? 'resolved-ai' : 'online-failed';
+    count = forEachHistoryEntryBySessionV1625(sid, function (x) {
+      x.verdictStatus = status; x.verdictPending = false; x.resultKind = 'breakdown'; x.breakdownStatus = status;
+      if (!x.mainStoryMeta) x.mainStoryMeta = {};
+      x.mainStoryMeta.pending = false; x.mainStoryMeta.sessionId = sid; x.mainStoryMeta.breakdown = true; x.mainStoryMeta.kind = meta.kind;
+      if (meta.provider) x.mainStoryMeta.provider = meta.provider;
+      if (meta.reason) x.mainStoryMeta.reason = meta.reason;
+    });
+    try { renderHistory(); } catch (e) {}
+  } catch (e) {}
+  try {
+    if (meta && meta.kind === 'offline' && (typeof isCurrentStorySessionV161 !== 'function' || isCurrentStorySessionV161(sid))) {
+      var st = document.getElementById('main-story-status');
+      if (st) { var _r1625 = meta.reason || 'Online AI generation was unavailable.'; try { if (typeof explainPollinationsErrorV161 === 'function') _r1625 = explainPollinationsErrorV161(_r1625); } catch (e) {} st.innerText = 'Online AI unavailable — offline breakdown shown. Reason: ' + _r1625; }
+    }
+  } catch (e) {}
+  return count;
+}
 function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, quality, meta) {
   if (!b) return null;
   const sid = b._v16SessionId || (meta && meta.sessionId) || null;
   try {
     let h = loadHistory();
     let entry = null;
+    let _allEntries1625 = [];
     if (sid) {
-      for (let i = 0; i < h.length; i++) { const x = h[i]; if (x.sessionId === sid || (x.mainStoryMeta && x.mainStoryMeta.sessionId === sid)) { entry = x; break; } }
+      for (let i = 0; i < h.length; i++) { const x = h[i]; if (x.sessionId === sid || (x.mainStoryMeta && x.mainStoryMeta.sessionId === sid)) { _allEntries1625.push(x); if (!entry) entry = x; } }
     }
     if (currentStorySavedSessionId === sid && entry && entry.verdictStatus !== 'pending') return entry.id;
     currentStorySavedSessionId = sid;
@@ -3595,7 +3845,7 @@ function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, qual
     entry.sessionId = sid;
     /* v16.21 DELIBERATE CHANGE: a breakdown that resolves offline is labelled online-failed — distinct from pending and from resolved-ai. Pending is never silently cleared into a resolved-looking state on failure. The verdict path keeps confirmed-offline. */
     entry.verdictStatus = (meta && meta.kind === 'ai') ? 'resolved-ai' : ((meta && meta.breakdown) ? 'online-failed' : 'confirmed-offline');
-    if (meta && meta.breakdown) { entry.resultKind = 'breakdown'; entry.breakdownStatus = (meta.kind === 'ai') ? 'resolved-ai' : 'online-failed'; entry.formatVersion = 'v16.24'; entry.storyGenerationMethod = (meta.kind === 'ai') ? ('Online AI breakdown (v16.24) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline breakdown (v16.24) — ' + V1619_OFFLINE_BREAKDOWN_LABEL + ' Reason: ' + (meta.reason || '')); if (storyHtml) { try { entry.breakdownProse = stripHtml(storyHtml); entry.verdictProse = entry.breakdownProse; } catch (e2) {} } }
+    if (meta && meta.breakdown) { entry.resultKind = 'breakdown'; entry.breakdownStatus = (meta.kind === 'ai') ? 'resolved-ai' : 'online-failed'; entry.formatVersion = 'v16.25'; entry.storyGenerationMethod = (meta.kind === 'ai') ? ('Online AI breakdown (v16.25) — ' + meta.provider + '; checked: ' + meta.passed + ' passed, ' + meta.unverified + ' unverified') : ('Offline breakdown (v16.25) — ' + V1619_OFFLINE_BREAKDOWN_LABEL + ' Reason: ' + (meta.reason || '')); if (storyHtml) { try { entry.breakdownProse = stripHtml(storyHtml); entry.verdictProse = entry.breakdownProse; } catch (e2) {} } }
     entry.verdictPending = false;
     if (meta && meta.kind === 'ai' && storyHtml) { try { entry.verdictProse = stripHtml(storyHtml); } catch (e2) {} }
     if (!entry.battleRecord) entry.battleRecord = battleRecordForV1618(b);
@@ -3608,6 +3858,8 @@ function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, qual
       entry.validation.accuracy = meta.checks.map(function (c) { return { name: c.name, passed: (c.state === 'PASSED' ? true : (c.state === 'UNVERIFIED' ? 'unverified' : false)), detail: c.detail }; });
       entry.validationNote = 'Saved validation: System A is battle integrity; System B is the v16.11 AI main-story hard-constraint validation (locked list, not event-by-event accuracy); System C is the fallback-episode quality check.';
     }
+    /* v16.25 PART 8 — every same-session entry gets the same resolved status/meta, not just the first match. */
+    try { if (sid && _allEntries1625.length > 1) { _allEntries1625.forEach(function (x) { if (x !== entry) { x.verdictStatus = entry.verdictStatus; x.verdictPending = entry.verdictPending; x.resultKind = entry.resultKind; x.breakdownStatus = entry.breakdownStatus; x.sessionId = entry.sessionId; x.mainStoryMeta = entry.mainStoryMeta; } }); } } catch (e) {}
     localStorage.setItem('warroom_battles_v3', JSON.stringify(h.slice(0, 20)));
     try { renderHistory(); } catch (e3) {}
     return entry.id;
@@ -4791,7 +5043,9 @@ function dossierPanelHtmlV1612(f) {
   } catch (e) {}
   /* v16.23 PHASE 1 — structured power profile panel (same function the breakdown prompt reads). */
   try { rows += powerProfileHtmlV1623(f); } catch (e) {}
-  /* v16.24 PHASE 2 RECONCILIATION — both damage-type values labelled wherever they differ. */
+  /* v16.25 PART 11a — per-power records in the dossier panel. */
+  try { rows += powerRecordsHtmlV1625(f); } catch (e) {}
+  /* v16.25 SINGLE SOURCE — replaces the v16.24 reconciliation block (see resolverReconciliationHtmlV1624). */
   try { rows += resolverReconciliationHtmlV1624(f); } catch (e) {}
   return rows;
 }
@@ -6535,7 +6789,7 @@ function sharedDossierFieldsV1620(f) {
   var durabilityType = deepDur || traitDur;
   var durabilityStatus = deep ? (d.durability.status || 'interpretation') : 'derived from engine trait';
   var durabilityNote = '';
-  if (deepDur && deepDur !== traitDur) durabilityNote = 'Note: the deep dossier says ' + deepDur + ' durability, but the engine trait gives ' + traitDur + ' durability — the engine governs simulation, so no ' + deepDur + ' engine effect is applied beyond the trait. This mismatch is flagged, not merged.';
+  if (deepDur && deepDur !== traitDur) durabilityNote = 'Note: the deep dossier says ' + deepDur + ' durability, but the engine trait gives ' + traitDur + ' durability — the simulation uses the engine trait, so no ' + deepDur + ' engine effect is applied beyond the trait. This mismatch is flagged, not merged.';
   var wayToLose = null;
   if (deep && d.durability && d.durability.howLose) wayToLose = { text: d.durability.howLose, status: d.durability.status || 'interpretation' };
   else if (durabilityType === 'regenerative') wayToLose = { text: 'HP 0 after the regeneration cap is exhausted (40 HP per round, 50% of maximum HP per battle, heals while alive only, never revives).', status: 'derived from engine trait' };
@@ -6864,7 +7118,7 @@ function tierBandV1623(t) {
 }
 function speedBandV1623(sp, dex) {
   var s = (typeof sp === "number") ? sp : 1;
-  var speed = (s >= 1.5) ? "blinding" : (s >= 1.35) ? "very fast" : (s >= 1.2) ? "fast" : (s >= 1.1) ? "above average" : "steady";
+  var speed = (s >= 1.5) ? "blinding" : (s >= 1.35) ? "very fast" : (s >= 1.2) ? "fast" : (s >= 1.1) ? "slightly above average" : "steady";
   var d = (typeof dex === "number") ? dex : 7;
   var reaction = (d >= 10) ? "exceptional reaction" : (d >= 9) ? "sharp reaction" : (d >= 8) ? "trained reaction" : (d >= 7) ? "average reaction" : "slow reaction";
   return { speed: speed, reaction: reaction };
@@ -6986,12 +7240,12 @@ function powerProfileV1623(f) {
       featStatus: base.feat ? "stated (profile feat, general terms)" : "unknown",
       status: "roster tier (game scale, not a canon measurement)" },
     speed: { band: sb.speed, reaction: sb.reaction,
-      status: "derived from roster speed/dexterity numbers (game scale, not a canon measurement)" },
+      status: "derived from roster speed/dexterity numbers (game scale, not a canon measurement); game speed, not canon speed" },
     durability: dur,
     damage: {
       signature: { name: sigName, type: sigType, status: sigStatus },
       powersetTypes: powersetTypes,
-      powersetStatus: "keyword-derived (damageTypeCanonicalV14) — NOT authored",
+      powersetStatus: "combat types via damageTypeCombatV1625 (v16.25 single source) — signature authored, recorded powers from Part 11 records, all other powers keyword fallback labelled, never presented as authored",
       resisted: resisted,
       resistedStatus: "engine derivation from record traits (not a canon measurement); all other types x1",
       bypassed: bypassed,
@@ -7025,7 +7279,7 @@ function powerProfileSummaryV1623(f) {
   try {
     var p = powerProfileV1623(f);
     var sig = p.damage.signature.name + " deals " + p.damage.signature.type + " damage [" + p.damage.signature.status + "]";
-    var pow = p.damage.powersetTypes.length ? ("other powers (keyword-derived, not authored): " + p.damage.powersetTypes.join(", ")) : "other powers: none recorded";
+    var pow = p.damage.powersetTypes.length ? ("other powers (combat types, v16.25 single source — keyword fallback labelled, not authored): " + p.damage.powersetTypes.join(", ")) : "other powers: none recorded";
     var res = p.damage.resisted.length ? ("resists (engine derivation): " + p.damage.resisted.join(", ")) : "resists: none below x1 (all types x1)";
     var byp = p.damage.bypassed.length ? ("bypassed by: " + p.damage.bypassed.join(", ")) : "bypassed by: none stated";
     var exp = p.weaknesses.exploitable.length ? p.weaknesses.exploitable.map(function (w) { return w.text + " (" + w.condition + ")"; }).join("; ") : "none with a recorded engine exploit path";
@@ -7044,7 +7298,7 @@ function powerProfileHtmlV1623(f) {
   rows += "<p><b>Power tier:</b> " + esc(p.tier.value) + " (" + esc(p.tier.band) + ")" + st(p.tier.status) + " <b>Feat behind it:</b> " + esc(p.tier.feat) + st(p.tier.featStatus) + "</p>";
   rows += "<p><b>Speed:</b> " + esc(p.speed.band) + " — " + esc(p.speed.reaction) + st(p.speed.status) + "</p>";
   rows += "<p><b>Durability type:</b> " + esc(p.durability.type) + (p.durability.type === "other" ? " (barrier/force-field — same barrier defence the older shared dossier section calls 'force-field')" : "") + st(p.durability.status) + " <b>Defined way to lose:</b> " + esc(p.durability.wayToLose) + (p.durability.note ? " " + esc(p.durability.note) : "") + "</p>";
-  rows += "<p><b>Damage dealt — signature (authored):</b> " + esc(p.damage.signature.name) + " deals " + esc(p.damage.signature.type) + st(p.damage.signature.status) + " <b>Engine keyword type for this signature:</b> " + esc(damageTypeCanonicalV14(p.damage.signature.name)) + " [keyword-derived — engine governs combat until Phase 3; authored column is NOT the combat damage type yet]"  + " <b>Other powers (keyword-derived, NOT authored):</b> " + esc(p.damage.powersetTypes.length ? p.damage.powersetTypes.join(", ") : "none recorded") + st(p.damage.powersetStatus) + "</p>";
+  rows += "<p><b>Damage dealt — signature (combat, v16.25 single source):</b> " + esc(p.damage.signature.name) + " deals " + esc(p.damage.signature.type) + st(p.damage.signature.status) + " — dossier, powers list, and combat all use this value. <b>Other powers (combat types):</b> " + esc(p.damage.powersetTypes.length ? p.damage.powersetTypes.join(", ") : "none recorded") + st(p.damage.powersetStatus) + "</p>";
   rows += "<p><b>Damage resisted:</b> " + esc(p.damage.resisted.length ? p.damage.resisted.join(", ") : "none below x1 — all types x1") + st(p.damage.resistedStatus) + " <b>What bypasses them:</b> " + esc(p.damage.bypassed.length ? p.damage.bypassed.join(", ") : "None stated") + st(p.damage.bypassedStatus) + "</p>";
   rows += "<p><b>Hax (with conditions):</b> None recorded." + st(p.hax.status) + " " + esc(p.hax.note) + "</p>";
   rows += "<p><b>Stamina:</b> " + esc(p.stamina.band) + " <b>Limit / exhaustion state:</b> " + esc(p.stamina.limit) + st(p.stamina.limitStatus) + " <b>Time limits:</b> " + esc(p.stamina.timeLimit) + "</p>";
@@ -7165,6 +7419,20 @@ function splitBreakdownSectionsV1619(text) {
   sections.forEach(function (s) { s.body = s.body.trim(); });
   return sections;
 }
+/* v16.25 PART 3 — Beat 1 margin is a damage rule, every battle, same place.
+   Loser dealt 0 = shutout; margin over 500 = not a close fight; margin 500
+   or less with both dealing damage = close, with the margin number. The
+   criteria-score margin template is retired in this build. */
+function marginSentenceV1625(winner, winnerDamage, loserDamage) {
+  var m = winnerDamage - loserDamage;
+  if (loserDamage === 0) return winner + ' wins ' + winnerDamage + '-' + loserDamage + ' — a shutout, not a close fight.';
+  if (m > 500) return winner + ' wins by ' + m + ' damage — not a close fight.';
+  return winner + ' wins ' + winnerDamage + '-' + loserDamage + ' — a close fight, decided by a margin of ' + m + ' damage.';
+}
+/* v16.25 PART 2 — durability honesty, stated in the breakdown itself, not
+   just the dossier: resistances and the cannot-harm gate change damage,
+   but durability grants no immunity in this build. */
+var DURABILITY_HONESTY_V1625 = 'Durability note: durability already changes damage here through resistances and the cannot-harm gate, but it grants no immunity — an invulnerable fighter still takes reduced damage, and Infinity blocks some blows outright while reducing the rest, so no fighter is untouchable in this build.';
 function buildBreakdownOfflineV1619(b) {
   var f = breakdownFactsV1619(b);
   function regenFor(name) {
@@ -7180,7 +7448,7 @@ function buildBreakdownOfflineV1619(b) {
   }
   var parts = [];
   if (f.stalemate) {
-    parts.push('1. Matchup\nCan ' + f.aName + ' beat ' + f.bName + ' on ' + f.battlefield + '? The record answers: neither fighter finished the other.');
+    parts.push('1. Matchup\nCan ' + f.aName + ' beat ' + f.bName + ' on ' + f.battlefield + '? The record answers: neither fighter finished the other. ' + DURABILITY_HONESTY_V1625);
     parts.push('2. Fighter A best case\n' + bestCase(f.aName, f.toolsA, false, f.characterLineA));
     parts.push('3. Fighter B best case\n' + bestCase(f.bName, f.toolsB, true, f.characterLineB));
     parts.push('4. Best plan\nNeither fighter found a decisive plan in the record. No recorded plan became a finish.');
@@ -7204,11 +7472,12 @@ function buildBreakdownOfflineV1619(b) {
   var variant20 = hash20 % 3;
   /* v16.21: 'close' / 'small edge' only when the log is actually close (margin <= 500 and the loser dealt damage). Shutouts and wide margins say so with numbers. */
   var tone20 = f.pairingType === 'god-vs-god' ? ' The record answers through the criteria, not through reputation.' : (f.pairingType === 'god-vs-weak' ? ' The record gives a short, decisive answer.' : (f.pairingType === 'equal-matched' && f.margin <= 500 && f.loserDamage > 0 ? ' The record gives a close answer, decided by a small edge.' : ''));
-  var marginSentence21 = f.loserDamage === 0 ? (f.winner + ' wins ' + f.winnerDamage + '-' + f.loserDamage + ' — a shutout, not a close fight.') : (f.margin > 500 ? (f.winner + ' wins by ' + f.margin + ' damage — not a close fight.') : '');
+  var marginSentence21 = marginSentenceV1625(f.winner, f.winnerDamage, f.loserDamage);
   var s1 = variant20 === 1 ? ('On ' + f.battlefield + ', ' + f.loser + ' faces ' + f.winner + '. The question is simple: can ' + f.loser + '\'s approach beat ' + f.winner + '\'s?' + tone20)
     : (variant20 === 2 ? (f.winner + ' and ' + f.loser + ' meet on ' + f.battlefield + '. The matchup asks one thing: does ' + f.loser + ' have an answer for ' + f.winner + '?' + tone20)
     : ('Can ' + f.loser + ' beat ' + f.winner + ' on ' + f.battlefield + '? That is the question, and the record answers it plainly.' + tone20));
   if (marginSentence21) s1 += ' ' + marginSentence21;
+  s1 += ' ' + DURABILITY_HONESTY_V1625;
   parts.push('1. Matchup\n' + s1);
   parts.push('2. Fighter A best case\n' + bestCase(f.aName, f.toolsA, false, f.characterLineA));
   parts.push('3. Fighter B best case\n' + bestCase(f.bName, f.toolsB, true, f.characterLineB));
@@ -7247,6 +7516,8 @@ function buildBreakdownOfflineV1619(b) {
   var s6 = f.pairingType === 'god-vs-god' ? ('Criteria considered: power, speed, durability, regeneration, hax/bypass, stamina, weakness exposed. Decisive: ' + f.decisiveKey + '.')
     : ('Other criteria were considered. Decisive: ' + f.decisiveKey + '.');
   if (f.decisiveKey === 'no decisive criterion') s6 = 'Other criteria were considered. Decisive: no decisive criterion — the record shows no single mechanism that decides this fight.';
+  s6 += ' Speed bands are game speed, not canon speed.';
+  if (f.aName === 'Superman' || f.bName === 'Superman') s6 += ' Superman speed audit (v16.25): roster speed 1.1 is a game-scale ordering number, not a canon speed claim — in canon he is far faster than Frodo (1.2); the number is unchanged here because changing it would change battle outcomes, and a roster speed rebalance needs its own decision, not a silent fix.';
   parts.push('6. Criteria scoreboard\n' + s6);
   parts.push('7. Finishing sequence\nThe finishing sequence, in order: ' + (f.finishingSequence.length ? f.finishingSequence.join(' — ') : (f.finisher || 'the finishing blow')) + '.');
   var s8 = 'Finisher: ' + (f.finisher || 'none recorded') + '. Loser: ' + f.loser + ' is ' + f.loserStateWord + '.';
@@ -7286,6 +7557,11 @@ function buildBreakdownPromptV1619(b) {
     var _fa23 = [...(b.alpha || []), ...(b.beta || [])];
     shared += ' POWER PROFILE (v16.23 — the dossier panel and this prompt read the same fields; unknown stays unknown; the engine HP trigger for transforms is unchanged): ' + _fa23.map(function (fr) { return powerProfileSummaryV1623(fr); }).join(' | ');
   } catch (e) {}
+  /* v16.25 PART 11a — per-power records for the prompt (same records as the dossier panel; unknown stays unknown). */
+  try {
+    var _fa25 = [...(b.alpha || []), ...(b.beta || [])];
+    shared += ' POWER RECORDS (v16.25 — per power, not a stat sheet; signature is one power among a demonstrated repertoire; unknown stays unknown): ' + _fa25.map(function (fr) { var _rs = powerRecordsForV1625(fr.id); return fr.name + ': ' + (_rs.length ? _rs.map(function (r) { return r.power + ' — ' + r.effect + '; reach: ' + r.reach + '; can hurt: ' + r.canHurt + '; cannot hurt: ' + r.cannotHurt + '; stopped by: ' + r.stoppedBy + '; cost or limit: ' + r.costLimit + '; outcome if it lands: ' + r.outcomeIfLands + ' (' + r.outcomeNote + ') [' + r.status + ']'; }).join('; ') : 'no per-power record established — unknown'); }).join(' | ');
+  } catch (e) {}
   var regenLine = '';
   try {
     var _recs = recoveryInfoV1620(b);
@@ -7299,13 +7575,15 @@ function buildBreakdownPromptV1619(b) {
   if (f.transformEvidence) { transEvLine = ' TRANSFORMATION EVIDENCE (from the log — never write a blanket struck-harder claim): winner transform ' + f.transformEvidence.form + ' at round ' + f.transformEvidence.round + '; winner attacks averaged ' + f.transformEvidence.preAvg.toFixed(1) + ' damage before it and ' + f.transformEvidence.postAvg.toFixed(1) + ' after it' + (f.transformEvidence.sharedPairs.length ? '; shared attacks before/after: ' + f.transformEvidence.sharedPairs.join('; ') : '') + '. If transformed attacks were not uniformly stronger, say which rose and which fell; never claim they all struck harder.'; }
   var mercyLine = f.mercy ? ' MERCY NOTE (from the log): the winner held the lethal finish once rather than taking the killing blow before the final blow — state this choice in section 8 without ever describing the winner as incapacitated, knocked out, or defeated.' : '';
   var pairing = f.pairingType || 'close';
+  /* v16.25 PART 3 — prompt tone is margin-gated, like the offline template: a shutout or wide margin never gets close/small-edge wording. */
   var toneLine = pairing === 'god-vs-god' ? ' TONE (God vs God): criteria-heavy — section 6 must list the criteria considered (power, speed, durability, regeneration, hax/bypass, stamina, weakness exposed) and name exactly one decisive criterion.'
     : (pairing === 'god-vs-weak' ? ' TONE (wide-gap pairing): short and decisive, with no fake closeness — say plainly through the decisive criterion why the gap decided it.'
-    : (pairing === 'equal-matched' ? ' TONE (equal-matched): close, small-edge wording — the fight is decided by a narrow edge, never by an invented blowout.'
-    : ' TONE: close wording — decide it on the recorded edge, never on an invented blowout.'));
+    : (pairing === 'equal-matched' ? ((f.margin > 500 || f.loserDamage === 0) ? ' TONE (equal-matched, wide margin or shutout): decisive wording — never call this fight close or a small edge; state the margin honestly.' : ' TONE (equal-matched): close, small-edge wording — the fight is decided by a narrow edge, never by an invented blowout.')
+    : ((f.margin > 500 || f.loserDamage === 0) ? ' TONE: decisive wording — never call this fight close or a small edge; state the margin honestly.' : ' TONE: close wording — decide it on the recorded edge, never on an invented blowout.')));
+  var speedDurLine1625 = ' SPEED AND DURABILITY HONESTY (v16.25): speed bands are game speed, not canon speed. ' + DURABILITY_HONESTY_V1625 + ((f.aName === 'Superman' || f.bName === 'Superman') ? ' SUPERMAN SPEED AUDIT (v16.25): roster speed 1.1 is a game-scale ordering number, not a canon speed claim — in canon he is far faster than Frodo (1.2); the number is unchanged here because changing it would change battle outcomes, and a roster speed rebalance needs its own decision, not a silent fix.' : '');
   return 'BREAKDOWN ONLY, TEXT ONLY. Write exactly 9 sections, each starting with its number and heading exactly as: 1. Matchup, 2. Fighter A best case, 3. Fighter B best case, 4. Best plan, 5. Why it stalls, 6. Criteria scoreboard, 7. Finishing sequence, 8. Finisher and loser state, 9. Verdict.'
     + ' WORDING STYLE (write in WAR-ROOM\'s own words, never copied from another creator): short, confident, declarative sentences in the present tense, fast pace. Pose the matchup as a question in section 1. Give each fighter\'s best case with SPECIFIC tools/powers from the record, never generic "he is very strong". Give the loser a REAL best plan first, then a hard pivot ("but" or "however") in section 5 on the one decisive point from the engine log. Name ONE decisive criterion in section 6 and repeat it in the final verdict sentence. Sections 7-8 use specific engine events only. No hedging filler ("maybe", "possibly", "might", "could be", "perhaps") unless the engine itself is uncertain. Vary phrasing by the actual record, fighter names, powers, and log events — never reuse one fixed paragraph shape for every battle.'
-    + toneLine + winnerPlanLine + marginLine + charLine + transEvLine + mercyLine
+    + toneLine + winnerPlanLine + marginLine + speedDurLine1625 + charLine + transEvLine + mercyLine
     + ' DEMON VS ANGEL WORDING: use damage-type/nature wording only when the shared dossier fields below actually record the relevant natures and damage types; otherwise write unknown, never invent a holy/demonic interaction.'
     + ' IMMORTAL / WIN-CONDITION WORDING: if a dossier records an immortal or regenerative durability, use win-condition wording (lasting incapacitation, stalemate) and never write "killed the immortal" — and never end on sealing, containment, or battlefield removal as the victory: the engine\'s outcomes are death, incapacitation, or stalemate only, and those three are not simulated in this build.'
     + ' ' + locked + ' Loser\'s best plan (from the record, for section 5): ' + (f.bestPlan || 'a prepared counter') + '. Why it stalls (from the record): ' + f.whyFailed.join('; ') + '. Decisive point (from the record — section 5 must pivot on this): ' + (f.decisivePoint || '') + '. ' + seqLine
@@ -7456,6 +7734,9 @@ function checkBreakdownV1619(text, b) {
     var closeWord21 = /\bclose\b|\bsmall edge\b/i.test(s1clean21);
     if (closeWord21 && (f.margin > 500 || f.loserDamage === 0)) push('Breakdown section 1 margin is honest', 'FAILED', 'Section 1 calls the fight close/small edge but the log margin is ' + f.margin + ' (' + f.winnerDamage + '-' + f.loserDamage + '); a shutout or wide margin must not be called close.');
     else push('Breakdown section 1 margin is honest', 'PASSED', 'Section 1 does not call a wide-margin or shutout fight close.');
+    /* v16.25 PART 3 — the criteria-score margin template is retired; Beat 1 margin must use damage totals. */
+    if (/small\s*\(score difference/i.test(s1)) push('Breakdown section 1 criteria-score margin template is retired', 'FAILED', 'Section 1 still uses the retired criteria-score margin template; Beat 1 margin must use damage totals.');
+    else push('Breakdown section 1 criteria-score margin template is retired', 'PASSED', 'No criteria-score margin template in section 1.');
     var body5 = secs[4].body || '';
     var dups = [];
     if (((body5.match(/cannot harm/gi) || []).length + (body5.match(/could not harm/gi) || []).length) > 1) dups.push('cannot/could not harm');
@@ -7627,6 +7908,7 @@ async function generateBreakdownV1619(b, sessionId, opts) {
       renderMainStoryDiagnosticsV16(meta, sid);
     }
     if (opts.onReady) { try { opts.onReady(meta, breakdownHtmlV1619(text, b)); } catch (e) {} }
+    try { syncOnlineBreakdownStatusV1625(sid, meta); } catch (e) {}
     return meta;
   }
   function renderOffline(reason) {
@@ -7634,13 +7916,15 @@ async function generateBreakdownV1619(b, sessionId, opts) {
     lastMainStoryMeta = meta;
     if (isCurrent()) {
       /* v16.21: the live view states the failure plainly, with the reason, instead of a silent fallback. */
-      (function () { var _r = reason || 'Online AI generation was unavailable.'; try { if (typeof explainPollinationsErrorV161 === 'function') _r = explainPollinationsErrorV161(_r); } catch (e) {} setStatus('Online AI unavailable — showing offline breakdown. Reason: ' + _r); })();
+      (function () { var _r = reason || 'Online AI generation was unavailable.'; try { if (typeof explainPollinationsErrorV161 === 'function') _r = explainPollinationsErrorV161(_r); } catch (e) {} setStatus('Online AI unavailable — offline breakdown shown. Reason: ' + _r); })();
       setStory(breakdownHtmlV1619(fallbackText, b));
       updateEpisodeHeadingV1610('breakdown-offline', 9, b.victoryMode);
       renderMainStoryLabelV16(meta, sid);
       renderMainStoryDiagnosticsV16(meta, sid);
     }
     if (opts.onReady) { try { opts.onReady(meta, null); } catch (e) {} }
+    /* v16.25 PART 8 — sync AFTER onReady, so saveMainStoryOnceV16 writes prose first and the sync flip cannot trigger its early-return guard before prose exists. */
+    try { syncOnlineBreakdownStatusV1625(sid, meta); } catch (e) {}
     return meta;
   }
   try {
@@ -8095,6 +8379,19 @@ function resolverTierV1624(t) {
   var m = { A: 3, 'A+': 4, S: 5, 'S+': 6, EX: 7 };
   return (m[t] !== undefined) ? m[t] : null;
 }
+/* v16.25 PART 11b — power-record direction. A signature record that lists
+   the defender durability type in cannotHurtVs blocks hurting, but ONLY
+   when no bypass path exists (a recorded bypass or exploit keeps its path,
+   so Batman vs Superman keeps the Kryptonite exploit). Returns null when
+   the record does not apply, so profile logic stands. */
+function powerRecordDirectionV1625(att, defDurabilityType, hasBypassPath) {
+  try {
+    if (!att || !att.id || hasBypassPath) return null;
+    var rec = powerRecordV1625(att.id, att.sig);
+    if (!rec || !rec.cannotHurtVs || rec.cannotHurtVs.indexOf(defDurabilityType) === -1) return null;
+    return { cannotHurt: true, reason: (att.name || att.id) + ' cannot hurt this defender via power record: ' + rec.power + ' — ' + rec.cannotHurt + ' [power record: ' + rec.status + ']' };
+  } catch (e) { return null; }
+}
 function resolverDirectionV1624(att, def) {
   var pa = resolverProfileV1624(att), pd = resolverProfileV1624(def);
   if (!pa || !pd) return { canHurt: null, cannotHarm: false, gated: false, bypassPath: null, reason: 'unknown — profile unavailable, nothing is invented' };
@@ -8113,13 +8410,15 @@ function resolverDirectionV1624(att, def) {
   var defDur = (defBase.dur !== undefined && defBase.dur !== null) ? defBase.dur : 7;
   var gated = (tierGap !== null && tierGap >= 2 && defDur >= 9 && RESOLVER_NONPHYSICAL_V1624.indexOf(sigType) === -1 && !bypassPath);
   var overwhelming = (!gated && tierGap !== null && tierGap >= 3 && (pd.damage.resisted || []).indexOf(sigType) !== -1 && !bypassPath);
-  var cannotHarm = gated || overwhelming;
+  var recDir1625 = powerRecordDirectionV1625(attBase, pd.durability.type, !!bypassPath);
+  var cannotHarm = gated || overwhelming || !!(recDir1625 && recDir1625.cannotHurt);
   var reason = '';
   if (gated) reason = attBase.name + ' cannot hurt ' + defBase.name + ' under the engine cannot-harm gate (tier gap ' + tierGap + ' plus defender durability ' + defDur + ' blocks ordinary ' + sigType + ' attacks; only a recorded bypass, exploit, or counter could change that)';
   else if (overwhelming) reason = attBase.name + ' cannot hurt ' + defBase.name + ' in practice under the resolver rule (tier gap ' + tierGap + ' plus the defender profile records resistance to the signature type ' + sigType + ' — this is a resolver rule, not the engine gate, and is labelled as such)';
+  else if (recDir1625 && recDir1625.cannotHurt) reason = recDir1625.reason;
   else if (bypassPath) reason = attBase.name + ' can hurt ' + defBase.name + ' via: ' + bypassPath;
   else reason = attBase.name + ' can hurt ' + defBase.name + ' (no cannot-harm gate applies: tier gap ' + (tierGap === null ? 'unknown' : tierGap) + ', defender durability ' + defDur + ', signature type ' + sigType + ')';
-  return { canHurt: !cannotHarm, cannotHarm: cannotHarm, gated: gated, overwhelming: overwhelming, bypassPath: bypassPath, tierGap: tierGap, defDur: defDur, sigType: sigType, resisted: pd.damage.resisted || [], reason: reason };
+  return { canHurt: !cannotHarm, cannotHarm: cannotHarm, gated: gated, overwhelming: overwhelming, recordOverride: !!(recDir1625 && recDir1625.cannotHurt), bypassPath: bypassPath, tierGap: tierGap, defDur: defDur, sigType: sigType, resisted: pd.damage.resisted || [], reason: reason };
 }
 function resolverSealNoteV1624(f) {
   var base = resolverFighterV1624(f), p = resolverProfileV1624(f);
@@ -8129,6 +8428,10 @@ function resolverSealNoteV1624(f) {
   var hit = null;
   names.forEach(function (n) { if (!hit && /seal|contain|banish|imprison/i.test(n)) hit = n; });
   var wc = (p && p.winCondition) || {};
+  /* v16.25 PART 11b — a power record stating a sealing/removal outcome is a recorded capability (still NOT a simulated victory). */
+  var recSeal1625 = null;
+  try { (powerRecordsForV1625(base.id) || []).forEach(function (r) { if (!recSeal1625 && (r.outcomeIfLands === 'sealing' || r.outcomeIfLands === 'removal')) recSeal1625 = r; }); } catch (e) {}
+  if (recSeal1625) return { capability: 'power record states ' + recSeal1625.outcomeIfLands + ' (' + recSeal1625.power + ') — ' + recSeal1625.effect, status: 'recorded capability — NOT a simulated victory in this phase; engine outcome set stays death / incapacitation / stalemate until Phase 3', sealing: wc.sealing || 'not simulated', containment: wc.containment || 'not simulated', battlefieldRemoval: wc.battlefieldRemoval || 'not simulated' };
   if (hit) return { capability: 'power name mentions sealing/containment (' + hit + ')', status: 'name-mention only — NOT a simulated victory in this phase; engine outcome set stays death / incapacitation / stalemate until Phase 3', sealing: wc.sealing || 'not simulated', containment: wc.containment || 'not simulated', battlefieldRemoval: wc.battlefieldRemoval || 'not simulated' };
   return { capability: 'not recorded', status: 'not recorded / not simulated — no dossier/profile field states a sealing, containment, or removal capability with conditions for this fighter, so none is invented', sealing: wc.sealing || 'not simulated', containment: wc.containment || 'not simulated', battlefieldRemoval: wc.battlefieldRemoval || 'not simulated' };
 }
@@ -8158,7 +8461,7 @@ function resolveCharacterRulesV1624(a, b, seed, opts) {
   opts = opts || {};
   var mode = opts.victoryMode || 'death';
   var fa = resolverFighterV1624(a), fb = resolverFighterV1624(b);
-  if (!fa || !fb) return { version: 'v16.24', error: 'unknown fighter — resolver refuses to invent a profile' };
+  if (!fa || !fb) return { version: 'v16.25', error: 'unknown fighter — resolver refuses to invent a profile' };
   var variant = opts.variant || 'Base', variantId = opts.variantId || 'base';
   var pa = resolverProfileV1624(Object.assign({}, fa, { variant: variant, variantId: variantId }));
   var pb = resolverProfileV1624(Object.assign({}, fb, { variant: variant, variantId: variantId }));
@@ -8200,8 +8503,19 @@ function resolveCharacterRulesV1624(a, b, seed, opts) {
   if (winner && winProfile) exchanges.push('Finisher: ' + winProfile.damage.signature.name + ' as the resolver finishing exchange (resolver sequence, NOT the HP-engine finisher) — decisive criterion: ' + criterion + '.');
   else exchanges.push('Finisher: none — the resolver awards no finisher in a stalemate.');
   var loserState = (winner === null) ? 'stalemate — no loser state' : (mode === 'incapacitation' ? 'unconscious' : 'knocked out');
+  /* v16.25 PART 11b — signature power records for both fighters, kept as a
+     separate field so the criterion/reason text (and its tests) are untouched. */
+  var powerRecordsOut1625 = [];
+  try {
+    var _prA = powerRecordV1625(fa.id, fa.sig);
+    var _prB = powerRecordV1625(fb.id, fb.sig);
+    powerRecordsOut1625 = [
+      { fighter: pa.name, power: pa.damage.signature.name, outcomeIfLands: _prA ? _prA.outcomeIfLands : 'unknown', outcomeNote: _prA ? _prA.outcomeNote : 'no per-power record established — unknown', status: _prA ? _prA.status : 'unknown', vsDefenderDurability: pb.durability.type, cannotHurtVs: _prA ? _prA.cannotHurtVs : [] },
+      { fighter: pb.name, power: pb.damage.signature.name, outcomeIfLands: _prB ? _prB.outcomeIfLands : 'unknown', outcomeNote: _prB ? _prB.outcomeNote : 'no per-power record established — unknown', status: _prB ? _prB.status : 'unknown', vsDefenderDurability: pa.durability.type, cannotHurtVs: _prB ? _prB.cannotHurtVs : [] }
+    ];
+  } catch (e) {}
   return {
-    version: 'v16.24', resolver: 'character-rule resolver v16.24 (alongside HP engine — does NOT replace the HP engine in this phase; the main breakdown stays HP-engine-locked)',
+    version: 'v16.25', resolver: 'character-rule resolver v16.25 (alongside HP engine — does NOT replace the HP engine in this phase; the main breakdown stays HP-engine-locked)',
     seed: (seed !== undefined && seed !== null) ? seed : null, victoryMode: mode,
     fighterA: { id: fa.id, name: pa.name, variant: variant, tier: fa.tier, tierBand: pa.tier.band, durability: pa.durability.type, signature: pa.damage.signature.name, signatureType: pa.damage.signature.type, range: pa.range.value },
     fighterB: { id: fb.id, name: pb.name, variant: variant, tier: fb.tier, tierBand: pb.tier.band, durability: pb.durability.type, signature: pb.damage.signature.name, signatureType: pb.damage.signature.type, range: pb.range.value },
@@ -8213,7 +8527,7 @@ function resolveCharacterRulesV1624(a, b, seed, opts) {
       profileB: { tier: pb.tier.value, durability: pb.durability.type, wayToLose: pb.durability.wayToLose, resisted: pb.damage.resisted, bypassed: pb.damage.bypassed, staminaLimit: pb.stamina.limit, staminaLimitStatus: pb.stamina.limitStatus, range: pb.range.value }
     },
     steps: ['1. Can A hurt B? Can B hurt A?', '2. Can either bypass?', '3. Can either seal / contain / remove / incapacitate if killing is impossible? (capability note only — not a simulated victory)', '4. Who runs out first?', '5. What character rule changes what they will do?'],
-    winner: winner, decisiveCriterion: criterion, why: why, exchanges: exchanges, loserState: loserState,
+    winner: winner, decisiveCriterion: criterion, why: why, exchanges: exchanges, loserState: loserState, powerRecords: powerRecordsOut1625,
     note: 'Resolver inputs, criterion, and exchange sequence are recorded here so the decision is deterministic and replayable without HP ticks. Sealing/containment/battlefield removal are NOT simulated victories in this phase.'
   };
 }
@@ -8229,35 +8543,46 @@ function resolverComparisonForBattleV1624(b) {
     var a = b.alpha[0], f2 = b.beta[0];
     var res = resolveCharacterRulesV1624(Object.assign({}, byId(a.id), { variant: a.variant || 'Base', variantId: a.variantId || 'base' }), Object.assign({}, byId(f2.id), { variant: f2.variant || 'Base', variantId: f2.variantId || 'base' }), b.seed || null, { victoryMode: b.victoryMode || 'death' });
     var comp = compareResolverToHpV1624(res, b.winner, !!b.stalemate);
-    return { resolver: res, hpWinner: b.winner, hpStalemate: !!b.stalemate, match: comp.match, verdict: comp.verdict };
+    /* v16.25 PART 6 (definition half only — saved-episode work is dropped under Part 10(a)): HP criterion and finisher, guarded, so a comparison input without an HP record reports unknown instead of assuming a match. */
+    var hpCrit1625 = 'unknown', hpFin1625 = 'unknown', resFin1625 = null;
+    try { var _bf1625 = breakdownFactsV1619(b); if (_bf1625 && _bf1625.decisiveKey) hpCrit1625 = _bf1625.decisiveKey; } catch (e) {}
+    try { if (b.finalRecord && b.finalRecord.finishingAbility) hpFin1625 = b.finalRecord.finishingAbility; } catch (e) {}
+    try { if (res && !res.error) resFin1625 = (res.winner === res.fighterA.name) ? res.fighterA.signature : ((res.winner === res.fighterB.name) ? res.fighterB.signature : null); } catch (e) {}
+    return { resolver: res, hpWinner: b.winner, hpStalemate: !!b.stalemate, match: comp.match, verdict: comp.verdict, hpCriterion: hpCrit1625, hpFinisher: hpFin1625, resolverFinisher: resFin1625, reasonMatch: (hpCrit1625 !== 'unknown' && res && res.decisiveCriterion === hpCrit1625), finisherMatch: (hpFin1625 !== 'unknown' && resFin1625 !== null && hpFin1625 === resFin1625) };
   } catch (e) { return { error: 'resolver comparison unavailable: ' + e.message }; }
 }
 function resolverComparisonHtmlV1624(comp) {
-  if (!comp || comp.error) return '<p><b>Resolver comparison (v16.24, alongside HP engine):</b> unavailable — ' + esc(String((comp && comp.error) || 'no comparison')) + '</p>';
+  if (!comp || comp.error) return '<p><b>Resolver comparison (v16.25, alongside HP engine):</b> unavailable — ' + esc(String((comp && comp.error) || 'no comparison')) + '</p>';
   var r = comp.resolver;
-  var rows = '<p><b>Resolver comparison (v16.24 — alongside the HP engine, NOT the main breakdown):</b> Resolver winner: ' + esc(r.winner || 'Stalemate') + ' — decisive criterion: ' + esc(r.decisiveCriterion) + '. HP engine winner: ' + esc(comp.hpStalemate ? 'Stalemate' : comp.hpWinner) + '. ' + esc(comp.verdict) + '</p>';
+  var rows = '<p><b>Resolver comparison (v16.25 — alongside the HP engine, NOT the main breakdown):</b> MATCH means winner only — reason and finisher are listed separately below. Resolver winner: ' + esc(r.winner || 'Stalemate') + ' — decisive criterion: ' + esc(r.decisiveCriterion) + '. HP engine winner: ' + esc(comp.hpStalemate ? 'Stalemate' : comp.hpWinner) + '. ' + esc(comp.verdict) + '</p>';
+  if (comp.hpCriterion === 'unknown') rows += '<p><b>Reason match:</b> HP criterion unknown in this comparison input — reason match cannot be checked, not assumed. Resolver criterion: ' + esc(r.decisiveCriterion) + '.</p>';
+  else rows += '<p><b>Reason match:</b> resolver ' + esc(r.decisiveCriterion) + ' vs HP ' + esc(comp.hpCriterion) + ' — ' + (comp.reasonMatch ? 'reason match' : 'reason MISMATCH') + '.</p>';
+  if (comp.hpFinisher === 'unknown') rows += '<p><b>Finisher match:</b> HP finisher unknown in this comparison input — finisher match cannot be checked, not assumed. Resolver finisher: ' + esc(comp.resolverFinisher || 'none') + '.</p>';
+  else rows += '<p><b>Finisher match:</b> resolver ' + esc(comp.resolverFinisher || 'none') + ' vs HP ' + esc(comp.hpFinisher) + ' — ' + (comp.finisherMatch ? 'finisher match' : 'finisher MISMATCH') + '.</p>';
   rows += '<p><b>Resolver exchanges (words only, no HP ticks):</b></p><ol>' + r.exchanges.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>';
   rows += '<p><b>Resolver loser state:</b> ' + esc(r.loserState) + '. <b>Seed recorded:</b> ' + esc(String(r.seed)) + '. <b>Sealing/containment note:</b> ' + esc(r.inputs.sealContainA.capability) + ' (' + esc(r.inputs.sealContainA.status) + '); ' + esc(r.inputs.sealContainB.capability) + ' (' + esc(r.inputs.sealContainB.status) + ').</p>';
+  if (r.powerRecords && r.powerRecords.length) rows += '<p><b>Power records (v16.25):</b> ' + r.powerRecords.map(function (pr) { return esc(pr.fighter) + ' signature ' + esc(pr.power) + ' — outcome if it lands: ' + esc(pr.outcomeIfLands) + ' vs ' + esc(pr.vsDefenderDurability) + ' durability [' + esc(pr.status) + ']'; }).join('; ') + '.</p>';
   return rows;
 }
-/* v16.24 PHASE 2 RECONCILIATION — label BOTH damage-type values wherever they differ.
-   The structured powers list uses the engine keyword type; the Phase 1 profile
-   signature uses the authored type. Neither is hidden and neither is silently
-   picked: where they differ, both are shown with their labels, and the engine
-   type still governs combat until Phase 3. The authored column is NOT the
-   combat damage type yet. */
+/* v16.25 SINGLE SOURCE — replaces the v16.24 reconciliation block. There
+   is one damage-type value now: dossier, powers list, and combat all use
+   damageTypeCombatV1625. The old engine-keyword warning is gone. Durability
+   naming is branched on the structured profile type: only a true barrier
+   profile gets a barrier sentence; a mortal profile gets a mortal sentence. */
 function resolverReconciliationHtmlV1624(f) {
   try {
     var p = powerProfileV1623(f);
-    var eng = damageTypeCanonicalV14(p.damage.signature.name);
-    var auth = p.damage.signature.type;
+    var combat = damageTypeCombatV1625(f, p.damage.signature.name);
     var durRaw = null;
     try { var d = dossierForV1612(f); if (d && d.durability) durRaw = d.durability.type; } catch (e) {}
-    var rows = '<p><b>Damage-type reconciliation (v16.24 Phase 2 — both values labelled, neither hidden):</b> Signature ' + esc(p.damage.signature.name) + ' — profile: ' + esc(auth) + ' [authored] / engine: ' + esc(eng) + ' [keyword-derived — engine governs combat until Phase 3]' + (auth === eng ? ' — the two values agree for this fighter.' : ' — the two values DIFFER for this fighter; the structured powers list uses the engine keyword type, the structured profile uses the authored type, and the authored column is NOT the combat damage type yet.') + '</p>';
-    if (durRaw && durRaw !== p.durability.type) rows += '<p><b>Durability naming (v16.24 Phase 2):</b> older shared dossier section: ' + esc(durRaw) + ' / structured profile: ' + esc(p.durability.type) + ' (barrier/force-field) — both names describe the same barrier defence; the profile term is "other" with the barrier note, not a different durability.</p>';
-    else rows += '<p><b>Durability naming (v16.24 Phase 2):</b> shared section and structured profile agree on durability naming for this fighter.</p>';
+    var rows = '<p><b>Damage-type single source (v16.25 — one value, used everywhere):</b> Signature ' + esc(p.damage.signature.name) + ' — combat damage type: ' + esc(combat.type) + ' [' + esc(combat.source) + '] — dossier, powers list, and combat all use this value; the old engine-keyword warning is gone.</p>';
+    if (durRaw && durRaw !== p.durability.type) {
+      if (p.durability.type === 'other') rows += '<p><b>Durability naming (v16.25):</b> older shared dossier section: ' + esc(durRaw) + ' / structured profile: ' + esc(p.durability.type) + ' (barrier/force-field) — both names describe the same barrier defence; the profile term is "other" with the barrier note, not a different durability.</p>';
+      else if (p.durability.type === 'mortal') rows += '<p><b>Durability naming (v16.25):</b> older shared dossier section: ' + esc(durRaw) + ' / structured profile: ' + esc(p.durability.type) + ' — both names mean no special durability is recorded; neither describes a barrier, and this fighter has no barrier defence.</p>';
+      else rows += '<p><b>Durability naming (v16.25):</b> older shared dossier section: ' + esc(durRaw) + ' / structured profile: ' + esc(p.durability.type) + ' — shown as recorded; the structured profile value is the one the panel uses.</p>';
+    } else rows += '<p><b>Durability naming (v16.25):</b> shared section and structured profile agree on durability naming for this fighter.</p>';
     return rows;
-  } catch (e) { return '<p><b>Damage-type reconciliation (v16.24):</b> unavailable — nothing is invented.</p>'; }
+  } catch (e) { return '<p><b>Damage-type single source (v16.25):</b> unavailable — nothing is invented.</p>'; }
 }
 
 /* ============ INIT ============ */
