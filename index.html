@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.25 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.26 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,9 +66,10 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.25</h1><span>1V1 DEATH BATTLES • ENGINE v16.25 • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v16.26</h1><span>1V1 DEATH BATTLES • ENGINE v16.26 • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
+<div class="panel"><h2>Phase 3 — simplified flow</h2><p class="note">Pick two fighters, battle, read the breakdown — that is the whole flow in v16.26. History, export, read-aloud, Advanced Settings, and live-research retests are removed in this build; the breakdown page is the result. Search and category filters, the Review Matchup edge table, Combat Details, the visible resolver check, and dossier Info are kept.</p></div>
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
 <input id="search-input" placeholder="Search by name, franchise, or alias — try Goku, Batman, Link...">
 <p id="roster-type-note" class="note"></p>
@@ -79,81 +80,15 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 <div class="panel"><h2>Combat Roster <span id="roster-count" style="font-size:.8rem;color:var(--dim)"></span></h2><div class="grid" id="fighter-pool"></div></div>
 <div class="panel"><h2 id="match-heading">2 — Death Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. Both fighters are chosen by you — WAR-ROOM v15 is 1v1 only.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
 <label style="font-size:.85rem">Battlefield</label><select id="battlefield-select"></select><p class="note" id="battlefield-desc"></p>
-<label style="font-size:.85rem">Victory condition</label><select id="victory-select"><option value="death" selected>Death (default) — a fighter must reach HP 0 to lose by death</option><option value="incapacitation">Incapacitation / Knockout — a knockout is unconsciousness, NOT death</option></select><p class="note">Mirror matches are blocked in this build: the same fighter cannot fight itself. In Death mode a knockout is never labelled death. In Incapacitation mode a knockout is labelled unconscious, not dead. Surrender and escape are not simulated outcomes in this build — the verdict will not claim them.</p>
-<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn yel" onclick="triggerOnlineResearch()" style="flex:1">Retest live research (optional)</button><button class="btn" id="review-btn" disabled style="flex:1">Review Matchup →</button></div>
-<div id="research-intel" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Live research intel will appear here. Research is optional. Without internet it falls back to local data. Research never changes battle stats in v15.</div>
+<label style="font-size:.85rem">Victory condition</label><select id="victory-select"><option value="death" selected>Death (default) — the loser is knocked out, not dead: the fight ends when a fighter can no longer continue</option><option value="incapacitation">Incapacitation / Knockout — a knockout is unconsciousness, NOT death</option></select><p class="note">Mirror matches are blocked in this build: the same fighter cannot fight itself. In Death mode a knockout is never labelled death. In Incapacitation mode a knockout is labelled unconscious, not dead. Surrender and escape are not simulated outcomes in this build — the verdict will not claim them.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="review-btn" disabled style="flex:1">Review Matchup →</button></div>
+
 
 
 <div id="setup-review" style="display:none"></div>
 </div>
 </div>
-<details class="adv" id="advanced-settings"><summary>Advanced Settings — connection tests, research, custom fighters, Gemini key, Pollinations key, diagnostics (closed by default; nothing here is required to play)</summary><div class="panel" id="mode-b-panel"><h2>Mode B — Video-Inspired Battle (optional, context only)</h2>
-<p class="note">Mode A (default) is an Original Death Battle, made from the game's own profiles and combat engine. Mode B is different: paste a transcript or notes from a video you watched below. That text is shown as "Video-inspired notes" in Chapters I–II only. It does NOT grant new powers, change stats, or replace the simulation. The narration in v15 is always original — it never copies another creator's script.</p>
-<p class="note"><b>Honest limit:</b> a YouTube link alone does not let this browser file read a video's audio or captions automatically. That would require a YouTube Data API key. Use whatever transcript or notes you can actually access and paste here.</p>
-<label style="font-size:.85rem">YouTube video URL (optional — the game cannot watch or transcribe it)</label><input id="video-url" placeholder="Paste a YouTube URL here, e.g. https://www.youtube.com/watch?v=..." style="width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px"><p class="note">If you paste a URL but no transcript, the game will say so plainly: no video was watched and no transcript was accessed, and the battle continues in ordinary research mode. If you paste notes, claims in them are treated as user-supplied context, not verified facts, and opinions in them are not adopted as facts.</p>
-<label style="font-size:.85rem">Paste transcript or notes (optional)</label>
-<textarea id="video-notes" placeholder="Paste transcript excerpts or notes here, e.g. which versions were discussed, feats mentioned, arguments made..." style="width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px;min-height:80px"></textarea>
-<p class="note">Video-inspired notes are context only. They do not add powers, forms, or stats.</p>
-</div>
-<div class="panel" id="victory-rules-panel"><h2>Victory Rules — what counts as a win</h2>
-<p class="note"><b>Victory is by death</b> (HP reaches 0), <b>or by incapacitation lasting the rest of the fight</b>, <b>or by battlefield removal with no way back</b>. The exact victory condition is stated in the results and in Chapter VI.</p>
-<p class="note"><b>Regeneration can heal, but it does NOT revive after HP 0.</b> A fighter who is knocked out stays knocked out — no dead fighter acts again, and regeneration only heals a fighter who is still alive.</p>
-<p class="note"><b>No invented killing blow:</b> if the battle hits its round cap with both fighters still alive and neither able to kill or incapacitate the other, the result is a <b>stalemate / no-death verdict</b>, explained in Chapter VI — not a fake finish.</p>
-<p class="note"><b>Battlefield removal:</b> removal alone does not count unless the opponent cannot return. No power in the current powersets permanently removes an opponent from the battlefield, so v15 will not claim a BFR victory it did not simulate.</p>
-</div>
-<div class="panel" id="four-brains-panel"><h2>WAR-ROOM AI — Four Connected Brains for 1v1 (rule-based, no paid API)</h2>
-<p class="note"><b>1. Combat Brain:</b> tier scaling, counters, stamina, battlefield destruction, transformations at or below 45% HP — a street-level fighter cannot routinely hurt a cosmic foe by luck alone.<br>
-<b>2. Character Brain:</b> personality decisions — Batman studies first, Goku holds back to test a foe, Vegeta's pride seeks the strongest opponent, humorous fighters are unpredictable. In 1v1 there is no ally to protect, so protective shielding cannot trigger.<br>
-<b>3. Knowledge Brain + Analysis Brain:</b> identity, continuity, powers, feats, limits, weaknesses, transformations, relationships — plus Wikipedia + Fandom research, shown per source — and a head-to-head comparison of strength, speed, durability, abilities, experience, transformations, weaknesses and win conditions, with an explicit uncertainty note when a matchup is close.<br>
-<b>4. Narrator Brain:</b> turns the analysis and the recorded events into a 6-chapter episode (Contenders, Comparison, First Exchange, Turning Point, Final Clash, Verdict), using tactics and reasons, not just attack names.<br>
-<b>Continuity check (adapted to 1v1):</b> checks the battle before the episode is shown — a dead or incapacitated fighter must not act, powers must belong to that version, transformations must meet their trigger, and the winner must match the survivor / stalemate record.</p>
-<p class="note">Trade-off, stated plainly: this is a sophisticated rule system, not a language model. It can calculate, decide, and narrate from rules reliably, but it cannot write unlimited original prose like an LLM. That last step would need a local open model or a free/paid inference service, which v15 does not require.</p></div>
-<div class="panel"><h2>YouTube &amp; Canon Research (Advanced)</h2><h3 style="color:var(--cyan);font-size:.95rem;margin-top:6px">YouTube Battle Research — no API key needed</h3>
-<p class="note">YouTube videos cannot be read automatically by a browser file without a YouTube Data API key, and scraping YouTube is blocked. So this version does the honest version that works on a phone: one-tap YouTube searches for each selected fighter, for powers, strength, speed and transformations, plus a channel library you can grow. Watching is research — it does not automatically add new powers to the combat engine.</p>
-<div id="yt-links" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px">Pick fighters to see their YouTube research searches.</div>
-<div id="yt-channels" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px"></div>
-<input id="new-channel-name" placeholder="Add a battle channel, e.g. Death Battle">
-<button class="btn small" onclick="addChannel()" style="margin-top:6px">Add channel to library</button>
-<label style="font-size:.85rem;display:block;margin-top:10px">Your research note — powers, speed, transformation (context only, does not grant new powers)</label>
-<textarea id="yt-note" placeholder="Example: Watched a breakdown saying X is faster in this form, but weaker against Y..." style="width:100%;background:#141b2c;border:1px solid var(--border);color:var(--main);border-radius:6px;padding:10px;min-height:70px"></textarea>
-<button class="btn small" onclick="saveYTNote()" style="margin-top:6px">Save research note for this battle</button>
-<div id="yt-note-display" class="note"></div><h3 style="color:var(--cyan);font-size:.95rem;margin-top:6px">Canon Sources — Wikipedia + Fandom, automatically</h3>
-<p class="note">Research panel — outside the episode: Fandom wikis are fan-run wikis for each franchise (Dragon Ball Wiki, Narutopedia, Wookieepedia, etc.). They are more canon-specific than Wikipedia, but they are still fan sources — the game shows which source succeeded and which failed, and never claims a failed fetch was verified. Canon extracts are context for the story; they do not automatically add new powers.</p>
-<button class="btn small" onclick="fetchCanonForSelected()">Retest canon for selected fighters (optional)</button>
-<div id="canon-results" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">Canon results appear here automatically when you pick a fighter. Review also refreshes canon for both fighters — no tap is required to proceed to battle.</div><div style="margin-top:10px"><h3 style="color:var(--cyan)">Research Dossier — Pipeline Stage 1: Evidence, Not Verdict</h3>
-<p class="note">Per fighter: source name, source type, found/not-found status, link, and fetched or cached date. Short excerpts appear ONLY here, never inside episode chapters. <b>Demonstrated feats</b> (from the local profile, in general terms) are kept separate from <b>fan opinion / discussion</b> (fan-run wikis and YouTube searches), which is discussion to investigate, not established fact, and never auto-grants a power. <b>Conflicting versions:</b> the game uses ONLY the selected continuity's profile and does not silently merge versions. Research is cached per fighter + continuity on this device and reused on the next encounter; use Refresh for missing or outdated info. A failed source shows ❌ honestly and the game still plays from local profiles. Research never changes battle stats — the old +10 ATK / +60 HP bonus was removed; research fills dossier fields only.</p>
-<button class="btn small" onclick="refreshDossier()">Refresh dossier (re-fetch selected fighters)</button>
-<div id="dossier-output" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">Pick fighters to see their Research Dossier.</div></div>
-<h3 style="color:var(--cyan);font-size:.95rem;margin-top:10px">Search canon for any character</h3>
-<input id="canon-search-input" placeholder="Search Wikipedia for a character, e.g. Vegeta, Thor, Pikachu">
-<button class="btn small" onclick="searchCanon()" style="margin-top:6px">Search canon</button>
-<div id="canon-search-results" class="note" style="margin-top:8px"></div></div><div class="panel"><h2>Online Storytelling Pipeline — Research → Combat → Narration → Check → Save</h2>
-<p class="note"><b>Stage 1 — Research Dossier:</b> load each fighter's structured profile, then fetch Wikipedia (encyclopedia) and fan-run Fandom wiki sources automatically. Fan sources and YouTube searches are discussion to investigate, not established fact, and never auto-grant powers.<br>
-<b>Stage 2 — Matchup Analysis:</b> compare power, speed, dexterity, durability, stamina, tactics, transformations, weaknesses and win conditions for the selected continuities only — versions are never silently merged.<br>
-<b>Stage 3 — Combat Simulation:</b> our own engine decides the battle and records every exchange. The internet is evidence; the engine is the outcome.<br>
-<b>Stage 4 — Episode:</b> the narrator turns the battle record into 6 chapters, with Analytical, Cinematic and Reflective voices.<br>
-<b>Stage 5 — Consistency Check:</b> the episode is checked against the record before it is presented as verified.<br>
-<b>Stage 6 — Saved Episode:</b> matchup, continuities, outcome, research references and the full episode are saved on this device only, so you can re-read them.<br>
-<b>Free storytelling, honestly:</b> the online AI story is now the primary episode and runs automatically after every battle. The rule-based episode is the honest offline fallback, labelled as such, when the online service fails or its draft fails validation. Free services can impose quotas, change availability, or require accounts or keys — internet access alone does not provide a language model, and this game is not built around an assumed free LLM. Automatic YouTube transcript reading still needs a YouTube Data API key; the game uses YouTube search links and your pasted notes instead. Pollinations keyless requests can return HTTP 402 when its anonymous limit is reached; that is reported honestly in the fallback reason (see Technical Details), not hidden, and an optional saved Pollinations key in Advanced Settings is tried only as a secondary attempt.</p></div>
-<div class="panel"><h2>Add a Custom Fighter (grows the roster without inventing canon)</h2><p class="note">Use this for original fighters, or for a version of a real character you have researched yourself. Custom fighters are saved on this device only.</p><input id="custom-name" placeholder="Name"><input id="custom-fr" placeholder="Franchise / universe" style="margin-top:6px"><select id="custom-cat" style="margin-top:6px"><option>Anime</option><option>Comics</option><option>Video Games</option><option>Movies &amp; TV</option><option>Animation</option><option>Fantasy &amp; Sci-Fi</option></select><input id="custom-style" placeholder="Fighting style" style="margin-top:6px"><input id="custom-powers" placeholder="Powers, comma-separated, e.g. Ki Blast, Dragon Fist" style="margin-top:6px"><button class="btn small" onclick="addCustomFighter()" style="margin-top:8px">Add custom fighter</button></div>
-<div class="panel"><h2>Internet Connection — Properly Connected</h2>
-<p class="note" id="file-warning"></p>
-<p class="note">This version connects, from the browser, to: Wikipedia, fan-run Fandom wikis, YouTube search, and — optionally — a free public AI text service (Pollinations, keyless access subject to its anonymous limits — see Advanced Settings) or your own free Gemini key. No Muse server, no paid API, and no key is sent to Muse. Your Gemini key, if you enter one, is stored only in this device's localStorage and is sent only to Google when you tap Generate.</p>
-<button class="btn small" onclick="testConnectionsV16()">Retest connections — real story-path test (optional)</button>
-<div id="connection-results" class="note" style="margin-top:8px">Testing connections automatically on load — just pick fighters and play. Retest is optional, never required to play. The story-path test sends a tiny POST to the real AI service in the same format as a story request; it proves reachability only, not research accuracy or story validation.</div>
-<label style="font-size:.85rem;display:block;margin-top:10px">Optional: your own free Gemini API key (from Google AI Studio — free tier, no card for basic use in many regions)</label>
-<input id="gemini-key-input" type="password" placeholder="Paste your Gemini key here — saved on this device only">
-<button class="btn small" onclick="saveGeminiKey()" style="margin-top:6px">Save key on this device</button>
-<button class="btn small" onclick="clearGeminiKey()" style="margin-top:6px">Remove key</button>
-<div id="gemini-key-status" class="note"></div>
-<p class="note">Security note: a key in a browser game can be seen in network traffic on that device. Use a free key, never a paid/production key, and rotate it if you share the device.</p>
-<label style="font-size:.85rem;display:block;margin-top:10px">Optional: your own Pollinations key (from Pollinations — only a secondary attempt, after keyless fails; never required to play)</label>
-<input id="pollinations-key-input" type="password" placeholder="Paste your Pollinations key here — saved on this device only">
-<button class="btn small" onclick="savePollinationsKey()" style="margin-top:6px">Save Pollinations key on this device</button>
-<button class="btn small" onclick="clearPollinationsKey()" style="margin-top:6px">Remove Pollinations key</button>
-<div id="pollinations-key-status" class="note"></div>
-<p class="note">Pollinations honesty note (v16.1 investigation, 2026-10-30): keyless POST and GET both answered HTTP 200 from Node when not rate-limited, but a second request inside ~30 seconds returned HTTP 402 "Free limit reached: 1 reply every 30 seconds per IP". So a 402 in this game usually means the free anonymous limit was hit, not that keyless access is permanently gone — the fallback reason now says so plainly. If no key is saved, the game never asks for one in the main flow: the honestly labelled offline episode is the result. Live-browser AI generation is still unproven and is not claimed here.</p></div>
-</details><div class="panel"><h2>Battle History (saved on this device only)</h2><div id="history-list" class="note">No saved battles yet.</div></div>
+
 </section>
 
 <section id="battle-screen" class="screen">
@@ -163,16 +98,29 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 
 <section id="results-screen" class="screen">
 <div class="panel"><h2 id="result-title">RESULT</h2><p id="result-desc" class="note" style="font-size:.9rem"></p></div>
-<div class="panel story"><h2 id="episode-heading">Death Battle Verdict</h2><p id="main-story-label" class="note"></p><p id="main-story-status" class="note"></p><p class="note">The main verdict below is a short verdict (about 150–200 words, 5 beats, shown as a slideshow), locked to the recorded battle outcome. While online generation runs, the labelled offline verdict is shown first and replaced by the online AI verdict when it passes validation. If online generation is unavailable, the offline rule-based verdict stays and is labelled honestly as offline — it is never presented as online AI, and it is never a long episode as main. Combat Details below is the authoritative round-by-round record.</p><div id="story-output"></div></div>
-<button class="btn" onclick="resetSimulator()">New Battle</button> <button class="btn" onclick="exportCurrentSavedEpisodeFile('json')">Download JSON</button> <button class="btn" onclick="exportCurrentSavedEpisodeFile('story')">Download story</button><p id="export-note-top" class="note"></p>
+<div class="panel" id="resolver-visible-panel"><h2>Resolver check — visible on this page</h2><div id="resolver-visible" class="note">Resolver comparison appears here after the battle — it is not hidden inside a collapsed block. If the comparison cannot be computed, the reason is shown here, never nothing.</div></div>
+<div class="panel" id="online-status-panel"><h2>Online breakdown status</h2><div id="online-status-banner" class="note">Online breakdown status appears here during and after generation.</div></div>
+<div class="panel story"><h2 id="episode-heading">Death Battle Breakdown</h2><p id="main-story-label" class="note"></p><p id="main-story-status" class="note"></p><p class="note">The main breakdown below is a 9-section text breakdown, locked to the recorded battle outcome. While online generation runs, the labelled offline breakdown is shown first and replaced by the online AI breakdown when it passes validation. If online generation is unavailable, the offline rule-based breakdown stays and is labelled honestly as offline — it is never presented as online AI. Combat Details below is the authoritative round-by-round record.</p><div id="story-output"></div></div>
+<button class="btn" onclick="resetSimulator()">New Battle</button>
 <details class="adv"><summary>Combat Details — breakdown and numbers (numbers live here, not in the story)</summary><ul class="break" id="breakdown-output"></ul></details>
 <details class="adv"><summary>Character Research — dossier for this battle</summary><div id="result-dossier-output" class="note">Research dossier for this battle appears here after the battle.</div></details>
-<details class="adv"><summary>Technical Details — validation, provider, session, retry</summary><p id="consistency-note" class="note"></p><div id="pipeline-stages" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px"></div><div id="consistency-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="quality-note" class="note"></p><div id="quality-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="integrity-note" class="note"></p><div id="integrity-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="accuracy-note" class="note"></p><div id="accuracy-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><div id="main-story-diagnostics" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">No story generated yet for this battle.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn small" id="retry-online-story-btn" onclick="retryMainStoryV16()">Retry online story</button></div><div id="ai-story-output" class="note" style="margin-top:10px;line-height:1.7">The main story above is the online AI story (or the labelled offline fallback). Rejected draft diagnostics, if any, are in Technical Details — never presented as the story.</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" onclick="downloadStory()">Download story as HTML</button> <button class="btn" onclick="exportCurrentSavedEpisodeFile('json')">Download JSON</button> <button class="btn" onclick="exportCurrentSavedEpisodeFile('story')">Download story</button></div><p id="export-note" class="note"></p></details>
+<details class="adv"><summary>Technical Details — validation, provider, session, retry</summary><p id="consistency-note" class="note"></p><div id="pipeline-stages" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px"></div><div id="consistency-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="quality-note" class="note"></p><div id="quality-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="integrity-note" class="note"></p><div id="integrity-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="accuracy-note" class="note"></p><div id="accuracy-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><div id="main-story-diagnostics" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">No story generated yet for this battle.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn small" id="retry-online-story-btn" onclick="retryMainStoryV16()">Retry online story</button></div><div id="ai-story-output" class="note" style="margin-top:10px;line-height:1.7">The main story above is the online AI story (or the labelled offline fallback). Rejected draft diagnostics, if any, are in Technical Details — never presented as the story.</div><p id="online-status-tech" class="note"></p></details>
 </section>
 </main>
 
 <div class="modal" id="info-modal"><div class="modal-box"><h3 id="info-title"></h3><img id="info-portrait" style="display:none;max-width:220px;border-radius:8px" alt="Character portrait from Wikipedia, if available"><div id="info-content"></div><button class="btn" onclick="closeInfo()">Close</button></div></div>
 <script>
+/* ============ WAR-ROOM v16.26 — PHASE 3 SIMPLIFIED FLOW ONLY ============
+   Built from v16.25. Character screen -> battle -> breakdown page only.
+   REMOVED from the main flow: save/history/export, read-aloud playback,
+   Advanced Settings (connection tests, custom fighters, keys, diagnostics),
+   Live Research panel + RETEST, Share/Copy Link (none existed in v16.25).
+   History wording fixes are SUPERSEDED by removal (history is gone); only
+   the mode-selector Death wording is fixed. Resolver stays ALONGSIDE the
+   HP-engine breakdown (NOT main output — that is Phase 3B, after 3A data).
+   Speed numbers are UNCHANGED (see Superman audit note in section 6);
+   the deliberate speed rebalance decision is still OPEN, not made here.
+   Text only: no video, no voice, no images. No push approval in this file. */
 /* ============ ROSTER: compact, honest, expandable ============ */
 /* Fields: v2 = second variant label + its stat mods. trans = transformation, or '' if none. */
 /* Only abilities listed here are implemented. Canon powers not listed are NOT invented. */
@@ -544,7 +492,7 @@ function renderSlots(){
   const labels=['Fighter A','Fighter B'];
   for(let i=0;i<2;i++){const id=selected[i]; const f=id?byId(id):null; const v=f?variantOf(f):null;
     if(f){const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0]; const inst=makeBattleInstance(f,bf); const c=canonResearch[id]||{}; const resStatus=c.time?`Research: Wikipedia ${c.wiki?'✅ found':'❌ no data'} • Fan-run Fandom wiki ${c.fandom?'✅ found':'❌ no data'}`:`Research: fetching automatically…`;
-    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(continuityFor(f))})</small></span><small style="color:var(--dim)">${esc(startingFormNoteForFighterV1625(f, v.label, selectedVariants[f.id]||'base'))}</small><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (no research bonus in v15 — research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(inst, bf)}</small><small style="color:var(--dim)">Research details live in the Research Dossier below, not on this card.</small></div>`;}
+    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(continuityFor(f))})</small></span><small style="color:var(--dim)">${esc(startingFormNoteForFighterV1625(f, v.label, selectedVariants[f.id]||'base'))}</small><details class="audit-numbers"><summary>Audit numbers</summary><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (no research bonus in v15 — research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(inst, bf)}</small></details><small style="color:var(--dim)">Research details live in the Research Dossier below, not on this card.</small></div>`;}
     else el.innerHTML+=`<div class="slot"><span>${labels[i]} (Empty — pick a fighter)</span></div>`;}
   document.getElementById('roster-count').innerText=`${selected.length}/2 Selected`;
   document.getElementById('review-btn').disabled=selected.length!==2;
@@ -557,6 +505,23 @@ function renderBattlefields(){
   document.getElementById('battlefield-desc').innerText=b.desc+` Combat effect: ATK ${b.atk>=0?'+':''}${b.atk}, DEF ${b.def>=0?'+':''}${b.def} for all fighters.`;
 }
 function fieldOrNotKnownV151(value,label){ const v=(value==null?'':String(value).trim()); if(!v||v==='—') return '[NOT KNOWN] — '+label; return esc(value); }
+function auditNumbersDetailsV1626(f) {
+  /* v16.26 Part 11: ALL engine numbers live here, collapsed, AFTER the character record.
+     Nothing in this block leads a dossier or preview. */
+  var resLine = '';
+  try {
+    var _p = (typeof structuredProfileForV14 === 'function') ? structuredProfileForV14(f) : null;
+    if (_p && _p.resistances && _p.resistances.resistances) {
+      resLine = '<p><b>Resistances (multipliers):</b> ' + esc(Object.entries(_p.resistances.resistances).map(function (kv) { return kv[0] + ' x' + kv[1]; }).join(', ')) + '</p>';
+    }
+  } catch (e) {}
+  var transLine = f.trans ? ('<p><b>Transformation stat changes:</b> +' + esc(String(f.tAtk || 0)) + ' ATK, +' + esc(String(f.tDef || 0)) + ' DEF</p>') : '';
+  return '<details class="audit-numbers"><summary>Audit numbers (engine numbers — not the character record)</summary>'
+    + '<p><b>Scaling (1-10):</b> Power ' + esc(String(f.pw || 7)) + ' • Speed ' + esc(String(f.sp)) + ' • Dexterity ' + esc(String(f.dex || 7)) + ' • Durability ' + esc(String(f.dur || 7)) + ' • Stamina ' + esc(String(f.sta || 7)) + ' • Tactics ' + esc(String(f.tac || 7)) + '</p>'
+    + '<p><b>Base stats:</b> HP ' + esc(String(f.hp)) + ' • ATK ' + esc(String(f.atk)) + ' • DEF ' + esc(String(f.def)) + ' • Speed ' + esc(String(f.sp)) + '</p>'
+    + '<p><b>Signature multiplier:</b> ×' + esc(String(f.sigMult)) + ' — signature timing: stamina at least 15, at least 2 rounds since the last signature, and a prepared counter ready, the target at or below 35% HP, a studied opening, or an impulsive opening.</p>'
+    + transLine + resLine + '</details>';
+}
 function openInfo(id){
   const f=byId(id); const v=variantOf(f);
   document.getElementById('info-title').innerText=`${f.icon} ${f.name} — ${f.fr}`;
@@ -564,17 +529,17 @@ function openInfo(id){
   <p><b>Category:</b> ${esc(f.cat)} &nbsp; <b>Tier:</b> ${f.tier} &nbsp; <b>Selected variant:</b> ${esc(v.label)}</p><p><b>Continuity / Version:</b> ${esc(continuityFor(f))} — a different version can have different abilities, feats, limits, and power levels.</p>
   <p><b>Aliases:</b> ${fieldOrNotKnownV151(f.alias,'no alias established in this profile.')}</p>
   <p><b>Fighting style:</b> ${fieldOrNotKnownV151(f.style,'no fighting style established in this profile.')}</p>
-  <p><b>Personality:</b> ${fieldOrNotKnownV151(f.persNote||f.pers,'no personality established in this profile.')}</p><p><b>Power usage:</b> ${fieldOrNotKnownV151(f.usage,'no power usage established in this profile.')}</p><p><b>Scaling (1-10):</b> Power ${f.pw||7} • Speed ${f.sp} • Dexterity ${f.dex||7} • Durability ${f.dur||7} • Stamina ${f.sta||7} • Tactics ${f.tac||7}</p>
-  <p><b>Signature (implemented):</b> ${esc(f.sig)} — used tactically, not on a fixed schedule (stamina at least 15, at least 2 rounds since the last signature, and a prepared counter ready, the target at or below 35% HP, a studied opening, or an impulsive opening), ×${f.sigMult}</p>
+  <p><b>Personality:</b> ${fieldOrNotKnownV151(f.persNote||f.pers,'no personality established in this profile.')}</p><p><b>Power usage:</b> ${fieldOrNotKnownV151(f.usage,'no power usage established in this profile.')}</p>
+  <p><b>Signature (implemented):</b> ${esc(f.sig)} — used tactically, not on a fixed schedule (timing conditions and multiplier in Audit numbers below).</p>
   <p><b>Power set (implemented, cycled in battle):</b> ${(typeof POWERS!=='undefined'&&POWERS[f.id]&&POWERS[f.id].length)?esc(POWERS[f.id].join(', ')):fieldOrNotKnownV151('','no implemented power set established for this fighter; only the signature is implemented.')}</p>
   <p><b>Variant power:</b> ${(typeof V2POWER!=='undefined'&&V2POWER[f.id])?esc(V2POWER[f.id]):fieldOrNotKnownV151('','no variant power established for this fighter.')} (replaces first power when the second variant is selected)</p>
-  <p><b>Transformation (implemented, if listed):</b> ${f.trans?esc(f.trans)+' — triggers below 45% HP, +'+f.tAtk+' ATK, +'+f.tDef+' DEF':'None in this build'}</p>
+  <p><b>Transformation (implemented, if listed):</b> ${f.trans?esc(f.trans)+' — triggers below 45% HP (stat changes in Audit numbers below)':'None in this build'}</p>
   <p><b>Legal transformations from the selected form:</b> ${legalTransitionsFor(f).length?legalTransitionsFor(f).map(x=>esc(x.from)+' → '+esc(x.to)+' — trigger: '+esc(x.trigger)+'; cost: '+esc(x.cost)+'; duration: '+esc(x.duration)+'; reversible: '+esc(x.reversible)+'; continuity: '+esc(x.continuity)).join('<br>'):'None — this fighter has no legal in-combat transformation in this build, and will not gain a generic one.'}</p>
   ${(V12_PROFILE_EXTRA[f.id]?`<p><b>Behaviour under pressure:</b> ${esc(V12_PROFILE_EXTRA[f.id].pressure)}</p><p><b>Equipment:</b> ${esc(V12_PROFILE_EXTRA[f.id].equipment)}</p><p><b>Regeneration / healing:</b> ${esc(V12_PROFILE_EXTRA[f.id].regen)}</p><p><b>Evidence status:</b> ${esc(V12_PROFILE_EXTRA[f.id].evidence)}</p>`:'<p><b>Behaviour under pressure / equipment / regeneration:</b> [NOT KNOWN] — anything not listed here is unknown in this profile, not invented. See the fighter\'s personality, style, and weakness notes above.</p>')}
   <p><b>Weakness:</b> ${fieldOrNotKnownV151(f.weak,'no weakness established in this profile.')}</p>
   <p><b>Notable feat (context, not a stat):</b> ${fieldOrNotKnownV151(f.feat,'no notable feat established in this profile.')}</p>${structuredProfileHtml(f)}
   ${dossierPanelHtmlV1612(f)}
-  <p><b>Base stats:</b> HP ${f.hp} • ATK ${f.atk} • DEF ${f.def} • Speed ${f.sp}</p>
+  ${auditNumbersDetailsV1626(f)}
   ${(/demon|angel|immortal|hellfire|devil|slayer|hunter/i.test((f.style || '') + ' ' + (f.fr || '') + ' ' + (f.alias || '') + ' ' + (f.name || '')) ? '<p class="note">Type note: Angel, Demon, and Immortal types are not yet in the roster with engine support. A tagline such as demon hunter, demon slayer, or hellfire does not imply a typed demon, angel, or immortal fighter, and this fighter is not relabelled by this note. Typed fighters with full dossiers, durability types, win conditions, and engine support will come as a separate later roster batch, not a name dump.</p>' : '')}
   <p class="note">Implemented vs canon: only the power set above, signature, transformation (if listed), and the engine traits for Infinity, prep-first-hit, and serious-punch scaling are implemented. Other canon powers for this character are not invented here. Research summaries, when fetched, are context — they do not automatically add new powers.</p>
   <button class="btn small" onclick="fetchCanonForInfo('${f.id}')">Retest canon sources (optional — canon auto-fetches on pick)</button>
@@ -590,7 +555,7 @@ function closeInfo(){document.getElementById('info-modal').classList.remove('ope
 async function triggerOnlineResearch(){
   const badge=document.getElementById('ai-status'); const intel=document.getElementById('research-intel');
   const setBadge=s=>{if(badge) badge.innerText=s;};
-  if(selected.length===0){setBadge('AI RESEARCH: PICK FIGHTERS FIRST');intel.innerText='Pick at least 1 fighter first.';return}
+  if(selected.length===0){setBadge('AI RESEARCH: PICK FIGHTERS FIRST');if(intel) intel.innerText='Pick at least 1 fighter first.';return}
   setBadge('AI RESEARCH: FETCHING LIVE DATA...'); intel.innerText='Fetching live Wikipedia summaries...';
   const results=await Promise.allSettled(selected.map(async id=>{
     const f=byId(id); const res=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(f.wiki)}`,{headers:{Accept:'application/json'}});
@@ -606,7 +571,7 @@ async function triggerOnlineResearch(){
 document.getElementById('review-btn').onclick=async ()=>{
   if(selected.length!==2){alert('Pick exactly 2 fighters first — Fighter A and Fighter B.');return}
   const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
-  const teamHtml=(ids,title,inst)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); const finalInst=inst; return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><span>${esc(f.fr)} • Final battle stats: ATK ${finalInst.startAtk||finalInst.atk} • HP ${finalInst.startHp||finalInst.maxHp} • DEF ${finalInst.startDef||finalInst.def}${finalInst.researched?' (no research bonus in v15 — research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(finalInst, bf)}</small></div>`}).join('');
+  const teamHtml=(ids,title,inst)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); const finalInst=inst; return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><details class="audit-numbers"><summary>Audit numbers</summary><span>${esc(f.fr)} • Final battle stats: ATK ${finalInst.startAtk||finalInst.atk} • HP ${finalInst.startHp||finalInst.maxHp} • DEF ${finalInst.startDef||finalInst.def}${finalInst.researched?' (no research bonus in v15 — research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(finalInst, bf)}</small></details></div>`}).join('');
   const aInst=makeBattleInstance(byId(selected[0]),bf); const bInst=makeBattleInstance(byId(selected[1]),bf);
   const analysis=generateAnalysis(aInst,bInst);
   document.getElementById('setup-review').style.display='block';
@@ -954,7 +919,7 @@ function saveBattleLegacy(b,story,breakdown,checks,quality){
   renderHistory();
 }
 function renderHistoryLegacy(){
-  const h=loadHistory(); const el=document.getElementById('history-list');
+  const h=loadHistory(); const el=document.getElementById('history-list'); if(!el) return;
   if(!h.length){el.innerText='No saved battles yet.';return}
   el.innerHTML=h.map(x=>`<div style="margin-bottom:10px"><b>${esc(x.date)} — ${esc(x.winner)}</b> on ${esc(x.battlefield)}<br><small>${esc(x.alpha.join(', '))} vs ${esc(x.beta.join(', '))}</small>${x.continuities?`<br><small>Continuities: ${esc(x.continuities.join(' vs '))}</small>`:''}${x.victoryType?`<br><small>Victory: ${esc(x.victoryType)}</small>`:''}${x.victoryMode?`<br><small>Mode: ${esc(x.victoryMode)}</small>`:''}<br><button class="btn small" onclick="viewHistory(${x.id})">View saved episode</button> <button class="btn small" onclick="exportSavedEpisodeFile(${x.id},'json')">Download JSON</button> <button class="btn small" onclick="exportSavedEpisodeFile(${x.id},'story')">Download story</button></div>`).join('')+'<p class="note">Saved episodes are stored on this device only (localStorage) and can be lost if browser storage is cleared. They are not saved online. Reopening a saved episode does not rerun the battle.</p>';
 }
@@ -2139,8 +2104,8 @@ function structuredProfileHtml(f){
   const labelIssues=rosterLabelIssuesV14().filter(x=>x.id===f.id);
   const powersHtml=p.powers.length?p.powers.map(x=>`<li><b>${esc(x.name)}</b> — ${esc(x.effect)}; use: ${esc(x.combatUse)}; bypass: ${x.canBypass?'yes (mental/internal type)':'no'}; escapes restraint: ${x.canEscapeRestraint?'possible by movement type':'not established'}; version has it: yes. Requirements: ${esc(x.requirements)} Limits: ${esc(x.limits)}</li>`).join(''):'<li>Only the signature is implemented for this fighter in this build; other powers are NOT KNOWN in this profile and are not invented.</li>';
   const res=p.resistances;
-  const resHtml=Object.entries(res.resistances).map(([k,v])=>k+' x'+v).join(', ');
-  const transHtml=p.transformation?(`${esc(p.transformation.from)} → ${esc(p.transformation.to)}; stat changes +${p.transformation.statChanges.atk} ATK / +${p.transformation.statChanges.def} DEF; new power: ${esc(p.transformation.newPowers||'same signature')}; cost: ${esc(p.transformation.cost)}; duration: ${esc(p.transformation.duration)}; reversibility: ${esc(p.transformation.reversibility)}; conditions: ${esc(p.transformation.conditions)}`):'No transformation in this build — none will be invented in battle.';
+  const resHtml=Object.entries(res.resistances).map(([k,v])=>k).join(', '); /* v16.26: multiplier values live in Audit numbers below, not in this record */
+  const transHtml=p.transformation?(`${esc(p.transformation.from)} → ${esc(p.transformation.to)}; stat changes recorded in Audit numbers below; new power: ${esc(p.transformation.newPowers||'same signature')}; cost: ${esc(p.transformation.cost)}; duration: ${esc(p.transformation.duration)}; reversibility: ${esc(p.transformation.reversibility)}; conditions: ${esc(p.transformation.conditions)}`):'No transformation in this build — none will be invented in battle.';
   return `<div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px"><b style="color:var(--cyan)">Structured Character Profile (v16) — ${esc(f.name)}</b>
   <p><b>How to read this panel:</b> [CHARACTER RECORD] = information in the character record. [RESEARCH] = fetched dossier material, shown in the Research Dossier, never in the episode. [NOT KNOWN] = not established — never invented. Research never changes battle stats in v15.</p>
   ${p.tier.unknown?`<p style="border:1px solid var(--yellow);padding:6px;border-radius:4px"><b>PROFILE-DATA NOTE:</b> Tier "${esc(f.tier)}" is not recognised. Tier is UNKNOWN in v15 — it is never silently treated as S-tier, and tier-gap rules do not assume a tier for this fighter.</p>`:''}
@@ -2711,7 +2676,8 @@ function showResults(){
   const ql=document.getElementById('quality-lines'); if(ql) ql.innerHTML='<b>System C — Story Quality (separate from factual accuracy; rule-based fallback episode — not the AI main story; the AI story\'s own hard-constraint validation is in Technical Details):</b> '+validationSummaryV14(quality)+'<br>'+validationLinesHtmlV14(quality);
   const pl=document.getElementById('pipeline-stages'); if(pl) pl.innerHTML=pipelineHtml(b,integrity);
   /* v16.24 PHASE 2 — resolver comparison shown for checking in Technical Details; the main breakdown stays HP-engine-locked. */
-  try { var _rc24 = resolverComparisonForBattleV1624(b); b.resolverComparisonV1624 = _rc24; if (pl) pl.innerHTML += resolverComparisonHtmlV1624(_rc24); } catch (e) {}
+  try { var _rc24 = resolverComparisonForBattleV1624(b); b.resolverComparisonV1624 = _rc24; if (pl) pl.innerHTML += resolverComparisonHtmlV1624(_rc24); } catch (e) { try { var _plE = document.getElementById('pipeline-stages'); if (_plE) _plE.innerHTML += '<p><b>Resolver comparison (v16.26):</b> unavailable — ' + esc(String((e && e.message) || e)) + '</p>'; } catch (e2) {} }
+  try { renderResolverVisibleV1626(b); } catch (e3) {}
   // v16: fallback-episode integrity/accuracy/quality above describe the fallback
   // episode, not the AI main story. The AI main story's own validation is
   // reported in Technical Details and saved in mainStoryMeta when it resolves.
@@ -2742,18 +2708,18 @@ function showResults(){
 function validateSavedEpisodeV14(x){ /* v15: delegates to the stricter importer; v14 records are legacy read-only, v15 records are current. */
   const v=validateImportedEpisodeV15(x); return {ok:v.ok,legacy:v.legacy,reason:v.reason};
 }
-function saveBattle(b,story,breakdown,integrity,accuracy,quality){
+function saveBattle(b,story,breakdown,integrity,accuracy,quality){ /* v16.26 FULL REMOVAL: battles are not saved; the history panel is gone. */ return null;
   try{
     const h=loadHistory();
     const refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]);
     const conts=[...b.alpha,...b.beta].map(f=>(typeof continuityLabelForInstance==='function'?continuityLabelForInstance(f):f.variant));
-    h.unshift({id:Date.now(),formatVersion:'v16.25',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.19 online AI breakdown (9 sections, locked to the recorded outcome), or labelled offline breakdown when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,resolverComparisonV1624:(function(){ try { return resolverComparisonForBattleV1624(b); } catch (e) { return { error: 'resolver comparison unavailable' }; } })(),storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
+    h.unshift({id:Date.now(),formatVersion:'v16.26',fighterSnapshots:[...b.alpha,...b.beta].map(f=>fighterSnapshotForV15(f)),date:new Date().toLocaleString(),battleId:'warroom-'+Date.now(),alpha:b.alpha.map(f=>f.name+' ('+f.variant+')'),beta:b.beta.map(f=>f.name+' ('+f.variant+')'),continuities:conts,battlefield:b.battlefield.name,winner:b.winner,loser:b.loserFighter?b.loserFighter.name:'',victoryType:b.victoryCondition||'',victoryMode:b.victoryMode||'death',seed:b.seed||null,outcome:b.stalemate?'Stalemate':b.winner,rounds:b.rounds,events:b.events.length,eventRecord:b.events,finalRecord:b.finalRecord||null,finalState:b.finalState||null,initialStats:[...b.alpha,...b.beta].map(f=>({name:f.name,variant:f.variant,startHp:f.startHp||f.maxHp,startAtk:f.startAtk||f.atk,startDef:f.startDef||f.def})),transformationRules:[...b.alpha,...b.beta].map(f=>({name:f.name,legalTransitions:legalTransitionsFor(f)})),researchRefs:refs,validation:{integrity:(integrity||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),accuracy:(accuracy||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail}))},checks:(integrity||[]).map(c=>({name:c.name,passed:c.passed})),quality:(quality||[]).map(c=>({name:c.name,passed:c.passed,detail:c.detail})),storyGenerationMethod:'v16.19 online AI breakdown (9 sections, locked to the recorded outcome), or labelled offline breakdown when online generation was unavailable',modelMetadata:{pollinations:'not used for the verified episode; optional draft only, endpoint https://text.pollinations.ai, no key, no model parameter in this build',gemini:'not used unless the player saves their own key; key stays in localStorage on this device and is sent only to Google'},episode:story,story,breakdown,resolverComparisonV1624:(function(){ try { return resolverComparisonForBattleV1624(b); } catch (e) { return { error: 'resolver comparison unavailable' }; } })(),storage:'device-only localStorage (warroom_battles_v3) — can be lost if browser storage is cleared; not saved online'});
     localStorage.setItem('warroom_battles_v3',JSON.stringify(h.slice(0,20)));
   }catch(e){}
   renderHistory();
 }
 function renderHistory(){
-  const h=loadHistory(); const el=document.getElementById('history-list');
+  const h=loadHistory(); const el=document.getElementById('history-list'); if(!el) return;
   if(!h.length){ el.innerText='No saved battles yet.'; return; }
   el.innerHTML=h.map(x=>{
     const v=validateSavedEpisodeV14(x);
@@ -3645,7 +3611,7 @@ function resetMainStoryUIV161(sid) {
     const label = document.getElementById('main-story-label');
     if (label) label.innerText = sid ? ('Preparing battle verdict… (session ' + sid + ')') : '';
     const status = document.getElementById('main-story-status');
-    if (status) status.innerText = sid ? 'Preparing battle verdict…' : '';
+    if (status) status.innerText = sid ? 'Preparing battle verdict…' : '';     try { const _bn = document.getElementById('online-status-banner'); if (_bn) _bn.innerText = sid ? 'Preparing online breakdown…' : ''; const _tc = document.getElementById('online-status-tech'); if (_tc) _tc.innerText = sid ? 'Preparing online breakdown…' : ''; } catch (e) {}
     const diag = document.getElementById('main-story-diagnostics');
     if (diag) diag.innerHTML = sid ? ('Session: ' + esc(sid) + '<br>Provider: —<br>Attempts: 0<br>Prompt size: —<br>Validation: pending — this battle only, no previous battle\'s session, reason, or validation is shown.') : 'No story generated yet for this battle.';
     const ai = document.getElementById('ai-story-output');
@@ -3759,7 +3725,7 @@ function findHistoryEntryBySessionV1618(sid) {
 function battleRecordForV1618(b) {
   return { winner: b.winner, loser: (b.loserFighter ? b.loserFighter.name : ''), victoryMode: b.victoryMode || 'death', victoryCondition: b.victoryCondition || '', battlefield: (b.battlefield && b.battlefield.name) || '', seed: (b.seed != null ? b.seed : null), rounds: b.rounds || 0, finalRecord: b.finalRecord || null };
 }
-function savePendingBattleV1618(b, breakdown, integrity, accuracy, quality, fallbackSlideshowHtml, sid) {
+function savePendingBattleV1618(b, breakdown, integrity, accuracy, quality, fallbackSlideshowHtml, sid) { /* v16.26 FULL REMOVAL: no pending history entry is created. */ return null;
   if (!b || !sid) return null;
   try {
     const existing = findHistoryEntryBySessionV1618(sid);
@@ -3799,7 +3765,7 @@ function forEachHistoryEntryBySessionV1625(sid, fn) {
     return n;
   } catch (e) { return 0; }
 }
-function syncOnlineBreakdownStatusV1625(sid, meta) {
+function syncOnlineBreakdownStatusV1625(sid, meta) { /* v16.26: history updates SUPERSEDED by removal — this function now only drives the single live status source. */   try { if (meta && meta.kind === 'offline') setOnlineStatusV1626('failed', meta.reason || 'Online AI generation was unavailable.'); else if (meta && meta.kind === 'ai') setOnlineStatusV1626('ready', ''); } catch (e) {}   return 0;
   var count = 0;
   try {
     var status = (meta && meta.kind === 'ai') ? 'resolved-ai' : 'online-failed';
@@ -3820,7 +3786,7 @@ function syncOnlineBreakdownStatusV1625(sid, meta) {
   } catch (e) {}
   return count;
 }
-function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, quality, meta) {
+function saveMainStoryOnceV16(b, storyHtml, breakdown, integrity, accuracy, quality, meta) { /* v16.26 FULL REMOVAL: no history entry is written or updated. */ return null; 
   if (!b) return null;
   const sid = b._v16SessionId || (meta && meta.sessionId) || null;
   try {
@@ -4838,7 +4804,7 @@ var DOSSIER_V1612 = {
     unknown: ['Exact solar-charge rate (not simulated).', 'Whether this version has ever broken the no-kill code (conflicting accounts flagged, not merged).']
   },
   batman: {
-    durability: { type: 'normal', effect: 'Human durability: no innate powers, no regeneration, no invulnerability. Survival comes from preparation, study, and traps, not from absorbing hits.', howLose: 'Any recorded loss: HP reaching 0. Human fragility is the point — a single decisive blow can end him.', status: 'demonstrated' },
+    durability: { type: 'mortal', effect: 'Human durability: no innate powers, no regeneration, no invulnerability. Survival comes from preparation, study, and traps, not from absorbing hits.', howLose: 'Any recorded loss: HP reaching 0. Human fragility is the point — a single decisive blow can end him.', status: 'demonstrated' },
     scaling: { feats: ['Outplanned far stronger foes (profile feat, general terms)'], bypass: [], note: 'Wins by planning, not by matching raw power. A weakness counts only with a recorded counter and in-fight knowledge (engine rules).', status: 'demonstrated' },
     style: { tags: ['strategist'], description: 'Tactical fighter who studies foes before striking; wins by planning, not by matching raw power.', aggression: 'low until prepared', risk: 'low', painResponse: 'avoids damage; cannot absorb it', taunt: false, dodgeMult: 1, status: 'demonstrated' },
     personality: { willKill: false, holdsFinish: false, refusesRetreat: false, voice: 'Strategist and obsessive planner — watches, measures, hits where it hurts most.', moral: 'No-kill code (Base version): will not kill. CONFLICT FLAGGED: some versions kill — the selected Base version follows the no-kill code and the conflict is not merged.', status: 'interpretation' },
@@ -4852,7 +4818,7 @@ var DOSSIER_V1612 = {
     unknown: ['Exact gadget inventory for this fight (finite, but not itemised in the profile — flagged, not invented).']
   },
   goku: {
-    durability: { type: 'normal', effect: 'Saiyan durability with ki: tough, not invulnerable. Fights to test limits, holds back at first, then goes all out.', howLose: 'Any recorded loss: HP reaching 0.', status: 'derived' },
+    durability: { type: 'mortal', effect: 'Saiyan durability with ki: tough, not invulnerable. Fights to test limits, holds back at first, then goes all out.', howLose: 'Any recorded loss: HP reaching 0.', status: 'derived' },
     scaling: { feats: ['Survived planet-shaking clashes (profile feat, general terms)'], bypass: [], note: 'Power rises with transformation; the transform itself has a cost (see below).', status: 'derived' },
     style: { tags: ['holder-back', 'direct'], description: 'Saiyan brawler who closes distance fast; tests the opponent with probing blows, then escalates.', aggression: 'low at first, then high', risk: 'high once committed', painResponse: 'welcomes a hard fight', taunt: false, dodgeMult: 1, status: 'demonstrated' },
     personality: { willKill: true, holdsFinish: false, refusesRetreat: false, voice: 'Reckless, joyful, honourable — fights to test limits.', moral: 'Honourable: wants the opponent at full power; will not claim a win he did not earn.', status: 'interpretation' },
@@ -4880,7 +4846,7 @@ var DOSSIER_V1612 = {
     unknown: ['Whether Saitama has a stated invulnerability power (none is claimed — interpretation only).', 'Any upper limit to his power (not stated — unknown, never invented).']
   },
   frodo: {
-    durability: { type: 'normal', effect: 'Hobbit fragility: small, fragile, no innate powers. Survival comes from endurance, stealth, and avoiding direct trades.', howLose: 'Any recorded loss: HP reaching 0. A single decisive blow from a vastly stronger fighter ends him; no hidden durability is assumed.', status: 'demonstrated' },
+    durability: { type: 'mortal', effect: 'Hobbit fragility: small, fragile, no innate powers. Survival comes from endurance, stealth, and avoiding direct trades.', howLose: 'Any recorded loss: HP reaching 0. A single decisive blow from a vastly stronger fighter ends him; no hidden durability is assumed.', status: 'demonstrated' },
     scaling: { feats: ['Carried the Ring to Mount Doom (profile feat, general terms)'], bypass: [], note: 'Power-gap pair with Saitama: Frodo wins only via a recorded exploit or victory condition, never by invented damage against an invulnerable-class fighter.', status: 'derived' },
     style: { tags: ['evasive'], description: 'Endurance, stealth and Sting — outlasts rather than overpowers.', aggression: 'low', risk: 'low', painResponse: 'avoids damage; cannot absorb it', taunt: false, dodgeMult: 1.2, status: 'derived' },
     personality: { willKill: false, holdsFinish: true, refusesRetreat: false, voice: 'Protective and brave — a small hero carrying an impossible burden.', moral: 'Protective: will not kill where incapacitation or endurance serves; no formal no-kill code is claimed, so the gated no-kill story check does NOT apply to him (willKill is false for restraint, law is not stated as a code).', status: 'interpretation' },
@@ -4905,7 +4871,7 @@ function dossierResolveIdV1612(f) {
 function dossierDerivedV1612(f) {
   var o = (f && f._orig) || f || {};
   var trait = o.trait || f.trait || '';
-  var durType = 'normal', dodgeMult = 1;
+  var durType = 'mortal', dodgeMult = 1;
   if (trait === 'invulnerable') { durType = 'invulnerable'; dodgeMult = 0.25; }
   else if (trait === 'regen') { durType = 'regenerative'; dodgeMult = 0.5; }
   else if (trait === 'infinity_void') { durType = 'force-field'; dodgeMult = 1; }
@@ -5033,8 +4999,8 @@ function dossierPanelHtmlV1612(f) {
       rows += '<p><b>Shared dossier (v16.20 — engine, dossier, and breakdown read the same fields):</b></p>';
       rows += '<p><b>Nature / origin:</b> ' + esc(_sd.nature.value) + st(_sd.nature.status) + '</p>';
       rows += '<p><b>Power source:</b> ' + esc(_sd.powerSource.value) + st(_sd.powerSource.status) + '</p>';
-      rows += '<p><b>Damage types dealt:</b> ' + esc(_sd.damageDealt.types.length ? _sd.damageDealt.types.join(', ') : 'none recorded') + st(_sd.damageDealt.status) + '</p>';
-      rows += '<p><b>Damage types resisted (reductions below x1; all other types x1):</b> ' + esc(_sd.damageResisted.reductions.length ? _sd.damageResisted.reductions.map(function (r) { return r.type + ' x' + r.mult; }).join(', ') : 'none — all types x1 in this build') + st(_sd.damageResisted.status) + '</p>';
+      rows += '<p><b>Damage types dealt — SUPERSEDED in v16.26:</b> the old v16.20 shared list of types for a whole power set is retired. The single source is the signature damage type in the structured power profile below (v16.25 single source); no panel shows two damage stories for one fighter.</p>';
+      rows += '<p><b>Damage types resisted (reductions below full damage; exact multipliers in Audit numbers below; all other types deal full damage):</b> ' + esc(_sd.damageResisted.reductions.length ? _sd.damageResisted.reductions.map(function (r) { return r.type; }).join(', ') : 'none reduced') + st(_sd.damageResisted.status) + '</p>';
       rows += '<p><b>Damage types that bypass this fighter:</b> ' + esc(_sd.damageBypassed.types.length ? _sd.damageBypassed.types.join(', ') : 'None stated') + st(_sd.damageBypassed.status) + '</p>';
       rows += '<p><b>Exploitable weaknesses only:</b> ' + (_sd.weaknesses.length ? esc(_sd.weaknesses.map(function (w) { return w.text + ' — ' + w.condition; }).join('; ')) : 'None with a recorded engine exploit path (other profile weaknesses stay in the Weaknesses row above; they are not copied here because no engine exploit path is recorded for them.)') + '</p>';
       rows += '<p><b>Durability type:</b> ' + esc(_sd.durabilityType) + st(_sd.durabilityStatus) + (_sd.durabilityNote ? ' ' + esc(_sd.durabilityNote) : '') + ' <b>Defined way to lose:</b> ' + esc(_sd.wayToLose.text) + st(_sd.wayToLose.status) + '</p>';
@@ -5152,7 +5118,7 @@ var DOSSIER_EXT_V1612 = {
     definingFeats: [{ moment: 'Outplanned far stronger foes (profile feat, general terms).', source: 'CHARACTER RECORD, general terms — no specific issue cited.', status: 'interpretation' }],
     psychWeaknesses: [{ trait: 'Obsession and need for control', exploitableCondition: 'When a plan fails (a prepared counter is detected and avoided), he must re-study before preparing again — a tempo loss, not a stat penalty.', status: 'interpretation' }],
     knowledge: [{ domain: 'Detective work, tactics, criminology, gadgetry', limit: 'Knows planning and his own world; does NOT know magic, and does not know an enemy he has not studied in the fight.', status: 'interpretation' }],
-    physiology: { species: 'Human, peak-trained.', anatomy: 'Human anatomy with no innate powers, regeneration, or invulnerability.', senses: 'Human senses, trained to peak.', painResponse: 'Avoids damage; cannot absorb it.', howLoseLink: 'Links to normal durability: any recorded loss is HP 0.', status: 'demonstrated' }
+    physiology: { species: 'Human, peak-trained.', anatomy: 'Human anatomy with no innate powers, regeneration, or invulnerability.', senses: 'Human senses, trained to peak.', painResponse: 'Avoids damage; cannot absorb it.', howLoseLink: 'Links to mortal durability: any recorded loss is HP 0.', status: 'demonstrated' }
   },
   goku: {
     relationships: [{ opponentId: 'vegeta', opponentName: 'Vegeta', relation: 'rival', behaviour: 'Escalates joyfully; refuses to hold back against a rival at full power.', effect: 'escalate', status: 'interpretation' }],
@@ -5167,7 +5133,7 @@ var DOSSIER_EXT_V1612 = {
     definingFeats: [{ moment: 'Survived planet-shaking clashes (profile feat, general terms).', source: 'CHARACTER RECORD, general terms — no specific episode cited.', status: 'interpretation' }],
     psychWeaknesses: [{ trait: 'Overconfidence and love of a fair fight', exploitableCondition: 'While holding back at first (holder-back stance), a decisive opponent can land a recorded blow before he commits fully.', status: 'interpretation' }],
     knowledge: [{ domain: 'Martial arts, ki control, combat instinct', limit: 'Knows fighting, not science, magic theory, or strategy beyond combat.', status: 'interpretation' }],
-    physiology: { species: 'Saiyan.', anatomy: 'Saiyan biology: grows stronger from near-death in canon, but no such bonus is simulated — flagged, not invented as a stat change.', senses: 'Ki sensing (not a separate mechanic in this build).', painResponse: 'Welcomes a hard fight.', howLoseLink: 'Links to normal durability: any recorded loss is HP 0.', status: 'interpretation' }
+    physiology: { species: 'Saiyan.', anatomy: 'Saiyan biology: grows stronger from near-death in canon, but no such bonus is simulated — flagged, not invented as a stat change.', senses: 'Ki sensing (not a separate mechanic in this build).', painResponse: 'Welcomes a hard fight.', howLoseLink: 'Links to mortal durability: any recorded loss is HP 0.', status: 'interpretation' }
   },
   saitama: {
     relationships: [],
@@ -5197,7 +5163,7 @@ var DOSSIER_EXT_V1612 = {
     definingFeats: [{ moment: 'Carried the Ring to Mount Doom (profile feat, general terms).', source: 'CHARACTER RECORD, general terms — no specific chapter cited.', status: 'interpretation' }],
     psychWeaknesses: [{ trait: 'Fear and the weight of the burden', exploitableCondition: 'When exhausted or cornered, he endures rather than counterattacks — an opening for a decisive blow, not a damage bonus.', status: 'interpretation' }],
     knowledge: [{ domain: 'Endurance, stealth, the Shire, the Ring (as a burden, not a weapon)', limit: 'Knows his own journey; does not know warfare, magic theory, or other worlds.', status: 'interpretation' }],
-    physiology: { species: 'Hobbit.', anatomy: 'Small, fragile humanoid anatomy; no innate powers.', senses: 'Keen hobbit senses, especially stealth and hearing (not a separate mechanic).', painResponse: 'Endures quietly; cannot absorb heavy blows.', howLoseLink: 'Links to normal durability: any recorded loss is HP 0.', status: 'demonstrated' }
+    physiology: { species: 'Hobbit.', anatomy: 'Small, fragile humanoid anatomy; no innate powers.', senses: 'Keen hobbit senses, especially stealth and hearing (not a separate mechanic).', painResponse: 'Endures quietly; cannot absorb heavy blows.', howLoseLink: 'Links to mortal durability: any recorded loss is HP 0.', status: 'demonstrated' }
   },
   rick: {
     relationships: [],
@@ -5212,14 +5178,14 @@ var DOSSIER_EXT_V1612 = {
     definingFeats: [{ moment: 'Out-invented dimension-spanning threats (general terms only).', source: 'Series summary — no specific episode cited, and no feat is converted into a new power.', status: 'interpretation' }],
     psychWeaknesses: [{ trait: 'Arrogance and contempt for authority', exploitableCondition: 'When an opponent refuses to be impressed or outsmarts his gadget, he escalates recklessly — an opening for a recorded counter, not a damage bonus.', status: 'interpretation' }],
     knowledge: [{ domain: 'Science, inventions, dimensions, gadgets', limit: 'Knows what THIS version has invented or learned; never "knows everything" — version-specific knowledge only, and anything unlearned in this version is unknown.', status: 'interpretation' }],
-    physiology: { species: 'Human with cybernetics in some versions (version-dependent, not assumed for Base).', anatomy: 'Human body; built-in weapons and backup bodies are version-dependent and NOT assumed for Base.', senses: 'Human senses.', painResponse: 'Shrugs off pain with contempt; alcohol use is a profile weakness, not a mechanic.', howLoseLink: 'Links to normal durability: any recorded loss is HP 0; portal escape is NOT simulated as a loss-avoidance mechanic.', status: 'uncertain' }
+    physiology: { species: 'Human with cybernetics in some versions (version-dependent, not assumed for Base).', anatomy: 'Human body; built-in weapons and backup bodies are version-dependent and NOT assumed for Base.', senses: 'Human senses.', painResponse: 'Shrugs off pain with contempt; alcohol use is a profile weakness, not a mechanic.', howLoseLink: 'Links to mortal durability: any recorded loss is HP 0; portal escape is NOT simulated as a loss-avoidance mechanic.', status: 'uncertain' }
   }
 };
 /* Rick 1-13 (added in the 14-26 extension so the spec's special case is a
    real dossier, not a name): statuses stay honest — clone counts, Meeseek
    powers, and portal limits are UNKNOWN and flagged, never invented. */
 DOSSIER_V1612.rick = {
-  durability: { type: 'normal', effect: 'Human durability; no innate invulnerability or regeneration is assumed for Base.', howLose: 'Any recorded loss: HP reaching 0. Portal escape is NOT simulated as battlefield removal, so it never avoids a recorded loss.', status: 'derived' },
+  durability: { type: 'mortal', effect: 'Human durability; no innate invulnerability or regeneration is assumed for Base.', howLose: 'Any recorded loss: HP reaching 0. Portal escape is NOT simulated as battlefield removal, so it never avoids a recorded loss.', status: 'derived' },
   scaling: { feats: ['Genius scientist with portal gun and gadgets (profile style, general terms)'], bypass: [], note: 'Intellect is not a damage bypass in the engine.', status: 'interpretation' },
   style: { tags: ['strategist'], description: 'Genius scientist with portal gun and gadgets; improvises under pressure.', aggression: 'high when provoked', risk: 'high', painResponse: 'contemptuous indifference', taunt: true, dodgeMult: 1, status: 'derived' },
   personality: { willKill: true, holdsFinish: false, refusesRetreat: false, voice: 'Sardonic genius — explains his own cleverness and mocks authority.', moral: 'No no-kill code is claimed; protectiveness toward family is version-specific and flagged as such.', status: 'interpretation' },
@@ -6201,7 +6167,7 @@ function verdictSlideshowHtmlV1614(text, b, opts) {
      slideshow (AI and offline alike). v16.14 offline renders passed readAloud:false, which
      is why the button was absent from every offline verdict live. The handler still returns
      quietly where speechSynthesis is unavailable. */
-  html += ' <button class="btn small" data-verdict-nav="readaloud" onclick="verdictReadAloudCurrentV1614()">🔊 Read aloud (browser voice)</button>';
+  /* v16.26: read-aloud playback removed from the main flow — no button is rendered. */
   html += '</div></div>';
   return html;
 }
@@ -6328,9 +6294,7 @@ function repairVerdictSlideshowHtmlV1615(html) {
   try {
     s = s.replace(/onclick="verdictShowPanelV1614\(\d+\)"(\s+data-verdict-nav="prev")/g, 'onclick="verdictStepV1615(-1)"$1');
     s = s.replace(/onclick="verdictShowPanelV1614\(\d+\)"(\s+data-verdict-nav="next")/g, 'onclick="verdictStepV1615(1)"$1');
-    if (s.indexOf('verdict-slideshow') !== -1 && s.indexOf('Read aloud (browser voice)') === -1) {
-      s = s.replace(/(<button[^>]*data-verdict-nav="next"[^>]*>Next ▶<\/button>)/, '$1 <button class="btn small" data-verdict-nav="readaloud" onclick="verdictReadAloudCurrentV1614()">🔊 Read aloud (browser voice)</button>');
-    }
+    /* v16.26: the saved-view repair no longer re-adds a read-aloud button (playback removed). */
   } catch (e) {}
   return s;
 }
@@ -6783,7 +6747,7 @@ function sharedDossierFieldsV1620(f) {
   try {
     if (deep && d.psychWeaknesses) d.psychWeaknesses.forEach(function (pw) { weaknesses.push({ text: pw.trait, condition: pw.exploitableCondition, status: pw.status || 'interpretation' }); });
   } catch (e) {}
-  function traitDurability(t) { if (t === 'regen') return 'regenerative'; if (t === 'invulnerable') return 'invulnerable'; if (t === 'infinity_void') return 'force-field'; return 'normal'; }
+  function traitDurability(t) { if (t === 'regen') return 'regenerative'; if (t === 'invulnerable') return 'invulnerable'; if (t === 'infinity_void') return 'force-field'; return 'mortal'; }
   var traitDur = traitDurability(base.trait || '');
   var deepDur = (deep && d.durability && d.durability.type) ? d.durability.type : null;
   var durabilityType = deepDur || traitDur;
@@ -7141,7 +7105,7 @@ function durabilityV1623(f, base, d, deep) {
     if (t === "regenerative") return "regenerative";
     if (t === "invulnerable") return "invulnerable";
     if (t === "force-field") return "other";
-    if (t === "normal") return "mortal";
+    if (t === "normal" || t === "mortal") return "mortal";
     return "mortal";
   }
   var type, status, wayToLose, note;
@@ -7298,8 +7262,8 @@ function powerProfileHtmlV1623(f) {
   rows += "<p><b>Power tier:</b> " + esc(p.tier.value) + " (" + esc(p.tier.band) + ")" + st(p.tier.status) + " <b>Feat behind it:</b> " + esc(p.tier.feat) + st(p.tier.featStatus) + "</p>";
   rows += "<p><b>Speed:</b> " + esc(p.speed.band) + " — " + esc(p.speed.reaction) + st(p.speed.status) + "</p>";
   rows += "<p><b>Durability type:</b> " + esc(p.durability.type) + (p.durability.type === "other" ? " (barrier/force-field — same barrier defence the older shared dossier section calls 'force-field')" : "") + st(p.durability.status) + " <b>Defined way to lose:</b> " + esc(p.durability.wayToLose) + (p.durability.note ? " " + esc(p.durability.note) : "") + "</p>";
-  rows += "<p><b>Damage dealt — signature (combat, v16.25 single source):</b> " + esc(p.damage.signature.name) + " deals " + esc(p.damage.signature.type) + st(p.damage.signature.status) + " — dossier, powers list, and combat all use this value. <b>Other powers (combat types):</b> " + esc(p.damage.powersetTypes.length ? p.damage.powersetTypes.join(", ") : "none recorded") + st(p.damage.powersetStatus) + "</p>";
-  rows += "<p><b>Damage resisted:</b> " + esc(p.damage.resisted.length ? p.damage.resisted.join(", ") : "none below x1 — all types x1") + st(p.damage.resistedStatus) + " <b>What bypasses them:</b> " + esc(p.damage.bypassed.length ? p.damage.bypassed.join(", ") : "None stated") + st(p.damage.bypassedStatus) + "</p>";
+  rows += "<p><b>Damage dealt — signature (combat, v16.25 single source):</b> " + esc(p.damage.signature.name) + " deals " + esc(p.damage.signature.type) + st(p.damage.signature.status) + " — dossier, powers list, and combat all use this value. <b>Other powers, each with its own combat type (not a second story for the signature):</b> " + esc(p.damage.powersetTypes.length ? p.damage.powersetTypes.join(", ") : "none recorded") + st(p.damage.powersetStatus) + "</p>";
+  rows += "<p><b>Damage resisted:</b> " + esc(p.damage.resisted.length ? (p.damage.resisted.join(", ") + " (reduced below full damage; multipliers in Audit numbers below)") : "none reduced — all types deal full damage") + st(p.damage.resistedStatus) + " <b>What bypasses them:</b> " + esc(p.damage.bypassed.length ? p.damage.bypassed.join(", ") : "None stated") + st(p.damage.bypassedStatus) + "</p>";
   rows += "<p><b>Hax (with conditions):</b> None recorded." + st(p.hax.status) + " " + esc(p.hax.note) + "</p>";
   rows += "<p><b>Stamina:</b> " + esc(p.stamina.band) + " <b>Limit / exhaustion state:</b> " + esc(p.stamina.limit) + st(p.stamina.limitStatus) + " <b>Time limits:</b> " + esc(p.stamina.timeLimit) + "</p>";
   rows += "<p><b>Nature / origin:</b> " + esc(p.nature.value) + st(p.nature.status) + " <b>Power source:</b> " + esc(p.powerSource.value) + st(p.powerSource.status) + "</p>";
@@ -7439,8 +7403,9 @@ function buildBreakdownOfflineV1619(b) {
     var r = null; (f.regenInfo || []).forEach(function (x) { if (x.name === name) r = x; });
     return r ? regenSentenceV1620(r) : '';
   }
+  function styleSentenceV1626(name) {     try { var inst = [...(b.alpha || []), ...(b.beta || [])].filter(function (x) { return x.name === name; })[0]; var r = (inst && inst.id && typeof byId === 'function') ? byId(inst.id) : null; var st = (r && r.style) || (inst && inst.style) || ''; if (!st) return ''; return name + ' fights as ' + st.charAt(0).toLowerCase() + st.slice(1) + '.'; } catch (e) { return ''; } }
   function bestCase(name, tools, asCounter, charLine) {
-    var base = name + "'s best case " + (asCounter ? 'as a counter rests on ' : 'rests on ') + (tools.length ? tools.join(', ') : 'no recorded damaging attack — unknown, not invented') + '.';
+    var base = name + "'s best case, and it is a genuine one, " + (asCounter ? 'as the counter-fighter, rests on ' : 'rests on ') + (tools.length ? tools.join(', ') : 'no recorded damaging attack — unknown, not invented') + '.';
     var rg = regenFor(name);
     var out = rg ? (base + ' ' + rg) : base;
     if (charLine) out += ' ' + charLine;
@@ -7448,15 +7413,15 @@ function buildBreakdownOfflineV1619(b) {
   }
   var parts = [];
   if (f.stalemate) {
-    parts.push('1. Matchup\nCan ' + f.aName + ' beat ' + f.bName + ' on ' + f.battlefield + '? The record answers: neither fighter finished the other. ' + DURABILITY_HONESTY_V1625);
+    parts.push('1. Matchup\nAn honest stalemate, fan to fan: can ' + f.aName + ' beat ' + f.bName + ' on ' + f.battlefield + '? The record answers: neither fighter finished the other. ' + DURABILITY_HONESTY_V1625);
     parts.push('2. Fighter A best case\n' + bestCase(f.aName, f.toolsA, false, f.characterLineA));
     parts.push('3. Fighter B best case\n' + bestCase(f.bName, f.toolsB, true, f.characterLineB));
     parts.push('4. Best plan\nNeither fighter found a decisive plan in the record. No recorded plan became a finish.');
-    parts.push('5. Why it stalls\nThe plan stalls because nothing in the record breaks the deadlock. No attack landed as a finish, and no weakness was exploited to an ending.');
+    parts.push('5. Why it stalls\nWhy it stalls, plainly: nothing in the record breaks the deadlock. No attack landed as a finish, and no weakness was exploited to an ending.');
     parts.push('6. Criteria scoreboard\nOther criteria were considered. Decisive: ' + f.decisiveKey + '.');
     parts.push('7. Finishing sequence\nNo finishing sequence was recorded. There is no finishing blow to list.');
     parts.push('8. Finisher and loser state\nNo finisher was recorded and there is no loser — the battle ended in a stalemate, with both fighters still standing.');
-    parts.push('9. Verdict\nVerdict: this battle is a stalemate — no winner, decided by no finishing blow.');
+    parts.push('9. Verdict\nVerdict: this battle is a stalemate — no winner, decided by no finishing blow. That is the whole story of this fight, start to finish.');
     return parts.join('\n\n');
   }
   /* v16.20 DELIBERATE CHANGE — the offline template is record-varied
@@ -7473,18 +7438,25 @@ function buildBreakdownOfflineV1619(b) {
   /* v16.21: 'close' / 'small edge' only when the log is actually close (margin <= 500 and the loser dealt damage). Shutouts and wide margins say so with numbers. */
   var tone20 = f.pairingType === 'god-vs-god' ? ' The record answers through the criteria, not through reputation.' : (f.pairingType === 'god-vs-weak' ? ' The record gives a short, decisive answer.' : (f.pairingType === 'equal-matched' && f.margin <= 500 && f.loserDamage > 0 ? ' The record gives a close answer, decided by a small edge.' : ''));
   var marginSentence21 = marginSentenceV1625(f.winner, f.winnerDamage, f.loserDamage);
-  var s1 = variant20 === 1 ? ('On ' + f.battlefield + ', ' + f.loser + ' faces ' + f.winner + '. The question is simple: can ' + f.loser + '\'s approach beat ' + f.winner + '\'s?' + tone20)
-    : (variant20 === 2 ? (f.winner + ' and ' + f.loser + ' meet on ' + f.battlefield + '. The matchup asks one thing: does ' + f.loser + ' have an answer for ' + f.winner + '?' + tone20)
-    : ('Can ' + f.loser + ' beat ' + f.winner + ' on ' + f.battlefield + '? That is the question, and the record answers it plainly.' + tone20));
-  if (marginSentence21) s1 += ' ' + marginSentence21;
+  var openerV1626 = (f.decisiveKey === 'cannot-harm') ? ('Okay, let us be honest about this one from the start: ' + f.loser + ' has heart, but heart does not matter when the hits cannot hurt ' + f.winner + '.')
+    : (f.decisiveKey === 'transformation') ? ('This fight is really about one moment: ' + f.winner + ' changes, and after that change the fight is no longer the same fight.')
+    : ((f.decisiveKey === 'prepared counter' || f.decisiveKey === 'prepared counter detected') ? ('This fight is won before the last blow lands: it is won in the preparation, in reading ' + f.loser + ' and being ready for the plan.')
+    : (f.decisiveKey === 'regeneration') ? ('This one comes down to outlasting: ' + f.winner + ' can take the punishment and keep coming, and that changes everything about how ' + f.loser + ' has to fight.')
+    : (f.decisiveKey === 'durability') ? ('This fight is decided by who can actually be put down: ' + f.winner + ' simply does not go down the way ' + f.loser + ' needs it to.')
+    : ('So here is the fight, fan to fan: ' + f.loser + ' against ' + f.winner + ', and the record settles it.'));
+
+  var s1 = variant20 === 1 ? (openerV1626 + ' On ' + f.battlefield + ', ' + f.loser + ' faces ' + f.winner + '. The question is simple: can ' + f.loser + '\'s approach beat ' + f.winner + '\'s?' + tone20)
+    : (variant20 === 2 ? (openerV1626 + ' ' + f.winner + ' and ' + f.loser + ' meet on ' + f.battlefield + '. The matchup asks one thing: does ' + f.loser + ' have an answer for ' + f.winner + '?' + tone20)
+    : (openerV1626 + ' Can ' + f.loser + ' beat ' + f.winner + ' on ' + f.battlefield + '? That is the question, and the record answers it plainly.' + tone20));
+  if (marginSentence21) s1 += ' ' + marginSentence21;   var _styL = styleSentenceV1626(f.loser), _styW = styleSentenceV1626(f.winner);   if (_styL) s1 += ' ' + _styL;   if (_styW) s1 += ' ' + _styW;
   s1 += ' ' + DURABILITY_HONESTY_V1625;
   parts.push('1. Matchup\n' + s1);
   parts.push('2. Fighter A best case\n' + bestCase(f.aName, f.toolsA, false, f.characterLineA));
   parts.push('3. Fighter B best case\n' + bestCase(f.bName, f.toolsB, true, f.characterLineB));
   /* v16.21 OPTION (a): section 4 is the WINNER's plan. The loser plan moves to section 5, where it is named and stated to have failed, with its damage number — never presented as a plan that should have won. */
-  var plan20 = variant20 === 1 ? (f.winner + "'s plan builds around " + (f.winnerBestPlan || 'a recorded attack') + '. It is the strongest approach the record shows ' + f.winner + ' using.')
+  var plan20 = 'Here is the plan that wins it, fan to fan: ' + (variant20 === 1 ? (f.winner + "'s plan builds around " + (f.winnerBestPlan || 'a recorded attack') + '. It is the strongest approach the record shows ' + f.winner + ' using.')
     : (variant20 === 2 ? (f.winner + ' builds the fight around ' + (f.winnerBestPlan || 'a recorded attack') + '. It is the winning plan the record shows.')
-    : ('The winner\'s plan was ' + (f.winnerBestPlan || 'a recorded attack') + '. ' + f.winner + ' commits to it as the strongest approach the record shows.'));
+    : ('The winner\'s plan was ' + (f.winnerBestPlan || 'a recorded attack') + '. ' + f.winner + ' commits to it as the strongest approach the record shows.')));
   parts.push('4. Best plan\n' + plan20);
   /* v16.21: section 5 names the loser plan and says it failed, keeps ONE stall claim (any why-failed fragment that restates the decisive point is dropped — the decisive point carries the claim once), and spends the second sentence on a log number. */
   var why21 = (f.whyFailed || []).slice();
@@ -7494,7 +7466,7 @@ function buildBreakdownOfflineV1619(b) {
   var loserPlan21 = f.loser + "'s best plan was " + (f.bestPlan || 'a prepared counter') + (f.bestPlanPrepared ? ', prepared in the record before it was tried' : '') + ', and it failed';
   var stall21 = why21.length ? (loserPlan21 + ': ' + why21.join('; ')) : (loserPlan21 + ' because the winner\'s recorded attacks kept landing while the loser\'s plan ran out of answers');
   var num21 = f.loser + ' dealt ' + f.loserDamage + ' damage across ' + f.rounds + (f.rounds === 1 ? ' round' : ' rounds') + ' while ' + f.winner + ' dealt ' + f.winnerDamage + '.';
-  var s5 = 'Why it stalls: ' + stall21 + '. ' + num21 + ' But ' + (f.decisivePoint || 'the record shows no single turning point') + '.';
+  var s5 = 'Why it stalls — and this is the part fans argue about most: ' + stall21 + '. ' + num21 + ' But ' + (f.decisivePoint || 'the record shows no single turning point') + '.';
   if (f.tacticSentence && f.decisiveKey !== 'transformation' && f.tacticSentence.indexOf(f.decisiveKey) === -1 && !(f.decisiveKey === 'cannot-harm' && /cannot harm|could not harm/i.test(f.tacticSentence))) {
     s5 += ' ' + f.tacticSentence;
     /* The hard-constraint checker requires effect wording AFTER the first
@@ -7513,18 +7485,18 @@ function buildBreakdownOfflineV1619(b) {
     }
   }
   parts.push('5. Why it stalls\n' + s5);
-  var s6 = f.pairingType === 'god-vs-god' ? ('Criteria considered: power, speed, durability, regeneration, hax/bypass, stamina, weakness exposed. Decisive: ' + f.decisiveKey + '.')
-    : ('Other criteria were considered. Decisive: ' + f.decisiveKey + '.');
+  var s6 = 'Quick scoreboard, because every fan asks for one: ' + (f.pairingType === 'god-vs-god' ? ('Criteria considered: power, speed, durability, regeneration, hax/bypass, stamina, weakness exposed. Decisive: ' + f.decisiveKey + '.')
+    : ('Other criteria were considered. Decisive: ' + f.decisiveKey + '.'));
   if (f.decisiveKey === 'no decisive criterion') s6 = 'Other criteria were considered. Decisive: no decisive criterion — the record shows no single mechanism that decides this fight.';
   s6 += ' Speed bands are game speed, not canon speed.';
   if (f.aName === 'Superman' || f.bName === 'Superman') s6 += ' Superman speed audit (v16.25): roster speed 1.1 is a game-scale ordering number, not a canon speed claim — in canon he is far faster than Frodo (1.2); the number is unchanged here because changing it would change battle outcomes, and a roster speed rebalance needs its own decision, not a silent fix.';
   parts.push('6. Criteria scoreboard\n' + s6);
-  parts.push('7. Finishing sequence\nThe finishing sequence, in order: ' + (f.finishingSequence.length ? f.finishingSequence.join(' — ') : (f.finisher || 'the finishing blow')) + '.');
+  parts.push('7. Finishing sequence\nThe ending, blow by blow, in order: ' + (f.finishingSequence.length ? f.finishingSequence.join(' — ') : (f.finisher || 'the finishing blow')) + '.');
   var s8 = 'Finisher: ' + (f.finisher || 'none recorded') + '. Loser: ' + f.loser + ' is ' + f.loserStateWord + '.';
   /* v16.21: a recorded mercy choice is carried into the loser-state wording, never contradicted by 'dead'. */
   if (f.mercy) s8 += ' The log records a mercy choice before the final blow: the lethal finish was held once rather than taking the killing blow, and the fight continued because the selected mode is Death.';
   parts.push('8. Finisher and loser state\n' + s8);
-  parts.push('9. Verdict\nVerdict: ' + f.winner + ' wins, decided by ' + decisiveVerdictPhraseV1622(f) + '.');
+  parts.push('9. Verdict\nVerdict: ' + f.winner + ' wins, decided by ' + decisiveVerdictPhraseV1622(f) + '. That is the whole story of this fight, start to finish.');
   return parts.join('\n\n');
 }
 
@@ -7549,7 +7521,7 @@ function buildBreakdownPromptV1619(b) {
     var _fa = [...(b.alpha || []), ...(b.beta || [])];
     shared = ' SHARED DOSSIER FIELDS (the engine, the dossier panel, and this prompt read the same facts — never invent beyond them; a field marked unknown stays unknown): ' + _fa.map(function (fr) {
       var sd = sharedDossierFieldsV1620(fr);
-      return fr.name + ' — nature/origin: ' + sd.nature.value + ' (' + sd.nature.status + '); power source: ' + sd.powerSource.value + ' (' + sd.powerSource.status + '); damage dealt: ' + (sd.damageDealt.types.length ? sd.damageDealt.types.join(', ') : 'none recorded') + '; damage resisted (below x1): ' + (sd.damageResisted.reductions.length ? sd.damageResisted.reductions.map(function (r) { return r.type + ' x' + r.mult; }).join(', ') : 'none — all types x1') + '; damage that bypasses them: ' + (sd.damageBypassed.types.length ? sd.damageBypassed.types.join(', ') : 'None stated') + '; exploitable weaknesses: ' + (sd.weaknesses.length ? sd.weaknesses.map(function (w) { return w.text + ' (' + w.condition + ')'; }).join('; ') : 'none with a recorded engine exploit path') + '; durability: ' + sd.durabilityType + '; way to lose: ' + sd.wayToLose.text + '; win conditions: ' + sd.winCondition.outcomes.join(', ') + ' (sealing/containment/battlefield removal: not simulated).';
+      return fr.name + ' — nature/origin: ' + sd.nature.value + ' (' + sd.nature.status + '); power source: ' + sd.powerSource.value + ' (' + sd.powerSource.status + '); damage dealt: SUPERSEDED whole-powerset list — use the signature damage type in the power profile below (v16.25 single source); damage resisted (below x1): ' + (sd.damageResisted.reductions.length ? sd.damageResisted.reductions.map(function (r) { return r.type + ' x' + r.mult; }).join(', ') : 'none — all types x1') + '; damage that bypasses them: ' + (sd.damageBypassed.types.length ? sd.damageBypassed.types.join(', ') : 'None stated') + '; exploitable weaknesses: ' + (sd.weaknesses.length ? sd.weaknesses.map(function (w) { return w.text + ' (' + w.condition + ')'; }).join('; ') : 'none with a recorded engine exploit path') + '; durability: ' + sd.durabilityType + '; way to lose: ' + sd.wayToLose.text + '; win conditions: ' + sd.winCondition.outcomes.join(', ') + ' (sealing/containment/battlefield removal: not simulated).';
     }).join(' | ');
   } catch (e) { shared = ''; }
   /* v16.23 PHASE 1 — power-profile context for the prompt (same fields as the dossier panel; words/tiers/states only, no battle numbers; outcome lines above are unchanged). */
@@ -7581,9 +7553,10 @@ function buildBreakdownPromptV1619(b) {
     : (pairing === 'equal-matched' ? ((f.margin > 500 || f.loserDamage === 0) ? ' TONE (equal-matched, wide margin or shutout): decisive wording — never call this fight close or a small edge; state the margin honestly.' : ' TONE (equal-matched): close, small-edge wording — the fight is decided by a narrow edge, never by an invented blowout.')
     : ((f.margin > 500 || f.loserDamage === 0) ? ' TONE: decisive wording — never call this fight close or a small edge; state the margin honestly.' : ' TONE: close wording — decide it on the recorded edge, never on an invented blowout.')));
   var speedDurLine1625 = ' SPEED AND DURABILITY HONESTY (v16.25): speed bands are game speed, not canon speed. ' + DURABILITY_HONESTY_V1625 + ((f.aName === 'Superman' || f.bName === 'Superman') ? ' SUPERMAN SPEED AUDIT (v16.25): roster speed 1.1 is a game-scale ordering number, not a canon speed claim — in canon he is far faster than Frodo (1.2); the number is unchanged here because changing it would change battle outcomes, and a roster speed rebalance needs its own decision, not a silent fix.' : '');
-  return 'BREAKDOWN ONLY, TEXT ONLY. Write exactly 9 sections, each starting with its number and heading exactly as: 1. Matchup, 2. Fighter A best case, 3. Fighter B best case, 4. Best plan, 5. Why it stalls, 6. Criteria scoreboard, 7. Finishing sequence, 8. Finisher and loser state, 9. Verdict.'
+  var toneFriendV1626 = ' TONE — NERDY FRIEND (v16.26): write like a knowledgeable friend explaining it to another fan — warm, enthusiastic, conversational, explain WHY in plain words, use canon knowledge a fan would actually know; never an audit report, never a templated checklist with only names changed; let the telling change with these fighters and with the decisive criterion; every lock above still binds every section.';
+   return 'BREAKDOWN ONLY, TEXT ONLY. Write exactly 9 sections, each starting with its number and heading exactly as: 1. Matchup, 2. Fighter A best case, 3. Fighter B best case, 4. Best plan, 5. Why it stalls, 6. Criteria scoreboard, 7. Finishing sequence, 8. Finisher and loser state, 9. Verdict.'
     + ' WORDING STYLE (write in WAR-ROOM\'s own words, never copied from another creator): short, confident, declarative sentences in the present tense, fast pace. Pose the matchup as a question in section 1. Give each fighter\'s best case with SPECIFIC tools/powers from the record, never generic "he is very strong". Give the loser a REAL best plan first, then a hard pivot ("but" or "however") in section 5 on the one decisive point from the engine log. Name ONE decisive criterion in section 6 and repeat it in the final verdict sentence. Sections 7-8 use specific engine events only. No hedging filler ("maybe", "possibly", "might", "could be", "perhaps") unless the engine itself is uncertain. Vary phrasing by the actual record, fighter names, powers, and log events — never reuse one fixed paragraph shape for every battle.'
-    + toneLine + winnerPlanLine + marginLine + speedDurLine1625 + charLine + transEvLine + mercyLine
+    + toneLine + toneFriendV1626 + winnerPlanLine + marginLine + speedDurLine1625 + charLine + transEvLine + mercyLine
     + ' DEMON VS ANGEL WORDING: use damage-type/nature wording only when the shared dossier fields below actually record the relevant natures and damage types; otherwise write unknown, never invent a holy/demonic interaction.'
     + ' IMMORTAL / WIN-CONDITION WORDING: if a dossier records an immortal or regenerative durability, use win-condition wording (lasting incapacitation, stalemate) and never write "killed the immortal" — and never end on sealing, containment, or battlefield removal as the victory: the engine\'s outcomes are death, incapacitation, or stalemate only, and those three are not simulated in this build.'
     + ' ' + locked + ' Loser\'s best plan (from the record, for section 5): ' + (f.bestPlan || 'a prepared counter') + '. Why it stalls (from the record): ' + f.whyFailed.join('; ') + '. Decisive point (from the record — section 5 must pivot on this): ' + (f.decisivePoint || '') + '. ' + seqLine
@@ -7821,7 +7794,7 @@ function breakdownCachePutV1619(b, text) {
     return key;
   } catch (e) { return null; }
 }
-function savePendingBreakdownV1619(b, breakdown, integrity, accuracy, quality, offlineHtml, sid) {
+function savePendingBreakdownV1619(b, breakdown, integrity, accuracy, quality, offlineHtml, sid) { /* v16.26 FULL REMOVAL: no pending history entry is created. */ return null;
   if (!b || !sid) return null;
   try {
     const existing = findHistoryEntryBySessionV1618(sid);
@@ -7861,12 +7834,16 @@ async function generateBreakdownV1619(b, sessionId, opts) {
   var storyEl = document.getElementById('story-output');
   var retryBtn = document.getElementById('retry-online-story-btn');
   function isCurrent() { return currentStorySessionId === sid; }
-  function setStatus(t) { try { if (statusEl) statusEl.innerText = t; } catch (e) {} }
+  function setStatus(t) { try { if (statusEl) statusEl.innerText = t; } catch (e) {} try { var _bn = document.getElementById('online-status-banner'); if (_bn) _bn.innerText = t; } catch (e) {} try { var _tc = document.getElementById('online-status-tech'); if (_tc) _tc.innerText = t; } catch (e) {} }
   function setStory(html) { try { if (storyEl) storyEl.innerHTML = html; } catch (e) {} }
   if (retryBtn) { try { retryBtn.disabled = true; } catch (e) {} }
   resetMainStoryUIV161(sid);
   var fallbackText = buildBreakdownOfflineV1619(b);
   setStatus((opts.fromRetry ? ('Retrying online breakdown (attempt ' + (opts.retryAttempt || 1) + ') — new online attempt in progress, offline breakdown shown meanwhile. If providers are slow this can take minutes; the offline breakdown stays shown meanwhile.') : 'Generating online AI breakdown… showing the offline breakdown meanwhile.'));
+  /* v16.26 honest interim: at 60s, if generation is genuinely still running, say so — never fake a failure. */
+  var _resolvedV1626 = false;
+  var _interimTimerV1626 = null;
+  try { _interimTimerV1626 = setTimeout(function () { try { if (isCurrent() && !_resolvedV1626) setOnlineStatusV1626('interim', '60'); } catch (e) {} }, 60000); if (_interimTimerV1626 && _interimTimerV1626.unref) _interimTimerV1626.unref(); } catch (e) {}
   try { var _lb = document.getElementById('main-story-label'); if (_lb && isCurrent()) _lb.innerText = (opts.fromRetry ? ('Retrying online breakdown (attempt ' + (opts.retryAttempt || 1) + ')… (offline breakdown shown meanwhile)') : 'Preparing online breakdown… (offline breakdown shown meanwhile)'); } catch (e) {}
   setStory(breakdownHtmlV1619(fallbackText, b));
   updateEpisodeHeadingV1610('breakdown-offline', 9, b.victoryMode);
@@ -7883,7 +7860,7 @@ async function generateBreakdownV1619(b, sessionId, opts) {
     await pace();
     var r;
     if (p.key === 'openai') {
-      r = await fetchOpenAICompatibleV169({ baseUrl: 'https://text.pollinations.ai/openai', model: 'openai-fast', messages: [{ role: 'system', content: 'You are a breakdown writer. Write only the 9-section text breakdown, locked to the recorded battle outcome. Never change the winner, the finishing event, or the final states. Canon powers only for the exact version selected; transforms only if the engine triggered one, and a transform must change the fight; a fighter who cannot harm the opponent in the record must not be shown hurting them; no fighter acts decisively after defeat; no knowledge a fighter could not have acquired in the fight; recorded personality decisions must not be contradicted. The battlefield must match its recorded properties exactly. No damage numbers, no HP numbers, no round numbers — except the section 1 margin sentence and the one section 5 log-number sentence — no repeated sentences, no probability as the final answer. Loser state wording is single-sourced from the log: Death mode = knocked out, Incapacitation mode = unconscious — never write dead for a knockout. Section 1 must state the damage margin honestly; section 4 is the winner\'s plan; section 5 names the loser plan, says it failed, and gives a log number; never repeat a claim twice in section 5.' }, { role: 'user', content: prompt }], reasoningEffort: 'low', temperature: 0.3, maxTokens: 900, stream: false, timeoutMs: V16_AI_TIMEOUT_MS, budgetObj: budgets.openai });
+      r = await fetchOpenAICompatibleV169({ baseUrl: 'https://text.pollinations.ai/openai', model: 'openai-fast', messages: [{ role: 'system', content: 'You are a breakdown writer. Write only the 9-section text breakdown, locked to the recorded battle outcome. Never change the winner, the finishing event, or the final states. Canon powers only for the exact version selected; transforms only if the engine triggered one, and a transform must change the fight; a fighter who cannot harm the opponent in the record must not be shown hurting them; no fighter acts decisively after defeat; no knowledge a fighter could not have acquired in the fight; recorded personality decisions must not be contradicted. The battlefield must match its recorded properties exactly. No damage numbers, no HP numbers, no round numbers — except the section 1 margin sentence and the one section 5 log-number sentence — no repeated sentences, no probability as the final answer. Loser state wording is single-sourced from the log: Death mode = knocked out, Incapacitation mode = unconscious — never write dead for a knockout. Section 1 must state the damage margin honestly; section 4 is the winner\'s plan; section 5 names the loser plan, says it failed, and gives a log number; never repeat a claim twice in section 5. Write in a nerdy-friend voice: warm, enthusiastic, conversational, explaining WHY in plain words.' }, { role: 'user', content: prompt }], reasoningEffort: 'low', temperature: 0.3, maxTokens: 900, stream: false, timeoutMs: V16_AI_TIMEOUT_MS, budgetObj: budgets.openai });
       r.provider = 'Pollinations /openai (POST, keyless)';
     } else if (p.key === 'classic') {
       r = await pollinationsPostOnceV162(prompt, V16_AI_TIMEOUT_MS, budgets.classic);
@@ -7899,6 +7876,7 @@ async function generateBreakdownV1619(b, sessionId, opts) {
     return r;
   }
   function renderAi(meta, text) {
+    _resolvedV1626 = true; try { if (_interimTimerV1626) clearTimeout(_interimTimerV1626); } catch (e) {}
     lastMainStoryMeta = meta;
     if (isCurrent()) {
       setStatus('Online AI breakdown ready.');
@@ -7907,6 +7885,7 @@ async function generateBreakdownV1619(b, sessionId, opts) {
       renderMainStoryLabelV16(meta, sid);
       renderMainStoryDiagnosticsV16(meta, sid);
     }
+    try { renderResolverVisibleV1626(b); } catch (e) {}
     if (opts.onReady) { try { opts.onReady(meta, breakdownHtmlV1619(text, b)); } catch (e) {} }
     try { syncOnlineBreakdownStatusV1625(sid, meta); } catch (e) {}
     return meta;
@@ -7916,7 +7895,7 @@ async function generateBreakdownV1619(b, sessionId, opts) {
     lastMainStoryMeta = meta;
     if (isCurrent()) {
       /* v16.21: the live view states the failure plainly, with the reason, instead of a silent fallback. */
-      (function () { var _r = reason || 'Online AI generation was unavailable.'; try { if (typeof explainPollinationsErrorV161 === 'function') _r = explainPollinationsErrorV161(_r); } catch (e) {} setStatus('Online AI unavailable — offline breakdown shown. Reason: ' + _r); })();
+      (function () { var _r = reason || 'Online AI generation was unavailable.'; try { if (typeof explainPollinationsErrorV161 === 'function') _r = explainPollinationsErrorV161(_r); } catch (e) {} setStatus('Online AI unavailable — offline breakdown shown. Reason: ' + _r); try { _resolvedV1626 = true; if (_interimTimerV1626) clearTimeout(_interimTimerV1626); } catch (e) {} try { setOnlineStatusV1626('failed', _r); } catch (e) {} try { renderResolverVisibleV1626(b); } catch (e) {} })();
       setStory(breakdownHtmlV1619(fallbackText, b));
       updateEpisodeHeadingV1610('breakdown-offline', 9, b.victoryMode);
       renderMainStoryLabelV16(meta, sid);
@@ -7988,6 +7967,7 @@ async function generateBreakdownV1619(b, sessionId, opts) {
         if (e && (e.status === 402 || /402/.test(msg))) attempts402++;
         lastReason = msg;
         diags.push(diagPrefix + ' error: ' + msg);
+        try { if (isCurrent() && (e.status === 402 || e.status === 400 || /402/.test(msg) || /\b400\b/.test(msg))) setOnlineStatusV1626('provider-error', (e.status === 402 || /402/.test(msg)) ? '402 (free limit)' : '400 (token limit)'); } catch (e2) {}
       }
     }
     if (!lastReason) lastReason = 'Breakdown generation failed on every provider in the chain.';
@@ -8019,7 +7999,7 @@ async function generateVerdictV1614(b, sessionId, opts) {
   var storyEl = document.getElementById('story-output');
   var retryBtn = document.getElementById('retry-online-story-btn');
   function isCurrent() { return currentStorySessionId === sid; }
-  function setStatus(t) { try { if (statusEl) statusEl.innerText = t; } catch (e) {} }
+  function setStatus(t) { try { if (statusEl) statusEl.innerText = t; } catch (e) {} try { var _bn = document.getElementById('online-status-banner'); if (_bn) _bn.innerText = t; } catch (e) {} try { var _tc = document.getElementById('online-status-tech'); if (_tc) _tc.innerText = t; } catch (e) {} }
   function setStory(html) { try { if (storyEl) storyEl.innerHTML = html; } catch (e) {} }
   if (retryBtn) { try { retryBtn.disabled = true; } catch (e) {} }
   resetMainStoryUIV161(sid);
@@ -8165,7 +8145,7 @@ async function generateMainStoryV16(b, sessionId, opts) {
   const storyEl = document.getElementById('story-output');
   const retryBtn = document.getElementById('retry-online-story-btn');
   function isCurrent() { return currentStorySessionId === sid; }
-  function setStatus(t) { try { if (statusEl) statusEl.innerText = t; } catch (e) {} }
+  function setStatus(t) { try { if (statusEl) statusEl.innerText = t; } catch (e) {} try { var _bn = document.getElementById('online-status-banner'); if (_bn) _bn.innerText = t; } catch (e) {} try { var _tc = document.getElementById('online-status-tech'); if (_tc) _tc.innerText = t; } catch (e) {} }
   function setStory(html) { try { if (storyEl) storyEl.innerHTML = html; } catch (e) {} }
   if (retryBtn) { try { retryBtn.disabled = true; } catch (e) {} }
   resetMainStoryUIV161(sid);
@@ -8551,6 +8531,41 @@ function resolverComparisonForBattleV1624(b) {
     return { resolver: res, hpWinner: b.winner, hpStalemate: !!b.stalemate, match: comp.match, verdict: comp.verdict, hpCriterion: hpCrit1625, hpFinisher: hpFin1625, resolverFinisher: resFin1625, reasonMatch: (hpCrit1625 !== 'unknown' && res && res.decisiveCriterion === hpCrit1625), finisherMatch: (hpFin1625 !== 'unknown' && resFin1625 !== null && hpFin1625 === resFin1625) };
   } catch (e) { return { error: 'resolver comparison unavailable: ' + e.message }; }
 }
+/* v16.26 Part 8 — ONE status source. Every online-breakdown status change writes the
+   live banner, the main-story status line, and the Technical Details line IN THE SAME
+   TICK, so the live screen can never lag behind history (history is removed in v16.26).
+   HONESTY: 'interim' means providers are STILL genuinely running at 60 seconds — it is
+   never presented as a failure. A failure is only written when generation actually ends
+   without an AI breakdown (renderOffline). A hard failure-at-60s rule would be a Phase 4
+   speed decision, NOT an honesty label, and is NOT implemented here. */
+function setOnlineStatusV1626(state, detail) {
+  var text = '';
+  if (state === 'pending') text = 'Generating online AI breakdown… showing the offline breakdown meanwhile.';
+  else if (state === 'interim') text = 'Still trying to reach the online AI (' + String(detail || '60') + ' seconds so far) — the offline breakdown below stays shown meanwhile. This is not a failure yet; providers are still being tried.';
+  else if (state === 'provider-error') text = 'Online provider returned ' + String(detail || 'an error') + ' — trying the next provider; the offline breakdown stays shown meanwhile.';
+  else if (state === 'failed') text = 'Online AI unavailable — offline breakdown shown. Reason: ' + String(detail || 'Online AI generation was unavailable.');
+  else if (state === 'ready') text = 'Online AI breakdown ready.';
+  else text = String(detail || '');
+  try { var b1 = document.getElementById('online-status-banner'); if (b1) b1.innerText = text; } catch (e) {}
+  try { var b2 = document.getElementById('main-story-status'); if (b2) b2.innerText = text; } catch (e) {}
+  try { var b3 = document.getElementById('online-status-tech'); if (b3) b3.innerText = text; } catch (e) {}
+  return text;
+}
+function renderResolverVisibleV1626(b) {
+  /* v16.26 resolver visibility fix: the comparison lives on the breakdown page itself,
+     NOT only inside the collapsed Technical Details block. Errors render visibly. */
+  var el = null;
+  try { el = document.getElementById('resolver-visible'); } catch (e) {}
+  if (!el) return 'no-element';
+  try {
+    var comp = resolverComparisonForBattleV1624(b);
+    el.innerHTML = resolverComparisonHtmlV1624(comp);
+    return comp && comp.error ? 'error-rendered' : 'ok';
+  } catch (e) {
+    el.innerHTML = '<p><b>Resolver comparison (v16.26 — alongside the HP engine, NOT the main breakdown):</b> unavailable — ' + esc(String((e && e.message) || e)) + '</p>';
+    return 'error-rendered';
+  }
+}
 function resolverComparisonHtmlV1624(comp) {
   if (!comp || comp.error) return '<p><b>Resolver comparison (v16.25, alongside HP engine):</b> unavailable — ' + esc(String((comp && comp.error) || 'no comparison')) + '</p>';
   var r = comp.resolver;
@@ -8589,10 +8604,10 @@ function resolverReconciliationHtmlV1624(f) {
 try{ restoreSettingsV151(); }catch(e){}
 document.getElementById('search-input').addEventListener('input',e=>{searchTerm=e.target.value.toLowerCase();renderRoster()});
 document.getElementById('battlefield-select').addEventListener('change',()=>{renderBattlefields(); try{ saveSettingsV151(); }catch(e){}});
-try{JSON.parse(localStorage.getItem('warroom_custom')||'[]').forEach(c=>{if(!ROSTER.find(x=>x.id===c.f.id)){ROSTER.push(c.f); if(c.powers) POWERS[c.f.id]=c.powers.slice(0,3);}})}catch(e){}
-renderChips(); renderRoster(); renderHistory(); renderChannels(); if(typeof updateOnlineStatus==='function'){updateOnlineStatus(); window.addEventListener('online',updateOnlineStatus); window.addEventListener('offline',updateOnlineStatus);} if(typeof updateFileWarning==='function') updateFileWarning(); if(typeof updateGeminiStatus==='function') updateGeminiStatus(); if(typeof updatePollinationsKeyStatus==='function') updatePollinationsKeyStatus();
+/* v16.26: custom fighters removed — previously saved customs are not loaded; the roster stays 194 */
+renderChips(); renderRoster(); /* v16.26: no renderHistory/renderChannels — history and the channel library are removed from the main flow */ if(typeof updateOnlineStatus==='function'){updateOnlineStatus(); window.addEventListener('online',updateOnlineStatus); window.addEventListener('offline',updateOnlineStatus);} if(typeof updateFileWarning==='function'){ try{ updateFileWarning(); }catch(e){} } /* v16.26: file-warning panel removed with Advanced Settings; guarded */ /* v16.26: key-status UI removed with Advanced Settings */
 // Fully automatic research: connection tests run on load, no tap required. Retest buttons remain optional.
-if(typeof testConnections==='function'){ try{ testConnections(); }catch(e){} }
+/* v16.26: automatic connection tests removed with Advanced Settings */
 </script>
 </body>
 </html>

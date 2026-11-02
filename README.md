@@ -8,7 +8,7 @@ breakdown.
 ## Play it
 
 Open `index.html` in a browser — no install, no build step. This is now
-WAR-ROOM v16.25, the 1v1 Death Battle game, and the main game on GitHub Pages.
+WAR-ROOM v16.26, the 1v1 Death Battle game, and the main game on GitHub Pages.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -80,9 +80,9 @@ New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v16.25 100% plan fix parts (one damage source; durability naming + fight honesty; Beat 1 damage margins; speed labels + Superman audit; Death header; MATCH defined; online honesty; base-form wording; per-power character records; Parts 6-saved/7 dropped under full-removal decision; no output switch; 499-test harness)
-- `war-room-v16.25.html` — same as `index.html`
-- `war-room-v16.25-tests.js` — Node regression harness (499 tests)
+- `index.html` — latest, WAR-ROOM v16.26 Phase 3 simplified flow (character screen → breakdown page only; save/history/export/playback, Advanced Settings, Live Research + RETEST, Share/Copy Link removed from main flow; nerdy-friend tone + ShortStory+ shape, locks unchanged; Part 8 in-place live banner + honest 60s interim status; Part 2 mortal everywhere; Part 5 mode selector knocked-out wording; Part 11 collapsed Audit numbers, character record first; Part 1 multi-type cleanup; resolver comparison visible on breakdown page; no output switch — main breakdown stays HP-engine-locked; 505-test harness)
+- `war-room-v16.26.html` — same as `index.html`
+- `war-room-v16.26-tests.js` — Node regression harness (505 tests)
 - `war-room-v16.19.html` — previous 1v1 version, kept as an archive
 - `war-room-v14.html` — previous 1v1 version, kept as an archive
 - `war-room-v13.1.html` — previous 1v1 version, kept as an archive
