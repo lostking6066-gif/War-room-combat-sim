@@ -8,7 +8,7 @@ breakdown.
 ## Play it
 
 Open `index.html` in a browser — no install, no build step. This is now
-WAR-ROOM v16.36, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.36 is a display-only 3B fix: the live battle screen is now word-only (no HP numbers, no HP bar, no HP transform lines) while results and Audit are unchanged.
+WAR-ROOM v16.37, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.37 removes the live playback screen entirely (Root 1 Option A): Start Battle goes directly to the results screen; results and Audit are unchanged.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
