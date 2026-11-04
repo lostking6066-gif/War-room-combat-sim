@@ -8,7 +8,7 @@ breakdown.
 ## Play it
 
 Open `index.html` in a browser — no install, no build step. This is now
-WAR-ROOM v16.38, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.38 is Phase 3C: the results page now shows a standard conditions line on every battle (versions, battlefield and its real properties only, mode, in-character stance, applicable win conditions), a fixed rubric stating what decides that pairing type before the narration argues it, and an analysis narration in the nerdy-friend voice (loser's real best plan first, hard pivot on the one decisive point, finisher verbatim, exact loser state, one-sentence verdict), all locked to the frozen resolver result, text only, with no HP numbers outside collapsed Audit.
+WAR-ROOM v16.39, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.39 is the Path B engine phase: one frozen resolver record now drives everything — the HP round simulation is retired as an independent system and the round record is rendered from the frozen result (winner, reason, finisher, loser state), so the main telling and the Audit comparison can no longer disagree; Audit now reports PASS/FAIL consistency checks instead of a second verdict. It also adds the fix-3 connecting sentence on incapacitation wins where the deciding power differs from the finisher (Freeze Breath decides, Heat Vision finishes), and keeps the v16.38 conditions line, fixed rubric, and nerdy-friend analysis narration, text only, with no HP numbers outside collapsed Audit.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
