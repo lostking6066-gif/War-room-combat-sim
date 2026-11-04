@@ -8,7 +8,7 @@ breakdown.
 ## Play it
 
 Open `index.html` in a browser — no install, no build step. This is now
-WAR-ROOM v16.37, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.37 removes the live playback screen entirely (Root 1 Option A): Start Battle goes directly to the results screen; results and Audit are unchanged.
+WAR-ROOM v16.38, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.38 is Phase 3C: the results page now shows a standard conditions line on every battle (versions, battlefield and its real properties only, mode, in-character stance, applicable win conditions), a fixed rubric stating what decides that pairing type before the narration argues it, and an analysis narration in the nerdy-friend voice (loser's real best plan first, hard pivot on the one decisive point, finisher verbatim, exact loser state, one-sentence verdict), all locked to the frozen resolver result, text only, with no HP numbers outside collapsed Audit.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
