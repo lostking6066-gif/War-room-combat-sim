@@ -7,7 +7,7 @@ breakdown.
 
 ## Play it
 
-Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.43, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.43 is the shutout style-quote fix on top of the v16.42 style batch: cannot-harm shutout stories now quote both fighters' style lines word for word, like the other stories already do — so Saitama vs Frodo and Superman vs Rocky show both style lines in the story. Winners, criteria, finishers, loser states, round counts, and damage are unchanged; all 24 golden records are byte-identical to v16.42. Harness 588 passed, 0 failed. Text only, no HP numbers on the player page.
+Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.44, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.44 is the first variants batch (Video Games, 32 fighters): every fighter now has real v2 and v3 profiles — style, usage, personality note, weakness, signature, transform, and powerset all swap with the selected version, not just stats and one power name. Held: Lara v2, Mega Man v2, Sephiroth v3, Kirby v3. Winners, criteria, finishers, loser states, round counts, and damage are unchanged on the base path; all 24 base golden records are byte-identical to v16.43. Harness 597 passed, 0 failed. Text only, no HP numbers on the player page.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -79,7 +79,13 @@ New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v16.28 fix release for the v16.27 side NOT CLEAR verdicts (genuinely varied free-form telling, 3 openers/orders/frames per decisive key, stale 9-section label rewritten, breakdown cache rotated to v1628 with legacy 9-section texts rejected; audit numbers confined to collapsed Audit incl. dodge/stamina/HP triggers and resolver numeric detail; speed clause in plain words in both dossier surfaces for all 194, numbers unchanged; resolver derives winner/reason/finisher from main-engine result — FULL MATCH all 7, advisory line updated, independent checking retired until Phase 3B; shutout tellings compressed to 6 paragraphs, telling only; Healing Factor Strike kept as recorded Wolverine move; Death wording reworded to knocked-out language with rules preserved; resolver heading exact wording v16.28; no output switch — main breakdown stays HP-engine-locked; 520-test harness)
+- `index.html` — latest, WAR-ROOM v16.44 Video Games variants batch (first category batch of the approved variants program: real v2+v3 profiles for 32 Video Games fighters — style, usage, personality note, weakness, signature, transform, and powerset swap with the selected version; v2==trans block; V3POWER map; 597-test harness; 24 base goldens byte-identical to v16.43)
+- `war-room-v16.44.html` — same as `index.html`
+- `war-room-v16.44-tests.js` — Node regression harness (597 tests)
+- `war-room-v16.44-goldens.json` — 32 golden records (24 base + 8 variant)
+- `war-room-v16.43.html` — previous version, kept as an archive
+- `war-room-v16.43-tests.js` — Node regression harness (588 tests)
+- `war-room-v16.43-goldens.json` — 24 golden records
 - `war-room-v16.28.html` — same as `index.html`
 - `war-room-v16.28-tests.js` — Node regression harness (520 tests)
 - `war-room-v16.19.html` — previous 1v1 version, kept as an archive
