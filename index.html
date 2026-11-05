@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.39 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.40 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,26 +66,21 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.39</h1><span>1V1 DEATH BATTLES • ENGINE v16.39 • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection and research status live only in the Research Dossier / Connection panel below. --></div></header>
+<header><div><h1>WAR-ROOM v16.40</h1><span>1V1 DEATH BATTLES • ENGINE v16.40 • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
-<div class="panel"><h2>Phase 3 — simplified flow</h2><p class="note">Pick two fighters, battle, read the breakdown — that is the whole flow in v16.39. History, export, read-aloud, Advanced Settings, and live-research retests are removed in this build; the breakdown page is the result. Search and category filters, the Review Matchup edge table, the collapsed Audit disclosure (with Combat Details inside), and dossier Info are kept.</p></div>
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
 <input id="search-input" placeholder="Search by name, franchise, or alias — try Goku, Batman, Link...">
 <p id="roster-type-note" class="note"></p>
 <div class="chips" id="cat-chips"></div>
-<p class="note">This build ships 194 playable fighters across 6 categories (Anime 33, Comics 33, Video Games 32, Movies & TV 32, Animation 32, Fantasy & Sci-Fi 32). The next-batch target is 100 per category — that is a target, not a claim. The roster is NOT 600 fighters; do not treat the target as implemented. Each card uses an emoji fallback portrait so no image ever breaks. Real artwork is not included.</p>
 </div>
 <div class="prep">
 <div class="panel"><h2>Combat Roster <span id="roster-count" style="font-size:.8rem;color:var(--dim)"></span></h2><div class="grid" id="fighter-pool"></div></div>
 <div class="panel"><h2 id="match-heading">2 — Death (knockout) Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. Both fighters are chosen by you — WAR-ROOM is 1v1 only.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
-<label style="font-size:.85rem">Battlefield</label><select id="battlefield-select"></select><p class="note" id="battlefield-desc"></p>
-<label style="font-size:.85rem">Victory condition</label><select id="victory-select"><option value="death" selected>Death (knockout) — the loser is knocked out, not dead: the fight ends when a fighter can no longer continue</option><option value="incapacitation">Incapacitation / Knockout — a knockout is unconsciousness, NOT death</option></select><p class="note">Mirror matches are blocked in this build: the same fighter cannot fight itself. In Death mode a knockout is never labelled death. In Incapacitation mode a knockout is labelled unconscious, not dead. Surrender and escape are not simulated outcomes in this build — the verdict will not claim them.</p>
-<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="review-btn" disabled style="flex:1">Review Matchup →</button></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="start-btn" disabled style="flex:1" onclick="startBattle()">Start Death (knockout) Battle →</button></div>
 
 
 
-<div id="setup-review" style="display:none"></div>
 </div>
 </div>
 
@@ -96,12 +91,16 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 <section id="results-screen" class="screen">
 <div class="panel"><h2 id="result-title">RESULT</h2><p id="result-desc" class="note" style="font-size:.9rem"></p></div>
 
-<div class="panel" id="online-status-panel"><h2>Online breakdown status</h2><div id="online-status-banner" class="note">Online breakdown status appears here during and after generation.</div></div>
-<div class="panel story"><h2 id="episode-heading">Death (knockout) Battle Breakdown</h2><p id="main-story-label" class="note"></p><p id="main-story-status" class="note"></p><p class="note">The main breakdown below is an analysis narration, with the standard conditions and the fixed rubric above it: the narration is generated from the schema resolver frozen result (winner, reason, finisher, loser state, word-only exchanges, transforms with triggers met) plus dossier facts, locked to that result, and it states no HP numbers, damage totals, or round counts. The conditions line states the actual fight conditions (versions, battlefield, mode, stance, win conditions). The rubric states the criteria that decide this pairing, in the resolver's order, before the narration argues the outcome. While online generation runs, the labelled offline analysis narration is shown first and replaced by the online AI breakdown when it passes validation. If online generation is unavailable, the offline analysis narration stays and is labelled honestly as offline — it is never presented as online AI. The round record is rendered from the frozen resolver result: its numbers and round lines live in the Audit disclosure below, never in the main telling.</p><div id="conditions-output" class="note"></div><div id="rubric-output" class="note"></div><div id="story-output"></div></div>
+<div class="panel story"><h2 id="episode-heading">Death (knockout) Battle Breakdown</h2><div id="story-output"></div><div id="conditions-output" class="note" style="font-size:.82rem;opacity:.85"></div><div id="rubric-output" class="note" style="font-size:.82rem;opacity:.85"></div></div>
 <button class="btn" onclick="resetSimulator()">New Battle</button>
+</section>
+<section id="tester-screen" class="screen" style="display:none">
+<div class="panel"><h2>Tester surface</h2><p class="note">Tester-only surface for Audit, Combat Details, dossier, and Technical Details. Not part of the player page; reachable only by adding #tester to the URL. No player-screen element links here.</p></div>
+<div class="panel"><h2>Online story status</h2><p id="main-story-label" class="note"></p><p id="main-story-status" class="note"></p></div>
+<div class="panel" id="online-status-panel"><h2>Online breakdown status</h2><div id="online-status-banner" class="note">Online breakdown status appears here during and after generation.</div></div>
 <details class="adv" id="audit-disclosure"><summary>Audit — single-record consistency, numbers, and working detail (collapsed by default; numbers live here, not in the main telling)</summary><p class="note">The resolver frozen result is the only verdict: it decides the winner, reason, finisher, and loser state for the main telling. The round record below is rendered from that frozen result; the comparison verifies the rendering against it (winner, reason, finisher, loser state, repertoire, transforms, damage sums) and reports PASS/FAIL, FAILING LOUDLY on any mismatch. There is no second competing verdict.</p><div id="resolver-visible" class="note">Audit comparison appears here after the battle — it is hidden inside this collapsed disclosure by default. If the comparison cannot be computed, the reason is shown here, never nothing.</div><details class="adv" id="combat-details-disclosure"><summary>Combat Details — breakdown and numbers (damage totals live here, not in the main telling; the main telling states no damage totals)</summary><ul class="break" id="breakdown-output"></ul></details></details>
 <details class="adv"><summary>Character Research — dossier for this battle</summary><div id="result-dossier-output" class="note">Research dossier for this battle appears here after the battle.</div></details>
-<details class="adv"><summary>Technical Details — validation, provider, session, retry</summary><p id="consistency-note" class="note"></p><div id="pipeline-stages" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px"></div><div id="consistency-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="quality-note" class="note"></p><div id="quality-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="integrity-note" class="note"></p><div id="integrity-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="accuracy-note" class="note"></p><div id="accuracy-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><div id="main-story-diagnostics" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">No story generated yet for this battle.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn small" id="retry-online-story-btn" onclick="retryMainStoryV16()">Retry online story</button></div><div id="ai-story-output" class="note" style="margin-top:10px;line-height:1.7">The main story above is the online AI story (or the labelled offline fallback). Rejected draft diagnostics, if any, are in Technical Details — never presented as the story.</div><p id="online-status-tech" class="note"></p></details>
+<details class="adv"><summary>Technical Details — validation, provider, session, retry</summary><p id="consistency-note" class="note">Three separate systems below — never combined into one pass/fail. Battle Integrity and Narrative Accuracy decide whether the episode is verified; Story Quality alone never verifies or unverifies it.</p><div id="pipeline-stages" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px"></div><div id="consistency-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="quality-note" class="note"></p><div id="quality-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="integrity-note" class="note"></p><div id="integrity-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><p id="accuracy-note" class="note"></p><div id="accuracy-lines" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px"></div><div id="main-story-diagnostics" class="note" style="background:#131929;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:8px">No story generated yet for this battle.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn small" id="retry-online-story-btn" onclick="retryMainStoryV16()">Retry online story</button></div><div id="ai-story-output" class="note" style="margin-top:10px;line-height:1.7">The main story above is the online AI story (or the labelled offline fallback). Rejected draft diagnostics, if any, are in Technical Details — never presented as the story.</div><p id="online-status-tech" class="note"></p></details>
 </section>
 </main>
 
@@ -502,18 +501,12 @@ function renderSlots(){
   const el=document.getElementById('alpha-squad-slots'); el.innerHTML='';
   const labels=['Fighter A','Fighter B'];
   for(let i=0;i<2;i++){const id=selected[i]; const f=id?byId(id):null; const v=f?variantOf(f):null;
-    if(f){const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0]; const inst=makeBattleInstance(f,bf); const c=canonResearch[id]||{}; const resStatus=c.time?`Research: Wikipedia ${c.wiki?'✅ found':'❌ no data'} • Fan-run Fandom wiki ${c.fandom?'✅ found':'❌ no data'}`:`Research: fetching automatically…`;
-    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(continuityFor(f))})</small></span><small style="color:var(--dim)">${esc(startingFormNoteForFighterV1625(f, v.label, selectedVariants[f.id]||'base'))}</small><details class="audit-numbers"><summary>Audit numbers</summary><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (no research bonus — since v15, research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(inst, bf)}</small></details><small style="color:var(--dim)">Research details live in the Research Dossier below, not on this card.</small></div>`;}
+    if(f){const bf=BATTLEFIELDS[0]; const inst=makeBattleInstance(f,bf); const c=canonResearch[id]||{}; const resStatus=c.time?`Research: Wikipedia ${c.wiki?'✅ found':'❌ no data'} • Fan-run Fandom wiki ${c.fandom?'✅ found':'❌ no data'}`:`Research: fetching automatically…`;
+    el.innerHTML+=`<div class="slot filled"><span>${labels[i]}: ${f.icon} ${esc(f.name)} <small>(${esc(continuityFor(f))})</small></span><small style="color:var(--dim)">${esc(startingFormNoteForFighterV1625(f, v.label, selectedVariants[f.id]||'base'))}</small><details class="audit-numbers"><summary>Audit numbers</summary><span>Final battle stats: ATK ${inst.startAtk||inst.atk} • HP ${inst.startHp||inst.maxHp} • DEF ${inst.startDef||inst.def}${inst.researched?' (no research bonus — since v15, research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(inst, bf)}</small></details><small style="color:var(--dim)">Research details live in the character Info.</small></div>`;}
     else el.innerHTML+=`<div class="slot"><span>${labels[i]} (Empty — pick a fighter)</span></div>`;}
   document.getElementById('roster-count').innerText=`${selected.length}/2 Selected`;
-  document.getElementById('review-btn').disabled=selected.length!==2;
-  renderBattlefields(); renderYT(); renderChannels();
-}
-function renderBattlefields(){
-  const sel=document.getElementById('battlefield-select'); const cur=sel.value||'arena';
-  sel.innerHTML=BATTLEFIELDS.map(b=>`<option value="${b.id}" ${b.id===cur?'selected':''}>${b.name}</option>`).join('');
-  const b=BATTLEFIELDS.find(x=>x.id===sel.value)||BATTLEFIELDS[0];
-  document.getElementById('battlefield-desc').innerText=b.desc+` Combat effect: ATK ${b.atk>=0?'+':''}${b.atk}, DEF ${b.def>=0?'+':''}${b.def} for all fighters.`;
+  document.getElementById('start-btn').disabled=selected.length!==2;
+  renderYT(); renderChannels();
 }
 function fieldOrNotKnownV151(value,label){ const v=(value==null?'':String(value).trim()); if(!v||v==='—') return '[NOT KNOWN] — '+label; return esc(value); }
 function auditNumbersDetailsV1626(f) {
@@ -576,20 +569,6 @@ async function triggerOnlineResearch(){
 }
 
 /* ============ TEAM REVIEW & COMBAT ENGINE ============ */
-document.getElementById('review-btn').onclick=async ()=>{
-  if(selected.length!==2){alert('Pick exactly 2 fighters first — Fighter A and Fighter B.');return}
-  const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
-  const teamHtml=(ids,title,inst)=>`<h3 style="color:var(--cyan);margin:10px 0 6px">${title}</h3>`+ids.map(id=>{const f=byId(id); const v=variantOf(f); const finalInst=inst; return `<div class="slot filled"><span>${f.icon} ${esc(f.name)} (${esc(v.label)})</span><details class="audit-numbers"><summary>Audit numbers</summary><span>${esc(f.fr)} • Final battle stats: ATK ${finalInst.startAtk||finalInst.atk} • HP ${finalInst.startHp||finalInst.maxHp} • DEF ${finalInst.startDef||finalInst.def}${finalInst.researched?' (no research bonus — since v15, research fills the dossier only)':''}</span><small style="color:var(--dim)">Stat build: ${statBuildString(finalInst, bf)}</small></details></div>`}).join('');
-  const aInst=makeBattleInstance(byId(selected[0]),bf); const bInst=makeBattleInstance(byId(selected[1]),bf);
-  const analysis=generateAnalysis(aInst,bInst);
-  document.getElementById('setup-review').style.display='block';
-  document.getElementById('setup-review').innerHTML=teamHtml([selected[0]],'Fighter A',aInst)+teamHtml([selected[1]],'Fighter B',bInst)+`<p class="note">Battlefield: ${bf.name}. ${bf.desc} Final battle stats above include the battlefield effect only. Research never changes battle stats — since v15, research fills the dossier only. The same final stats appear in Chapter I and in the breakdown.</p><div class="panel" style="margin-top:8px"><h3 style="color:var(--cyan)">Analysis preview — Chapter II in brief</h3>${analysis.html}</div><p class="note">Analysis preview uses current stats; final battle stats are shown in Chapter I and the breakdown.</p><p class="note" id="auto-research-note">Auto-researching both fighters from Wikipedia + Fandom… Research runs automatically — the battle button below is already enabled and does not wait for research.</p><button class="btn mag" style="width:100%" onclick="startBattle()">${(document.getElementById('victory-select')&&document.getElementById('victory-select').value==='incapacitation'?'Start Incapacitation Battle':'Start Death (knockout) Battle')} on ${esc(bf.name)} →</button>`;
-  const live=await fetchResearchFor([...selected]);
-  const wikiCount=selected.filter(id=>{const c=canonResearch[id]||{}; return !!(c.wiki||researchIntel[id]);}).length; const fandomCount=selected.filter(id=>{const c=canonResearch[id]||{}; return !!c.fandom;}).length;
-  const note=document.getElementById('auto-research-note'); if(note) note.innerText=`Auto-research complete: Wikipedia: ${wikiCount}/2 found, Fan-run Fandom wiki: ${fandomCount}/2 found. The two sources are counted separately; a failed source is never counted as found. Research never changes battle stats — since v15 (the old bonus was removed), and their dossier feeds the Research Dossier below — summaries never appear inside the episode chapters.`;
-  if(wikiCount===0&&fandomCount===0&&note) note.innerText=`Auto-research found no live Wikipedia or Fan-run Fandom data (offline or blocked). The battle will use local profiles only, and the episode will say so — it will not invent researched feats.`;
-  renderCanonResults(selected);
-};
 function chooseTarget(actor, enemies){
   const alive=enemies.filter(e=>e.alive);
   if(!alive.length) return null;
@@ -649,8 +628,8 @@ function counterFor(actor, pattern){ return actor.id==='batman' ? ('web-counter 
    renderFromFrozenV1639; it decides nothing itself. */
 function simulateBattle(){
   if(typeof selected!=='undefined' && selected.length===2 && selected[0]===selected[1]) throw new Error('Mirror match blocked: the same fighter cannot fight itself in this build.');
-  const bf=BATTLEFIELDS.find(b=>b.id===document.getElementById('battlefield-select').value)||BATTLEFIELDS[0];
-  const _vsel=(typeof document!=='undefined')?document.getElementById('victory-select'):null; const victoryMode=(typeof forcedVictoryMode==='string'&&forcedVictoryMode)?forcedVictoryMode:((_vsel&&_vsel.value)?_vsel.value:'death');
+  const bf=BATTLEFIELDS[0];
+  const victoryMode=(typeof forcedVictoryMode==='string'&&forcedVictoryMode)?forcedVictoryMode:'death';
   battleSeed=(typeof forcedSeed==='number')?forcedSeed:Math.floor(Math.random()*2147483647);
   const a=makeBattleInstance(byId(selected[0]),bf);
   const b=makeBattleInstance(byId(selected[1]),bf);
@@ -675,7 +654,6 @@ function startBattle(){
   showResults();
 }
 /* v16.37: playback functions removed — direct to results. */
-try{const _vs=document.getElementById('victory-select'); if(_vs&&!_vs.dataset.v131bound){_vs.dataset.v131bound='1'; _vs.addEventListener('change',()=>{try{const _lbl=_vs.value==='incapacitation'?'Start Incapacitation Battle':'Start Death (knockout) Battle';try{ saveSettingsV151(); }catch(e){} try{ if(typeof updateModeHeadings==='function') updateModeHeadings(_vs.value); }catch(e){}  document.querySelectorAll('button').forEach(_b=>{if((_b.getAttribute('onclick')||'').includes('startBattle')){ _b.innerText=_b.innerText.replace(/^Start (Death \(knockout\)|Incapacitation) Battle/,_lbl); }});}catch(e){}});}}catch(e){}
 
 /* ============ STORY ENGINE — built ONLY from recorded events ============ */
 function cond(hp,max){if(hp===0) return 'falls and does not rise'; if(hp/max<0.25) return 'is barely standing, breathing hard'; if(hp/max<0.5) return 'is badly hurt and slowing'; return 'staggers, but holds their ground';}
@@ -807,7 +785,6 @@ function resetSimulator(){
   if(playbackTimer) clearInterval(playbackTimer);
   selected=[]; aiTeam=[]; researchIntel={}; currentBattle=null; ytNote=''; if(typeof canonResearch!=='undefined') canonResearch={}; researchFetchedKeys={}; researchTimers={}; researchInFlight={}; episodeDialogueUsed={};
   const tn=document.getElementById('yt-note'); if(tn) tn.value=''; const nd=document.getElementById('yt-note-display'); if(nd) nd.innerHTML='';
-  document.getElementById('setup-review').style.display='none';
   const _ab=document.getElementById('ai-status'); if(_ab) _ab.innerText='AI RESEARCH: AUTO-TESTING…'; try{ if(typeof testConnections==='function') testConnections(); }catch(e){}
   document.getElementById('results-screen').classList.remove('active'); document.getElementById('draft-screen').classList.add('active');
   renderRoster(); renderHistory();
@@ -2566,7 +2543,6 @@ function showResults(){
   const quality=storyQualityChecksV14(b,story);
   const intFail=integrity.filter(c=>c.passed===false).length, accFail=accuracy.filter(c=>c.passed===false).length, qFail=quality.filter(c=>c.passed===false).length;
   const factuallyVerified=(intFail===0&&accFail===0);
-  document.getElementById('consistency-note').innerText='Three separate systems below — never combined into one pass/fail. Battle Integrity and Narrative Accuracy decide whether the episode is verified; Story Quality alone never verifies or unverifies it.';
   const cl=document.getElementById('consistency-lines'); if(cl) cl.innerHTML='<b>Legacy combined check is not used in this build.</b> See Systems A, B, and C below, each with its own result.';
   const il=document.getElementById('integrity-lines'); if(il) il.innerHTML='<b>System A — Battle Integrity:</b> '+validationSummaryV14(integrity)+'<br>'+validationLinesHtmlV14(integrity);
   const in2=document.getElementById('integrity-note'); if(in2) in2.innerText='System A — Battle Integrity: '+validationSummaryV14(integrity)+'. Authoritative record: winner='+fr.winner+', loser='+fr.loserName+', victoryMode='+fr.victoryMode+', finishingEventId='+(fr.finishingEventId!=null?fr.finishingEventId:'none')+', finishingAbility='+(fr.finishingAbility||'none')+'.';
@@ -2581,7 +2557,8 @@ function showResults(){
   // v16: fallback-episode integrity/accuracy/quality above describe the fallback
   // episode, not the AI main story. The AI main story's own validation is
   // reported in Technical Details and saved in mainStoryMeta when it resolves.
-  document.getElementById('breakdown-output').innerHTML=breakdown;
+  /* v16.40 (spec F-8): Combat Details lives on the tester surface only — guarded tester render; the unguarded player-page write is deleted. */
+  try{ renderTesterBreakdownV1640(); }catch(e){}
   try{ const _rd=document.getElementById('result-dossier-output'); if(_rd){ var _speed29 = ([...b.alpha,...b.beta]).map(function (ff) { var _rf29 = (typeof byId === 'function' && ff && ff.id) ? byId(ff.id) : ff; if (!_rf29 || _rf29.sp == null) return ''; return '<b>Speed audit — ' + esc(_rf29.name) + ':</b> roster speed ' + _rf29.sp + ' — game speed, not canon speed; left unchanged because changing it would change outcomes; a rebalance needs its own decision.'; }).filter(function (x) { return !!x; }).join('<br>'); const _refs=(typeof researchRefsFor==='function'?researchRefsFor([...b.alpha,...b.beta].map(f=>f.id)):[]); _rd.innerHTML=_refs.map(r=>'<b>'+esc(r.fighter)+' ('+esc(r.continuity)+'):</b> '+r.sources.map(x=>esc(x.name)+' '+esc(x.status)).join('; ')).join('<br>')+(_speed29 ? '<br>' + _speed29 : '')+'<br><span class="note">Fan wikis are leads, not authorities. Research never changed battle stats or powers.</span>'; } }catch(e){}
   currentStorySavedSessionId=null;
   try{ resetMainStoryUIV161('pending'); }catch(e){}
@@ -2829,7 +2806,7 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38'].includes(x.formatVersion);
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39'].includes(x.formatVersion);
   return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12/v16.13/v16.14/v16.15/v16.16/v16.17/v16.18/v16.19/v16.20 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
@@ -6347,7 +6324,7 @@ function verdictFailedNamesV1614(checks) { return (checks || []).filter(function
    invented closeness. The system scales to the 600 roster target
    because breakdowns are generated on first click and cached per
    distinct pair/outcome — never pre-generated for every pair. */
-var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1639';
+var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1640';
 var V1619_OFFLINE_BREAKDOWN_LABEL = 'Offline Breakdown — Online AI generation was unavailable.';
 var V1619_BREAKDOWN_HEADINGS = ['Matchup', 'Fighter A best case', 'Fighter B best case', 'Best plan', 'Why it stalls', 'Criteria scoreboard', 'Finishing sequence', 'Finisher and loser state', 'Verdict'];
 /* ============ WAR-ROOM v16.20: EXPANDED PAIRING + FIXES ============
@@ -10576,10 +10553,32 @@ function resolverReconciliationHtmlV1624(f) {
   } catch (e) { return '<p><b>Damage-type single source (v16.38):</b> unavailable — nothing is invented.</p>'; }
 }
 
+
+/* v16.40 strip (placement B): tester-only route. The tester surface is a
+   separate section in this same file, hidden by default, shown ONLY when
+   the URL hash is exactly #tester typed directly. No player-screen markup
+   links to it, and draft/results screen toggling never activates it. */
+function renderTesterBreakdownV1640(){
+  try{
+    if(typeof currentBattle === 'undefined' || !currentBattle) return;
+    var bo = document.getElementById('breakdown-output');
+    if(bo) bo.innerHTML = generateBreakdown(currentBattle);
+  }catch(e){}
+}
+function applyTesterRouteV1640(){
+  try{
+    var h = (typeof window !== 'undefined' && window.location && window.location.hash) ? window.location.hash : '';
+    if(h === '#tester'){
+      var ts = document.getElementById('tester-screen');
+      if(ts) ts.style.display = 'flex';
+      try{ renderTesterBreakdownV1640(); }catch(e){}
+    }
+  }catch(e){}
+}
+
 /* ============ INIT ============ */
-try{ restoreSettingsV151(); }catch(e){}
 document.getElementById('search-input').addEventListener('input',e=>{searchTerm=e.target.value.toLowerCase();renderRoster()});
-document.getElementById('battlefield-select').addEventListener('change',()=>{renderBattlefields(); try{ saveSettingsV151(); }catch(e){}});
+try{ applyTesterRouteV1640(); }catch(e){}
 /* v16.26: custom fighters removed — previously saved customs are not loaded; the roster stays 194 */
 renderChips(); renderRoster(); /* v16.26: no renderHistory/renderChannels — history and the channel library are removed from the main flow */ if(typeof updateOnlineStatus==='function'){updateOnlineStatus(); window.addEventListener('online',updateOnlineStatus); window.addEventListener('offline',updateOnlineStatus);} if(typeof updateFileWarning==='function'){ try{ updateFileWarning(); }catch(e){} } /* v16.26: file-warning panel removed with Advanced Settings; guarded */ /* v16.26: key-status UI removed with Advanced Settings */
 // v16.27: no retest buttons remain in the main flow — the dossier Retest button and its fetch handler were deleted, not hidden.
