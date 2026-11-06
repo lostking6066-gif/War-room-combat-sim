@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.50 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.51 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.50</h1><span>1V1 DEATH BATTLES • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
+<header><div><h1>WAR-ROOM v16.51</h1><span>1V1 DEATH BATTLES • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -2983,7 +2983,7 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46','v16.47','v16.48','v16.49'].includes(x.formatVersion);
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46','v16.47','v16.48','v16.49','v16.50'].includes(x.formatVersion);
   return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12/v16.13/v16.14/v16.15/v16.16/v16.17/v16.18/v16.19/v16.20 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
@@ -6501,7 +6501,7 @@ function verdictFailedNamesV1614(checks) { return (checks || []).filter(function
    invented closeness. The system scales to the 600 roster target
    because breakdowns are generated on first click and cached per
    distinct pair/outcome — never pre-generated for every pair. */
-var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1650';
+var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1651';
 var V1619_OFFLINE_BREAKDOWN_LABEL = 'Offline Breakdown — written on this device, no internet needed.';
 var V1619_BREAKDOWN_HEADINGS = ['Matchup', 'Fighter A best case', 'Fighter B best case', 'Best plan', 'Why it stalls', 'Criteria scoreboard', 'Finishing sequence', 'Finisher and loser state', 'Verdict'];
 /* ============ WAR-ROOM v16.20: EXPANDED PAIRING + FIXES ============
@@ -8848,19 +8848,19 @@ function staminaWhyV1645(winnerName, loserName, loserRec) {
     }
   } catch (e) {}
   if (limit) return winnerName + ' wins on stamina: ' + loserName + ' runs out first — the stated limit is: ' + limit + '.';
-  /* v16.49 (F7, Jhay ruling 2026-11-06): when no stamina limit is stated
-     but the loser's recorded morals text states a limited resource (the
+  /* v16.49 (F7, Jhay ruling 2026-11-06): when no stamina limit was stated
+     but the loser's recorded morals text stated a limited resource (the
      strategist template — "Gathers information before spending a limited
-     resource"), cite that instead of the honest no-limit line. The cite
-     is real recorded text; the stamina link is a judgement call Jhay
-     approved for Batman vs Deadpool. Fighters with no recorded limit at
-     all keep the honest wording below — nothing is invented, no rate, no
-     gadget count. Measured at build: F7 moves ZERO golden records — all
-     10 golden stamina losers already carry a stated limit. */
-  var limitedResource1649 = false;
-  try { if (loserRec && loserRec.morals && loserRec.morals.text && /limited resource/i.test(loserRec.morals.text)) limitedResource1649 = true; } catch (e) {}
-  if (limitedResource1649) return winnerName + ' wins on stamina: ' + loserName + ' runs out first — the record states ' + loserName + ' spends a limited resource.';
-  return winnerName + ' wins on stamina: ' + loserName + ' runs out first. No stated limit is recorded for ' + loserName + ' — the record separates them on stamina alone.';
+     resource"), the why cited that instead of the honest no-limit line.
+     v16.51 (H2, Jhay ruling 2026-11-06 16:43 EST — "drop the Batman
+     cite"): the cite is GONE. The why falls through to the honest line
+     below, reworded to plain speech so no "record" wording remains in
+     the telling. Nothing is invented, no rate, no gadget count.
+     Measured at build: dropping the cite moves ZERO golden records —
+     no golden why contains the cite or the honest line (all 10 golden
+     stamina losers already carry a stated limit; batman/deadpool is
+     not a golden pair). */
+  return winnerName + ' wins on stamina: ' + loserName + ' runs out first. ' + loserName + ' has no stated limit — stamina alone separates them.';
 }
 function resolveCharFirstV1631(a, b, seed, opts) {
   opts = opts || {};
@@ -9344,7 +9344,7 @@ function finishParaV1647(frozen, W, L, winBattle, loseBattle, fix3, moralNote, f
     else if (pw.outcome === 'wounded') {
       if (loseRec.durability === 'regenerative') s += _pick1650([' The wounds add up past what regeneration can cover.', ' Regeneration cannot keep up with that damage.', ' The healing cannot close wounds that fast.']);
       else if (loseRec.durability === 'invulnerable' || loseRec.durability === 'other') s += _pick1650([' The wounds add up past a defence that can be beaten.', ' Even that defence gives way under it.', ' The defence holds until it does not.']);
-      else s += _pick1650([' The wounds add up against a mortal body.', ' A mortal body cannot take that and keep fighting.', ' That is more than a mortal body survives.', ' The body gives out under it.', ' The damage is too much for a mortal body.', ' No mortal body walks away from that.']);
+      else s += _pick1650(['A mortal body does not get up from that.', ' A mortal body cannot take that and keep fighting.', ' That is more than a mortal body survives.', ' The body gives out under it.', ' The damage is too much for a mortal body.', ' No mortal body walks away from that.']);
     }
   }
   if (fix3) s += ' ' + fix3;
@@ -9399,7 +9399,7 @@ function openerV1647(frozen, h, fill, W, L) {
   var oh = hash1634([A.id, A.variant, B.id, B.variant, W, crit].join('|'));
   var openers = {
     'cannot-harm': [
-      'Can {L} beat {W} on {BF}? The record stops the question cold: {L} has nothing that can hurt {W}.',
+      'Can {L} beat {W} on {BF}? Nothing {L} has can hurt {W}.',
       'Can {L} beat {W} on {BF}? Ask what {L} can do to {W} — and the record says nothing.',
       'Can {L} beat {W} on {BF}? {L} brings a plan and a weapon — neither one touches {W}.',
       'Can {L} beat {W} on {BF}? Start with what {L} can hurt. The answer is nothing here.',
@@ -10735,6 +10735,18 @@ function effectValueV1649(battleFighter, sigName) {
     return cleanDossierSentenceV1638(pw.canHurt || '');
   } catch (e) { return ''; }
 }
+/* v16.51 (H1): the cleaned does value of a fighter's signature power —
+   the call site compares the two plan paragraphs' values so an identical
+   does line is never printed twice. Three powers share one does text
+   (Kamehameha, Galick Gun and Final Flash are all 'Full-screen ki beam').
+   Period-stripped, matching exactly what planParaV1638 appends. */
+function doesValueV1651(battleFighter, sigName) {
+  try {
+    var pw = dossierPowerV1638(battleFighter, sigName);
+    if (!pw || !pw.does) return '';
+    return cleanDossierSentenceV1638(pw.does || '').replace(/\.+$/, '');
+  } catch (e) { return ''; }
+}
 /* v16.50 (G2): the CORE of a cleaned canHurt value — the part before the
    first ";" or " — ", with a trailing " at full effect" stripped, then
    normalised. Two powers whose values share a core ("ordinary bodies"
@@ -10760,16 +10772,19 @@ function hasPowerDetailV1649(pw) {
    it. The second-power sentence is REMOVED: it named a move only to look
    detailed, with no recorded meaning attached. withSecond is kept as a
    parameter so existing call sites do not break; it is ignored. */
-function planParaV1638(battleFighter, frozenRec, verb, withSecond, oppDurability, oppName, omitEffect) {
+function planParaV1638(battleFighter, frozenRec, verb, withSecond, oppDurability, oppName, omitEffect, omitDoes) {
   var s = frozenRec.name + ' ' + verb + ' ' + (frozenRec.signature || 'no recorded signature') + ' (' + frozenRec.signatureKind + ')';
   s += rangeClauseV1638(frozenRec.range);
   var pw = dossierPowerV1638(battleFighter, frozenRec.signature);
   var does = pw ? cleanDossierSentenceV1638(pw.does || '') : '';
   /* The does rides as a dash clause on the signature sentence, not a
      standalone sentence: two powers can share the same does text
-     (Kamehameha and Galick Gun are both 'Full-screen ki beam'), and a
-     standalone sentence would repeat it verbatim. */
-  if (does) s = s.replace(/\.$/, '') + ' — ' + does.replace(/\.+$/, '') + '.';
+     (Kamehameha, Galick Gun and Final Flash are all 'Full-screen ki
+     beam'), and a standalone sentence would repeat it verbatim.
+     v16.51 (H1): the call site passes omitDoes when the other plan
+     paragraph already carries the same does — the second paragraph
+     drops its does clause rather than repeating the line. */
+  if (does && !omitDoes) s = s.replace(/\.$/, '') + ' — ' + does.replace(/\.+$/, '') + '.';
   if (pw) {
     var stops = cleanBlockedByV1647(pw.blockedBy || '');
     if (stops) s += ' What stops ' + (frozenRec.signature || 'it') + ': ' + stops + '.';
@@ -10792,9 +10807,9 @@ function planParaV1638(battleFighter, frozenRec, verb, withSecond, oppDurability
 }
 function wayToLoseClauseV1638(durType, fighterId) {
   if (durType === 'mortal') return 'any recorded loss ends the fight';
-  if (durType === 'regenerative') return 'a recorded loss ends the fight once regeneration is exhausted — regeneration is not immunity';
-  if (durType === 'invulnerable') return 'only a recorded bypass or an overwhelming gap ends the fight';
-  if (durType === 'other' && fighterId === 'gojo') return 'only an EX-tier attacker or a recorded bypass gets through at meaningful strength';
+  if (durType === 'regenerative') return 'a loss ends the fight once regeneration is exhausted — regeneration is not immunity';
+  if (durType === 'invulnerable') return 'only a bypass or an overwhelming gap ends the fight';
+  if (durType === 'other' && fighterId === 'gojo') return 'only an EX-tier attacker or a bypass gets through at meaningful strength';
   return 'the dossier records a defined way to lose; full wording in Audit';
 }
 function tierScoreV1638(t) {
@@ -10958,7 +10973,12 @@ function analysisNarrationTextV1638(b) {
     var _stEffB1649 = effectValueV1649(battleB, B.signature);
     var _stCoreA1650 = coreEffectV1650(_stEffA1649), _stCoreB1650 = coreEffectV1650(_stEffB1649);
     var _stDup1649 = !!(_stCoreA1650 && _stCoreA1650 === _stCoreB1650);
-    var stText = [fill(so[h % 2], '', ''), planParaV1638(battleA, A, 'leads with', false, B.durability, B.name), planParaV1638(battleB, B, 'counters with', false, A.durability, A.name, _stDup1649),
+    /* v16.51 (H1): same dedup for the does line — the second plan paragraph
+       drops its does clause when both powers carry the same recorded
+       meaning (Kamehameha / Galick Gun / Final Flash). */
+    var _stDoesA1651 = doesValueV1651(battleA, A.signature), _stDoesB1651 = doesValueV1651(battleB, B.signature);
+    var _stDoesDup1651 = !!(_stDoesA1651 && _stDoesA1651 === _stDoesB1651);
+    var stText = [fill(so[h % 2], '', ''), planParaV1638(battleA, A, 'leads with', false, B.durability, B.name), planParaV1638(battleB, B, 'counters with', false, A.durability, A.name, _stDup1649, _stDoesDup1651),
       'Neither fighter finds a decisive plan: no recorded step decides this fight, and the fallback finds no edge either.',
       'No finisher was recorded and there is no loser — the battle ends in a stalemate, with both fighters still standing.',
       'Verdict: this battle is a stalemate — no winner, and no recorded edge breaks the tie.'].join('\n\n');
@@ -11096,6 +11116,11 @@ function analysisNarrationTextV1638(b) {
     var winPw = dossierPowerV1638(winBattle, winRec.signature);
     if (winPw) {
       var winDoes = cleanDossierSentenceV1638(winPw.does || '');
+      /* v16.51 (H1): drop the winner's does when it is the same recorded
+         meaning the loser's clause already carries (Kamehameha / Galick
+         Gun / Final Flash share 'Full-screen ki beam') — the merged
+         shutout paragraph must not print the same line twice. */
+      if (winDoes && normDoes1648(winDoes) === normDoes1648(loseDoes)) winDoes = '';
       if (winDoes) merged = merged.replace(/\.$/, '') + ' — ' + winDoes.replace(/\.+$/, '') + '.';
       var winStops = cleanBlockedByV1647(winPw.blockedBy || '');
       if (winStops) merged += ' What stops ' + (winRec.signature || 'it') + ': ' + winStops + '.';
@@ -11128,9 +11153,14 @@ function analysisNarrationTextV1638(b) {
   var _effB1649 = effectValueV1649(winBattle, winRec.signature);
   var _coreA1650 = coreEffectV1650(_effA1649), _coreB1650 = coreEffectV1650(_effB1649);
   var _dupEff1649 = !!(_coreA1650 && _coreA1650 === _coreB1650);
+  /* v16.51 (H1): same dedup for the does line — the winner's paragraph
+     drops its does clause when both powers carry the same recorded
+     meaning (Kamehameha / Galick Gun / Final Flash). */
+  var _doesA1651 = doesValueV1651(loseBattle, loseRec.signature), _doesB1651 = doesValueV1651(winBattle, winRec.signature);
+  var _dupDoes1651 = !!(_doesA1651 && _doesA1651 === _doesB1651);
   var loserPara = planParaV1638(loseBattle, loseRec, 'leads with', false, winRec.durability, W);
   if (pt.type === 'close') {
-    var winnerPara = planParaV1638(winBattle, winRec, 'counters with', false, loseRec.durability, L, _dupEff1649);
+    var winnerPara = planParaV1638(winBattle, winRec, 'counters with', false, loseRec.durability, L, _dupEff1649, _dupDoes1651);
     return finishCheck([opener, loserPara, winnerPara, decidePara].concat(transformParas, [finishPara, verdictPara]).join('\n\n'));
   }
   return finishCheck([opener, loserPara, decidePara].concat(transformParas, [finishPara, verdictPara]).join('\n\n'));
