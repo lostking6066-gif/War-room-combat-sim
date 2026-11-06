@@ -7,7 +7,7 @@ breakdown.
 
 ## Play it
 
-Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.49, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.49 fixes the v16.48 test failures: the verdict names the finisher on every kind of win, not just incapacitation; decide openers stop repeating and stop doubling the same claim; "wins by incapacitation" is now death wording, since the loser dies; attack paragraphs stop repeating the same effect line twice; finish lines vary instead of repeating; the ENGINE tagline and the "record" talk are off the player screen; the search box clears on New Battle; and the Batman vs Deadpool stamina decision now cites the recorded limited-resource line, per Jhay's ruling. No winners, finishers, criteria, rounds, or damage changed. Harness 622 passed, 0 failed. Text only, no HP numbers on the player page.
+Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.50, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.50 fixes the v16.49 test failures: fight openers and decide paragraphs vary per fight instead of repeating the same frame for the same kind of fight; attack paragraphs stop repeating their shared effect line even when one adds extra words; finish lines vary and take the fighter's version into account, and Batman vs Deadpool no longer ends with the flagged line; the conditions line reads just "Neutral ground." and the label is plain speech; the tier reason says "decides it" once; the incapacitation verdict names the finisher as the killer; and the gap line for thin move detail now follows the move actually shown. No winners, finishers, criteria, rounds, or damage changed. Harness 628 passed, 0 failed. Text only, no HP numbers on the player page.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -79,10 +79,13 @@ New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v16.48 v16.47-test fixes (Branch A: all 40 golden losers dead; rubric block off the player screen; verdict names the finisher; seed + final-blow damage + Offline Breakdown label on the player screen; 617-test harness)
-- `war-room-v16.48.html` — same as `index.html`
-- `war-room-v16.48-tests.js` — Node regression harness (617 tests)
-- `war-room-v16.48-goldens.json` — 40 golden records (24 base + 16 variant; 9 incapacitation records re-locked dead)
+- `index.html` — latest, WAR-ROOM v16.50 wording fix 3 (Route B fix 3 + re-lock extension: openers and decide bodies vary per fight, finish lines take the version into account, conditions line short, label in plain speech, tier reason says "decides it" once, incapacitation verdict names the finisher as killer; 13 golden records re-locked on why wording only — 6 tier + 7 cannot-harm; 628-test harness)
+- `war-room-v16.50.html` — same as `index.html`
+- `war-room-v16.50-tests.js` — Node regression harness (628 tests)
+- `war-room-v16.50-goldens.json` — 40 golden records (24 base + 16 variant; 13 records re-locked on why wording only)
+- `war-room-v16.49.html` — previous version, kept as an archive
+- `war-room-v16.49-tests.js` — Node regression harness (622 tests)
+- `war-room-v16.49-goldens.json` — 40 golden records (24 base + 16 variant)
 - `war-room-v16.47.html` — previous version, kept as an archive
 - `war-room-v16.47-tests.js` — Node regression harness (613 tests)
 - `war-room-v16.47-goldens.json` — 40 golden records (24 base + 16 variant)
