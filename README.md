@@ -7,7 +7,7 @@ breakdown.
 
 ## Play it
 
-Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.46, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.46 is the Anime variants batch: 29 Anime fighters now have real v2 + v3 profiles (style, signature, powerset, transforms — not just stat deltas), with 26 new v3s; Levi, Eren, Kaneki and Hisoka are untouched (blocked, base check still pending); Jiraiya, Saitama and Natsu have no v3 yet (held). One real mechanism fix: a variant's battle repertoire is now its own powerset, so a variant can no longer fire a power it does not have (Goku v2 no longer uses God Kamehameha). All 24 base golden records recompute byte-identically — no base battle changed. Harness 605 passed, 0 failed. Text only, no HP numbers on the player page.
+Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.47, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.47 is the Route B breakdown fix: the telling is now real analysis built from the frozen record — it reads the resolver's step notes in plain words, every named move carries its recorded meaning, the finish is explained from the finisher's recorded outcome, and there are no round-by-round hit claims or repeated boilerplate. Knockouts are gone: mortals die, incapacitation-criterion losers are incapacitated. No winners, finishers, criteria, rounds, or damage changed. The game is fully offline now — there is no online breakdown at all, and no online attempt is made. Harness 613 passed, 0 failed. Text only, no HP numbers on the player page.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -79,8 +79,11 @@ New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v16.46 Anime variants batch (29 Anime fighters get real v2 + v3 profiles; 26 new v3s; Levi/Eren/Kaneki/Hisoka untouched; Jiraiya/Saitama/Natsu v3 held; variant repertoire fix; 24 base goldens byte-identical; 605-test harness)
-- `war-room-v16.46.html` — same as `index.html`
+- `index.html` — latest, WAR-ROOM v16.47 Route B breakdown fix + no-online removal (telling built as real analysis from the frozen record; knockouts gone — mortals die, incapacitation losers incapacitated; no winners/finishers/criteria/rounds/damage moved; fully offline, no online attempt; 613-test harness)
+- `war-room-v16.47.html` — same as `index.html`
+- `war-room-v16.47-tests.js` — Node regression harness (613 tests)
+- `war-room-v16.47-goldens.json` — 40 golden records (24 base + 16 variant; loserState/why/winPath/conditions/finishing events re-locked per the knockout ruling)
+- `war-room-v16.46.html` — previous version, kept as an archive
 - `war-room-v16.46-tests.js` — Node regression harness (605 tests)
 - `war-room-v16.46-goldens.json` — 40 golden records (24 base + 16 variant)
 - `war-room-v16.45.html` — previous version, kept as an archive
