@@ -7,7 +7,7 @@ breakdown.
 
 ## Play it
 
-Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.44, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.44 is the first variants batch (Video Games, 32 fighters): every fighter now has real v2 and v3 profiles — style, usage, personality note, weakness, signature, transform, and powerset all swap with the selected version, not just stats and one power name. Held: Lara v2, Mega Man v2, Sephiroth v3, Kirby v3. Winners, criteria, finishers, loser states, round counts, and damage are unchanged on the base path; all 24 base golden records are byte-identical to v16.43. Harness 597 passed, 0 failed. Text only, no HP numbers on the player page.
+Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.45, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.45 is the joint-plan fix for the v16.44 side test: fighter cards and Info panels now show the picked version's real style, signature, and power set (not the base lines), and stamina losses name the stated limit (Super Sonic's ring drain). 4 golden records updated why-only (3× Goku/Vegeta, 1× Sonic v2/Rocky); winners, criteria, finishers, loser states, round counts, and damage are unchanged. Harness 601 passed, 0 failed. Text only, no HP numbers on the player page.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -79,8 +79,11 @@ New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v16.44 Video Games variants batch (first category batch of the approved variants program: real v2+v3 profiles for 32 Video Games fighters — style, usage, personality note, weakness, signature, transform, and powerset swap with the selected version; v2==trans block; V3POWER map; 597-test harness; 24 base goldens byte-identical to v16.43)
-- `war-room-v16.44.html` — same as `index.html`
+- `index.html` — latest, WAR-ROOM v16.45 joint-plan fix (side-test fixes for the v16.44 Video Games variants batch: version info panels read the selected version; stamina why names the stated limit; 601-test harness; 4 golden records updated why-only)
+- `war-room-v16.45.html` — same as `index.html`
+- `war-room-v16.45-tests.js` — Node regression harness (601 tests)
+- `war-room-v16.45-goldens.json` — 32 golden records (24 base + 8 variant)
+- `war-room-v16.44.html` — previous version, kept as an archive
 - `war-room-v16.44-tests.js` — Node regression harness (597 tests)
 - `war-room-v16.44-goldens.json` — 32 golden records (24 base + 8 variant)
 - `war-room-v16.43.html` — previous version, kept as an archive
