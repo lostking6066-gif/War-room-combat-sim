@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.48 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.49 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.48</h1><span>1V1 DEATH BATTLES • ENGINE v16.48 • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
+<header><div><h1>WAR-ROOM v16.49</h1><span>1V1 DEATH BATTLES • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -811,6 +811,9 @@ function resetSimulator(){
   try { if (typeof collapseResultsAuditV1635 === 'function') collapseResultsAuditV1635(); } catch (e) {}
   if(playbackTimer) clearInterval(playbackTimer);
   selected=[]; aiTeam=[]; researchIntel={}; currentBattle=null; ytNote=''; if(typeof canonResearch!=='undefined') canonResearch={}; researchFetchedKeys={}; researchTimers={}; researchInFlight={}; episodeDialogueUsed={};
+  /* v16.49 (F9): New Battle clears the roster search too — the old search
+     term used to survive and filter the fresh roster. */
+  searchTerm=''; const _si1649=document.getElementById('search-input'); if(_si1649) _si1649.value='';
   const tn=document.getElementById('yt-note'); if(tn) tn.value=''; const nd=document.getElementById('yt-note-display'); if(nd) nd.innerHTML='';
   const _ab=document.getElementById('ai-status'); if(_ab) _ab.innerText='AI RESEARCH: AUTO-TESTING…'; try{ if(typeof testConnections==='function') testConnections(); }catch(e){}
   document.getElementById('results-screen').classList.remove('active'); document.getElementById('draft-screen').classList.add('active');
@@ -2980,7 +2983,7 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46','v16.47'].includes(x.formatVersion);
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46','v16.47','v16.48'].includes(x.formatVersion);
   return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12/v16.13/v16.14/v16.15/v16.16/v16.17/v16.18/v16.19/v16.20 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
@@ -6498,7 +6501,7 @@ function verdictFailedNamesV1614(checks) { return (checks || []).filter(function
    invented closeness. The system scales to the 600 roster target
    because breakdowns are generated on first click and cached per
    distinct pair/outcome — never pre-generated for every pair. */
-var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1648';
+var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1649';
 var V1619_OFFLINE_BREAKDOWN_LABEL = 'Offline Breakdown — written from the frozen record on this device.';
 var V1619_BREAKDOWN_HEADINGS = ['Matchup', 'Fighter A best case', 'Fighter B best case', 'Best plan', 'Why it stalls', 'Criteria scoreboard', 'Finishing sequence', 'Finisher and loser state', 'Verdict'];
 /* ============ WAR-ROOM v16.20: EXPANDED PAIRING + FIXES ============
@@ -8845,6 +8848,18 @@ function staminaWhyV1645(winnerName, loserName, loserRec) {
     }
   } catch (e) {}
   if (limit) return winnerName + ' wins on stamina: ' + loserName + ' runs out first — the stated limit is: ' + limit + '.';
+  /* v16.49 (F7, Jhay ruling 2026-11-06): when no stamina limit is stated
+     but the loser's recorded morals text states a limited resource (the
+     strategist template — "Gathers information before spending a limited
+     resource"), cite that instead of the honest no-limit line. The cite
+     is real recorded text; the stamina link is a judgement call Jhay
+     approved for Batman vs Deadpool. Fighters with no recorded limit at
+     all keep the honest wording below — nothing is invented, no rate, no
+     gadget count. Measured at build: F7 moves ZERO golden records — all
+     10 golden stamina losers already carry a stated limit. */
+  var limitedResource1649 = false;
+  try { if (loserRec && loserRec.morals && loserRec.morals.text && /limited resource/i.test(loserRec.morals.text)) limitedResource1649 = true; } catch (e) {}
+  if (limitedResource1649) return winnerName + ' wins on stamina: ' + loserName + ' runs out first — the record states ' + loserName + ' spends a limited resource.';
   return winnerName + ' wins on stamina: ' + loserName + ' runs out first. No stated limit is recorded for ' + loserName + ' — the record separates them on stamina alone.';
 }
 function resolveCharFirstV1631(a, b, seed, opts) {
@@ -9273,27 +9288,39 @@ function finishParaV1647(frozen, W, L, winBattle, loseBattle, fix3, moralNote, f
        powers can share the same does text. */
     if (does) s = s.replace(/\.$/, '') + ' — ' + does.replace(/\.+$/, '') + '.';
   }
-  /* The finisher's recorded outcome explains the finish — but only when
-     the deciding reason is not incapacitation: there the deciding power
-     governs the loser state, not the finisher's wounding. */
+  /* v16.49 (F5): the finisher's recorded outcome explains the finish —
+     but only when the deciding reason is not incapacitation: there the
+     deciding power is the reason and the finisher kills (Branch A — the
+     loser state keys off the loser, not the deciding power). The outcome
+     sentence VARIES: several plain-word variants per outcome/loser
+     durability, hash-picked per pair, so the same line does not close
+     every telling ("The wounds add up against a mortal body." closed 6
+     of 8). No "The record calls it" anywhere. */
   if (frozen.decisiveCriterion !== 'incapacitation' && pw) {
-    if (pw.outcome === 'lethal') s += ' The record calls it lethal.';
-    else if (pw.outcome === 'incapacitated') s += ' The record calls it incapacitating: it stops the target from continuing.';
+    var _fh1649 = hash1634([frozen.fighterA.id, frozen.fighterB.id, fin, L].join('|'));
+    var _pick1649 = function (arr) { return arr[(_fh1649 >>> 5) % arr.length]; };
+    if (pw.outcome === 'lethal') s += _pick1649([' It\'s lethal.', ' The blow is lethal.', ' That is a killing blow.', ' The finish is lethal, full stop.']);
+    else if (pw.outcome === 'incapacitated') s += _pick1649([' It stops the target from continuing.', ' The target cannot continue after that.', ' That ends the target\'s ability to continue.']);
     else if (pw.outcome === 'wounded') {
-      if (loseRec.durability === 'regenerative') s += ' The wounds add up past what regeneration can cover.';
-      else if (loseRec.durability === 'invulnerable' || loseRec.durability === 'other') s += ' The wounds add up past a defence the record says can be beaten.';
-      else s += ' The wounds add up against a mortal body.';
+      if (loseRec.durability === 'regenerative') s += _pick1649([' The wounds add up past what regeneration can cover.', ' Regeneration cannot keep up with that damage.', ' The healing cannot close wounds that fast.']);
+      else if (loseRec.durability === 'invulnerable' || loseRec.durability === 'other') s += _pick1649([' The wounds add up past a defence that can be beaten.', ' Even that defence gives way under it.', ' The defence holds until it does not.']);
+      else s += _pick1649([' The wounds add up against a mortal body.', ' A mortal body cannot take that and keep fighting.', ' That is more than a mortal body survives.', ' The body gives out under it.']);
     }
   }
   if (fix3) s += ' ' + fix3;
   s += ' ' + L + ' is ' + loserStatePhraseV1647(frozen.loserState) + '.' + (moralNote || '');
   return s;
 }
+/* v16.49 (F1): the verdict names the FINISHER on EVERY branch, not
+   just incapacitation — the v16.48 fix only covered the incapacitation
+   branch, so 8 of 11 live verdicts named no move. The reason stays first
+   (it is the verdict's job); the finisher closes the sentence. Fall back
+   to the reason alone only if no finisher is recorded. */
 function verdictParaV1647(frozen, W, L) {
   var crit = frozen.decisiveCriterion;
+  var fin = frozen.finisher || '';
   var adv = '';
-  if (crit === 'cannot-harm') adv = ' — ' + L + ' has no way to hurt ' + W + '.';
-  else if (crit === 'incapacitation') {
+  if (crit === 'incapacitation') {
     var rec = (W === frozen.fighterA.name) ? (frozen.inputs && frozen.inputs.incapA) : (frozen.inputs && frozen.inputs.incapB);
     /* v16.48 (F3): the verdict names the FINISHER, not the deciding power —
        the deciding power is already explained in the finish paragraph via
@@ -9301,12 +9328,16 @@ function verdictParaV1647(frozen, W, L) {
        finisher is recorded. */
     var nm = frozen.finisher || ((rec && rec.power && rec.power.name) ? rec.power.name : '');
     adv = ' — ' + nm + ' ends ' + L + '\'s ability to continue.';
+  } else {
+    var base = '';
+    if (crit === 'cannot-harm') base = L + ' has no way to hurt ' + W;
+    else if (crit === 'stamina') base = L + '\'s stamina gives out first';
+    else if (crit === 'durability') base = 'the tougher body holds up';
+    else if (crit === 'tier difference') base = 'a tier above';
+    else if (crit === 'speed') base = 'the faster fighter sets the pace';
+    else base = 'decided by ' + criterionWordsV1634(crit);
+    adv = ' — ' + base + (fin ? ', and ' + fin + ((crit === 'stamina' || crit === 'tier difference') ? ' is the blow that ends it.' : ' ends it.') : '.');
   }
-  else if (crit === 'stamina') adv = ' — ' + L + '\'s stamina gives out first.';
-  else if (crit === 'durability') adv = ' — the tougher body holds up.';
-  else if (crit === 'tier difference') adv = ' — a tier above, and the fight follows it.';
-  else if (crit === 'speed') adv = ' — the faster fighter sets the pace.';
-  else adv = ' — decided by ' + criterionWordsV1634(crit) + '.';
   return 'Verdict: ' + W + ' wins' + adv;
 }
 function openerV1647(frozen, h, fill, W, L) {
@@ -9405,6 +9436,40 @@ function qualityCheckTellingV1647(b, frozen, text, usedMoves) {
     for (var _ej1648 = 0; _ej1648 < _finIdx1648; _ej1648++) { _splitC1648(_paras1648[_ej1648]).forEach(function (x) { _earlier1648[x] = true; }); }
     _splitC1648(_paras1648[_finIdx1648]).forEach(function (x) { if (_earlier1648[x]) failures.push('repeated clause in finish paragraph: ' + x.slice(0, 60)); });
   }
+  /* v16.49 (F4): plan-vs-plan effect clauses — the two attack
+     paragraphs must never carry the same "it can hurt ..." clause. The
+     F4 call-site dedup omits the second one; this check fails the telling
+     if one ever slips through, so the fallback telling shows instead.
+     Does-text sharing stays allowed (Kamehameha/Galick Gun). */
+  var _effSeen1649 = {};
+  _paras1648.forEach(function (pp, _pi1649) {
+    if (_pi1649 === _finIdx1648) return;
+    var _m1649 = String(pp).match(/it can hurt [^.]+/gi);
+    (_m1649 || []).forEach(function (cl) {
+      var _nc1649 = cl.replace(/^\s+|\s+$/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ');
+      if (_effSeen1649[_nc1649]) failures.push('repeated effect clause in plan paragraphs: ' + _nc1649.slice(0, 60));
+      _effSeen1649[_nc1649] = true;
+    });
+  });
+  /* v16.49 (F2): the decide paragraph must not state the deciding claim
+     twice — the v16.48 failure was "settles it: ... decides it:" and the
+     dog-walk "decides it" x3. Scoped to the decide paragraph and to the
+     text OUTSIDE the why itself: the tier why legitimately carries
+     "decides it" twice ("The tier difference decides it ... no
+     incapacitating power decides it") and the opener paragraphs carry
+     their own deciding claims — those are frozen resolver/opener
+     wording, outside the F3+F7 re-lock. What is banned is the PIVOT or
+     the deciding extra restating the claim around the why. */
+  var _why1649 = (frozen && frozen.why) ? String(frozen.why) : '';
+  var _decPara1649 = '';
+  _paras1648.forEach(function (pp) { if (_why1649 && String(pp).indexOf(_why1649) !== -1) _decPara1649 = String(pp); });
+  if (_decPara1649) {
+    var _whyAt1649 = _decPara1649.indexOf(_why1649);
+    var _before1649 = _decPara1649.slice(0, _whyAt1649);
+    var _after1649 = _decPara1649.slice(_whyAt1649 + _why1649.length);
+    if (/decides it|settles it|decided/i.test(_before1649)) failures.push('decide pivot restates the deciding claim: ' + _before1649.slice(0, 60));
+    if (/decides it|settles it/i.test(_after1649)) failures.push('deciding extra restates the deciding claim: ' + _after1649.slice(0, 60));
+  }
   /* v16.48 (main-test item 2): a doubled word is always a typo in telling
      prose (the Deadpool/Wolverine report read "Both" twice in a row). The
      v16.47 file cannot produce it (0 occurrences, clean at the live seed)
@@ -9495,8 +9560,14 @@ function resolveCharFirstV1634(fa, fb, seed, opts) {
   if (!dirAB.canHurt && !dirBA.canHurt) { winner = null; criterion = 'stalemate'; why = 'Neither fighter can hurt the other — no recorded way through for either side — so no win is awarded rather than inventing one.'; }
   else if (!dirAB.canHurt) { winner = cb.name; criterion = 'cannot-harm'; why = cb.name + ' wins because ' + ca.name + ' cannot hurt ' + cb.name + ' at all, while ' + cb.name + ' can hurt ' + ca.name + '. ' + cannotHarmEvidenceV1647(ca, cb, dirAB, sigA); }
   else if (!dirBA.canHurt) { winner = ca.name; criterion = 'cannot-harm'; why = ca.name + ' wins because ' + cb.name + ' cannot hurt ' + ca.name + ' at all, while ' + ca.name + ' can hurt ' + cb.name + '. ' + cannotHarmEvidenceV1647(cb, ca, dirBA, sigB); }
-  else if (incapA.power && !incapB.power) { winner = ca.name; criterion = 'incapacitation'; why = ca.name + ' wins by incapacitation: ' + ca.name + ' holds the recorded incapacitating power ' + incapA.power.name + ', with no established block against ' + cb.name + ', so ' + cb.name + ' cannot continue.'; }
-  else if (incapB.power && !incapA.power) { winner = cb.name; criterion = 'incapacitation'; why = cb.name + ' wins by incapacitation: ' + cb.name + ' holds the recorded incapacitating power ' + incapB.power.name + ', with no established block against ' + ca.name + ', so ' + ca.name + ' cannot continue.'; }
+  /* v16.49 (F3): the win is by DEATH with the deciding power as the
+     reason — the old incapacitation framing is gone from the player-facing why.
+     The Branch A suffix below still appends the death ("— and [finisher]
+     kills [loser]."), so the why ends on the kill. The "no established
+     block" evidence stays in the Audit step notes (Step 3) and the rubric
+     twin — it is not lost, it is not player-screen wording. */
+  else if (incapA.power && !incapB.power) { winner = ca.name; criterion = 'incapacitation'; why = ca.name + ' wins: ' + incapA.power.name + ' stops ' + cb.name + ' from continuing.'; }
+  else if (incapB.power && !incapA.power) { winner = cb.name; criterion = 'incapacitation'; why = cb.name + ' wins: ' + incapB.power.name + ' stops ' + ca.name + ' from continuing.'; }
   else if (runsOut.fighter === 'A') { winner = cb.name; criterion = 'stamina'; why = staminaWhyV1645(cb.name, ca.name, ca); }
   else if (runsOut.fighter === 'B') { winner = ca.name; criterion = 'stamina'; why = staminaWhyV1645(ca.name, cb.name, cb); }
   else if ((ca.durability.type === 'invulnerable' || ca.durability.type === 'other') && cb.durability.type === 'mortal' && tierDiff !== null && tierDiff <= 1) { winner = ca.name; criterion = 'durability'; why = ca.name + ' wins on durability: ' + ca.durability.type + ' durability against ' + cb.name + ' (mortal), with the tier gap at most one, so the body that holds up decides it.'; }
@@ -9505,7 +9576,11 @@ function resolveCharFirstV1634(fa, fb, seed, opts) {
     if (tierA !== null && tierB !== null && tierA !== tierB) { winner = (tierA > tierB) ? ca.name : cb.name; criterion = 'tier difference'; why = 'The tier difference decides it: ' + winner + ' fights ' + ((tierDiff === 1) ? 'one tier above ' : 'more than one tier above ') + ((winner === ca.name) ? cb.name : ca.name) + ', and no earlier edge separates them — both can hurt each other, no incapacitating power decides it, and neither runs out first.'; }
     else {
       var sa = (ca.audit.speed || 1) + ((ca.audit.dex || 7) / 20), sb = (cb.audit.speed || 1) + ((cb.audit.dex || 7) / 20);
-      if (sa !== sb) { winner = (sa > sb) ? ca.name : cb.name; criterion = 'speed'; why = 'Speed order decides it: ' + winner + ' is faster than ' + ((winner === ca.name) ? cb.name : ca.name) + ' on the roster game-speed ordering, so ' + winner + ' sets the pace — no earlier edge separates them. Speed numbers are game speed, not canon speed.'; }
+      /* v16.49 (F3): the speed-numbers disclaimer moves OUT of the
+         player-facing why — it stays
+         in the Audit step notes (frozen.stepNotes, rendered by Audit and
+         the tester breakdown). The player screen reads plain words. */
+      if (sa !== sb) { winner = (sa > sb) ? ca.name : cb.name; criterion = 'speed'; why = 'Speed order decides it: ' + winner + ' is faster than ' + ((winner === ca.name) ? cb.name : ca.name) + ' on the roster game-speed ordering, so ' + winner + ' sets the pace — no earlier edge separates them.'; stepNotes.push('Speed numbers are game speed, not canon speed.'); }
       else { winner = null; criterion = 'stalemate'; why = 'No recorded step separates the fighters: both can hurt each other, and no decisive incapacitation, stamina, durability, tier, or speed edge is recorded — so no win is awarded rather than inventing one.'; }
     }
   }
@@ -10567,12 +10642,34 @@ function rangeClauseV1638(range) {
   if (!range || range === 'unknown') return '.';
   return ' at ' + range + (/\brange\s*$/.test(range) ? '.' : ' range.');
 }
+/* v16.49 (F4): the cleaned canHurt value of a fighter's signature
+   power — the call site compares the two plan paragraphs' values so an
+   identical effect clause is never printed twice. */
+/* v16.49 (F8): true when the power record carries any detail at all (a
+   does, a blockedBy, or a canHurt). Powers with a record but no detail
+   fields — and powers with no record — get the honest gap clause. */
+function effectValueV1649(battleFighter, sigName) {
+  try {
+    var pw = dossierPowerV1638(battleFighter, sigName);
+    if (!pw || !pw.canHurt) return '';
+    return cleanDossierSentenceV1638(pw.canHurt || '');
+  } catch (e) { return ''; }
+}
+function hasPowerDetailV1649(pw) {
+  try {
+    if (!pw) return false;
+    if (pw.does && String(pw.does).replace(/\s+/g, '')) return true;
+    if (pw.blockedBy && String(pw.blockedBy).replace(/\s+/g, '')) return true;
+    if (pw.canHurt && String(pw.canHurt).replace(/\s+/g, '')) return true;
+  } catch (e) {}
+  return false;
+}
 /* v16.47 ROUTE B (B2): every move named carries its recorded meaning —
    what it does, what stops it, and what the opponent's record says about
    it. The second-power sentence is REMOVED: it named a move only to look
    detailed, with no recorded meaning attached. withSecond is kept as a
    parameter so existing call sites do not break; it is ignored. */
-function planParaV1638(battleFighter, frozenRec, verb, withSecond, oppDurability, oppName) {
+function planParaV1638(battleFighter, frozenRec, verb, withSecond, oppDurability, oppName, omitEffect) {
   var s = frozenRec.name + ' ' + verb + ' ' + (frozenRec.signature || 'no recorded signature') + ' (' + frozenRec.signatureKind + ')';
   s += rangeClauseV1638(frozenRec.range);
   var pw = dossierPowerV1638(battleFighter, frozenRec.signature);
@@ -10585,11 +10682,19 @@ function planParaV1638(battleFighter, frozenRec, verb, withSecond, oppDurability
   if (pw) {
     var stops = cleanBlockedByV1647(pw.blockedBy || '');
     if (stops) s += ' What stops ' + (frozenRec.signature || 'it') + ': ' + stops + '.';
-    if (oppName && pw.canHurt) {
+    /* v16.49 (F4): plain speech — "the record says" is gone. The clause
+       is omitted outright when the call site says the other plan paragraph
+       already carries the same effect (omitEffect). */
+    if (oppName && pw.canHurt && !omitEffect) {
       var eff = cleanDossierSentenceV1638(pw.canHurt || '');
-      if (eff) s += ' Against ' + oppName + ', the record says it can hurt ' + eff;
+      if (eff) s += ' Against ' + oppName + ', it can hurt ' + eff;
     }
   }
+  /* v16.49 (F8): when the power record carries no detail at all — or
+     no record exists (e.g. Frodo's Sting Slash) — say so plainly instead
+     of letting the paragraph read as a complete analysis. Never invent a
+     block or an effect. */
+  if (!hasPowerDetailV1649(pw)) s += ' No recorded detail is stated for ' + (frozenRec.signature || 'this power') + '.';
   var sd = cleanDossierSentenceV1638(frozenRec.styleDescription || '');
   if (sd) s += ' ' + sd;
   return s;
@@ -10657,7 +10762,10 @@ function battlefieldWordsV1638(name) {
   var mods = [];
   if (bf && bf.element) mods.push('element ' + bf.element);
   if (bf && bf.solar) mods.push('solar ' + bf.solar);
-  if (!mods.length) return (first ? first + ' ' : '') + 'Neutral ground: no recorded element or solar modifier applies to this fight.';
+  /* v16.49 (F6): no modifiers, no detail — "Neutral ground." The long
+     no-modifiers wording only matters when
+     modifiers exist (the branch below). */
+  if (!mods.length) return (first ? first + ' ' : '') + 'Neutral ground.';
   return (first ? first + ' ' : '') + 'Recorded modifiers: ' + mods.join(', ') + '.';
 }
 function conditionsTextV1638(b, frozen) {
@@ -10745,7 +10853,13 @@ function analysisNarrationTextV1638(b) {
       'Can {A} beat {B} on {BF}? The record refuses to pick: neither fighter holds a decisive edge.',
       'Can {A} beat {B} on {BF}? Two full answers, no tiebreaker — the record calls this one even.'
     ];
-    var stText = [fill(so[h % 2], '', ''), planParaV1638(battleA, A, 'leads with', false, B.durability, B.name), planParaV1638(battleB, B, 'counters with', false, A.durability, A.name),
+    /* v16.49 (F4): same effect-clause dedup as the close path — the
+       second plan paragraph omits its effect clause when both powers
+       hurt the same thing. */
+    var _stEffA1649 = effectValueV1649(battleA, A.signature);
+    var _stEffB1649 = effectValueV1649(battleB, B.signature);
+    var _stDup1649 = !!(_stEffA1649 && _stEffA1649 === _stEffB1649);
+    var stText = [fill(so[h % 2], '', ''), planParaV1638(battleA, A, 'leads with', false, B.durability, B.name), planParaV1638(battleB, B, 'counters with', false, A.durability, A.name, _stDup1649),
       'Neither fighter finds a decisive plan: no recorded step decides this fight, and the fallback finds no edge either.',
       'No finisher was recorded and there is no loser — the battle ends in a stalemate, with both fighters still standing.',
       'Verdict: this battle is a stalemate — no winner, and no recorded edge breaks the tie.'].join('\n\n');
@@ -10770,17 +10884,29 @@ function analysisNarrationTextV1638(b) {
      so the 8 standard battles get 8 distinct pivots: verified at build
      time with shift 2. The retired resolverTellingTextV1634 keeps its own
      2 pivots — it has no live callers. */
+  /* v16.49 (F2): 4–5 pivot frames per criterion with varied openings —
+     no "However,"-heavy set, and NO frame restates the why's opening claim:
+     no "decides it", no "settles it", no "decided", no criterion claim
+     ("the ending is decided on stamina", "the tier line settles it",
+     "the faster fighter settles it" all doubled the why in v16.48).
+     The pick stays pair-stable (hash of criterion + fighter ids, not the
+     seed); the shift was tuned at build time so the 9 standard tellings
+     all open differently (see build report). */
   var pivots1648 = {
-    'stamina': ['But the limit settles it: ', 'However, the ending is decided on stamina: '],
-    'incapacitation': ['However, one point settles it: ', 'But the ending is decided here: ', 'However, the stop decides it: '],
-    'cannot-harm': ['But the record turns on one point: ', 'However, the barrier decides it: '],
-    'tier difference': ['But the tier line settles it: ', 'However, the gap decides it: '],
-    'speed': ['But the pace decides it: ', 'However, the faster fighter settles it: '],
-    'durability': ['But the tougher body decides it: ', 'However, the body that holds up settles it: ']
+    'stamina': ['So it comes down to staying power: ', 'In the end, one fighter lasts longer: ', 'That leaves the long game: ', 'What breaks first is the body: ', 'The fight goes to whoever lasts: '],
+    'incapacitation': ['One point ends the argument: ', 'Here is the whole fight: ', 'The ending turns on one move: ', 'That is the fight, right there: ', 'It comes down to a single ending: '],
+    'cannot-harm': ['So the question answers itself: ', 'That is the whole story: ', 'One fact ends the argument: ', 'There is nowhere else for this to go: ', 'The answer is in the opening: '],
+    'tier difference': ['So the gap does the work: ', 'That is what the tiers mean here: ', 'One step up, and it shows: ', 'The fight follows the gap: ', 'Above is above: '],
+    'speed': ['So the pace is the point: ', 'That is the whole difference: ', 'One fighter moves first, and keeps moving first: ', 'The fight runs on one fighter\'s terms: ', 'First to the opening, every time: '],
+    'durability': ['So the body is the argument: ', 'That is what holds up means: ', 'One body takes it, the other does not: ', 'In the end, it is about what breaks: ', 'The fight comes down to what lasts: ']
   };
   var _pv1648 = pivots1648[crit] || pivots1648['tier difference'];
   var _ph1648 = hash1634([crit, A.id, B.id].join('|'));
-  var pivot = _pv1648[(_ph1648 >>> 2) % _pv1648.length];
+  /* v16.49 (F2): shift tuned at build time (>>> 0) — with the new
+     frames this gives all 9 standard tellings distinct decide openers
+     (verified by probe; shifts 2/3/4/5 collided on the incapacitation
+     pairs). The pick stays pair-stable (hash of criterion + ids). */
+  var pivot = _pv1648[(_ph1648 >>> 0) % _pv1648.length];
   var decidePara = pivot + frozen.why + decidingExtraV1647(frozen);
   var transformParas = (frozen.transformsUsed || []).map(function (t) {
     if (t.fighter === W) return W + ' becomes ' + t.to + ' — the form the record says ' + W + ' takes ' + transformTriggerWordsV1634(t.triggerClass) + ' — and the finish comes from ' + frozen.finisher + '.';
@@ -10788,13 +10914,24 @@ function analysisNarrationTextV1638(b) {
   });
   if (transformParas.length) transformParas[0] = 'Transforms: ' + transformParas[0];
   /* v16.39: the v16.35 HP-audit transform pointer is DELETED (Path B 6). The rendered record IS the resolver record, so the pointer condition is unreachable; when the resolver uses no transform, the telling says nothing about transforms. */
-  var moralNote = frozen.moralWinPath ? ' The finish stays inside ' + W + '\'s recorded morals.' : '';
+  /* v16.49 (F5b): the fixed moral sentence is DROPPED — claiming a kill
+     is "inside" a hero's morals contradicts the dead loser and the no-mode
+     model (morals are behaviour during a fight, not a gate on a lethal
+     finish — Jhay, 2026-11-04). The conditions line already states the
+     stance. This is the LIVE site only; the second site (line 10505) is
+     inside the RETIRED resolverTellingTextV1634 (no live callers — the
+     name appears only in the LAYER_OF_V1631 registry) and is untouched. */
+  var moralNote = '';
   /* v16.39 Fix 3 (3a wording only): when incapacitation is the deciding reason and the decisive incapacitating power differs from the finisher, one connecting sentence names both roles. The finisher itself is unchanged. */
   var fix3Power1639 = '';
   if (crit === 'incapacitation') {
     var fix3Rec1639 = (W === A.name) ? (frozen.inputs && frozen.inputs.incapA) : (frozen.inputs && frozen.inputs.incapB);
     var fix3Name1639 = (fix3Rec1639 && fix3Rec1639.power && fix3Rec1639.power.name) ? fix3Rec1639.power.name : '';
-    if (fix3Name1639 && frozen.finisher && frozen.finisher !== fix3Name1639) fix3Power1639 = 'Incapacitation is the deciding reason, delivered through ' + fix3Name1639 + '; ' + frozen.finisher + ' is the final blow, not a second deciding power.';
+    /* v16.49 (F3): same death framing as the resolver why — the
+       deciding power stops the loser from continuing, the finisher is the
+       final blow that kills them. The rubric twin (fix3Rubric1639) stays
+       as-is: tester-only Audit wording. */
+    if (fix3Name1639 && frozen.finisher && frozen.finisher !== fix3Name1639) fix3Power1639 = fix3Name1639 + ' is the deciding power — it stops ' + L + ' from continuing; ' + frozen.finisher + ' is the final blow that kills ' + L + '.';
   }
   /* v16.47 ROUTE B (B3/B5/B6): the finish is explained from the finisher's
      recorded outcome, the loser state is stated in words, and the verdict
@@ -10841,6 +10978,9 @@ function analysisNarrationTextV1638(b) {
       var loseStops = cleanBlockedByV1647(losePw.blockedBy || '');
       if (loseStops) merged += ' What stops ' + (loseRec.signature || 'it') + ': ' + loseStops + '.';
     }
+    /* v16.49 (F8): the shutout telling states the gap for the loser's
+       power too (e.g. Frodo's Sting Slash has no record at all). */
+    if (!hasPowerDetailV1649(losePw)) merged += ' No recorded detail is stated for ' + (loseRec.signature || 'this power') + '.';
     merged += ' But it cannot land: ' + L + ' cannot hurt ' + W + '. ' + W + ' counters with ' + (winRec.signature || 'no recorded signature') + ' (' + winRec.signatureKind + ')' + rangeClauseV1638(winRec.range);
     var winPw = dossierPowerV1638(winBattle, winRec.signature);
     if (winPw) {
@@ -10848,11 +10988,15 @@ function analysisNarrationTextV1638(b) {
       if (winDoes) merged = merged.replace(/\.$/, '') + ' — ' + winDoes.replace(/\.+$/, '') + '.';
       var winStops = cleanBlockedByV1647(winPw.blockedBy || '');
       if (winStops) merged += ' What stops ' + (winRec.signature || 'it') + ': ' + winStops + '.';
+      /* v16.49 (F4): plain speech here too — "the record says" is gone. */
       if (winPw.canHurt) {
         var winEff = cleanDossierSentenceV1638(winPw.canHurt || '');
-        if (winEff) merged += ' Against ' + L + ', the record says it can hurt ' + winEff;
+        if (winEff) merged += ' Against ' + L + ', it can hurt ' + winEff;
       }
     }
+    /* v16.49 (F8): same gap clause for the winner's power when it carries
+       no detail. */
+    if (!hasPowerDetailV1649(winPw)) merged += ' No recorded detail is stated for ' + (winRec.signature || 'this power') + '.';
     /* v16.43: shutout stories quote both style lines word for word, like the
        other stories do (planParaV1638 path, loser first, then winner). */
     var loseSd = cleanDossierSentenceV1638(loseRec.styleDescription || '');
@@ -10861,9 +11005,18 @@ function analysisNarrationTextV1638(b) {
     if (winSd) merged += ' ' + winSd;
     return finishCheck([opener, merged, decidePara].concat(transformParas, [finishPara, verdictPara]).join('\n\n'));
   }
+  /* v16.49 (F4): when both plan paragraphs would carry the same effect
+     clause (same cleaned canHurt — e.g. both powers hurt "ordinary
+     bodies"), the SECOND paragraph omits it. The comparison is on the
+     cleaned canHurt value, not the full clause (the clause names the
+     opponent, so the full strings always differ). Never invents a
+     different effect. */
+  var _effA1649 = effectValueV1649(loseBattle, loseRec.signature);
+  var _effB1649 = effectValueV1649(winBattle, winRec.signature);
+  var _dupEff1649 = !!(_effA1649 && _effA1649 === _effB1649);
   var loserPara = planParaV1638(loseBattle, loseRec, 'leads with', false, winRec.durability, W);
   if (pt.type === 'close') {
-    var winnerPara = planParaV1638(winBattle, winRec, 'counters with', false, loseRec.durability, L);
+    var winnerPara = planParaV1638(winBattle, winRec, 'counters with', false, loseRec.durability, L, _dupEff1649);
     return finishCheck([opener, loserPara, winnerPara, decidePara].concat(transformParas, [finishPara, verdictPara]).join('\n\n'));
   }
   return finishCheck([opener, loserPara, decidePara].concat(transformParas, [finishPara, verdictPara]).join('\n\n'));
