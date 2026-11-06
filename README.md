@@ -7,7 +7,7 @@ breakdown.
 
 ## Play it
 
-Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.45, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.45 is the joint-plan fix for the v16.44 side test: fighter cards and Info panels now show the picked version's real style, signature, and power set (not the base lines), and stamina losses name the stated limit (Super Sonic's ring drain). 4 golden records updated why-only (3× Goku/Vegeta, 1× Sonic v2/Rocky); winners, criteria, finishers, loser states, round counts, and damage are unchanged. Harness 601 passed, 0 failed. Text only, no HP numbers on the player page.
+Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.46, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.46 is the Anime variants batch: 29 Anime fighters now have real v2 + v3 profiles (style, signature, powerset, transforms — not just stat deltas), with 26 new v3s; Levi, Eren, Kaneki and Hisoka are untouched (blocked, base check still pending); Jiraiya, Saitama and Natsu have no v3 yet (held). One real mechanism fix: a variant's battle repertoire is now its own powerset, so a variant can no longer fire a power it does not have (Goku v2 no longer uses God Kamehameha). All 24 base golden records recompute byte-identically — no base battle changed. Harness 605 passed, 0 failed. Text only, no HP numbers on the player page.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -79,8 +79,11 @@ New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v16.45 joint-plan fix (side-test fixes for the v16.44 Video Games variants batch: version info panels read the selected version; stamina why names the stated limit; 601-test harness; 4 golden records updated why-only)
-- `war-room-v16.45.html` — same as `index.html`
+- `index.html` — latest, WAR-ROOM v16.46 Anime variants batch (29 Anime fighters get real v2 + v3 profiles; 26 new v3s; Levi/Eren/Kaneki/Hisoka untouched; Jiraiya/Saitama/Natsu v3 held; variant repertoire fix; 24 base goldens byte-identical; 605-test harness)
+- `war-room-v16.46.html` — same as `index.html`
+- `war-room-v16.46-tests.js` — Node regression harness (605 tests)
+- `war-room-v16.46-goldens.json` — 40 golden records (24 base + 16 variant)
+- `war-room-v16.45.html` — previous version, kept as an archive
 - `war-room-v16.45-tests.js` — Node regression harness (601 tests)
 - `war-room-v16.45-goldens.json` — 32 golden records (24 base + 8 variant)
 - `war-room-v16.44.html` — previous version, kept as an archive
