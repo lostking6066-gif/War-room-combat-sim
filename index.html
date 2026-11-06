@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.47 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.48 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.47</h1><span>1V1 DEATH BATTLES • ENGINE v16.47 • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
+<header><div><h1>WAR-ROOM v16.48</h1><span>1V1 DEATH BATTLES • ENGINE v16.48 • TEXT BREAKDOWN FIRST • NO RESEARCH STAT BONUS</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
@@ -91,7 +91,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 <section id="results-screen" class="screen">
 <div class="panel"><h2 id="result-title">RESULT</h2><p id="result-desc" class="note" style="font-size:.9rem"></p></div>
 
-<div class="panel story"><h2 id="episode-heading">Death Battle Breakdown</h2><div id="story-output"></div><div id="conditions-output" class="note" style="font-size:.82rem;opacity:.85"></div><div id="rubric-output" class="note" style="font-size:.82rem;opacity:.85"></div></div>
+<div class="panel story"><h2 id="episode-heading">Death Battle Breakdown</h2><p id="result-offline-label" class="note" style="font-size:.82rem;opacity:.85"></p><p id="result-seed-line" class="note" style="font-size:.82rem;opacity:.85"></p><div id="story-output"></div><div id="conditions-output" class="note" style="font-size:.82rem;opacity:.85"></div><div id="rubric-output" class="note" style="font-size:.82rem;opacity:.85"></div></div>
 <button class="btn" onclick="resetSimulator()">New Battle</button>
 </section>
 <section id="tester-screen" class="screen" style="display:none">
@@ -751,7 +751,12 @@ function renderHistoryLegacy(){
 }
 let currentHistoryId=null;
 function viewHistoryLegacy(id){
-  const x=loadHistory().find(h=>h.id===id); if(!x) return; currentHistoryId=x.id; const _en=document.getElementById('export-note'); if(_en) _en.innerText='';
+  const x=loadHistory().find(h=>h.id===id); if(!x) return;
+  /* v16.48: a saved view is not the live battle — clear the live seed +
+     offline-label lines so no stale live data shows on a saved episode. */
+  try { var _ol1648 = document.getElementById('result-offline-label'); if (_ol1648) _ol1648.innerText = ''; } catch (e) {}
+  try { var _sl1648 = document.getElementById('result-seed-line'); if (_sl1648) _sl1648.innerText = ''; } catch (e) {}
+  currentHistoryId=x.id; const _en=document.getElementById('export-note'); if(_en) _en.innerText='';
   document.getElementById('draft-screen').classList.remove('active'); document.getElementById('results-screen').classList.add('active');
   document.getElementById('result-title').innerText='Saved Battle — '+x.winner; document.getElementById('result-desc').innerText=x.date+' • '+x.battlefield+(x.continuities?' • Continuities: '+x.continuities.join(' vs '):'')+(x.victoryType?' • Victory: '+x.victoryType:'')+(x.seed!=null?' • Battle seed: '+x.seed+' — same seed + fighters + variants + battlefield reproduces the same battle':'')+(x.researchRefs?' • Research: '+x.researchRefs.map(r=>r.fighter+': '+r.sources.map(s=>s.name+' '+s.status).join(', ')).join(' | '):'');
   const cl2=document.getElementById('consistency-lines'); if(cl2) cl2.innerHTML=x.checks?('<b>Saved Consistency Check:</b><br>'+x.checks.map(c=>(c.passed===true?'✅ ':(c.passed==='unverified'?'❓ UNVERIFIED — ':'❌ '))+esc(c.name)).join('<br>')):'Saved on this device only.';
@@ -2676,6 +2681,22 @@ function showResults(){
   var _frozen1635 = null; try { _frozen1635 = frozenResolverResultV1634(b); } catch (e) { _frozen1635 = null; }
   collapseResultsAuditV1635();
   setResultHeaderFromFrozenV1635(_frozen1635);
+  /* v16.48 (F4 + main-test item 1): one line under the breakdown heading
+     names the offline breakdown, and one line names the seed + the final
+     blow's damage (the finisher hit only — never the round total). Both
+     come from the frozen record, so they match the battle that ran. */
+  try { var _ol1648 = document.getElementById('result-offline-label'); if (_ol1648) _ol1648.innerText = V1619_OFFLINE_BREAKDOWN_LABEL; } catch (e) {}
+  try {
+    var _sl1648 = document.getElementById('result-seed-line');
+    if (_sl1648) {
+      var _fr1648 = null; try { _fr1648 = frozenRecordV1639(b); } catch (e) {}
+      var _seed1648 = (_fr1648 && _fr1648.seed !== undefined && _fr1648.seed !== null) ? _fr1648.seed : b.seed;
+      var _fd1648 = (_fr1648 && _fr1648.damageSplit && _fr1648.damageSplit.finalDamage !== undefined && _fr1648.damageSplit.finalDamage !== null) ? _fr1648.damageSplit.finalDamage : null;
+      if (_fr1648 && !_fr1648.winner) _sl1648.innerText = 'Battle seed: ' + _seed1648 + ' — stalemate, no finishing blow.';
+      else if (_fd1648 !== null) _sl1648.innerText = 'Battle seed: ' + _seed1648 + ' · Final blow: ' + _fd1648 + ' damage.';
+      else _sl1648.innerText = 'Battle seed: ' + _seed1648 + '.';
+    }
+  } catch (e) {}
   /* v16.38 3C: standard conditions + fixed rubric render on EVERY results
      arrival, synchronously, before any online/offline narration swap — so
      they survive online swap-in (which replaces only story-output). */
@@ -2773,6 +2794,10 @@ function savedStoryMetaV162(x) {
 }
 function viewHistory(id){
   const x=loadHistory().find(h=>h.id===id); if(!x) return;
+  /* v16.48: a saved view is not the live battle — clear the live seed +
+     offline-label lines so no stale live data shows on a saved episode. */
+  try { var _ol1648 = document.getElementById('result-offline-label'); if (_ol1648) _ol1648.innerText = ''; } catch (e) {}
+  try { var _sl1648 = document.getElementById('result-seed-line'); if (_sl1648) _sl1648.innerText = ''; } catch (e) {}
   // v15.1: episode/match headings on a saved view come ONLY from this saved entry's own
   // victoryMode — never from the current victory-select or the last battle's mode.
   const _sm=(x.victoryMode||(x.finalRecord&&x.finalRecord.victoryMode)||((x.victoryType||'').toLowerCase().indexOf('incapacitation')!==-1?'incapacitation':'death'));
@@ -2955,7 +2980,7 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46'].includes(x.formatVersion);
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46','v16.47'].includes(x.formatVersion);
   return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12/v16.13/v16.14/v16.15/v16.16/v16.17/v16.18/v16.19/v16.20 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
@@ -6473,7 +6498,7 @@ function verdictFailedNamesV1614(checks) { return (checks || []).filter(function
    invented closeness. The system scales to the 600 roster target
    because breakdowns are generated on first click and cached per
    distinct pair/outcome — never pre-generated for every pair. */
-var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1647';
+var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1648';
 var V1619_OFFLINE_BREAKDOWN_LABEL = 'Offline Breakdown — written from the frozen record on this device.';
 var V1619_BREAKDOWN_HEADINGS = ['Matchup', 'Fighter A best case', 'Fighter B best case', 'Best plan', 'Why it stalls', 'Criteria scoreboard', 'Finishing sequence', 'Finisher and loser state', 'Verdict'];
 /* ============ WAR-ROOM v16.20: EXPANDED PAIRING + FIXES ============
@@ -9180,11 +9205,19 @@ function loserStatePhraseV1647(ls) {
   if (ls === 'stalemate — no loser state') return 'no loser — the battle ends in a stalemate';
   return 'dead';
 }
+/* v16.48 Branch A (Jhay 2026-11-06): the loser state keys off the LOSER,
+   not the deciding reason. A mortal or regenerative loser dies whatever the
+   deciding reason is — the incapacitating power is the deciding reason, the
+   finisher kills. Only an undying loser (immortal / intangible, or a
+   recorded way to lose of incapacitation / sealing / containment / removal)
+   is incapacitated instead. criterion and finisherOutcome stay as
+   parameters (callers pass 5 args) but no longer decide the state. All 194
+   live fighters are mortal / regenerative / invulnerable / other, so every
+   live loser dies in death mode; the immortal/intangible branches are
+   future-proofing. */
 function loserStateForV1647(winner, mode, criterion, loserDurType, finisherOutcome) {
   if (!winner) return 'stalemate — no loser state';
   if (mode === 'incapacitation') return 'unconscious';
-  if (criterion === 'incapacitation') return 'incapacitated';
-  if (finisherOutcome === 'incapacitated') return 'incapacitated';
   if (loserDurType === 'immortal' || loserDurType === 'intangible') return 'incapacitated';
   return 'dead';
 }
@@ -9262,7 +9295,11 @@ function verdictParaV1647(frozen, W, L) {
   if (crit === 'cannot-harm') adv = ' — ' + L + ' has no way to hurt ' + W + '.';
   else if (crit === 'incapacitation') {
     var rec = (W === frozen.fighterA.name) ? (frozen.inputs && frozen.inputs.incapA) : (frozen.inputs && frozen.inputs.incapB);
-    var nm = (rec && rec.power && rec.power.name) ? rec.power.name : frozen.finisher;
+    /* v16.48 (F3): the verdict names the FINISHER, not the deciding power —
+       the deciding power is already explained in the finish paragraph via
+       the fix-3 sentence. Fall back to the deciding power only if no
+       finisher is recorded. */
+    var nm = frozen.finisher || ((rec && rec.power && rec.power.name) ? rec.power.name : '');
     adv = ' — ' + nm + ' ends ' + L + '\'s ability to continue.';
   }
   else if (crit === 'stamina') adv = ' — ' + L + '\'s stamina gives out first.';
@@ -9351,6 +9388,30 @@ function qualityCheckTellingV1647(b, frozen, text, usedMoves) {
   var sents = t.replace(/\n+/g, ' ').split('. ').map(function (x) { return x.replace(/^\s+|\s+$/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' '); }).filter(function (x) { return x.length > 12; });
   var seen = {};
   sents.forEach(function (x) { if (seen[x]) failures.push('repeated sentence: ' + x.slice(0, 60)); seen[x] = true; });
+  /* v16.48 (main-test item 3): clause-level repeats — a does-text rides as
+     an em-dash clause, so the sentence split above misses it when the same
+     clause appears in a plan paragraph and again in the finish paragraph.
+     Only the finish paragraph is checked against the earlier paragraphs:
+     two plan paragraphs may legitimately share a does-text (Kamehameha and
+     Galick Gun are both 'Full-screen ki beam'), so plan-vs-plan repeats
+     are not flagged. */
+  var _paras1648 = t.split('\n\n');
+  var _finIdx1648 = -1;
+  for (var _pi1648 = 0; _pi1648 < _paras1648.length; _pi1648++) { if (_paras1648[_pi1648].indexOf(' finishes with ') !== -1) _finIdx1648 = _pi1648; }
+  if (_finIdx1648 > 0) {
+    var _normC1648 = function (x) { return x.replace(/^\s+|\s+$/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' '); };
+    var _splitC1648 = function (s) { return String(s || '').replace(/\n+/g, ' ').split(/\. |\s—\s/).map(_normC1648).filter(function (x) { return x.length > 12; }); };
+    var _earlier1648 = {};
+    for (var _ej1648 = 0; _ej1648 < _finIdx1648; _ej1648++) { _splitC1648(_paras1648[_ej1648]).forEach(function (x) { _earlier1648[x] = true; }); }
+    _splitC1648(_paras1648[_finIdx1648]).forEach(function (x) { if (_earlier1648[x]) failures.push('repeated clause in finish paragraph: ' + x.slice(0, 60)); });
+  }
+  /* v16.48 (main-test item 2): a doubled word is always a typo in telling
+     prose (the Deadpool/Wolverine report read "Both" twice in a row). The
+     v16.47 file cannot produce it (0 occurrences, clean at the live seed)
+     — this guard fails the telling if one ever appears, so the fallback
+     telling shows instead. */
+  var _dbl1648 = t.match(/\b([A-Za-z]+)\s+\1\b/i);
+  if (_dbl1648) failures.push('doubled word in telling: ' + _dbl1648[0]);
   if (/round \d+/i.test(t)) failures.push('round number in telling');
   if (/\b\d+\s*damage\b/i.test(t)) failures.push('damage number in telling');
   if (/\bhp \d|\d+ hp\b/i.test(t)) failures.push('HP number in telling');
@@ -9476,12 +9537,28 @@ function resolveCharFirstV1634(fa, fb, seed, opts) {
   exchanges.push('Decisive: ' + why);
   if (winner && finName) exchanges.push('Finisher: ' + finName + ' as the resolver finishing exchange (resolver sequence, NOT the HP-audit finisher) — decisive criterion: ' + criterion + '.');
   else exchanges.push('Finisher: none — the resolver awards no finisher in a stalemate.');
-  /* v16.47 ROUTE B (B3): knockouts are gone — the loser state comes from
-     loserStateForV1647 (dead unless the deciding reason is incapacitation
-     or the loser cannot be killed on the record). */
+  /* v16.48 Branch A: knockouts are gone and the loser state keys off
+     the LOSER — a mortal loser dies whatever the deciding reason is. */
   var finOutcome1647 = 'unknown';
   try { var _fw1647 = null; if (winRec) (winRec.powers || []).forEach(function (pw) { if (pw.name === finName) _fw1647 = pw; }); if (_fw1647 && _fw1647.outcome) finOutcome1647 = _fw1647.outcome; } catch (e) {}
   var loserState = loserStateForV1647(winner, mode, criterion, loserRec ? loserRec.durability.type : '', finOutcome1647);
+  /* v16.48 Branch A: the incapacitating power is the deciding reason, the
+     finisher kills — when the loser dies, the why says so, so the deciding
+     paragraph does not end on "cannot continue" while the loser is dead.
+     The Decisive exchange was built from the old why above, so rebuild it. */
+  if (criterion === 'incapacitation' && loserState === 'dead' && winner) {
+    var _loseName1648 = (winner === ca.name) ? cb.name : ca.name;
+    var _finName1648 = finName || 'the finishing blow';
+    why = why.replace(/\.$/, '') + ' — and ' + _finName1648 + ' kills ' + _loseName1648 + '.';
+    for (var _ei1648 = 0; _ei1648 < exchanges.length; _ei1648++) {
+      if (exchanges[_ei1648].indexOf('Decisive: ') === 0) exchanges[_ei1648] = 'Decisive: ' + why;
+    }
+  }
+  /* v16.48 (F1): the frozen win-conditions string is built from THIS battle,
+     not hardcoded. Death mode with a mortal loser is 'death'; an undying
+     loser (incapacitated) or incapacitation mode is 'incapacitation'; a
+     stalemate meets no win condition. */
+  var winConditions1648 = (!winner) ? 'none — stalemate, no win condition met' : ((mode === 'incapacitation' || loserState === 'incapacitated') ? 'incapacitation' : 'death');
   var winPath = (criterion === 'incapacitation') ? 'incapacitation' : ((winner === null) ? 'stalemate' : 'death');
   var moralWinPath = false;
   if (winRec && winRec.morals && winRec.morals.text && /incapacitat/i.test(winRec.morals.text)) moralWinPath = true;
@@ -9514,7 +9591,7 @@ function resolveCharFirstV1634(fa, fb, seed, opts) {
     transformsUsed: transformsUsed,
     moveCounts: moveList,
     staminaStages: { A: staminaStage(ca), B: staminaStage(cb), runsOutFirst: runsOut.fighter || null },
-    conditions: { battlefield: battlefield, fighterAVariant: variant, fighterBVariant: variantB, victoryMode: mode, modeLabel: (mode === 'incapacitation' ? 'Incapacitation' : 'Death'), winConditions: 'death/incapacitation (sealing/containment/removal as capability notes only, never simulated win conditions unless recorded decisively — in current data they are not)' },
+    conditions: { battlefield: battlefield, fighterAVariant: variant, fighterBVariant: variantB, victoryMode: mode, modeLabel: (mode === 'incapacitation' ? 'Incapacitation' : 'Death'), winConditions: winConditions1648 },
     heldOutA: ca.heldOut, heldOutB: cb.heldOut,
     note: 'Schema inputs, criterion, and exchange sequence are recorded here so the decision is deterministic and replayable without HP ticks. Sealing/containment/battlefield removal are NOT simulated victories in this phase. Transforms are telling escalations with triggers met, never winner changes.'
   };
@@ -10687,7 +10764,23 @@ function analysisNarrationTextV1638(b) {
      alone); the deciding step gets a full paragraph with its actual
      evidence — no bare 'Decisive:' line. */
   var opener = openerV1647(frozen, h, fill, W, L);
-  var pivot = ((h >>> 5) % 2 === 0) ? 'But the record turns on one point: ' : 'However, one point settles it: ';
+  /* v16.48 (F2): one pivot wording per criterion, hash-picked within the
+     criterion — the same pivot no longer opens battles 2, 4 and 7 alike.
+     The pick is pair-stable (hash of criterion + fighter ids, not the seed),
+     so the 8 standard battles get 8 distinct pivots: verified at build
+     time with shift 2. The retired resolverTellingTextV1634 keeps its own
+     2 pivots — it has no live callers. */
+  var pivots1648 = {
+    'stamina': ['But the limit settles it: ', 'However, the ending is decided on stamina: '],
+    'incapacitation': ['However, one point settles it: ', 'But the ending is decided here: ', 'However, the stop decides it: '],
+    'cannot-harm': ['But the record turns on one point: ', 'However, the barrier decides it: '],
+    'tier difference': ['But the tier line settles it: ', 'However, the gap decides it: '],
+    'speed': ['But the pace decides it: ', 'However, the faster fighter settles it: '],
+    'durability': ['But the tougher body decides it: ', 'However, the body that holds up settles it: ']
+  };
+  var _pv1648 = pivots1648[crit] || pivots1648['tier difference'];
+  var _ph1648 = hash1634([crit, A.id, B.id].join('|'));
+  var pivot = _pv1648[(_ph1648 >>> 2) % _pv1648.length];
   var decidePara = pivot + frozen.why + decidingExtraV1647(frozen);
   var transformParas = (frozen.transformsUsed || []).map(function (t) {
     if (t.fighter === W) return W + ' becomes ' + t.to + ' — the form the record says ' + W + ' takes ' + transformTriggerWordsV1634(t.triggerClass) + ' — and the finish comes from ' + frozen.finisher + '.';
@@ -10709,7 +10802,24 @@ function analysisNarrationTextV1638(b) {
      sequence, no bare 'Decisive:' line. The telling passes the B6
      quality check before display; a failing telling is replaced silently
      by a short locked-facts telling, never shown with a warning. */
-  var finisherDoesShown = (frozen.finisher === winRec.signature) && (pt.type === 'close' || crit === 'cannot-harm');
+  /* v16.48 (main-test item 3): the finish paragraph must not repeat a
+     does-text already shown in a plan paragraph. Two powers can share the
+     same does text (Kamehameha and Galick Gun are both 'Full-screen ki
+     beam'), so compare the TEXT, not the power name. The loser plan shows
+     the loser signature's does; a close telling also shows the winner
+     signature's does; a cannot-harm telling shows both. */
+  var finisherDoes1648 = '';
+  try { var _fpw1648 = dossierPowerV1638(winBattle, frozen.finisher); if (_fpw1648) finisherDoes1648 = cleanDossierSentenceV1638(_fpw1648.does || ''); } catch (e) {}
+  var normDoes1648 = function (s) { return String(s || '').toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, ''); };
+  var finisherDoesShown = false;
+  try {
+    var _nd1648 = normDoes1648(finisherDoes1648);
+    if (_nd1648) {
+      var _sigDoes1648 = function (bf, sig) { var _p = null; try { _p = dossierPowerV1638(bf, sig); } catch (e) {} if (!_p) return ''; return normDoes1648(cleanDossierSentenceV1638(_p.does || '')); };
+      if (_sigDoes1648(loseBattle, loseRec.signature) === _nd1648) finisherDoesShown = true;
+      if ((pt.type === 'close' || crit === 'cannot-harm') && _sigDoes1648(winBattle, winRec.signature) === _nd1648) finisherDoesShown = true;
+    }
+  } catch (e) {}
   var finishPara = finishParaV1647(frozen, W, L, winBattle, loseBattle, fix3Power1639, moralNote, finisherDoesShown);
   var verdictPara = verdictParaV1647(frozen, W, L);
   var usedMoves = [{ battleFighter: loseBattle, power: loseRec.signature }, { battleFighter: winBattle, power: winRec.signature }];
@@ -10761,6 +10871,11 @@ function analysisNarrationTextV1638(b) {
 function analysisNarrationHtmlV1638(b) {
   try { return breakdownHtmlV1619(analysisNarrationTextV1638(b), b); } catch (e) { return '<p>Analysis narration unavailable — nothing is invented.</p>'; }
 }
+/* v16.48 (F2): the rubric is OFF the player screen — it named engine
+   steps ("Decided at step N", "Decisive criterion:") on every result. The
+   conditions line still renders here. rubricTextV1638 stays defined for
+   the tester/Audit surface only; the player #rubric-output is cleared so a
+   rubric from an earlier battle in the same tab never lingers. */
 function renderConditionsAndRubricV1638(b, frozen) {
   try {
     var cEl = document.getElementById('conditions-output');
@@ -10768,7 +10883,7 @@ function renderConditionsAndRubricV1638(b, frozen) {
   } catch (e) {}
   try {
     var rEl = document.getElementById('rubric-output');
-    if (rEl) rEl.innerHTML = breakdownHtmlV1619(rubricTextV1638(b, frozen), b);
+    if (rEl) rEl.innerHTML = '';
   } catch (e) {}
   return 'rendered';
 }
