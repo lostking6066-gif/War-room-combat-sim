@@ -7,7 +7,7 @@ breakdown.
 
 ## Play it
 
-Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.55, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.55 is the B stamina fix: running out of stamina no longer means automatic loss — the fighter is weakened and the opponent finishes them. Stamina limits now come from a structured research record for 45 fighters (powered state, duration, weakened state, how the opponent exploits it, recovery), and the old roster-number fallback that invented a runs-out is gone. 21 golden records re-locked (8 change criterion, 4 winners flip). Harness 649 passed, 0 failed; goldens 40/40. Text only, no HP numbers on the player page.
+Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.56, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.56 is the review fixes: result screens show fighter photos and name variants, Gandalf the White appears once (gandalf2 removed, roster 193), Instant Transmission gets a detail record and joins base Goku's power list, engine words are reworded in plain words, Thanos's Infinity Gauntlet gets a Titan Slam record and a losing-the-Gauntlet weakness, and Iron Man's Hulkbuster gets its own variant photo. 12 golden records re-locked (all outcome-unchanged). Harness 656 passed, 0 failed; goldens 40/40. Text only, no HP numbers on the player page.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
