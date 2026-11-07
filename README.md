@@ -7,7 +7,7 @@ breakdown.
 
 ## Play it
 
-Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.52, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.52 is a one-character follow-up to v16.51: the new finish line ("A mortal body does not get up from that.") now renders with its space after the finisher name. Nothing else changed. No winners, finishers, criteria, rounds, or damage changed. Harness 631 passed, 0 failed. Text only, no HP numbers on the player page.
+Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.53, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.53 wires in the fighters' real canon photos: every roster card, draft slot, and Info panel shows the fighter's photo instead of an emoji (Sauron's armoured Second Age form gets its own photo). A photo that fails to load falls back to the fighter's initials. Nothing else changed. No winners, finishers, criteria, rounds, or damage changed. Harness 634 passed, 0 failed; goldens 40/40, 0 movers. Text only, no HP numbers on the player page.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
