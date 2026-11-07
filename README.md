@@ -7,7 +7,7 @@ breakdown.
 
 ## Play it
 
-Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.53, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.53 wires in the fighters' real canon photos: every roster card, draft slot, and Info panel shows the fighter's photo instead of an emoji (Sauron's armoured Second Age form gets its own photo). A photo that fails to load falls back to the fighter's initials. Nothing else changed. No winners, finishers, criteria, rounds, or damage changed. Harness 634 passed, 0 failed; goldens 40/40, 0 movers. Text only, no HP numbers on the player page.
+Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.54, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.54 is the A+C review-fixes batch: verdicts vary by pair instead of repeating one frame, the speed why and Gojo's Infinity read in plain words, damage-type tags are gone from tellings, the no-limit stamina opener no longer contradicts itself, Web Shot gets its bridge against regenerators, what-stops lines name only what applies to this opponent, variant names show in the conditions line, and variant picks clear on New Battle. Dead code removed (17,671 chars) and the size ceiling raised to 1,420,000. No winners, finishers, criteria, rounds, or damage changed. Harness 642 passed, 0 failed; goldens 40/40, 8 movers on why wording only (A2 speed re-lock). Text only, no HP numbers on the player page.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -79,8 +79,14 @@ New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v16.52 one-character follow-up (the new finish line renders with its space after the finisher name; nothing else changed; 0 golden records moved; 631-test harness)
-- `war-room-v16.52.html` — same as `index.html`
+- `index.html` — latest, WAR-ROOM v16.54 A+C review fixes + Fix 6 (verdict frames vary per pair, plain-words speed why + Gojo clause, damage tags dropped, no-limit stamina frames reworded, Web Shot bridge vs regenerators, opponent-aware stops, variant names in conditions, variant picks clear on New Battle; dead code removed, ceiling 1,420,000; 8 golden records re-locked on why wording only; 642-test harness)
+- `war-room-v16.54.html` — same as `index.html`
+- `war-room-v16.54-tests.js` — Node regression harness (642 tests)
+- `war-room-v16.54-goldens.json` — 40 golden records (24 base + 16 variant; 8 records re-locked on why wording only vs v16.53)
+- `war-room-v16.53.html` — previous version, kept as an archive
+- `war-room-v16.53-tests.js` — Node regression harness (634 tests)
+- `war-room-v16.53-goldens.json` — 40 golden records (24 base + 16 variant; 0 records moved vs v16.52)
+- `war-room-v16.52.html` — previous version, kept as an archive
 - `war-room-v16.52-tests.js` — Node regression harness (631 tests)
 - `war-room-v16.52-goldens.json` — 40 golden records (24 base + 16 variant; 0 records moved vs v16.51)
 - `war-room-v16.51.html` — previous version, kept as an archive
