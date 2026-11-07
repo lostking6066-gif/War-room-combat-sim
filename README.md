@@ -7,7 +7,7 @@ breakdown.
 
 ## Play it
 
-Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.51, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.51 fixes the v16.50 test failures: attack paragraphs stop repeating the same move line when two powers carry the same recorded meaning; the "record" wording is cleaned up in the text (the Batman stamina reason no longer cites the limited-resource line, the deciding-extra trailing line and the "recorded loss" line are plain speech, one cannot-harm opener frame is reworded); the flagged finish line is gone, replaced in place so finish lines still vary per fight. No winners, finishers, criteria, rounds, or damage changed. Harness 631 passed, 0 failed. Text only, no HP numbers on the player page.
+Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.52, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.52 is a one-character follow-up to v16.51: the new finish line ("A mortal body does not get up from that.") now renders with its space after the finisher name. Nothing else changed. No winners, finishers, criteria, rounds, or damage changed. Harness 631 passed, 0 failed. Text only, no HP numbers on the player page.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
@@ -79,8 +79,11 @@ New batches will be added with full, accurate profiles.
 
 ## Versions in this repo
 
-- `index.html` — latest, WAR-ROOM v16.51 wording fix 4 (Route B fix 4: shared move-line dedup, "record" wording cleaned up, Batman cite dropped, flagged finish line replaced in place; 0 golden records moved; 631-test harness)
-- `war-room-v16.51.html` — same as `index.html`
+- `index.html` — latest, WAR-ROOM v16.52 one-character follow-up (the new finish line renders with its space after the finisher name; nothing else changed; 0 golden records moved; 631-test harness)
+- `war-room-v16.52.html` — same as `index.html`
+- `war-room-v16.52-tests.js` — Node regression harness (631 tests)
+- `war-room-v16.52-goldens.json` — 40 golden records (24 base + 16 variant; 0 records moved vs v16.51)
+- `war-room-v16.51.html` — previous version, kept as an archive
 - `war-room-v16.51-tests.js` — Node regression harness (631 tests)
 - `war-room-v16.51-goldens.json` — 40 golden records (24 base + 16 variant; 0 records moved vs v16.50)
 - `war-room-v16.50.html` — previous version, kept as an archive
