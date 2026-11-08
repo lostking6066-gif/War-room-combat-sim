@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.56 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.57 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,9 +66,10 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.56</h1><span>1V1 DEATH BATTLES • TEXT BREAKDOWN FIRST</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
+<header><div><h1>WAR-ROOM v16.57</h1><span>1V1 DEATH BATTLES • TEXT BREAKDOWN FIRST</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
+<div id="daily-banner"></div>
 <div class="panel"><h2>1 — Search &amp; Browse the Roster <span id="roster-note" style="font-size:.75rem;color:var(--dim)"></span></h2>
 <input id="search-input" placeholder="Search by name, franchise, or alias — try Goku, Batman, Link...">
 <p id="roster-type-note" class="note"></p>
@@ -77,7 +78,10 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 <div class="prep">
 <div class="panel"><h2>Combat Roster <span id="roster-count" style="font-size:.8rem;color:var(--dim)"></span></h2><div class="grid" id="fighter-pool"></div></div>
 <div class="panel"><h2 id="match-heading">2 — Death Match: Pick Fighter A and Fighter B</h2><p class="note">1v1 only. Pick exactly two fighters — one for each side. Both fighters are chosen by you — WAR-ROOM is 1v1 only.</p><div id="alpha-squad-slots" style="display:flex;flex-direction:column;gap:8px"></div>
-<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="start-btn" disabled style="flex:1" onclick="startBattle()">Start Death Battle →</button></div>
+<div id="prediction-box"></div>
+<div id="rivalry-box"></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="start-btn" disabled style="flex:1" onclick="startBattle()">Start Death Battle →</button><button class="btn" id="random-btn" onclick="randomFight()">Surprise me</button></div>
+<input id="seed-input" type="text" inputmode="numeric" placeholder="Seed — type a number to replay a battle" onchange="applySeedInput()">
 
 
 
@@ -91,8 +95,10 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 <section id="results-screen" class="screen">
 <div class="panel"><h2 id="result-title">RESULT</h2><p id="result-desc" class="note" style="font-size:.9rem"></p></div>
 
-<div class="panel story"><h2 id="episode-heading">Death Battle Breakdown</h2><p id="result-offline-label" class="note" style="font-size:.82rem;opacity:.85"></p><p id="result-seed-line" class="note" style="font-size:.82rem;opacity:.85"></p><div id="story-output"></div><div id="conditions-output" class="note" style="font-size:.82rem;opacity:.85"></div><div id="rubric-output" class="note" style="font-size:.82rem;opacity:.85"></div></div>
+<div class="panel story"><h2 id="episode-heading">Death Battle Breakdown</h2><p id="result-offline-label" class="note" style="font-size:.82rem;opacity:.85"></p><p id="result-seed-line" class="note" style="font-size:.82rem;opacity:.85"></p><p id="prediction-line" class="note"></p><div id="story-output"></div><div id="conditions-output" class="note" style="font-size:.82rem;opacity:.85"></div><div id="rubric-output" class="note" style="font-size:.82rem;opacity:.85"></div></div>
 <button class="btn" onclick="resetSimulator()">New Battle</button>
+<button class="btn" onclick="startBattle()">Fight again</button>
+<button class="btn" onclick="backToDraftKeepPair()">Same fighters, different versions</button>
 </section>
 <section id="tester-screen" class="screen" style="display:none">
 <div class="panel"><h2>Tester surface</h2><p class="note">Tester-only surface for Audit, Combat Details, dossier, and Technical Details. Not part of the player page; reachable only by adding #tester to the URL. No player-screen element links here.</p></div>
@@ -412,6 +418,7 @@ function dialogueFor(f, opp, round, kind, hpRatio){
 // Backwards-compatible name used by older code paths; now fighter-specific.
 const DIALOGUE={};
 let selected=[]; let selectedVariants={}; let researchIntel={}; let catFilter='All'; let searchTerm='';
+let playerPrediction=null; /* v16.57 (fun loop, idea 4): the player's pick for 'Who wins?' — in-memory only, gone on refresh. */
 /* YouTube research: starter library only. No claim of 400 verified channels.
    The library is expandable — add channels in the game and they persist on this device.
    Links are YouTube searches, not direct video claims, so they do not break if a handle changes. */
@@ -532,6 +539,10 @@ function renderSlots(){
   document.getElementById('roster-count').innerText=`${selected.length}/2 Selected`;
   document.getElementById('start-btn').disabled=selected.length!==2;
   renderYT(); renderChannels();
+  /* v16.57 (fun loop, ideas 4+6): the prediction box (2 picked) and the
+     rivalry suggestion (1 picked) re-render on every selection change. */
+  try{renderPredictionBoxV1657();}catch(e){}
+  try{renderRivalryV1657();}catch(e){}
 }
 function fieldOrNotKnownV151(value,label){ const v=(value==null?'':String(value).trim()); if(!v||v==='—') return '[NOT KNOWN] — '+label; return esc(value); }
 function auditNumbersDetailsV1626(f) {
@@ -674,6 +685,22 @@ function simulateBattle(){
 function saveSettingsV151(){ try{ const vs=document.getElementById('victory-select'); const bs=document.getElementById('battlefield-select'); const s={victoryMode:(vs&&vs.value)||'death',battlefield:(bs&&bs.value)||'arena'}; localStorage.setItem('warroom_settings_v151',JSON.stringify(s)); return s; }catch(e){ return null; } }
 function restoreSettingsV151(){ try{ const raw=localStorage.getItem('warroom_settings_v151'); if(!raw) return null; const s=JSON.parse(raw); const vs=document.getElementById('victory-select'); if(vs&&(s.victoryMode==='death'||s.victoryMode==='incapacitation')) vs.value=s.victoryMode; const bs=document.getElementById('battlefield-select'); if(bs&&s.battlefield&&(typeof BATTLEFIELDS==='undefined'||BATTLEFIELDS.some(b=>b.id===s.battlefield))) bs.value=s.battlefield; if(typeof updateModeHeadings==='function') updateModeHeadings(s.victoryMode); return s; }catch(e){ return null; } }
 function updateModeHeadings(mode){const m=mode||((typeof document!=='undefined'&&document.getElementById('victory-select'))?document.getElementById('victory-select').value:'death'); const mh=typeof document!=='undefined'?document.getElementById('match-heading'):null; if(mh) mh.innerText=(m==='incapacitation'?'2 — Incapacitation Match: Pick Fighter A and Fighter B':'2 — Death Match: Pick Fighter A and Fighter B'); const eh=typeof document!=='undefined'?document.getElementById('episode-heading'):null; if(eh) eh.innerText=(m==='incapacitation'?'Incapacitation Breakdown':'Death Battle Breakdown'); return m;}
+/* v16.57 (fun loop, Jhay 2026-11-07 ~19:24 — ideas 1-6 + 8; Best-of-3 waits for the detailed telling, v16.58+).
+   Render/UI only — no engine field, no resolver change. All state is plain
+   in-memory lets, gone on refresh. The resolver never reads any of it. */
+function backToDraftKeepPair(){try{if(typeof collapseResultsAuditV1635==='function')collapseResultsAuditV1635();}catch(e){}document.getElementById('results-screen').classList.remove('active');document.getElementById('draft-screen').classList.add('active');renderRoster();}
+function randomFight(){var a=Math.floor(Math.random()*ROSTER.length),b=a;while(b===a)b=Math.floor(Math.random()*ROSTER.length);selected=[ROSTER[a].id,ROSTER[b].id];selectedVariants={};playerPrediction=null;startBattle();}
+function setPrediction(i){playerPrediction=selected[i];renderRoster();}
+function renderPredictionBoxV1657(){var el=document.getElementById('prediction-box');if(!el)return;if(playerPrediction&&selected.indexOf(playerPrediction)===-1)playerPrediction=null;if(selected.length!==2){el.innerHTML='';return;}var a=byId(selected[0]),b=byId(selected[1]);if(!a||!b){el.innerHTML='';return;}var p=playerPrediction?byId(playerPrediction):null;el.innerHTML='<b>Who wins?</b> <button class="btn small" onclick="setPrediction(0)">'+esc(a.name)+'</button> <button class="btn small" onclick="setPrediction(1)">'+esc(b.name)+'</button>'+(p?' <span class="note">You picked '+esc(p.name)+'.</span>':'');}
+function applySeedInput(){var _si=document.getElementById('seed-input');if(!_si)return;var n=parseInt((_si.value||'').trim(),10);setForcedSeedV1657(isNaN(n)?null:n);}
+function setForcedSeedV1657(n){forcedSeed=(typeof n==='number'&&isFinite(n))?n:null;}
+function rivalFor(id){var f=byId(id);if(!f)return null;var n=f.name;for(var k in RELATIONSHIPS){if(!RELATIONSHIPS[k])continue;var p=k.split('|');if(p[0]===p[1])continue;var o=p[0]===n?p[1]:p[1]===n?p[0]:null;if(o){var g=ROSTER.find(function(x){return x.name===o;});return g?g.id:null;}}return null;}
+function addRival(){var r=rivalFor(selected[0]);if(r){selected=[selected[0],r];renderRoster();}}
+function renderRivalryV1657(){var el=document.getElementById('rivalry-box');if(!el)return;if(selected.length!==1){el.innerHTML='';return;}var r=rivalFor(selected[0]);if(!r){el.innerHTML='';return;}var f=byId(selected[0]),g=byId(r);if(!f||!g){el.innerHTML='';return;}el.innerHTML=esc(f.name)+'\'s rival is '+esc(g.name)+' — <button class="btn small" onclick="addRival()">Fight '+esc(g.name)+'</button>';}
+function dailyDateSeedV1657(){var d=new Date();return d.getUTCFullYear()*10000+(d.getUTCMonth()+1)*100+d.getUTCDate();}
+function dailyPickV1657(){var s=dailyDateSeedV1657();var rng=mulberry32(s);var a=Math.floor(rng()*ROSTER.length),b=a;while(b===a)b=Math.floor(rng()*ROSTER.length);return{seed:s,a:ROSTER[a].id,b:ROSTER[b].id};}
+function playDailyV1657(){var d=dailyPickV1657();selected=[d.a,d.b];selectedVariants={};playerPrediction=null;setForcedSeedV1657(d.seed);startBattle();}
+function renderDailyBannerV1657(){var el=document.getElementById('daily-banner');if(!el)return;var d=dailyPickV1657();var a=byId(d.a),b=byId(d.b);if(!a||!b){el.innerHTML='';return;}el.innerHTML='<b>Fight of the Day:</b> '+esc(a.name)+' vs '+esc(b.name)+' <button class="btn small" onclick="playDailyV1657()">Fight today\'s fight</button> <span class="note">Seed '+d.seed+' — same fight for everyone today.</span>';}
 function startBattle(){
   /* v16.18 DELIBERATE CHANGE: do NOT abort the previous verdict run here (see generateVerdictV1614) — starting a new battle must not lose the previous battle's pending history entry or block its in-place update. */
   try{ currentStorySessionId=null; if(typeof resetMainStoryUIV161==='function') resetMainStoryUIV161(null); }catch(e){}
@@ -681,6 +708,12 @@ function startBattle(){
   if(selected.length===2 && selected[0]===selected[1]){alert('Mirror match blocked: the same fighter cannot fight itself in this build. Pick two different fighters.');return;}
   updateModeHeadings();
   currentBattle=simulateBattle();
+  /* v16.57 (fun loop, ideas 5+8): the forced seed is consumed by the
+     battle that just ran — the next fight re-rolls unless a new seed
+     is typed or the daily button is tapped again. startBattle() is
+     synchronous and simulateBattle() already read the seed, so
+     clearing here is safe; the battle holds its seed in battleSeed. */
+  forcedSeed=null;
   document.getElementById('draft-screen').classList.remove('active');
   /* v16.37: playback screen removed — no intermediate screen, no playback timer; results render directly. */
   showResults();
@@ -824,6 +857,10 @@ function resetSimulator(){
   /* v16.49 (F9): New Battle clears the roster search too — the old search
      term used to survive and filter the fresh roster. */
   searchTerm=''; const _si1649=document.getElementById('search-input'); if(_si1649) _si1649.value='';
+  /* v16.57 (fun loop, idea 5): New Battle clears the typed seed too. */
+  var _si1657=document.getElementById('seed-input');if(_si1657)_si1657.value='';forcedSeed=null;
+  /* v16.57 (fun loop, idea 4): a prediction that never fought is dropped. */
+  playerPrediction=null;
   const tn=document.getElementById('yt-note'); if(tn) tn.value=''; const nd=document.getElementById('yt-note-display'); if(nd) nd.innerHTML='';
   const _ab=document.getElementById('ai-status'); if(_ab) _ab.innerText='AI RESEARCH: AUTO-TESTING…'; try{ if(typeof testConnections==='function') testConnections(); }catch(e){}
   document.getElementById('results-screen').classList.remove('active'); document.getElementById('draft-screen').classList.add('active');
@@ -2607,6 +2644,11 @@ function showResults(){
       else _sl1648.innerText = 'Battle seed: ' + _seed1648 + '.';
     }
   } catch (e) {}
+  /* v16.57 (fun loop, idea 4): the player's prediction, read AFTER the
+     battle from the locked winner. It never changes the winner. On a
+     stalemate there is no winner, so the line says so. Consumed here
+     so a stale prediction cannot survive into the next battle. */
+  try { var _pl1657 = document.getElementById('prediction-line'); if (_pl1657) { if (playerPrediction) { if (!b.winner || b.stalemate) _pl1657.innerText = 'Stalemate — no winner.'; else { var _pn1657 = byId(playerPrediction); _pl1657.innerText = (_pn1657 && _pn1657.name === b.winner) ? 'You called it.' : 'Wrong — ' + b.winner + ' wins.'; } playerPrediction = null; } else _pl1657.innerText = ''; } } catch (e) {}
   /* v16.38 3C: standard conditions + fixed rubric render on EVERY results
      arrival, synchronously, before any online/offline narration swap — so
      they survive online swap-in (which replaces only story-output). */
@@ -2890,7 +2932,7 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46','v16.47','v16.48','v16.49','v16.50','v16.51','v16.52','v16.53','v16.54','v16.55'].includes(x.formatVersion);
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46','v16.47','v16.48','v16.49','v16.50','v16.51','v16.52','v16.53','v16.54','v16.55','v16.56'].includes(x.formatVersion);
   return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12/v16.13/v16.14/v16.15/v16.16/v16.17/v16.18/v16.19/v16.20 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
@@ -6408,7 +6450,7 @@ function verdictFailedNamesV1614(checks) { return (checks || []).filter(function
    invented closeness. The system scales to the 600 roster target
    because breakdowns are generated on first click and cached per
    distinct pair/outcome — never pre-generated for every pair. */
-var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1656';
+var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1657';
 var V1619_OFFLINE_BREAKDOWN_LABEL = 'Breakdown — written on this device, no internet needed.';
 var V1619_BREAKDOWN_HEADINGS = ['Matchup', 'Fighter A best case', 'Fighter B best case', 'Best plan', 'Why it stalls', 'Criteria scoreboard', 'Finishing sequence', 'Finisher and loser state', 'Verdict'];
 /* ============ WAR-ROOM v16.20: EXPANDED PAIRING + FIXES ============
@@ -11588,7 +11630,7 @@ function applyTesterRouteV1640(){
 document.getElementById('search-input').addEventListener('input',e=>{searchTerm=e.target.value.toLowerCase();renderRoster()});
 try{ applyTesterRouteV1640(); }catch(e){}
 /* v16.26: custom fighters removed — previously saved customs are not loaded; the roster stays 194 */
-renderChips(); renderRoster(); /* v16.26: no renderHistory/renderChannels — history and the channel library are removed from the main flow */ if(typeof updateOnlineStatus==='function'){updateOnlineStatus(); window.addEventListener('online',updateOnlineStatus); window.addEventListener('offline',updateOnlineStatus);} if(typeof updateFileWarning==='function'){ try{ updateFileWarning(); }catch(e){} } /* v16.26: file-warning panel removed with Advanced Settings; guarded */ /* v16.26: key-status UI removed with Advanced Settings */
+renderChips(); renderRoster(); try{renderDailyBannerV1657();}catch(e){} /* v16.57 (fun loop, idea 8): the daily pair is derived from today's UTC date at page load — never cached, never saved. */ /* v16.26: no renderHistory/renderChannels — history and the channel library are removed from the main flow */ if(typeof updateOnlineStatus==='function'){updateOnlineStatus(); window.addEventListener('online',updateOnlineStatus); window.addEventListener('offline',updateOnlineStatus);} if(typeof updateFileWarning==='function'){ try{ updateFileWarning(); }catch(e){} } /* v16.26: file-warning panel removed with Advanced Settings; guarded */ /* v16.26: key-status UI removed with Advanced Settings */
 // v16.27: no retest buttons remain in the main flow — the dossier Retest button and its fetch handler were deleted, not hidden.
 /* v16.26: automatic connection tests removed with Advanced Settings */
 </script>

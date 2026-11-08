@@ -7,7 +7,7 @@ breakdown.
 
 ## Play it
 
-Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.56, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.56 is the review fixes: result screens show fighter photos and name variants, Gandalf the White appears once (gandalf2 removed, roster 193), Instant Transmission gets a detail record and joins base Goku's power list, engine words are reworded in plain words, Thanos's Infinity Gauntlet gets a Titan Slam record and a losing-the-Gauntlet weakness, and Iron Man's Hulkbuster gets its own variant photo. 12 golden records re-locked (all outcome-unchanged). Harness 656 passed, 0 failed; goldens 40/40. Text only, no HP numbers on the player page.
+Open `index.html` in a browser — no install, no build step. This is now WAR-ROOM v16.57, the 1v1 Death Battle game, and the main game on GitHub Pages. v16.57 is the fun loop: Rematch ("Fight again", same pair, new seed), Variant rematch ("Same fighters, different versions", pair stays picked), Random ("Surprise me", whole roster, base only), Prediction ("Who wins?" on the draft screen, "You called it" or "Wrong — [winner] wins" after the battle), Seed challenge (type a seed, get the exact same battle, share it), Rivalry suggestion (Goku's rival is Vegeta, Batman's rival is Superman, one tap), and Fight of the Day (one matchup a day, picked by the date, UTC, same for everyone). Best-of-3 waits for the detailed telling (v16.58+). 0 golden records moved. Harness 663 passed, 0 failed; goldens 40/40. Text only, no HP numbers on the player page.
 
 For the connected version, open it over https (for example GitHub Pages),
 not as a local `file://` page, so Wikipedia / Fandom research fetches work
