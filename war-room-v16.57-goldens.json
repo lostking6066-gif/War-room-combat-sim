@@ -3,7 +3,7 @@
   "htmlMd5": "01bc0e8f05e19085e4b636173b1d125f",
   "generatedFrom": "war-room-v16.57.html",
   "baseline": "war-room-v16.56-goldens.json",
-  "note": "MEASURED v16.57 goldens (fun loop ideas 1-6 + 8, Jhay-agreed 2026-11-07 ~19:24 EST): all 40 records recomputed from the v16.57 file with the same pair/seed/variant/mode as v16.56. Movers: 0 — see the build report for the old-vs-new per-record values. This is a MEASUREMENT, not a re-lock: the re-lock tap with Jhay comes after the measurement if any mover appears. validateBattle: 9 of 40 fail identically on v16.56 and v16.57 (pre-existing transformed-form powerset issue, not a v16.57 change).",
+  "note": "MEASURED v16.57 goldens (fun loop ideas 1-6 + 8, Jhay-agreed 2026-11-07 ~19:24 EST): all 40 records recomputed from the v16.57 file with the same pair/seed/variant/mode as v16.56. Movers: 0 — see the build report for the old-vs-new per-record values. This is a MEASUREMENT, not a re-lock: the re-lock tap with Jhay comes after the measurement if any mover appears. validateBattle: 9 of 40 fail identically on v16.56 and v16.57 (pre-existing transformed-form powerset issue, not a v16.57 change). LABEL CORRECTION 2026-11-08 (Milo's call, Jhay delegated 'Up to you'): the saitama/goku record's variant was {\"saitama\":\"v3\"} but Saitama has no built v3 — the engine falls back to base (variantOf L471 held:true, instanceOf L477 forces variantId 'base'), so the battle IS base Saitama vs base Goku; the label is corrected to {\"saitama\":\"base\"} (what was APPLIED, not what was REQUESTED). The frozen record is byte-identical either way — no mover, no re-lock of the battle.",
   "records": [
     {
       "pair": "spiderman/batman",
@@ -918,7 +918,7 @@
       "mode": "death",
       "battlefield": "Open Arena",
       "variant": {
-        "saitama": "v3"
+        "saitama": "base"
       },
       "winner": "Saitama",
       "criterion": "stamina",

@@ -8297,7 +8297,7 @@ const waitFor = async (cond, ms) => {
       } catch (e) { return false; }
     })(), '');
 
-  check('V1657-GOLDENS-VARIANT-RELOCK (G5 + re-lock extension + v16.51 telling fix + v16.52 spacing fix + v16.53 photos wiring + v16.55 B stamina fix + v16.56 review fixes + v16.57 fun loop, Jhay-approved 2026-11-06 10:11 + 13:19 + 16:43 + 19:24 + 2026-11-07 01:12 + B fix 2026-11-07 ~13:00 + v16.56 re-lock 2026-11-07 ~15:58 + v16.57 fun loop 0 movers 2026-11-07 ~19:24) all 16 stored variant golden records recompute byte-identically from the v16.57 file with the recorded variant selected; the diff vs the v16.49 goldens is why 16/16, exchanges 16/16, stepNotes 9/16, winner 4/16, criterion 5/16, finisher 4/16, damage 4/16, heldOutA 2/16 (v16.55 B: 4 winner flips — sonic/rocky v2 Rocky->Sonic, goku/vegeta v3 Vegeta->Goku, tanjiro/zoro v2 Zoro->Tanjiro, naruto/sasuke v3 Naruto->Sasuke — and 5 criterion moves — those 4 plus goku/vegeta v2 stamina->speed; v16.56: item 6 moves heldOutA on the 2 goku/vegeta variants, pinned by key); each matches its stored winner/criterion/finisher/loserState/roundCount; the diff vs the v16.49 goldens is confined to the same allowed paths as the base re-lock: loserState moves on 0/16, why moves on 16/16, winPath moves on 0/16, conditions move on 0/16, events move on 4/16 (the 4 winner flips — their battles play out differently; non-flip records move no event at all), stepNotes move on 9/16, exchanges move on 16/16, kindStatus moves on 0/16, heldOutA moves on 2/16; rounds never move; finisher and damage move ONLY on the 4 winner flips',
+  check('V1657-GOLDENS-VARIANT-RELOCK (G5 + re-lock extension + v16.51 telling fix + v16.52 spacing fix + v16.53 photos wiring + v16.55 B stamina fix + v16.56 review fixes + v16.57 fun loop, Jhay-approved 2026-11-06 10:11 + 13:19 + 16:43 + 19:24 + 2026-11-07 01:12 + B fix 2026-11-07 ~13:00 + v16.56 re-lock 2026-11-07 ~15:58 + v16.57 fun loop 0 movers 2026-11-07 ~19:24) all 16 stored variant golden records recompute byte-identically from the v16.57 file with the recorded variant selected; the diff vs the v16.49 goldens is why 16/16, exchanges 16/16, stepNotes 9/16, winner 4/16, criterion 5/16, finisher 4/16, damage 4/16, heldOutA 2/16 (v16.55 B: 4 winner flips — sonic/rocky v2 Rocky->Sonic, goku/vegeta v3 Vegeta->Goku, tanjiro/zoro v2 Zoro->Tanjiro, naruto/sasuke v3 Naruto->Sasuke — and 5 criterion moves — those 4 plus goku/vegeta v2 stamina->speed; v16.56: item 6 moves heldOutA on the 2 goku/vegeta variants, pinned by key); each matches its stored winner/criterion/finisher/loserState/roundCount; the diff vs the v16.49 goldens is confined to the same allowed paths as the base re-lock: loserState moves on 0/16, why moves on 16/16, winPath moves on 0/16, conditions move on 0/16, events move on 4/16 (the 4 winner flips — their battles play out differently; non-flip records move no event at all), stepNotes move on 9/16, exchanges move on 16/16, kindStatus moves on 0/16, heldOutA moves on 2/16; rounds never move; finisher and damage move ONLY on the 4 winner flips; label correction 2026-11-08 (Milo call, Jhay delegated "Up to you"): saitama/goku v3 relabelled to base (fallback — Saitama has no built v3), frozen record byte-identical, no mover',
     (function () {
       const crypto = require('crypto');
       let gold, oldGold;
@@ -8343,6 +8343,8 @@ const waitFor = async (cond, ms) => {
       }
       const oldByKey = {};
       (oldGold.records || []).forEach(function (o) { oldByKey[o.pair + '|' + o.seed + '|' + JSON.stringify(o.variant || null)] = o; });
+      // Label correction 2026-11-08 (Milo's call, Jhay delegated "Up to you"): the saitama/goku v3 golden was a fallback to base (Saitama has no built v3), relabelled to {"saitama":"base"}. The v16.49 record still carries the v3 label, so alias the new key to the old record.
+      oldByKey['saitama/goku|12345|{"saitama":"base"}'] = oldByKey['saitama/goku|12345|{"saitama":"v3"}'];
       let ok = true;
       const badPaths = [];
       let movedLoser = 0, movedWhy = 0, movedWinPath = 0, movedConditions = 0, movedEvents = 0, movedStepNotes = 0, movedExchanges = 0, movedFin = 0, movedDmg = 0, movedKind = 0, movedHeldOut = 0;
@@ -8415,7 +8417,7 @@ const waitFor = async (cond, ms) => {
   // Crop fix, result-header photos + variant names, gandalf2 removed,
   // Instant Transmission record + POWERS.goku 4th power, engine words
   // reworded, Thanos Titan Slam + v2weak, Hulkbuster variant photo.
-  check('V1657-GOLDENS-RELOCK-VS-V1656 (v16.57 fun loop, Jhay-agreed build 2026-11-07 ~19:24, Best-of-3 waits) exactly 0 of the 40 golden records move vs v16.56 — the fun loop is render/UI only (no resolver change, no new POWER_RECORDS/POWERS entry, no frozen-input string change); all 40 records are byte-identical to v16.56',
+  check('V1657-GOLDENS-RELOCK-VS-V1656 (v16.57 fun loop, Jhay-agreed build 2026-11-07 ~19:24, Best-of-3 waits) exactly 0 of the 40 golden records move vs v16.56 — the fun loop is render/UI only (no resolver change, no new POWER_RECORDS/POWERS entry, no frozen-input string change); all 40 records are byte-identical to v16.56; label correction 2026-11-08 (Milo call, Jhay delegated "Up to you"): saitama/goku v3 relabelled to base (fallback — Saitama has no built v3), frozen record byte-identical, 0 movers',
     (function () {
       const crypto = require('crypto');
       let gold, oldGold;
@@ -8430,6 +8432,8 @@ const waitFor = async (cond, ms) => {
       if (!Array.isArray(oldGold.records) || oldGold.records.length !== 40) return false;
       const oldByKey = {};
       oldGold.records.forEach(function (o) { oldByKey[o.pair + '|' + o.seed + '|' + JSON.stringify(o.variant || null)] = o; });
+      // Label correction 2026-11-08 (Milo's call, Jhay delegated "Up to you"): the saitama/goku v3 golden was a fallback to base (Saitama has no built v3), relabelled to {"saitama":"base"}. The v16.56 record still carries the v3 label, so alias the new key to the old record.
+      oldByKey['saitama/goku|12345|{"saitama":"base"}'] = oldByKey['saitama/goku|12345|{"saitama":"v3"}'];
       let moved = 0;
       const badPaths = [];
       gold.records.forEach(function (g) {
