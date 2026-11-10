@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.59 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.60 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.59</h1><span>1V1 DEATH BATTLES • TEXT BREAKDOWN FIRST</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
+<header><div><h1>WAR-ROOM v16.60</h1><span>1V1 DEATH BATTLES • TEXT BREAKDOWN FIRST</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div id="daily-banner"></div>
@@ -2932,7 +2932,7 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46','v16.47','v16.48','v16.49','v16.50','v16.51','v16.52','v16.53','v16.54','v16.55','v16.56','v16.57','v16.58'].includes(x.formatVersion);
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46','v16.47','v16.48','v16.49','v16.50','v16.51','v16.52','v16.53','v16.54','v16.55','v16.56','v16.57','v16.58','v16.59'].includes(x.formatVersion);
   return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12/v16.13/v16.14/v16.15/v16.16/v16.17/v16.18/v16.19/v16.20 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
@@ -4831,7 +4831,7 @@ var DOSSIER_V1612 = {
     weaknesses: [{ text: 'Overconfidence', exploitableBy: 'an opponent who outlasts the transformed state', status: 'derived' }],
     laws: [{ rule: 'Honourable combat: wants the opponent at full power.', breaksWhen: 'Not stated — unknown.', engineEffect: 'Brief only: no engine trigger in this build; flagged, not simulated as a refusal.', status: 'interpretation' }],
     peeves: [{ trigger: 'An opponent who will not fight at full power', triggerKind: 'none', effect: 'Pushes harder and escalates to transformation sooner (narrative only in this build).', engineTriggerable: false, status: 'interpretation' }],
-    systems: [{ name: 'Ki energy', access: 'Innate, trained.', duration: 'While stamina lasts.', control: 'Fighter.', cost: 'Stamina (engine stamina pool).', limit: 'Stamina drains in very long fights (profile weakness).', stopsBy: 'Exhaustion — engine stamina floor, not a hard cutoff.', status: 'derived' }],
+    systems: [{ name: 'Ki energy', access: 'Innate, trained.', duration: 'While stamina lasts.', control: 'Fighter.', cost: 'Stamina (engine stamina pool).', limit: 'unknown', stopsBy: 'Exhaustion — engine stamina floor, not a hard cutoff.', status: 'derived' }],
     sources: [{ type: 'fighter record', note: 'Existing game profile fields.', status: 'derived' }, { type: 'General canon (Dragon Ball anime/manga)', note: 'Broadly established traits as summarised in the profile; no specific episode citation is claimed.', status: 'interpretation' }],
     unknown: ['Exact ki-drain rate for Super Saiyan Blue in this version (engine applies a flat 20 stamina cost; the canon rate is not stated numerically).']
   },
@@ -6450,7 +6450,7 @@ function verdictFailedNamesV1614(checks) { return (checks || []).filter(function
    invented closeness. The system scales to the 600 roster target
    because breakdowns are generated on first click and cached per
    distinct pair/outcome — never pre-generated for every pair. */
-var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1659';
+var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1660';
 var V1619_OFFLINE_BREAKDOWN_LABEL = 'Breakdown — written on this device, no internet needed.';
 var V1619_BREAKDOWN_HEADINGS = ['Matchup', 'Fighter A best case', 'Fighter B best case', 'Best plan', 'Why it stalls', 'Criteria scoreboard', 'Finishing sequence', 'Finisher and loser state', 'Verdict'];
 /* ============ WAR-ROOM v16.20: EXPANDED PAIRING + FIXES ============
