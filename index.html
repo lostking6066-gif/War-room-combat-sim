@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAR-ROOM v16.70 — 1v1 Death Battles</title>
+<title>WAR-ROOM v16.71 — 1v1 Death Battles</title>
 <style>
 :root{--bg:#07090f;--panel:#0f131f;--border:#1a2236;--cyan:#00f0ff;--mag:#ff007f;--green:#00ff66;--yellow:#ffcc00;--main:#e2e8f0;--dim:#8fa3bf}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
@@ -66,7 +66,7 @@ details.adv{background:#0f131f;border:1px solid var(--border);border-radius:8px;
 </style>
 </head>
 <body>
-<header><div><h1>WAR-ROOM v16.70</h1><span>1V1 DEATH BATTLES • TEXT BREAKDOWN FIRST</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
+<header><div><h1>WAR-ROOM v16.71</h1><span>1V1 DEATH BATTLES • TEXT BREAKDOWN FIRST</span></div><div><!-- v12: no status badges on the selection interface. Connection status lives only on the tester surface. --></div></header>
 <main>
 <section id="draft-screen" class="screen active">
 <div id="daily-banner"></div>
@@ -3164,7 +3164,7 @@ function validateImportedEpisodeV15(x){
   if(Array.isArray(x.eventRecord)){for(let i=0;i<x.eventRecord.length;i++){const e=x.eventRecord[i]; if(!e||typeof e!=='object'||typeof e.type!=='string'||typeof e.round!=='number') return {ok:false,legacy:false,reason:'Imported event record entry '+i+' is malformed (missing type or round).'};}}
   if(x.finalRecord&&x.finalRecord.winner&&x.finalRecord.winner!==x.winner&&x.finalRecord.winner!=='Stalemate'&&x.finalRecord.winner!=='Tie') return {ok:false,legacy:false,reason:'Imported record contradicts itself: finalRecord.winner ('+x.finalRecord.winner+') does not match winner ('+x.winner+').'};
   if(x.validation&&typeof x.validation!=='object') return {ok:false,legacy:false,reason:'Imported record has a malformed validation block.'};
-  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46','v16.47','v16.48','v16.49','v16.50','v16.51','v16.52','v16.53','v16.54','v16.55','v16.56','v16.57','v16.58','v16.59','v16.60','v16.61','v16.62','v16.63','v16.64','v16.65','v16.66','v16.67','v16.68','v16.69'].includes(x.formatVersion);
+  const legacy=!['v15','v15.1','v16','v16.1','v16.2','v16.3','v16.4','v16.5','v16.6','v16.7','v16.8','v16.9','v16.10','v16.11','v16.12','v16.13','v16.14','v16.15','v16.16','v16.17','v16.18','v16.19','v16.20','v16.21','v16.22','v16.23','v16.24','v16.25','v16.26','v16.27','v16.28','v16.29','v16.30','v16.31','v16.32','v16.33','v16.34','v16.35','v16.36','v16.37','v16.38','v16.39','v16.40','v16.41','v16.42','v16.43','v16.44','v16.45','v16.46','v16.47','v16.48','v16.49','v16.50','v16.51','v16.52','v16.53','v16.54','v16.55','v16.56','v16.57','v16.58','v16.59','v16.60','v16.61','v16.62','v16.63','v16.64','v16.65','v16.66','v16.67','v16.68','v16.69','v16.70'].includes(x.formatVersion);
   return {ok:true,legacy:legacy,reason:legacy?'Saved in an older format — read-only, format differs.':'Valid v15/v15.1/v16/v16.1/v16.2/v16.3/v16.4/v16.5/v16.6/v16.7/v16.8/v16.9/v16.10/v16.11/v16.12/v16.13/v16.14/v16.15/v16.16/v16.17/v16.18/v16.19/v16.20 record.'};
 }
 function fighterSnapshotForV15(f){return {id:f.id,name:f.name,variant:f.variant||'Base',variantId:f.variantId||'base',instanceId:f.instanceId||null,hp:f.maxHp,startHp:f.startHp||f.maxHp,atk:f.startAtk||f.atk,def:f.startDef||f.def,tier:f.tier,sig:f.sig,sigMult:f.sigMult,trans:f.trans||'',powers:(typeof structuredPowersForV14==='function'?structuredPowersForV14(f).map(p=>p.name):[]),weak:f.weak||'',style:f.style||''};}
@@ -6682,7 +6682,7 @@ function verdictFailedNamesV1614(checks) { return (checks || []).filter(function
    invented closeness. The system scales to the 600 roster target
    because breakdowns are generated on first click and cached per
    distinct pair/outcome — never pre-generated for every pair. */
-var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1670';
+var V1620_BREAKDOWN_CACHE_KEY = 'warroom_breakdown_cache_v1671';
 var V1619_OFFLINE_BREAKDOWN_LABEL = 'Breakdown — written on this device, no internet needed.';
 var V1619_BREAKDOWN_HEADINGS = ['Matchup', 'Fighter A best case', 'Fighter B best case', 'Best plan', 'Why it stalls', 'Criteria scoreboard', 'Finishing sequence', 'Finisher and loser state', 'Verdict'];
 /* ============ WAR-ROOM v16.20: EXPANDED PAIRING + FIXES ============
@@ -9728,6 +9728,8 @@ function finishParaV1647(frozen, W, L, winBattle, loseBattle, fix3, moralNote, f
   var fin = frozen.finisher;
   var winRec = (W === frozen.fighterA.name) ? frozen.fighterA : frozen.fighterB;
   var loseRec = (W === frozen.fighterA.name) ? frozen.fighterB : frozen.fighterA;
+  /* v16.71 (Jhay's ruling): a Frodo/Raven win is outlasted, never a kill. */
+  var _ruled1671 = isRuledNoKillV1671(frozen, W);
   var pw = null;
   try { pw = dossierPowerV1638(winBattle, fin); } catch (e) {}
   /* v16.62 (step 7): the finish is an image, not a label — the paragraph
@@ -9764,7 +9766,8 @@ function finishParaV1647(frozen, W, L, winBattle, loseBattle, fix3, moralNote, f
        mortal body." */
     var _fh1650 = hash1634([frozen.fighterA.id, frozen.fighterA.variant, frozen.fighterB.id, frozen.fighterB.variant, fin, L].join('|'));
     var _pick1650 = function (arr) { return arr[(_fh1650 >>> 23) % arr.length]; };
-    if (pw.outcome === 'lethal') s += _pick1650([' It\'s lethal.', ' The blow is lethal.', ' That is a killing blow.', ' The finish is lethal, full stop.']);
+    if (pw.outcome === 'lethal' && !_ruled1671) s += _pick1650([' It\'s lethal.', ' The blow is lethal.', ' That is a killing blow.', ' The finish is lethal, full stop.']);
+    else if (pw.outcome === 'lethal') s += _pick1650([' It stops the target from continuing.', ' The target cannot continue after that.', ' That ends the target\'s ability to continue.']);
     else if (pw.outcome === 'incapacitated') s += _pick1650([' It stops the target from continuing.', ' The target cannot continue after that.', ' That ends the target\'s ability to continue.']);
     /* v16.54 (A6): an incapacitating finisher against a regenerative
        loser needs a bridge — the stop alone does not explain a death.
@@ -9779,7 +9782,7 @@ function finishParaV1647(frozen, W, L, winBattle, loseBattle, fix3, moralNote, f
       else s += _pick1650([' A mortal body does not get up from that.', ' A mortal body cannot take that and keep fighting.', ' That is more than a mortal body survives.', ' The body gives out under it.', ' The damage is too much for a mortal body.', ' No mortal body walks away from that.']);
     }
   }
-  if (fix3) s += ' ' + fix3;
+  if (fix3 && !_ruled1671) s += ' ' + fix3;
   /* v16.64 (Step 3, Call 6 + Call 7): the hold finisher's kill step. A hold finisher
      only stops the loser — the finish adds the winner's demonstrated follow-up strike
      (render-time pick from POWERS[winId]) and the body state it causes (concrete, from
@@ -9788,7 +9791,7 @@ function finishParaV1647(frozen, W, L, winBattle, loseBattle, fix3, moralNote, f
      The loser state is 'dead' in Death mode. Regenerative: the regen clause is dropped
      when the A6 bridge already said it (criterion != incapacitation + outcome
      incapacitated). */
-  if (frozen.loserState === 'dead' && isHoldFinisherV1664(fin, pw) && loseRec.durability !== 'invulnerable') {
+  if (frozen.loserState === 'dead' && isHoldFinisherV1664(fin, pw) && loseRec.durability !== 'invulnerable' && !_ruled1671 && !(frozen.why && frozen.why.indexOf(fin + ' kills ' + L) !== -1 && loseRec.durability !== 'regenerative')) {
     var followUp1664 = null;
     try { followUp1664 = pickFollowUpV1664(winBattle, loseBattle, battle, frozen); } catch (e) { followUp1664 = null; }
     if (followUp1664) {
@@ -9798,7 +9801,8 @@ function finishParaV1647(frozen, W, L, winBattle, loseBattle, fix3, moralNote, f
     }
   }
   /* v16.64 (Step 2, A4): the named-place stage line replaces the finish plan generic stage lines — the finish names where the loser ends up. */
-  s += ' ' + L + ' is ' + loserStatePhraseV1647(frozen.loserState) + (arena1664 ? ' ' + arena1664.s : '') + '.' + (moralNote || '');
+  if (_ruled1671) s += ' ' + L + ' is outlasted.' + (moralNote || '');
+  else s += ' ' + L + ' is ' + loserStatePhraseV1647(frozen.loserState) + (arena1664 ? ' ' + arena1664.s : '') + '.' + (moralNote || '');
   /* v16.62 (step 7): the telling ends on a past-tense finish image — no
      verdict label. */
   var _e1662 = enderV1662(frozen, L);
@@ -9842,10 +9846,10 @@ function openerV1647(frozen, h, fill, W, L) {
     ],
     'tier difference': [
       'Can {L} beat {W} on {BF}? The tiers draw a line here: {W} fights above {L}.',
-      'Can {L} beat {W} on {BF}? {L} is game, but {W} fights a tier above — and the fight follows it.',
+      'Can {L} beat {W} on {BF}? {L} is game, but {W} fights a step above — and the fight follows it.',
       'Can {L} beat {W} on {BF}? {L} is good. {W} is a level above good.',
       'Can {L} beat {W} on {BF}? The gap between them is the fight.',
-      'Can {L} beat {W} on {BF}? {W} fights from a higher tier, and {L} has no way up.'
+      'Can {L} beat {W} on {BF}? {W} fights from above, and {L} has no way up.'
     ],
     'speed': [
       'Can {L} beat {W} on {BF}? No power or stamina edge settles this one, so the pace-setter takes it.',
@@ -11057,8 +11061,8 @@ function resolverTellingTextV1634(b) {
     ],
     'tier difference': [
       'Can {L} beat {W} on {BF}? The tiers say it plainly: {W} fights a level above {L}.',
-      'Can {L} beat {W} on {BF}? {L} belongs in this fight, but {W} sits a tier higher — and that gap decides it.',
-      'Can {L} beat {W} on {BF}? The record puts {W} a tier above {L}, and the fight follows the tiers.'
+      'Can {L} beat {W} on {BF}? {L} belongs in this fight, but {W} sits a step higher — and that is the whole fight.',
+      'Can {L} beat {W} on {BF}? The matchup puts {W} a step above {L}, and the fight follows it.'
     ],
     'speed': [
       'Can {L} beat {W} on {BF}? No recorded power, stamina edge, or durability gap settles this one — so speed order decides it.',
@@ -11477,7 +11481,13 @@ function pastSceneV1662(loseBattle, L) {
    v16.70: the beat-composed decide renders plain words from the slim
    table instead of the frozen why (decideV1670); the frozen why stays
    locked in the record, unprinted. This comment's rule still governs the
-   fallback frame, where the mechanism sentence still follows the why. */
+   fallback frame, where the mechanism sentence still follows the why.
+   v16.71: outcome-aware render — loss-flagged slim fields never describe
+   a win (C1a), ally clauses drop in 1v1 (C1b), the ruled win route
+   replaces the sig in the best plan (B7), fix-3 framings read as a
+   sequence (B4), the hold follow-up is gated (B1), cannot-harm enders
+   fit a dead loser (B6/F3), and Frodo/Raven wins render as outlasted,
+   never a kill (Jhay's ruling). */
 function mechanismV1662(frozen, winBattle, loseBattle) {
   var crit = frozen.decisiveCriterion;
   var W = frozen.winner;
@@ -11565,17 +11575,19 @@ function escapeRoutesV1662(frozen, loseBattle) {
    stated as "if it lands, {L} wins", then the one thing it needs, then
    the counter. The counter is a fixed set by loser trait / winner
    durability. The prep counter is BATMAN-ONLY (loseRec.id === 'batman'):
-   "the record gives it only after a study moment" is his dossier extra
+   "it comes only after a study moment" is his dossier extra
    ("Preparation: conditional — only after a study moment in the record");
    The Punisher and Dutch share the prep trait but carry no such extra, so
    they fall through to the generic counter. The generic counter names the
    MECHANISM, not a power — for a speed/tier/stamina decision the finisher
    is not "the whole fight", the pace/gap/limit is. The loser NAME is used,
    never a pronoun (gender). */
+var RULED_WIN_V1671={raven:'binding and containment'};
 function bestPlanConditionV1662(frozen, loseRec, winRec, loseBattle) {
   var W = frozen.winner, L = loseRec.name;
   var sig = loseRec.signature || '';
   if (!sig) return '';
+  var _rw1671 = RULED_WIN_V1671[loseRec.id] || '';
   var deciding = '';
   if (frozen.decisiveCriterion === 'incapacitation') {
     var inc = (W === frozen.fighterA.name) ? (frozen.inputs && frozen.inputs.incapA) : (frozen.inputs && frozen.inputs.incapB);
@@ -11596,8 +11608,8 @@ function bestPlanConditionV1662(frozen, loseRec, winRec, loseBattle) {
   if (trait === 'prep' && loseRec.id === 'batman') {
     /* Incapacitation: the deciding power lands before the study moment.
        Any other criterion: the fight ends before the moment comes. */
-    if (frozen.decisiveCriterion === 'incapacitation') counter = 'Prep is not a cheat code: the record gives it only after a study moment, and ' + deciding + ' lands before that moment comes.';
-    else counter = 'Prep is not a cheat code: the record gives it only after a study moment, and the fight ends before that moment comes.';
+    if (frozen.decisiveCriterion === 'incapacitation') counter = 'Prep is not a cheat code: it comes only after a study moment, and ' + deciding + ' lands before that moment comes.';
+    else counter = 'Prep is not a cheat code: it comes only after a study moment, and the fight ends before that moment comes.';
   }
   else if (winRec.durability === 'regenerative') counter = 'Is the healing the whole fight? Regeneration is not immunity, and once it is exhausted the loser stays down.';
   else {
@@ -11608,8 +11620,9 @@ function bestPlanConditionV1662(frozen, loseRec, winRec, loseBattle) {
     else if (frozen.decisiveCriterion === 'tier difference') mech = 'the gap';
     else if (frozen.decisiveCriterion === 'speed') mech = 'the pace';
     else if (frozen.decisiveCriterion === 'durability') mech = 'the body';
-    counter = 'Could ' + L + ' have won another way? The record gives ' + L + ' no other way in — ' + mech + ' is the whole fight.';
+    counter = 'Could ' + L + ' have won another way? ' + L + ' has no other way in — ' + mech + ' is the whole fight.';
   }
+  if (_rw1671) return 'If ' + L + "\u0027" + 's ' + _rw1671 + ' holds, ' + L + ' wins. But that needs ' + need + '. ' + counter;
   return 'If ' + L + "\u0027" + 's ' + sig + ' plan lands, ' + L + ' wins. But that needs ' + need + '. ' + counter;
 }
 /* v16.62 (step 7): the past-tense ender — the telling ends on a finish
@@ -11621,7 +11634,7 @@ function enderV1662(frozen, L) {
   var sets = {
     'incapacitation': ['{L} ended up held in place, out of moves.', '{L} ended up stopped, with the fight already gone.', '{L} ended up with no way back into the fight.'],
     'stamina': ['{L} ended up spent, with nothing left in the tank.', '{L} ended up unable to rise, out of time.', '{L} ended up worn down to nothing.'],
-    'cannot-harm': ['{L} ended up unmarked and unanswered, with no way through.', '{L} ended up still standing, still unable to land a blow.', '{L} ended up with nothing landed and nowhere to go.'],
+    'cannot-harm': ['{L} ended up with no way through, and no blow landed.', '{L} ended up down, unable to land a blow.', '{L} ended up with nothing landed and nowhere to go.'],
     'tier difference': ['{L} ended up outclassed, with nothing left to try.', '{L} ended up a step below, with the gap still there.', '{L} ended up beaten by the gap itself.'],
     'speed': ['{L} ended up a step behind, with the fight already gone.', '{L} ended up chasing a pace {L} never caught.', '{L} ended up where the slower fighter ends: behind.'],
     'durability': ['{L} ended up broken, with the body giving out.', '{L} ended up where the weaker body ends: down.', '{L} ended up unable to take one more hit.']
@@ -11648,7 +11661,7 @@ function clauseForV1663(fighterId, sigName) {
        clause at all, and callers fall to the record gloss. */
     var a = stripAbsenceV1670(t[0]), b = stripAbsenceV1670(t[1]);
     if (!a && !b) return null;
-    return [a, b];
+    return [plainWordsV1670(a), plainWordsV1670(b)];
   } catch (e) { return null; }
 }
 function beatForV1663(fighterId, variantId) {
@@ -11698,7 +11711,7 @@ var SLIM_V1670={
 "vegeta|Big Bang Attack":{l:4,c:"A sphere can be swatted aside, not beam-struggled - Anilaza easily swats it aside.",x:"Swatted aside (Anilaza); no demonstrated block that holds it otherwise.",b:"Android 19: body destroyed, only the head remaining; explosive disintegration, nothing left to heal.",a:"Swatted by Anilaza: no demonstrated switch - the fight continues as a team fight.",k:"Short charge, moderate ki - much cheaper than the Final Flash; no demonstrated tiredness from firing it."},
 "vegeta|Final Explosion":{l:5,f:"t:4",c:"An explosion, not a beam - it does not beam-struggle; it engulfs Buu, who is blown to utter bits.",x:"Regeneration - Buu is blown to bits and reforms in his entirety.",b:"Buu blown to utter bits, then reformed; Vegeta himself turns to a statue of ash and crumbles.",a:"Does not kill Buu: Vegeta dies, and the fight continues without him - no adaptation, the user is dead.",k:"Costs ALL of Vegeta's ki; in Majin form the cost is death; in Blue Evolved, total exhaustion, reverted to base."},
 "vegeta|Final Flash":{l:5,c:"No beam-vs-beam clash demonstrated; vs Magetta's Lava Spit the beam overcomes the counter and pushes him to the arena's edge.",x:"Regeneration - Cell is pulverized in half and easily regenerates.",b:"Half of Perfect Cell's upper torso pulverized, ground disintegrated; Cell regenerates, unharmed.",a:"Cell taunts him into the full charge; Vegeta accepts and fires at full power anyway.",k:"Long charge and huge ki - must stand still for minutes, open during it; power tracks the charge."},
-"vegeta|Galick Gun":{l:6,c:"Beam-vs-beam: overpowered by a stronger beam (Kaio-ken x4 Kamehameha); blocked by solidified Lava Spit (Magetta); cancelled by Cabba's Galick Cannon.",x:"Overpower with a stronger beam - Goku's Kaio-ken x4 Kamehameha blasts Vegeta into the sky.",b:"Never lands on Goku - the beam struggle is the outcome; Zarbon annihilated from the inside (Final Galick Cannon).",a:"Beam overpowered: switches to the Power Ball and Great Ape.",k:"Short charge, moderate ki - much cheaper than the Final Flash; no demonstrated limit on how many he can fire."},
+"vegeta|Galick Gun":{l:6,loss:'cxb',c:"Beam-vs-beam: overpowered by a stronger beam (Kaio-ken x4 Kamehameha); blocked by solidified Lava Spit (Magetta); cancelled by Cabba's Galick Cannon.",x:"Overpower with a stronger beam - Goku's Kaio-ken x4 Kamehameha blasts Vegeta into the sky.",b:"Never lands on Goku - the beam struggle is the outcome; Zarbon annihilated from the inside (Final Galick Cannon).",a:"Beam overpowered: switches to the Power Ball and Great Ape.",k:"Short charge, moderate ki - much cheaper than the Final Flash; no demonstrated limit on how many he can fire."},
 "vegeta|Ki Blast":{l:1,c:"A projectile, not a beam - cannot beam-struggle; it hits an afterimage and is spent on nothing.",x:"Dodge - Golden Frieza jumps clear; a single projectile with travel time.",b:"No unnamed ki blast demonstrated killing a trained fighter; an unnamed blast kills the Namekian elder (ordinary human scale).",a:"Blasts fail on Magetta: switches to a bigger move - Galick Gun, then Final Flash.",k:"Costs almost nothing - cheapest attack he has; the limit is the L1 ceiling, not ki."},
 "sasuke|Amaterasu":{l:4,c:"Vs a block: burns through - Raikage's arm burns, he severs it; Bee's tentacle burns, he substitutes with it.",x:"Shed the burning part - Raikage severs his arm, Bee substitutes a tentacle, Madara sheds burning armor; the flames burn slowly enough to allow it.",b:"Burns Bee's tentacle (Bee himself unburned, subdued); burns the Raikage's arm until he severs it.",a:"Bee escapes by substitution: switches to tracking him; Raikage: Amaterasu holds, fight continues.",k:"High chakra cost AND eyesight cost - each use damages eyesight toward blindness; flames burn seven days and nights unless extinguished."},
 "sasuke|Chidori Sharp Spear":{l:4,c:"Vs a thrust: mutual stab - Danzo's Vacuum Blade and the Sharp Spear stab each other; both land, neither blocks.",x:"A mutual thrust trades with it; Izanagi rewrites the hit (Danzo).",b:"Two separate pierces on Danzo - mutual stab (shoulder, arm sliced off) and the hostage pierce through Danzo and Karin, striking a vital spot.",a:"Pierces Itachi's back but does not finish him: switches to fireballs, then Kirin.",k:"A-rank, high chakra; needs the Sharingan to aim at full speed; loud and visible; mid-range thrust."},
@@ -11816,6 +11829,7 @@ function stripAbsenceV1670(s) {
   }
   out = out.replace(/,\s*$/, '');
   if (hadPeriod && out && !/[.!?]\s*$/.test(out)) out += '.';
+  out = out.replace(/^[a-z]/, function (m) { return m.toUpperCase(); });
   return out;
 }
 function slimAbsenceV1670(s) {
@@ -11829,6 +11843,7 @@ function slimField1670(e, k) {
      field is missing, form-gated out, or carries an absence shape. */
   if (!e || !e[k]) return '';
   var v = plainWordsV1670(e[k]);
+  if (k === 'a') v = slimAllyV1671(v);
   if (slimAbsenceV1670(v)) return '';
   var t = v.replace(/^\s+|\s+$/g, '');
   if (!t) return '';
@@ -11845,6 +11860,24 @@ function slimCost1670(e) {
   if (slimAbsenceV1670(v)) return '';
   if (!/[.!?]$/.test(v)) v += '.';
   return v;
+}
+function slimLossV1671(e, k) {
+  /* v16.71 (C1a): a slim field marked as a loss line — it describes the
+     move losing to the foe. The record is correct (the loss happened);
+     the render must not use it for the winner. */
+  try { return !!(e && e.loss && e.loss.indexOf(k) !== -1); } catch (err) { return false; }
+}
+function slimAllyV1671(s) {
+  /* v16.71 (C1b): a 1v1 has no ally — drop adaptation clauses that need
+     one. Word-boundary 'ally', so 'finally'/'physically' survive. */
+  var p = String(s || '').split(';'), k = [];
+  for (var i = 0; i < p.length; i++) if (!/\bally\b/i.test(p[i])) k.push(p[i]);
+  return k.join(';');
+}
+function isRuledNoKillV1671(frozen, W) {
+  /* v16.71 (Jhay's ruling): a Frodo or Raven win is outlasted, never a
+     kill — the finish line says outlasted, not dead. */
+  try { var wr = (W === frozen.fighterA.name) ? frozen.fighterA : frozen.fighterB; return !!(wr && (wr.id === 'frodo' || wr.id === 'raven')); } catch (e) { return false; }
 }
 function slimDecideEntryV1670(frozen, winBattle, loseBattle) {
   /* Decisive-entry lookup, shared by the decide and the beat paragraph so
@@ -11864,7 +11897,7 @@ function slimDecideEntryV1670(frozen, winBattle, loseBattle) {
     if (loseRec.signature) cands.push({fid: loseRec.id, label: loseRec.signature, battle: loseBattle, rec: loseRec});
     for (var i = 0; i < cands.length; i++) {
       var e = slimEntryV1670(cands[i].fid, cands[i].label);
-      if (!e || !e.c || slimAbsenceV1670(e.c)) continue;
+      if (!e || !e.c || slimAbsenceV1670(e.c) || (cands[i].fid === winRec.id && slimLossV1671(e, 'c'))) continue;
       var f = slimFormV1670(e, cands[i].fid, cands[i].battle.variantId, hasTrans1670(frozen, cands[i].rec));
       if (!f.applies) continue;
       return {entry: e, form: f, fid: cands[i].fid, label: cands[i].label};
@@ -11924,10 +11957,10 @@ function beatsV1670(frozen, winBattle, loseBattle) {
     var part = function (head, arr) { var t = arr.filter(Boolean).join(' '); return t ? (head + t) : ''; };
     var out = [];
     if (crit === 'cannot-harm') {
-      if (wF.applies) out.push(part(wH, [(!wFin && !wF.clashOnly) ? slimField1670(wE, 'b') : '', slimCost1670(wE)]));
+      if (wF.applies) out.push(part(wH, [(!wFin && !wF.clashOnly && !slimLossV1671(wE, 'b')) ? slimField1670(wE, 'b') : '', slimCost1670(wE)]));
       if (lF.applies) out.push(part(lH, [lSkipC ? '' : slimField1670(lE, 'c'), slimField1670(lE, 'a')]));
     } else {
-      if (wF.applies) out.push(part(wH, [slimField1670(wE, 'x'), (!wFin && !wF.clashOnly) ? slimField1670(wE, 'b') : '', slimCost1670(wE)]));
+      if (wF.applies) out.push(part(wH, [slimLossV1671(wE, 'x') ? '' : slimField1670(wE, 'x'), (!wFin && !wF.clashOnly && !slimLossV1671(wE, 'b')) ? slimField1670(wE, 'b') : '', slimCost1670(wE)]));
       if (lF.applies) out.push(part(lH, [lSkipC ? '' : slimField1670(lE, 'c'), slimField1670(lE, 'x'), slimField1670(lE, 'a')]));
     }
     var txt = out.filter(Boolean).join(' ');
@@ -11942,6 +11975,8 @@ function slimCounterV1670(frozen, rec, battle) {
   try {
     var e = slimEntryV1670(rec.id, rec.signature);
     if (!e || !e.x) return '';
+    var _w1671 = (frozen.winner === frozen.fighterA.name) ? frozen.fighterA : frozen.fighterB;
+    if (rec.id === _w1671.id && slimLossV1671(e, 'x')) return '';
     var f = slimFormV1670(e, rec.id, battle.variantId, hasTrans1670(frozen, rec));
     if (!f.applies) return '';
     return slimField1670(e, 'x');
@@ -12066,18 +12101,19 @@ function analysisNarrationTextV1638(b) {
   if (crit === 'incapacitation') {
     var fix3Rec1639 = (W === A.name) ? (frozen.inputs && frozen.inputs.incapA) : (frozen.inputs && frozen.inputs.incapB);
     var fix3Name1639 = (fix3Rec1639 && fix3Rec1639.power && fix3Rec1639.power.name) ? fix3Rec1639.power.name : '';
-    /* v16.49 (F3): same death framing as the resolver why — the
-       deciding power stops the loser from continuing, the finisher is the
-       final blow that kills them. The rubric twin (fix3Rubric1639) stays
+    /* v16.49 (F3): same death framing as the resolver why — the hold
+       stops the loser from continuing, the finisher lands as the final
+       blow (a sequence, not two deciders). v16.71: the framings no
+       longer say 'kills'. The rubric twin (fix3Rubric1639) stays
        as-is: tester-only Audit wording. */
     if (fix3Name1639 && frozen.finisher && frozen.finisher !== fix3Name1639) {
       /* v16.50 (G3c): the fix-3 framing varies, so the two live incapacitation
          finish paragraphs (B4/B8) do not read identically. Three framings,
          pair-stable hash, shift tuned at build time (>>> 0): B4 takes the
          original framing, B8 takes the third. */
-      var _f3v1650 = [fix3Name1639 + ' is the deciding power — it stops ' + L + ' from continuing; ' + frozen.finisher + ' is the final blow that kills ' + L + '.',
-        fix3Name1639 + ' stops ' + L + ' from continuing — that is the deciding power — and ' + frozen.finisher + ' is the blow that kills ' + L + '.',
-        'The deciding power is ' + fix3Name1639 + ' — it stops ' + L + ' from continuing — and ' + frozen.finisher + ' is the final blow that kills ' + L + '.'];
+      var _f3v1650 = [fix3Name1639 + ' holds ' + L + ' — it stops ' + L + ' from continuing — then ' + frozen.finisher + ' lands as the final blow.',
+        fix3Name1639 + ' stops ' + L + ' from continuing, and ' + frozen.finisher + ' lands as the final blow.',
+        fix3Name1639 + ' holds ' + L + ' still, and ' + frozen.finisher + ' is the final blow.'];
       var _f3h1650 = hash1634([A.id, A.variant, B.id, B.variant, frozen.finisher, L].join('|'));
       fix3Power1639 = _f3v1650[(_f3h1650 >>> 0) % 3];
     }
@@ -12119,7 +12155,7 @@ function analysisNarrationTextV1638(b) {
   }
   var finishCheck = function (text) {
     if (qualityCheckTellingV1647(b, frozen, text, usedMoves, _dec1670).passed) return text;
-    return W + ' wins. Finisher: ' + frozen.finisher + '. ' + L + ' is ' + loserStatePhraseV1647(frozen.loserState) + '. The record decides it on ' + criterionWordsV1634(crit) + '.';
+    return W + ' wins. Finisher: ' + frozen.finisher + '. ' + L + ' is ' + (isRuledNoKillV1671(frozen, W) ? 'outlasted' : loserStatePhraseV1647(frozen.loserState)) + '. The record decides it on ' + criterionWordsV1634(crit) + '.';
   };
   if (crit === 'cannot-harm') {
     var losePw = dossierPowerV1638(loseBattle, loseRec.signature);
